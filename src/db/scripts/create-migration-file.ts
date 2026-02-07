@@ -20,7 +20,7 @@ if (!migrationName) {
   process.exit(1);
 }
 
-const migrationsDir = path.join(__dirname, "..", "migrations");
+const migrationsDir = path.join(import.meta.dirname, "..", "migrations");
 const filePath = path.join(migrationsDir, `${Date.now()}-${migrationName}.ts`);
 
 fs.writeFileSync(filePath, fileContent.trim());

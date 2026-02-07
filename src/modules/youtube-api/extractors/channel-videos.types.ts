@@ -1,4 +1,4 @@
-import { LanguageCode } from "../../i18n";
+import { LanguageCode } from "../../i18n/index.js";
 
 export type ChannelVideos = {
   id: string;

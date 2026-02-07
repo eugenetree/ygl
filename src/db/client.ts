@@ -1,21 +1,20 @@
-import { Database } from "./types"; // this is the Database interface we defined earlier
-import { Pool } from "pg";
-import { Kysely, PostgresDialect } from "kysely";
+import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
+import pg from "pg";
+
+import { Database } from "./types.js";
 
 const dialect = new PostgresDialect({
-  pool: new Pool({
+  pool: new pg.Pool({
     database: "ygl-pg",
-    host: "localhost",
+    host: "db",
     user: "admin",
+    password: "admin",
     port: 5432,
     max: 10,
   }),
 });
 
-// Database interface is passed to Kysely's constructor, and from now on, Kysely
-// knows your database structure.
-// Dialect is passed to Kysely's constructor, and from now on, Kysely knows how
-// to communicate with your database.
 export const dbClient = new Kysely<Database>({
   dialect,
+  plugins: [new CamelCasePlugin()],
 });

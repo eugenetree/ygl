@@ -1,0 +1,41 @@
+{
+  "name": "youtube-caption-search",
+  "version": "1.0.0",
+  "description": "A YouGlish-like search system for video captions using Elasticsearch",
+  "type": "module",
+  "main": "api_server.js",
+  "scripts": {
+    "start": "node api_server.js",
+    "dev": "node --watch api_server.js",
+    "index": "node example_usage.js",
+    "init-index": "node init-index.js",
+    "check": "node check-setup.js",
+    "test-search": "node test-search.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "docker:reset": "docker-compose down -v && docker-compose up -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "youtube",
+    "captions",
+    "search",
+    "elasticsearch",
+    "video",
+    "subtitles"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.11.0",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

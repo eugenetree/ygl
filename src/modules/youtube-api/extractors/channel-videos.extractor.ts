@@ -1,104 +1,208 @@
-import { Failure, Result, Success } from "../../../types";
+import * as fs from "fs";
 import { z } from "zod";
-import { ValidationError } from "../../_common/validation/errors";
 
-type ChannelVideo = z.infer<typeof channelVideoSchema>;
-type Token = z.infer<typeof tokenSchema>;
+import { Failure, Result, Success } from "../../../types/index.js";
+import { Logger } from "../../_common/logger/logger.js";
+import {
+  ParsingError,
+  ValidationError,
+} from "../../_common/validation/errors.js";
+import { validator } from "../../_common/validation/validator.js";
+import { videoDurationParser } from "../parsers/video-duration.parser.js";
+import { viewCountParser } from "../parsers/view-count.parser.js";
+import { inputSchemas, outputSchemas } from "./channel-videos.schemas.js";
+import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
 
-const channelVideoSchema = z.object({
-  id: z.string(),
-  thumbnail: z.string().optional(),
-  title: z.string(),
-  duration: z.string(),
-  viewCount: z.string(),
-});
+type ChannelVideo = {
+  id: string;
+  thumbnail?: string;
+  title: string;
+  duration: number;
+  viewCount: number;
+}
 
-const tokenSchema = z.string().min(1);
+type Token = string | undefined;
 
 export class ChannelVideosExtractor {
-  getChannelVideos(
-    youtubeDataObject: any
-  ): Result<{ videos: ChannelVideo[]; token: Token }, ValidationError> {
-    const resultVideos: ChannelVideo[] = [];
-    let resultToken: Token = "";
+  private logger = new Logger({ context: ChannelVideosExtractor.name });
 
-    const videoTab =
-      youtubeDataObject?.contents?.twoColumnBrowseResultsRenderer?.tabs?.find(
-        (tab: any) => {
-          return tab.tabRenderer.title === "Videos";
-        }
-      );
+  extractFromHtml(
+    html: unknown,
+  ): Result<
+    { videos: ChannelVideo[]; token: Token },
+    ValidationError | ParsingError
+  > {
+    const rawInitialResponseResult = jsonFromHtmlExtractor.getInitialData(html);
+    if (!rawInitialResponseResult.ok) {
+      return Failure(rawInitialResponseResult.error);
+    }
+
+    const initialResponse = inputSchemas.initialResponse.safeParse(
+      rawInitialResponseResult.value,
+    );
+
+    if (!initialResponse.success) {
+      return Failure({
+        type: "VALIDATION_ERROR",
+        cause: initialResponse.error,
+      });
+    }
+
+    const tabs =
+      initialResponse.data.contents.twoColumnBrowseResultsRenderer.tabs;
+
+    let videoTab: z.infer<typeof inputSchemas.videoTab> | undefined;
+
+    for (const tab of tabs) {
+      const tabParseResult = inputSchemas.videoTab.safeParse(tab);
+
+      if (tabParseResult.success) {
+        videoTab = tabParseResult.data;
+        break;
+      }
+    }
 
     if (!videoTab) {
-      return Failure(new ValidationError("Could not find the video tab"));
+      return Success({ videos: [], token: "" });
     }
 
     const videoContents =
-      videoTab?.tabRenderer?.content?.richGridRenderer?.contents;
+      videoTab.tabRenderer.content.richGridRenderer.contents;
 
-    if (!videoContents) {
-      return Failure(new ValidationError("Could not find the video contents"));
-    }
+    let outputToken: Token = "";
+    const outputVideos: ChannelVideo[] = [];
 
-    let i = 0;
+    for (const renderer of videoContents) {
+      const isRichItemRenderer = "richItemRenderer" in renderer;
+      const isContinuationItemRenderer = "continuationItemRenderer" in renderer;
 
-    for (const videoContent of videoContents) {
-      console.log(i++);
-      const token =
-        videoContent?.continuationItemRenderer?.continuationEndpoint
-          ?.continuationCommand?.token;
+      if (isRichItemRenderer) {
+        const videoRenderer = renderer.richItemRenderer.content.videoRenderer;
 
-      if (token) {
-        resultToken = token;
-        continue;
+        if (!videoRenderer.viewCountText?.simpleText) {
+          this.logger.info(
+            `Video ${videoRenderer.videoId} is missing view count. ` +
+            `Most likely it only for sponsors.`,
+          );
+
+          continue;
+        }
+
+        outputVideos.push({
+          id: videoRenderer.videoId,
+          thumbnail: videoRenderer.thumbnail.thumbnails[0].url,
+          title: videoRenderer.title.runs[0].text,
+          viewCount: this.processViewCount(
+            videoRenderer.viewCountText.simpleText,
+          ),
+          duration: this.processDuration(videoRenderer.lengthText.simpleText),
+        });
       }
 
-      const videoRenderer =
-        videoContent?.richItemRenderer?.content?.videoRenderer;
+      if (isContinuationItemRenderer) {
+        outputToken =
+          renderer.continuationItemRenderer.continuationEndpoint
+            .continuationCommand.token;
+      }
+    }
 
-      if (!videoRenderer) {
-        return Failure(
-          new ValidationError("Error with accessing videoRenderer object")
-        );
+    return Success({ videos: outputVideos, token: outputToken });
+  }
+
+  extractFromJson(json: unknown): Result<
+    z.infer<typeof outputSchemas.result>,
+    ValidationError | ParsingError
+  > {
+    const initialResponse = validator.validate(inputSchemas.jsonResponse, json);
+
+    if (!initialResponse.ok) {
+      return Failure(initialResponse.error);
+    }
+
+    let outputContinuationToken: string;
+    const outputVideos: ChannelVideo[] = [];
+
+    const continuationItems =
+      initialResponse.value.onResponseReceivedActions[0]
+        .appendContinuationItemsAction.continuationItems;
+
+    for (const renderer of continuationItems) {
+      const isRichItemRenderer = "richItemRenderer" in renderer;
+      const isContinuationItemRenderer = "continuationItemRenderer" in renderer;
+
+      if (isRichItemRenderer) {
+        const videoRenderer = renderer.richItemRenderer.content.videoRenderer;
+
+        if (!videoRenderer.viewCountText?.simpleText) {
+          this.logger.info(
+            `Video ${videoRenderer.videoId} is missing view count. ` +
+            `Most likely it only for sponsors.`,
+          );
+
+          continue;
+        }
+
+        outputVideos.push({
+          id: videoRenderer.videoId,
+          thumbnail: videoRenderer.thumbnail.thumbnails[0].url,
+          title: videoRenderer.title.runs[0].text,
+          viewCount: this.processViewCount(
+            videoRenderer.viewCountText.simpleText,
+          ),
+          duration: this.processDuration(videoRenderer.lengthText.simpleText),
+        });
       }
 
-      const videoThumbnails = videoRenderer?.thumbnail?.thumbnails;
-
-      const videoItem = {
-        id: videoRenderer?.videoId,
-        thumbnail: videoThumbnails[videoThumbnails.length - 1]?.url,
-        title: videoRenderer?.title?.runs?.[0]?.text,
-        viewCount: videoRenderer?.viewCountText?.simpleText,
-        duration: videoRenderer?.lengthText?.simpleText,
-      };
-
-      const videoParseResult = channelVideoSchema.safeParse(videoItem);
-
-      if (!videoParseResult.success)
-        return Failure(
-          new ValidationError({
-            message:
-              "Error with parsing data for one of the videos, most likely something's changed for all content",
-            error: videoParseResult.error,
-          })
-        );
-
-      resultVideos.push(videoParseResult.data);
+      if (isContinuationItemRenderer) {
+        outputContinuationToken =
+          renderer.continuationItemRenderer.continuationEndpoint
+            .continuationCommand.token;
+      }
     }
 
-    const tokenParseResult = tokenSchema.safeParse(resultToken);
+    const outputResult = outputSchemas.result.safeParse({
+      videos: outputVideos,
+      token: outputContinuationToken!,
+    });
 
-    if (!tokenParseResult.success) {
-      return Failure(
-        new ValidationError({
-          message:
-            "Error with parsing continuation token. It should've been parsed, but it wasn't",
-          error: tokenParseResult.error,
-        })
-      );
+    if (!outputResult.success) {
+      return Failure({
+        type: "VALIDATION_ERROR",
+        message: "Could not parse output result",
+        cause: outputResult.error,
+        context: { outputVideos, outputContinuationToken: outputContinuationToken! },
+      })
     }
 
-    return Success({ videos: resultVideos, token: resultToken });
+    return Success(outputResult.data);
+  }
+
+  private processViewCount(viewCount: string): number {
+    const parseResult = viewCountParser.parse(viewCount);
+    if (!parseResult.ok) {
+      this.logger.error({
+        message: "Could not parse view count",
+        error: parseResult.error,
+      });
+
+      return 0;
+    }
+
+    return parseResult.value;
+  }
+
+  private processDuration(duration: string): number {
+    const parseResult = videoDurationParser.parse(duration);
+    if (!parseResult.ok) {
+      this.logger.error({
+        message: "Could not parse duration",
+        error: parseResult.error,
+      });
+
+      return 0;
+    }
+
+    return parseResult.value;
   }
 }
 

@@ -1,0 +1,15 @@
+{
+  "name": "elastic-simple-ingest",
+  "version": "1.0.0",
+  "description": "Simple data ingest for Elasticsearch",
+  "main": "ingest.js",
+  "scripts": {
+    "start": "node ingest.js",
+    "search": "node search.js",
+    "debug": "node debug.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.12.0"
+  }
+}

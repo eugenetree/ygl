@@ -4,3 +4,11 @@ export type Result<Value, Error> = Success<Value> | Failure<Error>;
 
 export const Success = <T>(value: T): Success<T> => ({ ok: true, value });
 export const Failure = <T>(error: T): Failure<T> => ({ ok: false, error });
+
+export type ErrorConstructorParams = {
+  message?: string;
+  cause?: unknown;
+  context?: unknown;
+};
+
+export type ValueOf<T> = T[keyof T];

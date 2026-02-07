@@ -1,2 +1,2 @@
-export { dbClient } from "./client";
-export * from "./types";
+export { dbClient } from "./client.js";
+export * from "./types.js";
