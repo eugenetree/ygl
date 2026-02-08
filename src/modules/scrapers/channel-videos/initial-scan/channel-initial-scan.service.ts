@@ -85,7 +85,7 @@ export class ChannelInitialProcessor {
               type: "VIDEO_PERSISTING_FAILED",
               channelId: channel.id,
               processingContext: this.processingContext,
-              error: processVideoResult.error.error,
+              error: processVideoResult.error,
             });
           }
 

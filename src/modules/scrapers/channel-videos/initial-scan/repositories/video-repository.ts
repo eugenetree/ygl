@@ -1,16 +1,17 @@
 import { injectable } from "inversify";
 import { dbClient } from "../../../../../db/client.js";
-import { Failure, Success } from "../../../../../types/index.js";
+import { Failure, Result, Success } from "../../../../../types/index.js";
 import { Logger } from "../../../../_common/logger/logger.js";
 import { tryCatch } from "../../../../_common/try-catch.js";
 import { Caption } from "../../../../domain/caption.js";
 import { Video } from "../../../../domain/video.js";
+import { DatabaseError } from "../../../../../db/types.js";
 
 @injectable()
 export class VideoRepository {
   constructor(private readonly logger: Logger) {}
 
-  async createWithCaptions(video: Video, captions: Caption[]) {
+  async createWithCaptions(video: Video, captions: Caption[]): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.transaction().execute(async (trx) => {
         await trx
@@ -34,7 +35,10 @@ export class VideoRepository {
     );
 
     if (!result.ok) {
-      return Failure(result.error);
+      return Failure({
+        type: "DATABASE",
+        error: result.error,
+      });
     }
 
     return Success(undefined);

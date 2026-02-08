@@ -1,3 +1,4 @@
+import { BaseError } from "../../../_common/errors.js";
 import {
   Caption as CaptionDto,
   Video as VideoDto,
@@ -39,7 +40,7 @@ export type ChannelInitialProcessError =
       type: "VIDEO_PERSISTING_FAILED";
       channelId: string;
       processingContext: ChannelProcessingContext;
-      error: Error;
+      error: BaseError;
     };
 
 export type ProcessVideoError =
@@ -49,5 +50,5 @@ export type ProcessVideoError =
     }
   | {
       type: "VIDEO_PERSISTING_FAILED";
-      error: Error;
+      error: BaseError;
     };
