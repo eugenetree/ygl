@@ -5,6 +5,7 @@ import { Container } from "inversify";
 import { httpClient, HttpClient } from "../../../_common/http/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { SearchChannelsWorker } from "./worker.js";
+import { SearchChannelQueriesSeeder } from "../search/search-channel-queries.seeder.js";
 
 const spawnWorker = ({
   name,
@@ -43,8 +44,28 @@ const spawnWorker = ({
   worker.start();
 };
 
-export function bootstrap() {
+export async function bootstrap() {
+  const logger = new Logger({ 
+    context: "bootstrap",
+    category: "worker-channels" 
+  });
+  
+  logger.info("Starting query seeding process...");
+  
+  const seeder = new SearchChannelQueriesSeeder(logger);
+  const result = await seeder.seedIfNeeded();
+  
+  if (!result.ok) {
+    logger.error({ 
+      message: "Failed to seed queries",
+      error: result.error 
+    });
+    process.exit(1);
+  }
+  
+  logger.info("Query seeding completed successfully");
+  
   spawnWorker({ name: "default" });
 }
 
-// bootstrap();
+bootstrap();

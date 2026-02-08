@@ -11,7 +11,7 @@ db-migrate:
 	docker exec app npm run db:migration:run
 
 db-connect:
-	docker exec -it db psql -U admin -d ygl-pg
+	docker exec -it db psql -U admin -d saythis
 
 db-rollback:
 	npm run db:migration:rollback
@@ -23,6 +23,6 @@ db-create-migration:
 # Completely reset the database (drop and recreate)
 db-reset:
 	@echo "Dropping and recreating database..."
-	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"ygl-pg\" WITH (FORCE);"
-	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"ygl-pg\""
+	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
+	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
 	@echo "Database reset complete. Run 'make db-migrate' to recreate tables."

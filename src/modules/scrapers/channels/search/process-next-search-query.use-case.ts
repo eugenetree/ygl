@@ -7,15 +7,15 @@ import {
   DELAY_WHEN_NO_QUERY,
   RESCRAPE_QUERY_DELAY,
 } from "./constants.js";
-import { SearchChannelQueriesRepository } from "./repositories/search-channel-queries.repository.js";
-import { ChannelSearchService } from "./channel-search.service.js";
+import { SearchChannelQueriesRepository } from "./search-channel-queries.repository.js";
+import { ChannelDiscoveryService } from "./channel-discovery.service.js";
 import { BaseError } from "../../../_common/errors.js";
 
 @injectable()
 export class ProcessNextSearchQueryUseCase {
   constructor(
     private readonly queriesRepository: SearchChannelQueriesRepository,
-    private readonly channelSearchService: ChannelSearchService,
+    private readonly channelDiscoveryService: ChannelDiscoveryService,
     private readonly logger: Logger,
   ) {
     this.logger.setContext(ProcessNextSearchQueryUseCase.name);
@@ -51,7 +51,7 @@ export class ProcessNextSearchQueryUseCase {
       });
     }
 
-    const processResult = await this.channelSearchService.searchAndPersistByQuery(query.value.query);
+    const processResult = await this.channelDiscoveryService.discoverByQuery(query.value.query);
 
     if (!processResult.ok) {
       const markAsFailedResult = await this.queriesRepository.markAsFailed(

@@ -5,15 +5,19 @@ import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { SearchChannelQuery } from "../../../domain/search-channel-query.js";
-import { DatabaseError, DatabaseNothingToUpdateError } from "../../../../db/types.js";
+import { DatabaseError } from "../../../../db/types.js";
 
 @injectable()
-export class QueriesRepository {
+export class SearchChannelQueriesRepository {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(QueriesRepository.name);
+    this.logger.setContext(SearchChannelQueriesRepository.name);
   }
 
-  async getNextQueryToProcess(): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
+  async getNextQueryToProcess({
+    rescrapeDelay,
+  }: {
+    rescrapeDelay: number;
+  }): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient
         .selectFrom("searchChannelQueries")
@@ -31,7 +35,7 @@ export class QueriesRepository {
       });
     }
 
-    const row = result.value;
+    const row = result.value as unknown as SearchChannelQuery | undefined;
 
     if (!row) {
       return Success(null);
@@ -40,63 +44,47 @@ export class QueriesRepository {
     return Success(row);
   }
 
-  async markAsFailed(id: string): Promise<Result<SearchChannelQuery, DatabaseError | DatabaseNothingToUpdateError>> {
-    const updateResult = await tryCatch(
+  async markAsFailed(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
       dbClient
         .updateTable("searchChannelQueries")
         .set({
           processingStatus: "FAIL",
           processingStatusUpdatedAt: new Date(),
         })
-        .where("id", "=", id)
-        .returningAll()
-        .executeTakeFirst(),
+        .where("query", "=", query.query)
+        .execute(),
     );
 
-    if (!updateResult.ok) {
+    if (!result.ok) {
       return Failure({
         type: "DATABASE",
-        error: updateResult.error,
+        error: result.error,
       });
     }
 
-    if (!updateResult.value) {
-      return Failure({
-        type: "DATABASE_NOTHING_TO_UPDATE",
-        id,
-      });
-    }
-
-    return Success(updateResult.value);
+    return Success(undefined);
   }
 
-  async markAsSuccess(id: string): Promise<Result<SearchChannelQuery, DatabaseError | DatabaseNothingToUpdateError>> {
-    const updateResult = await tryCatch(
+  async markAsSuccess(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
       dbClient
         .updateTable("searchChannelQueries")
         .set({
           processingStatus: "SUCCESS",
           processingStatusUpdatedAt: new Date(),
         })
-        .where("id", "=", id)
-        .returningAll()
-        .executeTakeFirst(),
+        .where("query", "=", query.query)
+        .execute(),
     );
 
-    if (!updateResult.ok) {
+    if (!result.ok) {
       return Failure({
         type: "DATABASE",
-        error: updateResult.error,
+        error: result.error,
       });
     }
 
-    if (!updateResult.value) {
-      return Failure({
-        type: "DATABASE_NOTHING_TO_UPDATE",
-        id,
-      });
-    }
-
-    return Success(updateResult.value);
+    return Success(undefined);
   }
 }

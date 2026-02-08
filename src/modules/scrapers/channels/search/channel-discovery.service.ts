@@ -6,7 +6,7 @@ import {
   SearchChannelEntry,
   YoutubeApiSearchChannels,
 } from "../../../youtube-api/yt-api-search-channels.js";
-import { ChannelRepository } from "./repositories/channel.repository.js";
+import { ChannelRepository } from "./channel.repository.js";
 import {
   CHANNEL_SUBS_MIN,
   CHANNEL_VIDEOS_MIN,
@@ -16,17 +16,17 @@ import { ParsingError, ValidationError } from "../../../_common/validation/error
 import { FetchError } from "../../../_common/http/errors.js";
 
 @injectable()
-export class ChannelSearchService {
+export class ChannelDiscoveryService {
   constructor(
     private readonly logger: Logger,
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannels,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
   ) {
-    this.logger.setContext(ChannelSearchService.name);
+    this.logger.setContext(ChannelDiscoveryService.name);
   }
 
-  async searchAndPersistByQuery(query: string) {
+  async discoverByQuery(query: string) {
     this.logger.info(`Processing query: ${query}`);
 
     const searchGenerator = this.youtubeApiSearchChannels.searchChannels({

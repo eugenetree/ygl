@@ -14,15 +14,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier . --write",
     "start": "npx tsx src/index.ts",
-    "build-with-seed": "npx tsc && node dist/src/modules/scrapers/channels/process-query/seed-queries.js && node dist/src/modules/scrapers/channels/runtime/bootstrap.js",
     "build": "npx tsc && node dist/src/modules/scrapers/channels/bootstrap.js",
     "build:channel-videos": "npx tsc && node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
     "t": "npx tsc && node dist/test2.js",
-    "seed": "npx tsc && node dist/src/modules/scrapers/channels/process-query/seed-queries.js",
     "run:channels": "npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap.js",
     "run:channel-videos": "npx tsc && node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
     "run:all": "npx tsc && node dist/src/modules/scrapers/channels/bootstrap.js & node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
-    "go": "npx tsc && node dist/src/modules/scrapers/bootstrap.js"
+    "go": "npm run db:migration:run && npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap.js"
   },
   "keywords": [],
   "author": "",

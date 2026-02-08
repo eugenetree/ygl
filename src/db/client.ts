@@ -5,7 +5,7 @@ import { Database } from "./types.js";
 
 const dialect = new PostgresDialect({
   pool: new pg.Pool({
-    database: "ygl-pg",
+    database: "saythis",
     host: "db",
     user: "admin",
     password: "admin",

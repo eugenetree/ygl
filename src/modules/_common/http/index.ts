@@ -162,9 +162,10 @@ export class HttpClient {
   }
 }
 
+// TODO: remove singleton
 export const httpClient = new HttpClient(
   new Logger({
-    context: "TODO-REMOVE-SINGLETON",
+    context: "http-client",
   }),
   {
     requestCooldown: 5000,

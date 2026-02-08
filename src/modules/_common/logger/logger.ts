@@ -45,12 +45,15 @@ export class Logger {
     const errorMessage = message ?? (error instanceof Error ? error.message : undefined);
 
     let log = `${timestamp} [error]\n[${this.context}]\n${errorMessage}`;
+    
     if (error instanceof Error) {
       log += `\nstack: ${error.stack}`;
       log += `\ncause: ${error.cause}`;
       if ("context" in error) {
         log += `\nerror.context: ${this.stringifyContext(error.context)}`;
       }
+    } else {
+      log += `\nerror: ${JSON.stringify(error)}`;
     }
 
     if (context) {
