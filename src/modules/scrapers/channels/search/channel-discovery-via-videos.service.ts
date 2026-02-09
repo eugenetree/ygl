@@ -1,33 +1,29 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../../../types/index.js";
+import { Failure, Success } from "../../../../types/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { YoutubeApiGetChannel } from "../../../youtube-api/yt-api-get-channel.js";
 import {
   SearchChannelEntry,
-  YoutubeApiSearchChannels,
-} from "../../../youtube-api/yt-api-search-channels.js";
+  YoutubeApiSearchChannelsViaVideos,
+} from "../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelRepository } from "./channel.repository.js";
 import {
   CHANNEL_SUBS_MIN,
-  CHANNEL_VIDEOS_MIN,
-  CHANNEL_VIEWS_MIN,
 } from "./constants.js";
-import { ParsingError, ValidationError } from "../../../_common/validation/errors.js";
-import { FetchError } from "../../../_common/http/errors.js";
 
 @injectable()
-export class ChannelDiscoveryService {
+export class ChannelDiscoveryViaVideosService {
   constructor(
     private readonly logger: Logger,
-    private readonly youtubeApiSearchChannels: YoutubeApiSearchChannels,
+    private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
   ) {
-    this.logger.setContext(ChannelDiscoveryService.name);
+    this.logger.setContext(ChannelDiscoveryViaVideosService.name);
   }
 
   async discoverByQuery(query: string) {
-    this.logger.info(`Processing query: ${query}`);
+    this.logger.info(`Processing query via videos: ${query}`);
 
     const searchGenerator = this.youtubeApiSearchChannels.searchChannels({
       query,
@@ -45,12 +41,7 @@ export class ChannelDiscoveryService {
       }
 
       if (searchResponse.status === "found") {
-        const channelEntries = await this.filterChannelEntries(
-          query,
-          searchResponse.chunk,
-        );
-
-        for (const channelEntry of channelEntries) {
+        for (const channelEntry of searchResponse.chunk) {
           await this.processChannel(channelEntry);
         }
       }
@@ -64,7 +55,7 @@ export class ChannelDiscoveryService {
     channelEntries: SearchChannelEntry[],
   ) {
     this.logger.info(
-      `Processing ${channelEntries.length} channels from query ${query}`,
+      `Processing ${channelEntries.length} unique channels from query ${query}`,
     );
 
     const channelEntriesWithEnoughSubs = channelEntries.filter(
@@ -117,25 +108,13 @@ export class ChannelDiscoveryService {
     }
 
     const fullChannelInfo = fullChannelInfoResult.value;
-    const { subscriberCount, viewCount, videoCount } = fullChannelInfo;
-
-    if (
-      subscriberCount < CHANNEL_SUBS_MIN ||
-      viewCount < CHANNEL_VIEWS_MIN ||
-      videoCount < CHANNEL_VIDEOS_MIN
-    ) {
-      this.logger.info(
-        `Channel ${fullChannelInfo.id} does not meet the criteria.` +
-        `Skipping. ${subscriberCount} subs, ${viewCount} views, ${videoCount} videos`,
-      );
-
-      return Success(undefined);
-    }
 
     this.logger.info(`Saving channel ${fullChannelInfo.id} into db.`);
 
     const createChannelResult =
-      await this.channelRepository.create(fullChannelInfo);
+      await this.channelRepository.create(fullChannelInfo, {
+        discoveryStrategy: "via-videos",
+      });
 
     if (!createChannelResult.ok) {
       this.logger.error({
@@ -149,6 +128,3 @@ export class ChannelDiscoveryService {
     return Success(undefined);
   }
 }
-
-
-

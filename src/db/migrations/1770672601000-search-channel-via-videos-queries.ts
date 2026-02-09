@@ -3,12 +3,7 @@ import { Kysely, sql } from "kysely";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createType("queryProcessingStatus")
-    .asEnum(["NOT_STARTED", "IN_PROGRESS", "SUCCESS", "FAIL"])
-    .execute();
-
-  await db.schema
-    .createTable("searchChannelQueries")
+    .createTable("searchChannelViaVideosQueries")
     .addColumn("id", "uuid", (col) =>
       col.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
@@ -30,5 +25,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable("searchChannelQueries").execute();
+  await db.schema.dropTable("searchChannelViaVideosQueries").execute();
 }

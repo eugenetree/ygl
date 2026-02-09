@@ -9,10 +9,11 @@ import {
 import { validator } from "../../_common/validation/validator.js";
 import { abbreviatedNumberParser } from "../parsers/abbreviated-number.parser.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
-import { inputSchemas, outputSchemas } from "./search-channels.schemas.js";
+import { inputSchemas, outputSchemas } from "./search-channels-direct.schemas.js";
+import { writeFileSync } from "fs";
 
-class SearchChannelsExtractor {
-  private logger = new Logger({ context: SearchChannelsExtractor.name });
+class SearchChannelsDirectExtractor {
+  private logger = new Logger({ context: SearchChannelsDirectExtractor.name });
 
   extractFromHtml(
     html: unknown,
@@ -20,10 +21,13 @@ class SearchChannelsExtractor {
     z.infer<typeof outputSchemas.result>,
     ValidationError | ParsingError
   > {
+    console.log("debug: extracting from html");
     const rawInitialResponseResult = jsonFromHtmlExtractor.getInitialData(html);
     if (!rawInitialResponseResult.ok) {
       return Failure(rawInitialResponseResult.error);
     }
+
+    writeFileSync("initial-response.json", JSON.stringify(rawInitialResponseResult.value, null, 2));
 
     const initialResponse = inputSchemas.initialResponse.safeParse(
       rawInitialResponseResult.value,
@@ -186,4 +190,4 @@ class SearchChannelsExtractor {
   }
 }
 
-export const searchChannelsExtractor = new SearchChannelsExtractor();
+export const searchChannelsExtractor = new SearchChannelsDirectExtractor();

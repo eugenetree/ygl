@@ -1,20 +1,20 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../_common/logger/logger.js";
-import { ProcessNextSearchQueryUseCase } from "../search/process-next-search-query.use-case.js";
+import { ProcessSearchChannelViaVideosQueryUseCase } from "../search/process-search-channel-via-videos-query.use-case.js";
 
 @injectable()
-export class SearchChannelsWorker {
+export class SearchChannelsViaVideosWorker {
   public queryBeingProcessed: string | null = null;
 
   private isRunning = false;
 
   constructor(
     private readonly logger: Logger,
-    private readonly processSearchQueryUseCase: ProcessNextSearchQueryUseCase,
-  ) {}
+    private readonly processSearchQueryUseCase: ProcessSearchChannelViaVideosQueryUseCase,
+  ) { }
 
   async start() {
-    this.logger.info("Starting worker");
+    this.logger.info("Starting worker for via-videos strategy");
 
     if (this.isRunning) {
       throw new Error("Unexpected state. Worker is already running");

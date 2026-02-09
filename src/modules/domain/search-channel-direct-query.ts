@@ -1,4 +1,4 @@
-export type SearchChannelQuery = {
+export type SearchChannelDirectQuery = {
   id: string;
   query: string;
   processingStatus: "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";

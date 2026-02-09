@@ -6,7 +6,7 @@ import { tryCatch } from "../../../_common/try-catch.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { Channel as DomainChannel } from "../../../domain/channel.js";
 import { Channel as ApiChannel } from "../../../youtube-api/youtube-api.types.js";
-import { DatabaseError } from "../../../../db/types.js";
+import { ChannelDiscoveryStrategy, DatabaseError } from "../../../../db/types.js";
 
 // TODO: migrate to service layer before accessing repository
 @injectable()
@@ -35,7 +35,10 @@ export class ChannelRepository {
     return Success((result.value as DomainChannel | undefined) ?? null);
   }
 
-  async create(channel: ApiChannel): Promise<Result<void, DatabaseError>> {
+  async create(
+    channel: ApiChannel,
+    metadata: { discoveryStrategy: ChannelDiscoveryStrategy },
+  ): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
       dbClient
         .insertInto("channels")
@@ -51,6 +54,7 @@ export class ChannelRepository {
           channelCreatedAt: channel.channelCreatedAt,
           username: channel.username,
           isArtist: channel.isArtist,
+          discoveryStrategy: metadata.discoveryStrategy,
         })
         .execute(),
     );
@@ -68,7 +72,7 @@ export class ChannelRepository {
       });
     }
 
-    this.logger.info(`Channel ${channel.id} created.`);
+    this.logger.info(`Channel ${channel.id} created via ${metadata.discoveryStrategy}.`);
     return Success(undefined);
   }
 }

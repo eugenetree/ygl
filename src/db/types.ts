@@ -11,7 +11,8 @@ export type ProcessingStatus =
 export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
 
 export interface Database {
-  searchChannelQueries: SearchChannelQueriesTable;
+  searchChannelDirectQueries: SearchChannelDirectQueriesTable;
+  searchChannelViaVideosQueries: SearchChannelViaVideosQueriesTable;
   channels: ChannelsTable;
   videos: VideosTable;
   channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
@@ -19,7 +20,7 @@ export interface Database {
   elasticCaptionsSync: ElasticCaptionsSyncTable;
 }
 
-export interface SearchChannelQueriesTable {
+export interface SearchChannelDirectQueriesTable {
   id: string;
   query: string;
   processingStatus: ProcessingStatus;
@@ -27,6 +28,17 @@ export interface SearchChannelQueriesTable {
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
+
+export interface SearchChannelViaVideosQueriesTable {
+  id: string;
+  query: string;
+  processingStatus: ProcessingStatus;
+  processingStatusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
+}
+
+export type ChannelDiscoveryStrategy = "direct" | "via-videos";
 
 export interface ChannelsTable {
   id: string;
@@ -40,6 +52,7 @@ export interface ChannelsTable {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
+  discoveryStrategy: ChannelDiscoveryStrategy;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -78,10 +91,10 @@ export interface ChannelVideosScrapeMetadataTable {
   processingStartedAt: Date | null;
   processingCompletedAt: Date | null;
   failReason:
-    | "CHANNEL_HAS_NO_VIDEOS"
-    | "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS"
-    | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
-    | null;
+  | "CHANNEL_HAS_NO_VIDEOS"
+  | "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS"
+  | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
+  | null;
   videosWithValidCaptionsCount: number;
   videosWithNoCaptionsCount: number;
   videosWithNotSuitableCaptionsCount: number;
@@ -121,6 +134,14 @@ export type UpdateableVideo = Updateable<VideosTable>;
 export type Caption = Selectable<CaptionsTable>;
 export type InsertableCaption = Insertable<CaptionsTable>;
 export type UpdateableCaption = Updateable<CaptionsTable>;
+
+export type SearchChannelDirectQuery = Selectable<SearchChannelDirectQueriesTable>;
+export type InsertableSearchChannelDirectQuery = Insertable<SearchChannelDirectQueriesTable>;
+export type UpdateableSearchChannelDirectQuery = Updateable<SearchChannelDirectQueriesTable>;
+
+export type SearchChannelViaVideosQuery = Selectable<SearchChannelViaVideosQueriesTable>;
+export type InsertableSearchChannelViaVideosQuery = Insertable<SearchChannelViaVideosQueriesTable>;
+export type UpdateableSearchChannelViaVideosQuery = Updateable<SearchChannelViaVideosQueriesTable>;
 
 export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
 export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;

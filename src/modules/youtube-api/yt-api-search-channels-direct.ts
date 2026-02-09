@@ -5,7 +5,7 @@ import { HttpClient } from "../_common/http/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { ParsingError } from "../_common/validation/errors.js";
 import { ValidationError } from "../_common/validation/errors.js";
-import { searchChannelsExtractor } from "./extractors/search-channels.extractor.js";
+import { searchChannelsExtractor } from "./extractors/search-channels-direct.extractor.js";
 
 export type SearchChannelEntry = {
   id: string;
@@ -15,22 +15,22 @@ export type SearchChannelEntry = {
 
 type SearchChannelsResultSuccess =
   | {
-      status: "found";
-      query: string;
-      chunk: SearchChannelEntry[];
-    }
+    status: "found";
+    query: string;
+    chunk: SearchChannelEntry[];
+  }
   | {
-      status: "done";
-      query: string;
-    };
+    status: "done";
+    query: string;
+  };
 
 @injectable()
-export class YoutubeApiSearchChannels {
+export class YoutubeApiSearchChannelsDirect {
   constructor(
     private readonly logger: Logger,
     private readonly httpClient: HttpClient,
   ) {
-    this.logger.setContext(YoutubeApiSearchChannels.name);
+    this.logger.setContext(YoutubeApiSearchChannelsDirect.name);
   }
 
   public async *searchChannels({

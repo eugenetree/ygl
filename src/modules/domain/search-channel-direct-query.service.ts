@@ -1,7 +1,7 @@
-import { SearchChannelQuery } from "./search-channel-query.js";
+import { SearchChannelDirectQuery } from "./search-channel-direct-query.js";
 
-export class SearchChannelQueryService {
-  create({ query }: { query: string }): SearchChannelQuery {
+export class SearchChannelDirectQueryService {
+  create({ query }: { query: string }): SearchChannelDirectQuery {
     return {
       id: crypto.randomUUID(),
       query,

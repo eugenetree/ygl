@@ -4,8 +4,8 @@ import { Container } from "inversify";
 
 import { httpClient, HttpClient } from "../../../_common/http/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
-import { SearchChannelsWorker } from "./worker.js";
-import { SearchChannelQueriesSeeder } from "../search/search-channel-queries.seeder.js";
+import { SearchChannelsViaVideosWorker } from "./worker-via-videos.js";
+import { SearchChannelViaVideosQueriesSeeder } from "../search/search-channel-via-videos-queries.seeder.js";
 
 const spawnWorker = ({
   name,
@@ -22,8 +22,8 @@ const spawnWorker = ({
 
   container.bind(Logger).toDynamicValue(() => {
     const logger = new Logger({
-      context: `${SearchChannelsWorker.name}-${name}`,
-      category: `worker-channels`,
+      context: `${SearchChannelsViaVideosWorker.name}-${name}`,
+      category: `worker-channels-via-videos`,
     });
 
     return logger;
@@ -40,30 +40,30 @@ const spawnWorker = ({
     });
   });
 
-  const worker = container.get(SearchChannelsWorker);
+  const worker = container.get(SearchChannelsViaVideosWorker);
   worker.start();
 };
 
 export async function bootstrap() {
   const logger = new Logger({
-    context: "bootstrap",
-    category: "worker-channels"
+    context: "bootstrap-via-videos",
+    category: "worker-channels-via-videos"
   });
 
-  logger.info("Starting query seeding process...");
+  logger.info("Starting via-videos query seeding process...");
 
-  const seeder = new SearchChannelQueriesSeeder(logger);
+  const seeder = new SearchChannelViaVideosQueriesSeeder(logger);
   const result = await seeder.seedIfNeeded();
 
   if (!result.ok) {
     logger.error({
-      message: "Failed to seed queries",
+      message: "Failed to seed via-videos queries",
       error: result.error
     });
     process.exit(1);
   }
 
-  logger.info("Query seeding completed successfully");
+  logger.info("Via-videos query seeding completed successfully");
 
   spawnWorker({ name: "default" });
 }

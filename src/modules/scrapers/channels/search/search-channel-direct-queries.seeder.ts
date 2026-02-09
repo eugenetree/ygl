@@ -8,15 +8,15 @@ import { tryCatch } from "../../../_common/try-catch.js";
 import { injectable } from "inversify";
 
 @injectable()
-export class SearchChannelQueriesSeeder {
+export class SearchChannelDirectQueriesSeeder {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(SearchChannelQueriesSeeder.name);
+    this.logger.setContext(SearchChannelDirectQueriesSeeder.name);
   }
 
   async seedIfNeeded() {
     const anyQueryResult = await tryCatch(
       dbClient
-        .selectFrom("searchChannelQueries")
+        .selectFrom("searchChannelDirectQueries")
         .selectAll()
         .executeTakeFirst(),
     );
@@ -29,11 +29,11 @@ export class SearchChannelQueriesSeeder {
 
     const anyQuery = anyQueryResult.value;
     if (anyQuery) {
-      this.logger.info("'searchChannelQueries' table already seeded");
+      this.logger.info("'searchChannelDirectQueries' table already seeded");
       return Success(undefined);
     }
 
-    this.logger.info("Seeding 'searchChannelQueries' table");
+    this.logger.info("Seeding 'searchChannelDirectQueries' table");
     const seedResult = await this.seedQueriesIntoStorage();
 
     if (!seedResult.ok) {
@@ -41,7 +41,7 @@ export class SearchChannelQueriesSeeder {
       return Failure(seedResult.error);
     }
 
-    this.logger.info("'searchChannelQueries' table seeded");
+    this.logger.info("'searchChannelDirectQueries' table seeded");
     return Success(undefined);
   }
 
@@ -76,7 +76,7 @@ export class SearchChannelQueriesSeeder {
 
       const dbResult = await tryCatch(
         dbClient
-          .insertInto("searchChannelQueries")
+          .insertInto("searchChannelDirectQueries")
           .values(
             chunk.map((word: string) => ({
               id: crypto.randomUUID(),

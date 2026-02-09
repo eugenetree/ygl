@@ -7,18 +7,18 @@ import {
   DELAY_WHEN_NO_QUERY,
   RESCRAPE_QUERY_DELAY,
 } from "./constants.js";
-import { SearchChannelQueriesRepository } from "./search-channel-queries.repository.js";
-import { ChannelDiscoveryService } from "./channel-discovery.service.js";
+import { SearchChannelViaVideosQueriesRepository } from "./search-channel-via-videos-queries.repository.js";
+import { ChannelDiscoveryViaVideosService } from "./channel-discovery-via-videos.service.js";
 import { BaseError } from "../../../_common/errors.js";
 
 @injectable()
-export class ProcessNextSearchQueryUseCase {
+export class ProcessSearchChannelViaVideosQueryUseCase {
   constructor(
-    private readonly queriesRepository: SearchChannelQueriesRepository,
-    private readonly channelDiscoveryService: ChannelDiscoveryService,
+    private readonly queriesRepository: SearchChannelViaVideosQueriesRepository,
+    private readonly channelDiscoveryService: ChannelDiscoveryViaVideosService,
     private readonly logger: Logger,
   ) {
-    this.logger.setContext(ProcessNextSearchQueryUseCase.name);
+    this.logger.setContext(ProcessSearchChannelViaVideosQueryUseCase.name);
   }
 
   async execute(): Promise<Result<null, { waitFor: number; error: BaseError }>> {
@@ -96,6 +96,3 @@ export class ProcessNextSearchQueryUseCase {
     return Success(null);
   }
 }
-
-
-

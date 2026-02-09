@@ -1,6 +1,6 @@
-import { youtubeApiGetVideo } from "./src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessAutoCaptionsService } from "./src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
-import { Logger } from "./src/modules/_common/logger/logger.js";
+import { youtubeApiGetVideo } from "../src/modules/youtube-api/yt-api-get-video.js";
+import { ProcessAutoCaptionsService } from "../src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
+import { Logger } from "../src/modules/_common/logger/logger.js";
 import { writeFileSync } from "fs";
 
 const main = async () => {
@@ -39,22 +39,6 @@ const main = async () => {
   console.log(`\n=== Calculating Density Metrics ===\n`);
 
   writeFileSync("processed-captions2.json", JSON.stringify(processedCaptions, null, 2));
-
-  const density = processor.calculateDensity(processedCaptions);
-
-  console.log(`Total words: ${density.totalWords}`);
-  console.log(`Total video duration: ${(density.totalVideoDuration / 1000).toFixed(1)}s`);
-  console.log(`Total caption duration: ${(density.totalCaptionDuration / 1000).toFixed(1)}s`);
-  console.log(`Words per second: ${density.wordsPerSecond.toFixed(2)}`);
-  console.log(`Speech coverage: ${density.speechCoveragePercent.toFixed(1)}%`);
-  console.log(`Average gap between captions: ${density.averageGapBetweenCaptions.toFixed(0)}ms`);
-  console.log(`Has continuous speech: ${density.hasContinuousSpeech ? "✓ YES" : "✗ NO"}`);
-
-  if (density.hasContinuousSpeech) {
-    console.log("\n🎙️  This video is likely a talk/podcast/tutorial!");
-  } else {
-    console.log("\n📹 This video has pauses/music/visual content");
-  }
 
   // Show sample of processed captions
   console.log(`\n=== Sample Processed Captions (first 5) ===\n`);

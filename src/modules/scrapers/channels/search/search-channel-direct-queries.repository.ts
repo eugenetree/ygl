@@ -4,23 +4,24 @@ import { dbClient } from "../../../../db/client.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { Logger } from "../../../_common/logger/logger.js";
-import { SearchChannelQuery } from "../../../domain/search-channel-query.js";
+import { SearchChannelDirectQuery } from "../../../domain/search-channel-direct-query.js";
 import { DatabaseError } from "../../../../db/types.js";
 
 @injectable()
-export class SearchChannelQueriesRepository {
+export class SearchChannelDirectQueriesRepository {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(SearchChannelQueriesRepository.name);
+    this.logger.setContext(SearchChannelDirectQueriesRepository.name);
   }
 
   async getNextQueryToProcess({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     rescrapeDelay,
   }: {
     rescrapeDelay: number;
-  }): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
+  }): Promise<Result<SearchChannelDirectQuery | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .selectFrom("searchChannelQueries")
+        .selectFrom("searchChannelDirectQueries")
         .selectAll()
         .where("processingStatus", "=", "NOT_STARTED")
         .orderBy("processingStatusUpdatedAt", "asc")
@@ -35,7 +36,7 @@ export class SearchChannelQueriesRepository {
       });
     }
 
-    const row = result.value as unknown as SearchChannelQuery | undefined;
+    const row = result.value as unknown as SearchChannelDirectQuery | undefined;
 
     if (!row) {
       return Success(null);
@@ -44,10 +45,10 @@ export class SearchChannelQueriesRepository {
     return Success(row);
   }
 
-  async markAsFailed(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
+  async markAsFailed(query: SearchChannelDirectQuery): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("searchChannelQueries")
+        .updateTable("searchChannelDirectQueries")
         .set({
           processingStatus: "FAIL",
           processingStatusUpdatedAt: new Date(),
@@ -66,10 +67,10 @@ export class SearchChannelQueriesRepository {
     return Success(undefined);
   }
 
-  async markAsSuccess(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
+  async markAsSuccess(query: SearchChannelDirectQuery): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("searchChannelQueries")
+        .updateTable("searchChannelDirectQueries")
         .set({
           processingStatus: "SUCCESS",
           processingStatusUpdatedAt: new Date(),
