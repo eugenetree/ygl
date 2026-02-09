@@ -8,14 +8,14 @@ import { youtubeApiGetVideo } from "./yt-api-get-video.js";
 
 type GeneratorChunk =
   | {
-      status: "done";
-      channelId: string;
-    }
+    status: "done";
+    channelId: string;
+  }
   | {
-      status: "found";
-      channelId: string;
-      video: Video;
-    };
+    status: "found";
+    channelId: string;
+    video: Video;
+  };
 
 export class YoutubeApiGetChannelVideos {
   private logger = new Logger({ context: YoutubeApiGetChannelVideos.name });
@@ -55,8 +55,6 @@ export class YoutubeApiGetChannelVideos {
 
       for (const videoEntry of videoEntries) {
         const videoResult = await youtubeApiGetVideo.getVideo(videoEntry.id);
-
-        console.log("debug: videoResult", videoResult);
 
         if (!videoResult.ok) {
           yield Failure(videoResult.error);

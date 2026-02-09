@@ -45,26 +45,26 @@ const spawnWorker = ({
 };
 
 export async function bootstrap() {
-  const logger = new Logger({ 
+  const logger = new Logger({
     context: "bootstrap",
-    category: "worker-channels" 
+    category: "worker-channels"
   });
-  
+
   logger.info("Starting query seeding process...");
-  
+
   const seeder = new SearchChannelQueriesSeeder(logger);
   const result = await seeder.seedIfNeeded();
-  
+
   if (!result.ok) {
-    logger.error({ 
+    logger.error({
       message: "Failed to seed queries",
-      error: result.error 
+      error: result.error
     });
     process.exit(1);
   }
-  
+
   logger.info("Query seeding completed successfully");
-  
+
   spawnWorker({ name: "default" });
 }
 

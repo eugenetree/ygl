@@ -5,13 +5,13 @@ down:
 	docker compose down
 
 app-connect:
-	docker exec -it app sh
+	docker exec -it saythis-app sh
 
 db-migrate:
-	docker exec app npm run db:migration:run
+	docker exec saythis-app npm run db:migration:run
 
 db-connect:
-	docker exec -it db psql -U admin -d saythis
+	docker exec -it saythis-db psql -U admin -d saythis
 
 db-rollback:
 	npm run db:migration:rollback
@@ -23,6 +23,22 @@ db-create-migration:
 # Completely reset the database (drop and recreate)
 db-reset:
 	@echo "Dropping and recreating database..."
-	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
-	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
+	docker exec saythis-db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
+	docker exec saythis-db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
 	@echo "Database reset complete. Run 'make db-migrate' to recreate tables."
+
+# Run commands inside app container
+# make run cmd="npm run find-captions -- your search query"
+run:
+	docker exec saythis-app $(cmd)
+
+# Quick search captions
+# make search query="your search query"
+search:
+	docker exec saythis-app npm run find-captions -- $(query)
+
+# Rebuild app container (useful after dependency changes)
+rebuild:
+	docker compose down
+	docker compose build --no-cache app
+	docker compose up -d

@@ -64,6 +64,7 @@ class YoutubeApiGetVideo {
 
     const videoDetails = videoDetailsResult.value;
 
+
     const videoLanguage = this.getVideoLanguageBasedOnCaptionTracks(
       videoDetails.captionTracksUrls,
     );

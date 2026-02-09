@@ -19,7 +19,7 @@ export class ProcessVideoService {
     private readonly captionService: CaptionService,
     private readonly videoService: VideoService,
     private readonly videoCaptionsAnalyzer: VideoCaptionsAnalyzer,
-  ) {}
+  ) { }
 
   async process(
     videoDto: VideoDto,
@@ -42,7 +42,7 @@ export class ProcessVideoService {
       );
 
       const { isCaptionsGood } =
-        this.videoCaptionsAnalyzer.analyzeManualCaptions();
+        this.videoCaptionsAnalyzer.analyzeManualCaptions(manualCaptions);
 
       if (isCaptionsGood) {
         captions = manualCaptions;

@@ -101,5 +101,3 @@ export class SearchChannelQueriesSeeder {
     return Success(undefined);
   }
 }
-
-

@@ -8,12 +8,15 @@ export type ProcessingStatus =
   | "SUCCESS"
   | "FAIL";
 
+export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
+
 export interface Database {
   searchChannelQueries: SearchChannelQueriesTable;
   channels: ChannelsTable;
   videos: VideosTable;
   channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
   captions: CaptionsTable;
+  elasticCaptionsSync: ElasticCaptionsSyncTable;
 }
 
 export interface SearchChannelQueriesTable {
@@ -89,6 +92,17 @@ export interface ChannelVideosScrapeMetadataTable {
   updatedAt: Generated<Date>;
 }
 
+export interface ElasticCaptionsSyncTable {
+  id: Generated<string>;
+  syncStatus: ElasticCaptionsSyncStatus;
+  syncStartedAt: Date | null;
+  syncCompletedAt: Date | null;
+  latestSyncedCaptionId: string | null;
+  failReason: string | null;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
+}
+
 export type Channel = Selectable<ChannelsTable>;
 export type InsertableChannel = Insertable<ChannelsTable>;
 export type UpdateableChannel = Updateable<ChannelsTable>;
@@ -107,6 +121,10 @@ export type UpdateableVideo = Updateable<VideosTable>;
 export type Caption = Selectable<CaptionsTable>;
 export type InsertableCaption = Insertable<CaptionsTable>;
 export type UpdateableCaption = Updateable<CaptionsTable>;
+
+export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
+export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;
+export type UpdateableElasticCaptionsSync = Updateable<ElasticCaptionsSyncTable>;
 
 export type DatabaseError = {
   type: "DATABASE";

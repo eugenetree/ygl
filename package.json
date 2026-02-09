@@ -19,8 +19,12 @@
     "t": "npx tsc && node dist/test2.js",
     "run:channels": "npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap.js",
     "run:channel-videos": "npx tsc && node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
+    "run:captions-search": "npx tsc && node dist/src/modules/captions-search/bootstrap.js",
+    "find-captions": "npx tsc && node dist/src/modules/captions-search/find-captions-bootstrap.js",
     "run:all": "npx tsc && node dist/src/modules/scrapers/channels/bootstrap.js & node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
-    "go": "npm run db:migration:run && npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap.js"
+    "go": "npm run db:migration:run && npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap.js",
+    "go:all": "npx tsc && node dist/src/modules/scrapers/bootstrap.js",
+    "export:captions": "npx tsc captions.ts"
   },
   "keywords": [],
   "author": "",
@@ -45,6 +49,7 @@
     "typescript-eslint": "^8.32.0"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.12.0",
     "axios": "^1.7.7",
     "inversify": "^7.9.1",
     "kysely": "^0.27.5",

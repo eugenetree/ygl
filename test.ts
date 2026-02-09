@@ -1,9 +1,70 @@
-// import { Logger } from "./src/modules/_common/logger/logger.js";
-// import { ChannelRepository } from "./src/modules/scrapers/channel-videos/process-channel/channel-repository.js";
+import { youtubeApiGetVideo } from "./src/modules/youtube-api/yt-api-get-video.js";
+import { ProcessAutoCaptionsService } from "./src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
+import { Logger } from "./src/modules/_common/logger/logger.js";
+import { writeFileSync } from "fs";
 
-// const logger = new Logger({ context: "test" });
-// const channelRepository = new ChannelRepository(logger);
+const main = async () => {
+  const videoIdDefault = "51KUocErpj0";
+  const videoIdMarkiplier = "jS2ykSmI9FA";
+  const videoId = videoIdMarkiplier;
+  console.log(`\n=== Fetching video: ${videoId} ===\n`);
 
-// const channel = await channelRepository.getNextChannelForInitialProcessing();
+  const result = await youtubeApiGetVideo.getVideo(videoId);
 
-// console.log(channel);
+  if (!result.ok) {
+    console.error("Failed to fetch video:", result.error);
+    return;
+  }
+
+  const video = result.value;
+  console.log(`✓ Video fetched: "${video.title}"`);
+  console.log(`  Duration: ${(video.duration / 1000).toFixed(0)}s`);
+  console.log(`  Language: ${video.languageCode || "none"}`);
+
+  if (!video.autoCaptions || video.autoCaptions.length === 0) {
+    console.log("\n✗ No auto captions available for this video");
+    return;
+  }
+
+  console.log(`  Auto captions: ${video.autoCaptions.length} segments`);
+
+  // Process auto captions
+  console.log(`\n=== Processing Auto Captions ===\n`);
+
+  const logger = new Logger({ context: "test", category: "test" });
+  const processor = new ProcessAutoCaptionsService(logger);
+
+  const processedCaptions = await processor.process(video.autoCaptions);
+
+  console.log(`\n=== Calculating Density Metrics ===\n`);
+
+  writeFileSync("processed-captions2.json", JSON.stringify(processedCaptions, null, 2));
+
+  const density = processor.calculateDensity(processedCaptions);
+
+  console.log(`Total words: ${density.totalWords}`);
+  console.log(`Total video duration: ${(density.totalVideoDuration / 1000).toFixed(1)}s`);
+  console.log(`Total caption duration: ${(density.totalCaptionDuration / 1000).toFixed(1)}s`);
+  console.log(`Words per second: ${density.wordsPerSecond.toFixed(2)}`);
+  console.log(`Speech coverage: ${density.speechCoveragePercent.toFixed(1)}%`);
+  console.log(`Average gap between captions: ${density.averageGapBetweenCaptions.toFixed(0)}ms`);
+  console.log(`Has continuous speech: ${density.hasContinuousSpeech ? "✓ YES" : "✗ NO"}`);
+
+  if (density.hasContinuousSpeech) {
+    console.log("\n🎙️  This video is likely a talk/podcast/tutorial!");
+  } else {
+    console.log("\n📹 This video has pauses/music/visual content");
+  }
+
+  // Show sample of processed captions
+  console.log(`\n=== Sample Processed Captions (first 5) ===\n`);
+  processedCaptions.slice(0, 5).forEach((caption, index) => {
+    const start = (caption.startTime / 1000).toFixed(1);
+    const end = (caption.endTime / 1000).toFixed(1);
+    console.log(`${index + 1}. [${start}s - ${end}s] "${caption.text}"`);
+  });
+}
+
+main()
+  .then(() => console.log("\n✓ Done"))
+  .catch(err => console.error("\n✗ Error:", err));

@@ -4,17 +4,17 @@ import { Caption } from "../../../domain/caption.js";
 
 type PickBetterCaptionsParams =
   | {
-      manualCaptions: Caption[] | null;
-      autoCaptions: Caption[];
-    }
+    manualCaptions: Caption[] | null;
+    autoCaptions: Caption[];
+  }
   | {
-      manualCaptions: Caption[];
-      autoCaptions: Caption[] | null;
-    }
+    manualCaptions: Caption[];
+    autoCaptions: Caption[] | null;
+  }
   | {
-      manualCaptions: Caption[];
-      autoCaptions: Caption[];
-    };
+    manualCaptions: Caption[];
+    autoCaptions: Caption[];
+  };
 
 type PickBetterCaptionsResult = {
   captions: Caption[];
@@ -23,13 +23,13 @@ type PickBetterCaptionsResult = {
 
 @injectable()
 export class VideoCaptionsAnalyzer {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: Logger) { }
 
   pickBetterCaptions({
     manualCaptions,
     autoCaptions,
   }: PickBetterCaptionsParams): PickBetterCaptionsResult {
-    if (manualCaptions && this.analyzeManualCaptions().isCaptionsGood) {
+    if (manualCaptions && this.analyzeManualCaptions(manualCaptions).isCaptionsGood) {
       return {
         captions: manualCaptions,
         captionType: "manual",
@@ -46,7 +46,9 @@ export class VideoCaptionsAnalyzer {
     return null;
   }
 
-  analyzeManualCaptions() {
+  analyzeManualCaptions(captions: Caption[]) {
+
+
     return {
       isCaptionsGood: true,
       qualityIndex: 1,

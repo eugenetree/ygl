@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const fileContent = `
 import { Kysely } from 'kysely'
@@ -20,7 +21,12 @@ if (!migrationName) {
   process.exit(1);
 }
 
-const migrationsDir = path.join(import.meta.dirname, "..", "migrations");
+// Node v18 compatible way to get __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const migrationsDir = path.join(__dirname, "..", "migrations");
 const filePath = path.join(migrationsDir, `${Date.now()}-${migrationName}.ts`);
 
 fs.writeFileSync(filePath, fileContent.trim());
+console.log(`✅ Created migration: ${path.basename(filePath)}`);
