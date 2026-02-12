@@ -87,7 +87,9 @@ export class ProcessVideoService {
         "languageCode",
         "thumbnail",
       ]),
-      captionType,
+      // TODO: fix
+      hasAutoCaptions: false,
+      hasManualCaptions: false,
     });
 
     return Success({

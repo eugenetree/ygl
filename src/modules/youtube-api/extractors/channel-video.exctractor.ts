@@ -56,8 +56,6 @@ export class ChannelVideoDetailsExtractor {
       playerResponseResult.value.captions?.playerCaptionsTracklistRenderer
         ?.captionTracks;
 
-    console.log("debug: inputCaptionTracks", inputCaptionTracks)
-
     for (const inputCaptionTrack of inputCaptionTracks || []) {
       const captionTrackResult = validator.validate(
         inputSchemas.captionTrack,

@@ -15,8 +15,6 @@ export class FindCaptionsUseCase {
   }
 
   async execute(query: string) {
-    console.log("debug: query", query);
-
     const response = await this.esClient.search({
       index: "captions",
       query: {

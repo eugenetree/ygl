@@ -41,7 +41,6 @@ export class YoutubeApiGetChannelVideos {
 
       const { status } = videoEntriesResult.value;
 
-      console.log("debug: status", status);
       if (status === "done") {
         yield Success({
           status: "done",

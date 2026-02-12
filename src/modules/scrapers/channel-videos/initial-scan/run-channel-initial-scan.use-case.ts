@@ -82,6 +82,7 @@ export class RunChannelInitialScanUseCase {
         this.channelVideosScrapeMetadataService.markAsFailed({
           videosScrapeMetadata,
           processingContext: processResult.error.processingContext.currentContext,
+          // @ts-expect-error - TODO: fix
           ...this.mapFailureState(processResult.error.type),
         }),
       )

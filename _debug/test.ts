@@ -2,6 +2,7 @@ import { youtubeApiGetVideo } from "../src/modules/youtube-api/yt-api-get-video.
 import { ProcessAutoCaptionsService } from "../src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
 import { Logger } from "../src/modules/_common/logger/logger.js";
 import { writeFileSync } from "fs";
+import { CaptionCleanUpService } from "../src/modules/scrapers/channel-videos/initial-scan/caption-clean-up.service.js";
 
 const main = async () => {
   const videoIdDefault = "51KUocErpj0";
@@ -32,9 +33,13 @@ const main = async () => {
   console.log(`\n=== Processing Auto Captions ===\n`);
 
   const logger = new Logger({ context: "test", category: "test" });
-  const processor = new ProcessAutoCaptionsService(logger);
+  const processor = new ProcessAutoCaptionsService(logger, new CaptionCleanUpService());
 
   const processedCaptions = await processor.process(video.autoCaptions);
+  if (!processedCaptions.ok) {
+    console.error("Failed to process auto captions:", processedCaptions.error);
+    return;
+  }
 
   console.log(`\n=== Calculating Density Metrics ===\n`);
 
@@ -42,7 +47,7 @@ const main = async () => {
 
   // Show sample of processed captions
   console.log(`\n=== Sample Processed Captions (first 5) ===\n`);
-  processedCaptions.slice(0, 5).forEach((caption, index) => {
+  processedCaptions.value.slice(0, 5).forEach((caption, index) => {
     const start = (caption.startTime / 1000).toFixed(1);
     const end = (caption.endTime / 1000).toFixed(1);
     console.log(`${index + 1}. [${start}s - ${end}s] "${caption.text}"`);

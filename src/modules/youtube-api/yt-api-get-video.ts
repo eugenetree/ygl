@@ -64,6 +64,15 @@ class YoutubeApiGetVideo {
 
     const videoDetails = videoDetailsResult.value;
 
+    if (this.hasOnlyManualCaptionTracks(videoDetails.captionTracksUrls)) {
+      this.logger.error({
+        message: "TO BE INVESTIGATED: Video has only manual captions and no ASR tracks",
+        context: {
+          videoId: videoDetails.id,
+          captionTracksUrls: videoDetails.captionTracksUrls,
+        },
+      });
+    }
 
     const videoLanguage = this.getVideoLanguageBasedOnCaptionTracks(
       videoDetails.captionTracksUrls,
@@ -138,7 +147,9 @@ class YoutubeApiGetVideo {
 
     if (languagesWithAutoCaptions.length > 1) {
       this.logger.warn(
-        "GOT MORE THAN ONE LANGUAGE WITH AUTO CAPTIONS, CHOOSING THE FIRST ONE",
+        "TO BE INVESTIGATED:" +
+        "More than one language with auto captions, choosing the first one. " +
+        "captionTracksUrls: " + JSON.stringify(captionTracksUrls),
       );
 
       return null;
@@ -151,6 +162,23 @@ class YoutubeApiGetVideo {
     }
 
     return languageCode;
+  }
+
+  private hasOnlyManualCaptionTracks(
+    captionTracksUrls: OutputVideo["captionTracksUrls"],
+  ): boolean {
+    const captionTracks = Object.values(captionTracksUrls);
+
+    if (captionTracks.length === 0) {
+      return false;
+    }
+
+    const hasAnyAutoTrack = captionTracks.some((tracks) => Boolean(tracks.auto));
+    const hasAnyManualTrack = captionTracks.some((tracks) =>
+      Boolean(tracks.manual),
+    );
+
+    return hasAnyManualTrack && !hasAnyAutoTrack;
   }
 
   private async getCaptions({
