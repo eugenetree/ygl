@@ -30,3 +30,6 @@ do we always need to have created_at & updated_at fields?
 
 video no subs
 https://www.youtube.com/watch?v=_XoyAD2tFhM
+
+
+finalize switch to hasManualCaptions hasAutoCaptions or something like this

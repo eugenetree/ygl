@@ -4,6 +4,7 @@ import { Failure, Result, Success } from "../../../../../types/index.js";
 import { tryCatch } from "../../../../_common/try-catch.js";
 import { dbClient } from "../../../../../db/client.js";
 import { ChannelVideosScrapeMetadata } from "../../../../domain/channel-videos-scrape-metadata.js";
+import { DatabaseError } from "../../../../../db/types.js";
 
 @injectable()
 export class ChannelRepository {
@@ -19,6 +20,7 @@ export class ChannelRepository {
         const channelRecord = await trx
           .selectFrom("channels")
           .selectAll("channels")
+          .where("channels.discoveryStrategy", "=", "via-videos")
           .where((eb) =>
             eb.not(
               eb.exists(
@@ -44,13 +46,12 @@ export class ChannelRepository {
         }
 
         const metadata = createMetadata({ channelId: channelRecord.id });
-        
+
         const metadataRecord = await trx
           .insertInto("channelVideosScrapeMetadata")
           .values(metadata)
           .returningAll()
           .executeTakeFirst();
-
 
         if (!metadataRecord) {
           throw new Error("Failed to create metadata record");
@@ -74,7 +75,7 @@ export class ChannelRepository {
     return Success(result.value);
   }
 
-  async saveMetadata(metadata: ChannelVideosScrapeMetadata): Promise<Result<null, Error>> {
+  async saveMetadata(metadata: ChannelVideosScrapeMetadata): Promise<Result<null, DatabaseError>> {
     const updateResult = await tryCatch(
       dbClient.updateTable("channelVideosScrapeMetadata")
         .set(metadata)
@@ -83,67 +84,12 @@ export class ChannelRepository {
     );
 
     if (!updateResult.ok) {
-      return Failure(updateResult.error);
+      return Failure({
+        type: "DATABASE",
+        error: updateResult.error,
+      });
     }
 
     return Success(null);
   }
-
-  // async markAsFailed({
-  //   channelId,
-  //   videosScrapeMetadata,
-  // }: {
-  //   channelId: string;
-  //   videosScrapeMetadata: ChannelVideosScrapeMetadata;
-  // }): Promise<Result<null, Error>> {
-  //   const updateResult = await tryCatch(
-  //     dbClient.updateTable("channelVideosScrapeMetadata")
-  //       .set({
-  //         processingStatus: "FAIL",
-  //         videosWithValidCaptionsCount: videosScrapeMetadata.videosWithValidCaptionsCount,
-  //         videosWithNoCaptionsCount: videosScrapeMetadata.videosWithNoCaptionsCount,
-  //         videosWithNotSuitableCaptionsCount: videosScrapeMetadata.videosWithNotSuitableCaptionsCount,
-  //         consecutiveFailedVideosCount: videosScrapeMetadata.consecutiveFailedVideosCount,
-  //         totalFailedVideosCount: videosScrapeMetadata.totalFailedVideosCount,
-  //         processedVideosCount: videosScrapeMetadata.processedVideosCount,
-  //       })
-  //     .where("channelId", "=", channelId)
-  //     .execute(),
-  //   )
-
-  //   if (!updateResult.ok) {
-  //     return Failure(updateResult.error);
-  //   }
-
-  //   return Success(null);
-  // }
-
-  // async markAsSuccess({
-  //   channelId,
-  //   processingContext,
-  // }: {
-  //   channelId: string;
-  //   processingContext: ChannelVideosScrapeMetadata;
-  // }): Promise<Result<null, Error>> {
-  //   const updateResult = await tryCatch(
-  //     dbClient.updateTable("channelVideosScrapeMetadata")
-  //       .set({
-  //         processingStatus: "success",
-  //         videosWithValidCaptionsCount: processingContext.videosWithValidCaptionsCount,
-  //         videosWithNoCaptionsCount: processingContext.videosWithNoCaptionsCount,
-  //         videosWithNotSuitableCaptionsCount: processingContext.videosWithNotSuitableCaptionsCount,
-  //         consecutiveFailedVideosCount: processingContext.consecutiveFailedVideosCount,
-  //         totalFailedVideosCount: processingContext.totalFailedVideosCount,
-  //         processedVideosCount: processingContext.processedVideosCount,
-  //       })
-  //       .where("channelId", "=", channelId)
-  //       .execute(),
-  //   );
-
-  //   if (!updateResult.ok) {
-  //     return Failure(updateResult.error);
-  //   }
-
-  //   return Success(null);
-  // }
 }

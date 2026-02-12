@@ -12,6 +12,7 @@ import {
 } from "./channel-processing-context.js";
 import { ProcessVideoService } from "./process-video.service.js";
 import { VideoRepository } from "./repositories/video-repository.js";
+import { ChannelVideosScrapeMetadata } from "../../../domain/channel-videos-scrape-metadata.js";
 
 @injectable()
 export class ChannelInitialProcessor {
@@ -21,11 +22,15 @@ export class ChannelInitialProcessor {
     private readonly logger: Logger,
     private readonly videoRepository: VideoRepository,
     private readonly videoProcessor: ProcessVideoService,
-  ) {}
+  ) { }
 
-  async process(
-    channel: Channel,
-  ): Promise<
+  async process({
+    channel,
+    previousMetadata,
+  }: {
+    channel: Channel;
+    previousMetadata: ChannelVideosScrapeMetadata;
+  }): Promise<
     Result<{ processingContext: ProcessingContext }, ChannelInitialProcessError>
   > {
     this.processingContext = new ChannelProcessingContext();
@@ -41,8 +46,6 @@ export class ChannelInitialProcessor {
         processingContext: this.processingContext,
       });
     }
-
-    this.processingContext = new ChannelProcessingContext();
 
     const channelVideosGenerator = youtubeApiGetChannelVideos.getChannelVideos(
       channel.id,
@@ -75,25 +78,36 @@ export class ChannelInitialProcessor {
       }
 
       if (videoResponse.status === "found") {
+        if (videoResponse.video.id === previousMetadata.firstVideoId && previousMetadata.processingStatus === "COMPLETED") {
+          this.logger.info(`Channel ${channel.id} reached the first video of the previous successful run. Terminating early.`);
+          return Success({
+            processingContext: this.processingContext.currentContext,
+          });
+        }
+
         const processVideoResult = await this.processVideo(videoResponse.video);
 
         if (!processVideoResult.ok) {
           if (processVideoResult.error.type === "VIDEO_PERSISTING_FAILED") {
             // If something is wrong with persisting, there is no need in processing next videos as
             // most likely something serious has happened.
+
+            this.processingContext.trackVideo({
+              ...processVideoResult.error,
+              videoId: videoResponse.video.id,
+            });
+
             return Failure({
-              type: "VIDEO_PERSISTING_FAILED",
+              ...processVideoResult.error,
               channelId: channel.id,
               processingContext: this.processingContext,
-              error: processVideoResult.error,
             });
           }
 
           if (processVideoResult.error.type === "VIDEO_PROCESSING_FAILED") {
             this.processingContext.trackVideo({
-              type: "VIDEO_PROCESSING_FAILED",
+              ...processVideoResult.error,
               videoId: videoResponse.video.id,
-              error: processVideoResult.error.error,
             });
           }
 

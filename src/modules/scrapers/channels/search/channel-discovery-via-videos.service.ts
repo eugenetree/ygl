@@ -10,6 +10,7 @@ import { ChannelRepository } from "./channel.repository.js";
 import {
   CHANNEL_SUBS_MIN,
 } from "./constants.js";
+import { ChannelService } from "../../../domain/channel.service.js";
 
 @injectable()
 export class ChannelDiscoveryViaVideosService {
@@ -18,6 +19,7 @@ export class ChannelDiscoveryViaVideosService {
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
+    private readonly channelService: ChannelService,
   ) {
     this.logger.setContext(ChannelDiscoveryViaVideosService.name);
   }
@@ -112,9 +114,12 @@ export class ChannelDiscoveryViaVideosService {
     this.logger.info(`Saving channel ${fullChannelInfo.id} into db.`);
 
     const createChannelResult =
-      await this.channelRepository.create(fullChannelInfo, {
-        discoveryStrategy: "via-videos",
-      });
+      await this.channelRepository.create(
+        this.channelService.create({
+          ...fullChannelInfo,
+          discoveryStrategy: "via-videos"
+        })
+      );
 
     if (!createChannelResult.ok) {
       this.logger.error({

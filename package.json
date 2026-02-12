@@ -26,7 +26,8 @@
     "go:direct": "npm run db:migration:run && npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap-direct.js",
     "go:via-videos": "npm run db:migration:run && npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap-via-videos.js",
     "go:all": "npx tsc && node dist/src/modules/scrapers/bootstrap.js",
-    "export:captions": "npx tsc captions.ts"
+    "export:captions": "npx tsc captions.ts",
+    "debug:fetch-captions": "npx tsx _debug/fetch-video-captions.ts"
   },
   "keywords": [],
   "author": "",

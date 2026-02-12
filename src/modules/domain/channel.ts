@@ -12,4 +12,5 @@ export type Channel = {
   isArtist: boolean;
   createdAt: Date;
   updatedAt: Date;
+  discoveryStrategy: "direct" | "via-videos";
 };

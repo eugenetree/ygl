@@ -1,0 +1,3372 @@
+{
+  "id": "fStLnjrZF_c",
+  "title": "How AI Is Unearthing Hidden Scientific Knowledge | Sara Beery | TED",
+  "duration": 772,
+  "keywords": [
+    "TEDTalk",
+    "TEDTalks",
+    "TED Talk",
+    "TED Talks",
+    "TED",
+    "science",
+    "technology",
+    "nature",
+    "id"
+  ],
+  "channelId": "UCAuUUnT6oDeKwE6v1NGQxug",
+  "viewCount": 35706,
+  "thumbnail": "https://i.ytimg.com/vi/fStLnjrZF_c/default.jpg",
+  "languageCode": "en",
+  "manualCaptions": [
+    {
+      "startTime": 8463,
+      "endTime": 10423,
+      "duration": 1960,
+      "text": "Imagine you're a doctor"
+    },
+    {
+      "startTime": 10465,
+      "endTime": 13468,
+      "duration": 3003,
+      "text": "and you're trying to save\nthe life of a patient,"
+    },
+    {
+      "startTime": 13468,
+      "endTime": 16388,
+      "duration": 2920,
+      "text": "but you can only see\na fifth of their body."
+    },
+    {
+      "startTime": 17597,
+      "endTime": 20100,
+      "duration": 2503,
+      "text": "How are you going to prescribe medicine?"
+    },
+    {
+      "startTime": 20141,
+      "endTime": 21893,
+      "duration": 1752,
+      "text": "How are you going to do surgery?"
+    },
+    {
+      "startTime": 22435,
+      "endTime": 24729,
+      "duration": 2294,
+      "text": "See, this is exactly\nthe situation we're in"
+    },
+    {
+      "startTime": 24771,
+      "endTime": 27107,
+      "duration": 2336,
+      "text": "with nature across the planet."
+    },
+    {
+      "startTime": 27524,
+      "endTime": 31444,
+      "duration": 3920,
+      "text": "We need to act now\nto protect ecosystems under threat,"
+    },
+    {
+      "startTime": 31486,
+      "endTime": 35365,
+      "duration": 3879,
+      "text": "but there's so much we don't know\nabout life on Earth."
+    },
+    {
+      "startTime": 36575,
+      "endTime": 39870,
+      "duration": 3295,
+      "text": "I'm an AI researcher and an ecologist,"
+    },
+    {
+      "startTime": 39911,
+      "endTime": 41496,
+      "duration": 1585,
+      "text": "and as a professor at MIT,"
+    },
+    {
+      "startTime": 41538,
+      "endTime": 43915,
+      "duration": 2377,
+      "text": "I lead a research group\nthat develops methods"
+    },
+    {
+      "startTime": 43957,
+      "endTime": 46877,
+      "duration": 2920,
+      "text": "to help us learn more\nabout the natural world."
+    },
+    {
+      "startTime": 47210,
+      "endTime": 51298,
+      "duration": 4088,
+      "text": "And I see a future where AI\ncan help exponentially increase"
+    },
+    {
+      "startTime": 51339,
+      "endTime": 55260,
+      "duration": 3921,
+      "text": "our ecological knowledge\nacross species and ecosystems."
+    },
+    {
+      "startTime": 56261,
+      "endTime": 60599,
+      "duration": 4338,
+      "text": "But to get there, we need to change\nhow we use AI in ecology."
+    },
+    {
+      "startTime": 61057,
+      "endTime": 62684,
+      "duration": 1627,
+      "text": "We need methods that are flexible,"
+    },
+    {
+      "startTime": 62684,
+      "endTime": 64185,
+      "duration": 1501,
+      "text": "methods that are interactive,"
+    },
+    {
+      "startTime": 64227,
+      "endTime": 66354,
+      "duration": 2127,
+      "text": "methods that scientists can use"
+    },
+    {
+      "startTime": 66396,
+      "endTime": 69024,
+      "duration": 2628,
+      "text": "to discover knowledge hidden in our data."
+    },
+    {
+      "startTime": 69941,
+      "endTime": 72694,
+      "duration": 2753,
+      "text": "Now let me tell you\nwhy this is so important."
+    },
+    {
+      "startTime": 73528,
+      "endTime": 76698,
+      "duration": 3170,
+      "text": "Scientists estimate\nthere are 10 million species"
+    },
+    {
+      "startTime": 76740,
+      "endTime": 78700,
+      "duration": 1960,
+      "text": "sharing the planet with us."
+    },
+    {
+      "startTime": 78742,
+      "endTime": 82787,
+      "duration": 4045,
+      "text": "But we have only ever observed\ntwo million of those."
+    },
+    {
+      "startTime": 83121,
+      "endTime": 84956,
+      "duration": 1835,
+      "text": "That means eight million species,"
+    },
+    {
+      "startTime": 84956,
+      "endTime": 89085,
+      "duration": 4129,
+      "text": "80 percent of the diversity of life\non Earth, remains unknown."
+    },
+    {
+      "startTime": 90420,
+      "endTime": 95508,
+      "duration": 5088,
+      "text": "And we need to know much more\nthan just a species exists"
+    },
+    {
+      "startTime": 95550,
+      "endTime": 97177,
+      "duration": 1627,
+      "text": "to be able to protect it."
+    },
+    {
+      "startTime": 97761,
+      "endTime": 98970,
+      "duration": 1209,
+      "text": "Where does it live?"
+    },
+    {
+      "startTime": 99012,
+      "endTime": 100347,
+      "duration": 1335,
+      "text": "What does it eat?"
+    },
+    {
+      "startTime": 100388,
+      "endTime": 102599,
+      "duration": 2211,
+      "text": "Does it migrate? How far?"
+    },
+    {
+      "startTime": 102599,
+      "endTime": 104517,
+      "duration": 1918,
+      "text": "This deeper knowledge about species"
+    },
+    {
+      "startTime": 104559,
+      "endTime": 107979,
+      "duration": 3420,
+      "text": "takes far more than a single observation."
+    },
+    {
+      "startTime": 107979,
+      "endTime": 111942,
+      "duration": 3963,
+      "text": "But it's necessary to understand\nwhat puts species at risk."
+    },
+    {
+      "startTime": 112651,
+      "endTime": 115153,
+      "duration": 2502,
+      "text": "So, for an example,"
+    },
+    {
+      "startTime": 115153,
+      "endTime": 119366,
+      "duration": 4213,
+      "text": "what if insect populations\ncrash across North America?"
+    },
+    {
+      "startTime": 119741,
+      "endTime": 121743,
+      "duration": 2002,
+      "text": "We know this is currently happening."
+    },
+    {
+      "startTime": 122327,
+      "endTime": 124913,
+      "duration": 2586,
+      "text": "What does that mean\nfor birds that eat insects?"
+    },
+    {
+      "startTime": 125246,
+      "endTime": 127207,
+      "duration": 1961,
+      "text": "Which birds are going to be most at risk,"
+    },
+    {
+      "startTime": 127207,
+      "endTime": 130752,
+      "duration": 3545,
+      "text": "and which are going to be able\nto adapt to other food sources?"
+    },
+    {
+      "startTime": 130794,
+      "endTime": 135256,
+      "duration": 4462,
+      "text": "What about predators further\nup the food chain that eat birds?"
+    },
+    {
+      "startTime": 135298,
+      "endTime": 137258,
+      "duration": 1960,
+      "text": "Everything is interconnected,"
+    },
+    {
+      "startTime": 137300,
+      "endTime": 139803,
+      "duration": 2503,
+      "text": "and a threat to one species,\nor a group of species,"
+    },
+    {
+      "startTime": 139844,
+      "endTime": 141137,
+      "duration": 1293,
+      "text": "can ripple outward"
+    },
+    {
+      "startTime": 141137,
+      "endTime": 144182,
+      "duration": 3045,
+      "text": "and trigger the complete collapse\nof an ecosystem as we know it."
+    },
+    {
+      "startTime": 145934,
+      "endTime": 149896,
+      "duration": 3962,
+      "text": "Unfortunately, species are under threat\nfrom every direction."
+    },
+    {
+      "startTime": 150313,
+      "endTime": 152440,
+      "duration": 2127,
+      "text": "Habitats are shrinking,"
+    },
+    {
+      "startTime": 152482,
+      "endTime": 154943,
+      "duration": 2461,
+      "text": "temperatures are rising,"
+    },
+    {
+      "startTime": 154985,
+      "endTime": 157612,
+      "duration": 2627,
+      "text": "food and water sources are disappearing."
+    },
+    {
+      "startTime": 158905,
+      "endTime": 164661,
+      "duration": 5756,
+      "text": "Natural disasters like fire are causing\nlarge-scale death and displacement."
+    },
+    {
+      "startTime": 164703,
+      "endTime": 167038,
+      "duration": 2335,
+      "text": "And invasive species are moving in"
+    },
+    {
+      "startTime": 167080,
+      "endTime": 169791,
+      "duration": 2711,
+      "text": "and outcompeting\nnative species for resources."
+    },
+    {
+      "startTime": 170834,
+      "endTime": 174838,
+      "duration": 4004,
+      "text": "As a result, extinction rates\nare now 100 to 1,000 times higher"
+    },
+    {
+      "startTime": 174838,
+      "endTime": 177757,
+      "duration": 2919,
+      "text": "than what we would expect\nbased on past data."
+    },
+    {
+      "startTime": 177799,
+      "endTime": 181094,
+      "duration": 3295,
+      "text": "Scientists, policymakers\nand community members worldwide"
+    },
+    {
+      "startTime": 181136,
+      "endTime": 184639,
+      "duration": 3503,
+      "text": "are racing to understand\nwhat is causing this,"
+    },
+    {
+      "startTime": 184681,
+      "endTime": 187600,
+      "duration": 2919,
+      "text": "what are the factors\nthat are most contributing to this loss"
+    },
+    {
+      "startTime": 187642,
+      "endTime": 189811,
+      "duration": 2169,
+      "text": "and what actions we can take to stop it."
+    },
+    {
+      "startTime": 190186,
+      "endTime": 194107,
+      "duration": 3921,
+      "text": "But unfortunately, it can feel\nlike we're discovering species"
+    },
+    {
+      "startTime": 194149,
+      "endTime": 196359,
+      "duration": 2210,
+      "text": "just in time to write their obituaries."
+    },
+    {
+      "startTime": 196985,
+      "endTime": 198903,
+      "duration": 1918,
+      "text": "Take the Tapanuli orangutan."
+    },
+    {
+      "startTime": 199279,
+      "endTime": 202115,
+      "duration": 2836,
+      "text": "We discovered this orangutan in 2017."
+    },
+    {
+      "startTime": 202115,
+      "endTime": 204784,
+      "duration": 2669,
+      "text": "It's one of only three species\nof orangutan on Earth,"
+    },
+    {
+      "startTime": 204784,
+      "endTime": 208204,
+      "duration": 3420,
+      "text": "and it was critically endangered\nbefore we even knew it existed."
+    },
+    {
+      "startTime": 208788,
+      "endTime": 210540,
+      "duration": 1752,
+      "text": "Traditional forms of data collection"
+    },
+    {
+      "startTime": 210582,
+      "endTime": 214169,
+      "duration": 3587,
+      "text": "are just too slow to keep up\nwith our current crisis."
+    },
+    {
+      "startTime": 214669,
+      "endTime": 217213,
+      "duration": 2544,
+      "text": "And this is where I finally\nhave some good news,"
+    },
+    {
+      "startTime": 217255,
+      "endTime": 222385,
+      "duration": 5130,
+      "text": "because we are sitting\non vast databases of ecological knowledge,"
+    },
+    {
+      "startTime": 222427,
+      "endTime": 225055,
+      "duration": 2628,
+      "text": "and we have barely scratched the surface."
+    },
+    {
+      "startTime": 227891,
+      "endTime": 230351,
+      "duration": 2460,
+      "text": "Let's talk about just one\nof these databases,"
+    },
+    {
+      "startTime": 230393,
+      "endTime": 232604,
+      "duration": 2211,
+      "text": "which is a platform called iNaturalist."
+    },
+    {
+      "startTime": 233104,
+      "endTime": 236775,
+      "duration": 3671,
+      "text": "300 million images\nhave been uploaded to this platform"
+    },
+    {
+      "startTime": 236816,
+      "endTime": 238651,
+      "duration": 1835,
+      "text": "by passionate volunteers."
+    },
+    {
+      "startTime": 238943,
+      "endTime": 240570,
+      "duration": 1627,
+      "text": "In every single image,"
+    },
+    {
+      "startTime": 240612,
+      "endTime": 243406,
+      "duration": 2794,
+      "text": "the community has identified a species,"
+    },
+    {
+      "startTime": 243448,
+      "endTime": 245742,
+      "duration": 2294,
+      "text": "and that level of species occurrence data"
+    },
+    {
+      "startTime": 245784,
+      "endTime": 248828,
+      "duration": 3044,
+      "text": "has already been\ntransformative for science."
+    },
+    {
+      "startTime": 248870,
+      "endTime": 251831,
+      "duration": 2961,
+      "text": "But there is a hidden\ntreasure trove of knowledge"
+    },
+    {
+      "startTime": 251831,
+      "endTime": 253917,
+      "duration": 2086,
+      "text": "that remains in the pixels."
+    },
+    {
+      "startTime": 254375,
+      "endTime": 256753,
+      "duration": 2378,
+      "text": "So let's look at just one of these images."
+    },
+    {
+      "startTime": 256795,
+      "endTime": 259881,
+      "duration": 3086,
+      "text": "In iNaturalist, this\nwas labeled Grant’s zebra."
+    },
+    {
+      "startTime": 260548,
+      "endTime": 263426,
+      "duration": 2878,
+      "text": "And it's clearly evidence\nthat Grant's zebra were sighted"
+    },
+    {
+      "startTime": 263426,
+      "endTime": 265303,
+      "duration": 1877,
+      "text": "in this place and time."
+    },
+    {
+      "startTime": 265845,
+      "endTime": 268056,
+      "duration": 2211,
+      "text": "But it shows us so much more than that."
+    },
+    {
+      "startTime": 268098,
+      "endTime": 270266,
+      "duration": 2168,
+      "text": "There are three\nGrant's zebra in this image."
+    },
+    {
+      "startTime": 270266,
+      "endTime": 272977,
+      "duration": 2711,
+      "text": "We can identify each of them\nto the individual level"
+    },
+    {
+      "startTime": 272977,
+      "endTime": 274896,
+      "duration": 1919,
+      "text": "based on their unique stripe pattern."
+    },
+    {
+      "startTime": 275313,
+      "endTime": 276773,
+      "duration": 1460,
+      "text": "By identifying individuals,"
+    },
+    {
+      "startTime": 276773,
+      "endTime": 281319,
+      "duration": 4546,
+      "text": "we can do things like monitoring\nhow species move across the planet,"
+    },
+    {
+      "startTime": 281319,
+      "endTime": 284864,
+      "duration": 3545,
+      "text": "looking at social networks\nof species, growth, health,"
+    },
+    {
+      "startTime": 284906,
+      "endTime": 287325,
+      "duration": 2419,
+      "text": "even estimating the full population size."
+    },
+    {
+      "startTime": 287951,
+      "endTime": 291496,
+      "duration": 3545,
+      "text": "These zebra are also coexisting\nwith a herd of wildebeest."
+    },
+    {
+      "startTime": 291538,
+      "endTime": 294290,
+      "duration": 2752,
+      "text": "And if we look closely,\nwe can even see an oxpecker,"
+    },
+    {
+      "startTime": 294332,
+      "endTime": 296167,
+      "duration": 1835,
+      "text": "a bird that eats ticks"
+    },
+    {
+      "startTime": 296209,
+      "endTime": 298336,
+      "duration": 2127,
+      "text": "and helps reduce the spread of disease."
+    },
+    {
+      "startTime": 298378,
+      "endTime": 301506,
+      "duration": 3128,
+      "text": "We could look at the background\nof the image and identify the type"
+    },
+    {
+      "startTime": 301548,
+      "endTime": 303466,
+      "duration": 1918,
+      "text": "and coverage of vegetation."
+    },
+    {
+      "startTime": 303508,
+      "endTime": 304926,
+      "duration": 1418,
+      "text": "We can estimate biomass,"
+    },
+    {
+      "startTime": 304968,
+      "endTime": 307720,
+      "duration": 2752,
+      "text": "use that to learn\nabout locally stored carbon."
+    },
+    {
+      "startTime": 308054,
+      "endTime": 310640,
+      "duration": 2586,
+      "text": "We can look at what\nthe animals are eating in the image"
+    },
+    {
+      "startTime": 310640,
+      "endTime": 313518,
+      "duration": 2878,
+      "text": "and build a stronger knowledge\nof a local food chain."
+    },
+    {
+      "startTime": 313977,
+      "endTime": 316020,
+      "duration": 2043,
+      "text": "Take this much knowledge in one image"
+    },
+    {
+      "startTime": 316062,
+      "endTime": 320066,
+      "duration": 4004,
+      "text": "and multiply it by 300 million\nimages in iNaturalist,"
+    },
+    {
+      "startTime": 320066,
+      "endTime": 323236,
+      "duration": 3170,
+      "text": "and then add in our other\necological databases."
+    },
+    {
+      "startTime": 323236,
+      "endTime": 326447,
+      "duration": 3211,
+      "text": "Millions of bioacoustic\nrecordings on xeno-canto,"
+    },
+    {
+      "startTime": 326489,
+      "endTime": 330118,
+      "duration": 3629,
+      "text": "tens of millions of camera-trap\nimages and wildlife insights,"
+    },
+    {
+      "startTime": 330118,
+      "endTime": 333496,
+      "duration": 3378,
+      "text": "thousands of hours\nof deep-sea footage in FathomNet."
+    },
+    {
+      "startTime": 333496,
+      "endTime": 336082,
+      "duration": 2586,
+      "text": "We're sitting on an ecological goldmine"
+    },
+    {
+      "startTime": 336124,
+      "endTime": 339210,
+      "duration": 3086,
+      "text": "and the problem is accessing\nthe knowledge efficiently."
+    },
+    {
+      "startTime": 340253,
+      "endTime": 343131,
+      "duration": 2878,
+      "text": "So say you want to look\nthrough all this data,"
+    },
+    {
+      "startTime": 343173,
+      "endTime": 346009,
+      "duration": 2836,
+      "text": "assuming it takes you about a second\nto look at every image,"
+    },
+    {
+      "startTime": 346009,
+      "endTime": 348553,
+      "duration": 2544,
+      "text": "you would need to work\nfull-time for 40 years"
+    },
+    {
+      "startTime": 348595,
+      "endTime": 351055,
+      "duration": 2460,
+      "text": "to look through all the images\nin iNaturalist alone."
+    },
+    {
+      "startTime": 351472,
+      "endTime": 353850,
+      "duration": 2378,
+      "text": "And this is where AI is transformative."
+    },
+    {
+      "startTime": 353892,
+      "endTime": 357270,
+      "duration": 3378,
+      "text": "It can just help us look\nthrough all the data quickly."
+    },
+    {
+      "startTime": 357896,
+      "endTime": 362525,
+      "duration": 4629,
+      "text": "So an ecologist today, say,\nthey're interested in bird diets,"
+    },
+    {
+      "startTime": 362525,
+      "endTime": 366154,
+      "duration": 3629,
+      "text": "and they want to find examples\nof birds eating insects in the database."
+    },
+    {
+      "startTime": 366154,
+      "endTime": 369699,
+      "duration": 3545,
+      "text": "What they can do is they can train\nan AI model to help them."
+    },
+    {
+      "startTime": 369741,
+      "endTime": 371868,
+      "duration": 2127,
+      "text": "So to do this, they collect hundreds"
+    },
+    {
+      "startTime": 371868,
+      "endTime": 375663,
+      "duration": 3795,
+      "text": "or even thousands of examples\nto teach the model what to look for."
+    },
+    {
+      "startTime": 376289,
+      "endTime": 379959,
+      "duration": 3670,
+      "text": "Now once they’ve trained this model,\nit’s an incredible tool."
+    },
+    {
+      "startTime": 379959,
+      "endTime": 383880,
+      "duration": 3921,
+      "text": "It can very, very quickly find\nnew examples of birds eating insects"
+    },
+    {
+      "startTime": 383880,
+      "endTime": 385089,
+      "duration": 1209,
+      "text": "in the database."
+    },
+    {
+      "startTime": 385632,
+      "endTime": 389219,
+      "duration": 3587,
+      "text": "But this process of collecting hundreds\nor thousands of examples"
+    },
+    {
+      "startTime": 389260,
+      "endTime": 392055,
+      "duration": 2795,
+      "text": "every time we want to look\nfor something new,"
+    },
+    {
+      "startTime": 392096,
+      "endTime": 393514,
+      "duration": 1418,
+      "text": "it's still too slow."
+    },
+    {
+      "startTime": 393848,
+      "endTime": 395683,
+      "duration": 1835,
+      "text": "So let's reframe the question."
+    },
+    {
+      "startTime": 396768,
+      "endTime": 402148,
+      "duration": 5380,
+      "text": "Scientific discovery really begins\nwith scientific curiosity,"
+    },
+    {
+      "startTime": 402148,
+      "endTime": 405860,
+      "duration": 3712,
+      "text": "with asking questions\nabout the world and how it works."
+    },
+    {
+      "startTime": 405902,
+      "endTime": 409405,
+      "duration": 3503,
+      "text": "Things like, how far\ncan a Grant's zebra migrate?"
+    },
+    {
+      "startTime": 410323,
+      "endTime": 412992,
+      "duration": 2669,
+      "text": "What plants grow back after a forest fire?"
+    },
+    {
+      "startTime": 413993,
+      "endTime": 416162,
+      "duration": 2169,
+      "text": "Do birds eat insects during the winter?"
+    },
+    {
+      "startTime": 416663,
+      "endTime": 420541,
+      "duration": 3878,
+      "text": "Wouldn't it be great if instead\nwe could just directly ask questions"
+    },
+    {
+      "startTime": 420583,
+      "endTime": 423628,
+      "duration": 3045,
+      "text": "to our databases and get answers back?"
+    },
+    {
+      "startTime": 424212,
+      "endTime": 427507,
+      "duration": 3295,
+      "text": "This is what my team at MIT\nhas been working towards,"
+    },
+    {
+      "startTime": 427548,
+      "endTime": 430343,
+      "duration": 2795,
+      "text": "and we've developed a system\nthat we call Inquire"
+    },
+    {
+      "startTime": 430385,
+      "endTime": 433638,
+      "duration": 3253,
+      "text": "that helps ecologists\nfind answers in the data"
+    },
+    {
+      "startTime": 433680,
+      "endTime": 436683,
+      "duration": 3003,
+      "text": "without collecting any examples\nto teach an AI model"
+    },
+    {
+      "startTime": 436683,
+      "endTime": 439018,
+      "duration": 2335,
+      "text": "or needing to write any lines of code."
+    },
+    {
+      "startTime": 439477,
+      "endTime": 440770,
+      "duration": 1293,
+      "text": "Now under the hood,"
+    },
+    {
+      "startTime": 440770,
+      "endTime": 442939,
+      "duration": 2169,
+      "text": "what we're doing\nis we're developing AI models"
+    },
+    {
+      "startTime": 442981,
+      "endTime": 445775,
+      "duration": 2794,
+      "text": "that can learn and understand similarities"
+    },
+    {
+      "startTime": 445817,
+      "endTime": 448861,
+      "duration": 3044,
+      "text": "between images and scientific language."
+    },
+    {
+      "startTime": 448903,
+      "endTime": 451572,
+      "duration": 2669,
+      "text": "And this is what allows us to just ask."
+    },
+    {
+      "startTime": 451906,
+      "endTime": 453116,
+      "duration": 1210,
+      "text": "So how does Inquire work?"
+    },
+    {
+      "startTime": 453116,
+      "endTime": 456536,
+      "duration": 3420,
+      "text": "Well, first, an ecologist\ndesigns an experiment"
+    },
+    {
+      "startTime": 456577,
+      "endTime": 458121,
+      "duration": 1544,
+      "text": "by taking a scientific question"
+    },
+    {
+      "startTime": 458162,
+      "endTime": 460915,
+      "duration": 2753,
+      "text": "and breaking it down\ninto a series of search terms"
+    },
+    {
+      "startTime": 460915,
+      "endTime": 464585,
+      "duration": 3670,
+      "text": "that they can use to discover data\nthat they'll analyze downstream."
+    },
+    {
+      "startTime": 464627,
+      "endTime": 467547,
+      "duration": 2920,
+      "text": "So one of those terms\nmight be \"bird eating insect.\""
+    },
+    {
+      "startTime": 467839,
+      "endTime": 471592,
+      "duration": 3753,
+      "text": "Now what happens\nis Inquire takes that search,"
+    },
+    {
+      "startTime": 471634,
+      "endTime": 476431,
+      "duration": 4797,
+      "text": "and it directly compares it to all\n300 million images within seconds."
+    },
+    {
+      "startTime": 476764,
+      "endTime": 479892,
+      "duration": 3128,
+      "text": "It's engineered to do this,\nboth quickly and efficiently,"
+    },
+    {
+      "startTime": 479934,
+      "endTime": 483271,
+      "duration": 3337,
+      "text": "which is important because it means\nthe system is truly interactive."
+    },
+    {
+      "startTime": 483313,
+      "endTime": 486357,
+      "duration": 3044,
+      "text": "But it also requires far less\ncomputational power"
+    },
+    {
+      "startTime": 486399,
+      "endTime": 489068,
+      "duration": 2669,
+      "text": "than a generative\nAI approach like ChatGPT."
+    },
+    {
+      "startTime": 489527,
+      "endTime": 491446,
+      "duration": 1919,
+      "text": "Now once all of these images are sorted"
+    },
+    {
+      "startTime": 491446,
+      "endTime": 493364,
+      "duration": 1918,
+      "text": "based on their relevance to the query,"
+    },
+    {
+      "startTime": 493364,
+      "endTime": 496868,
+      "duration": 3504,
+      "text": "it's really easy for a scientist\nto just focus their attention"
+    },
+    {
+      "startTime": 496868,
+      "endTime": 499787,
+      "duration": 2919,
+      "text": "on the data that’s most likely\nto be relevant to them"
+    },
+    {
+      "startTime": 499829,
+      "endTime": 502540,
+      "duration": 2711,
+      "text": "and quickly verify the true matches."
+    },
+    {
+      "startTime": 502540,
+      "endTime": 505501,
+      "duration": 2961,
+      "text": "Now you have human-verified\nexamples of data"
+    },
+    {
+      "startTime": 505501,
+      "endTime": 507670,
+      "duration": 2169,
+      "text": "that you can directly export and analyze."
+    },
+    {
+      "startTime": 508004,
+      "endTime": 510381,
+      "duration": 2377,
+      "text": "One of our collaborators used this system,"
+    },
+    {
+      "startTime": 510381,
+      "endTime": 513593,
+      "duration": 3212,
+      "text": "and they found thousands of examples\nof birds eating insects,"
+    },
+    {
+      "startTime": 513634,
+      "endTime": 517680,
+      "duration": 4046,
+      "text": "but also seeds, fruit, nuts,\ncarrion, nectar, plants."
+    },
+    {
+      "startTime": 518014,
+      "endTime": 521184,
+      "duration": 3170,
+      "text": "And then they took that data\nthat they discovered quickly"
+    },
+    {
+      "startTime": 521184,
+      "endTime": 523978,
+      "duration": 2794,
+      "text": "and they analyzed differences\nin species' diets"
+    },
+    {
+      "startTime": 524020,
+      "endTime": 525772,
+      "duration": 1752,
+      "text": "between summer and winter."
+    },
+    {
+      "startTime": 526356,
+      "endTime": 530485,
+      "duration": 4129,
+      "text": "Now what they found was that, yeah,\nsome birds do eat insects in the winter."
+    },
+    {
+      "startTime": 530485,
+      "endTime": 532612,
+      "duration": 2127,
+      "text": "American robins actually do,"
+    },
+    {
+      "startTime": 532612,
+      "endTime": 534781,
+      "duration": 2169,
+      "text": "but far less than they do in the summer."
+    },
+    {
+      "startTime": 534781,
+      "endTime": 537283,
+      "duration": 2502,
+      "text": "And some species,\nlike American tree sparrow,"
+    },
+    {
+      "startTime": 537325,
+      "endTime": 539410,
+      "duration": 2085,
+      "text": "that are incredibly dependent on insects"
+    },
+    {
+      "startTime": 539410,
+      "endTime": 541079,
+      "duration": 1669,
+      "text": "as a food source in the summer,"
+    },
+    {
+      "startTime": 541120,
+      "endTime": 542955,
+      "duration": 1835,
+      "text": "don't eat them at all in the winter."
+    },
+    {
+      "startTime": 543414,
+      "endTime": 548086,
+      "duration": 4672,
+      "text": "This entire process, question-to-answer,\ntook them about three hours."
+    },
+    {
+      "startTime": 548711,
+      "endTime": 552590,
+      "duration": 3879,
+      "text": "Another team spent 1,560 hours"
+    },
+    {
+      "startTime": 552590,
+      "endTime": 555676,
+      "duration": 3086,
+      "text": "manually curating the data\nto do a similar study."
+    },
+    {
+      "startTime": 556052,
+      "endTime": 559222,
+      "duration": 3170,
+      "text": "And when you compare the results\nfrom Inquire to that study,"
+    },
+    {
+      "startTime": 559263,
+      "endTime": 561391,
+      "duration": 2128,
+      "text": "you see an almost perfect match."
+    },
+    {
+      "startTime": 561391,
+      "endTime": 563768,
+      "duration": 2377,
+      "text": "I think this is so exciting, right?"
+    },
+    {
+      "startTime": 563810,
+      "endTime": 568815,
+      "duration": 5005,
+      "text": "It means that we can start\nquickly getting access"
+    },
+    {
+      "startTime": 568856,
+      "endTime": 570817,
+      "duration": 1961,
+      "text": "to all of this hidden knowledge."
+    },
+    {
+      "startTime": 571275,
+      "endTime": 576531,
+      "duration": 5256,
+      "text": "And really, I've been so inspired\nby the creativity"
+    },
+    {
+      "startTime": 576531,
+      "endTime": 578616,
+      "duration": 2085,
+      "text": "of the scientists using the system."
+    },
+    {
+      "startTime": 578616,
+      "endTime": 582036,
+      "duration": 3420,
+      "text": "All of the flexible ways\nthat people have explored many,"
+    },
+    {
+      "startTime": 582078,
+      "endTime": 583955,
+      "duration": 1877,
+      "text": "many different questions."
+    },
+    {
+      "startTime": 583955,
+      "endTime": 588084,
+      "duration": 4129,
+      "text": "Things like looking\nat how forests regenerate after fire."
+    },
+    {
+      "startTime": 588126,
+      "endTime": 591546,
+      "duration": 3420,
+      "text": "Or discovering differences\nin species’ mortality"
+    },
+    {
+      "startTime": 591587,
+      "endTime": 593256,
+      "duration": 1669,
+      "text": "between urban and rural areas."
+    },
+    {
+      "startTime": 593256,
+      "endTime": 596300,
+      "duration": 3044,
+      "text": "Or looking at how flowering\nevents are changing"
+    },
+    {
+      "startTime": 596300,
+      "endTime": 598219,
+      "duration": 1919,
+      "text": "in relation to a changing climate."
+    },
+    {
+      "startTime": 598636,
+      "endTime": 601180,
+      "duration": 2544,
+      "text": "The possibilities are truly endless."
+    },
+    {
+      "startTime": 601222,
+      "endTime": 603141,
+      "duration": 1919,
+      "text": "And the fact that it's open-ended"
+    },
+    {
+      "startTime": 603182,
+      "endTime": 606185,
+      "duration": 3003,
+      "text": "means that any scientist\ncan ask the questions"
+    },
+    {
+      "startTime": 606227,
+      "endTime": 607520,
+      "duration": 1293,
+      "text": "they're interested in."
+    },
+    {
+      "startTime": 607937,
+      "endTime": 611399,
+      "duration": 3462,
+      "text": "Now this is also just the beginning,"
+    },
+    {
+      "startTime": 611441,
+      "endTime": 613860,
+      "duration": 2419,
+      "text": "because we've shown\nthat we can do this for images,"
+    },
+    {
+      "startTime": 613901,
+      "endTime": 617780,
+      "duration": 3879,
+      "text": "but we can also imagine designing\nsimilar discovery-driven systems"
+    },
+    {
+      "startTime": 617780,
+      "endTime": 620199,
+      "duration": 2419,
+      "text": "for bioacoustic recordings,"
+    },
+    {
+      "startTime": 620241,
+      "endTime": 623870,
+      "duration": 3629,
+      "text": "for aerial video, for satellite data,"
+    },
+    {
+      "startTime": 623870,
+      "endTime": 626706,
+      "duration": 2836,
+      "text": "for GPS trajectories\ncoming from animal collars,"
+    },
+    {
+      "startTime": 626747,
+      "endTime": 629167,
+      "duration": 2420,
+      "text": "any ecological data type you can think of."
+    },
+    {
+      "startTime": 629876,
+      "endTime": 632170,
+      "duration": 2294,
+      "text": "And that brings up\na whole new opportunity,"
+    },
+    {
+      "startTime": 632211,
+      "endTime": 635506,
+      "duration": 3295,
+      "text": "because all of these types of data\nare innately interrelated."
+    },
+    {
+      "startTime": 635548,
+      "endTime": 637383,
+      "duration": 1835,
+      "text": "They’re all looking at the same thing."
+    },
+    {
+      "startTime": 637383,
+      "endTime": 640428,
+      "duration": 3045,
+      "text": "They’re capturing complementary\nbut distinct perspectives"
+    },
+    {
+      "startTime": 640470,
+      "endTime": 641929,
+      "duration": 1459,
+      "text": "of life on Earth."
+    },
+    {
+      "startTime": 641929,
+      "endTime": 644182,
+      "duration": 2253,
+      "text": "And I can imagine a future\nwhere we have systems"
+    },
+    {
+      "startTime": 644182,
+      "endTime": 648060,
+      "duration": 3878,
+      "text": "that help scientists quickly discover\nhidden connections between them all."
+    },
+    {
+      "startTime": 649061,
+      "endTime": 655067,
+      "duration": 6006,
+      "text": "Now, of course, this alone\ncannot solve our global nature crisis."
+    },
+    {
+      "startTime": 655568,
+      "endTime": 659197,
+      "duration": 3629,
+      "text": "But what it does do is\nit helps us maximize the value"
+    },
+    {
+      "startTime": 659238,
+      "endTime": 661657,
+      "duration": 2419,
+      "text": "of data that we've already collected."
+    },
+    {
+      "startTime": 662116,
+      "endTime": 664327,
+      "duration": 2211,
+      "text": "And that means that then, in turn,"
+    },
+    {
+      "startTime": 664327,
+      "endTime": 667580,
+      "duration": 3253,
+      "text": "we can carefully understand\nwhat knowledge gaps remain"
+    },
+    {
+      "startTime": 667622,
+      "endTime": 671709,
+      "duration": 4087,
+      "text": "and strategically use our resources\nto collect new data to fill those."
+    },
+    {
+      "startTime": 672210,
+      "endTime": 674545,
+      "duration": 2335,
+      "text": "Overall, this means\nwe're reducing the time"
+    },
+    {
+      "startTime": 674587,
+      "endTime": 679258,
+      "duration": 4671,
+      "text": "and the cost of driving information\nthat supports conservation actions."
+    },
+    {
+      "startTime": 679717,
+      "endTime": 683304,
+      "duration": 3587,
+      "text": "Things like understanding\nhow to ensure that food"
+    },
+    {
+      "startTime": 683346,
+      "endTime": 687058,
+      "duration": 3712,
+      "text": "and habitat resources are available\nto species when they need them most,"
+    },
+    {
+      "startTime": 687099,
+      "endTime": 688976,
+      "duration": 1877,
+      "text": "when they're migrating through an area,"
+    },
+    {
+      "startTime": 688976,
+      "endTime": 690853,
+      "duration": 1877,
+      "text": "when they're breeding or rearing young,"
+    },
+    {
+      "startTime": 690853,
+      "endTime": 693940,
+      "duration": 3087,
+      "text": "or when they're recovering\nfrom natural disasters like fire."
+    },
+    {
+      "startTime": 695274,
+      "endTime": 697944,
+      "duration": 2670,
+      "text": "We stand at a unique point in history."
+    },
+    {
+      "startTime": 698611,
+      "endTime": 701781,
+      "duration": 3170,
+      "text": "We have both an unprecedented\nbiodiversity crisis,"
+    },
+    {
+      "startTime": 701781,
+      "endTime": 704659,
+      "duration": 2878,
+      "text": "but we also have unprecedented\ntools to address it."
+    },
+    {
+      "startTime": 705284,
+      "endTime": 707870,
+      "duration": 2586,
+      "text": "We have millions of people\naround the world"
+    },
+    {
+      "startTime": 707912,
+      "endTime": 712416,
+      "duration": 4504,
+      "text": "eager to contribute to nature conservation\nand scientific discovery."
+    },
+    {
+      "startTime": 712458,
+      "endTime": 716212,
+      "duration": 3754,
+      "text": "And we have AI tools that enable\nscientists to find patterns"
+    },
+    {
+      "startTime": 716254,
+      "endTime": 720383,
+      "duration": 4129,
+      "text": "in all of that data at scales\nimpossible for humans alone."
+    },
+    {
+      "startTime": 721509,
+      "endTime": 725972,
+      "duration": 4463,
+      "text": "The future of conservation\ndoesn't just lie in remote rainforests"
+    },
+    {
+      "startTime": 726013,
+      "endTime": 727974,
+      "duration": 1961,
+      "text": "or deep ocean trenches."
+    },
+    {
+      "startTime": 727974,
+      "endTime": 731894,
+      "duration": 3920,
+      "text": "The future of conservation is hiding\nin our ecological databases,"
+    },
+    {
+      "startTime": 731894,
+      "endTime": 733396,
+      "duration": 1502,
+      "text": "both the ones we have now"
+    },
+    {
+      "startTime": 733437,
+      "endTime": 736274,
+      "duration": 2837,
+      "text": "but also the ones we have yet to collect."
+    },
+    {
+      "startTime": 736274,
+      "endTime": 741112,
+      "duration": 4838,
+      "text": "And that is where all of you come in,\nbecause everyone can contribute."
+    },
+    {
+      "startTime": 741153,
+      "endTime": 742905,
+      "duration": 1752,
+      "text": "Everyone can collect data"
+    },
+    {
+      "startTime": 742947,
+      "endTime": 745825,
+      "duration": 2878,
+      "text": "and upload it to platforms\nlike iNaturalist."
+    },
+    {
+      "startTime": 746200,
+      "endTime": 749370,
+      "duration": 3170,
+      "text": "Every photo uploaded,\nevery sound recorded,"
+    },
+    {
+      "startTime": 749412,
+      "endTime": 752456,
+      "duration": 3044,
+      "text": "every observation shared\nis a piece of the puzzle."
+    },
+    {
+      "startTime": 753040,
+      "endTime": 757336,
+      "duration": 4296,
+      "text": "We know that we need to act now\nto save nature under threat."
+    },
+    {
+      "startTime": 757753,
+      "endTime": 762091,
+      "duration": 4338,
+      "text": "And together with scientific\nAI tools in our toolbox,"
+    },
+    {
+      "startTime": 762091,
+      "endTime": 766345,
+      "duration": 4254,
+      "text": "we can help by building\nthe complete picture of life on Earth."
+    },
+    {
+      "startTime": 766345,
+      "endTime": 767555,
+      "duration": 1210,
+      "text": "Thank you."
+    },
+    {
+      "startTime": 767555,
+      "endTime": 771267,
+      "duration": 3712,
+      "text": "(Cheers and applause)"
+    }
+  ],
+  "autoCaptions": [
+    {
+      "startTime": 0,
+      "endTime": 3000,
+      "duration": 3000,
+      "text": "Imagine"
+    },
+    {
+      "startTime": 9120,
+      "endTime": 14080,
+      "duration": 4960,
+      "text": "you're a doctor and you're trying to"
+    },
+    {
+      "startTime": 11440,
+      "endTime": 17840,
+      "duration": 6400,
+      "text": "save the life of a patient, but you can"
+    },
+    {
+      "startTime": 14080,
+      "endTime": 20320,
+      "duration": 6240,
+      "text": "only see a fifth of their body."
+    },
+    {
+      "startTime": 17840,
+      "endTime": 22880,
+      "duration": 5040,
+      "text": "How are you going to prescribe medicine?"
+    },
+    {
+      "startTime": 20320,
+      "endTime": 24800,
+      "duration": 4480,
+      "text": "How are you going to do surgery? See,"
+    },
+    {
+      "startTime": 22880,
+      "endTime": 28080,
+      "duration": 5200,
+      "text": "this is exactly the situation we're in"
+    },
+    {
+      "startTime": 24800,
+      "endTime": 30720,
+      "duration": 5920,
+      "text": "with nature across the planet. We need"
+    },
+    {
+      "startTime": 28080,
+      "endTime": 33360,
+      "duration": 5280,
+      "text": "to act now to protect ecosystems under"
+    },
+    {
+      "startTime": 30720,
+      "endTime": 36640,
+      "duration": 5920,
+      "text": "threat, but there's so much we don't"
+    },
+    {
+      "startTime": 33360,
+      "endTime": 39920,
+      "duration": 6560,
+      "text": "know about life on Earth."
+    },
+    {
+      "startTime": 36640,
+      "endTime": 42239,
+      "duration": 5599,
+      "text": "I'm an AI researcher and an ecologist."
+    },
+    {
+      "startTime": 39920,
+      "endTime": 44320,
+      "duration": 4400,
+      "text": "And as a professor at MIT, I lead a"
+    },
+    {
+      "startTime": 42239,
+      "endTime": 46480,
+      "duration": 4241,
+      "text": "research group that develops methods to"
+    },
+    {
+      "startTime": 44320,
+      "endTime": 49120,
+      "duration": 4800,
+      "text": "help us learn more about the natural"
+    },
+    {
+      "startTime": 46480,
+      "endTime": 51600,
+      "duration": 5120,
+      "text": "world. And I see a future where AI can"
+    },
+    {
+      "startTime": 49120,
+      "endTime": 54239,
+      "duration": 5119,
+      "text": "help exponentially increase our"
+    },
+    {
+      "startTime": 51600,
+      "endTime": 56320,
+      "duration": 4720,
+      "text": "ecological knowledge across species and"
+    },
+    {
+      "startTime": 54239,
+      "endTime": 58640,
+      "duration": 4401,
+      "text": "ecosystems."
+    },
+    {
+      "startTime": 56320,
+      "endTime": 61760,
+      "duration": 5440,
+      "text": "But to get there, we need to change how"
+    },
+    {
+      "startTime": 58640,
+      "endTime": 63520,
+      "duration": 4880,
+      "text": "we use AI in ecology. We need methods"
+    },
+    {
+      "startTime": 61760,
+      "endTime": 65760,
+      "duration": 4000,
+      "text": "that are flexible, methods that are"
+    },
+    {
+      "startTime": 63520,
+      "endTime": 68560,
+      "duration": 5040,
+      "text": "interactive, methods that scientists can"
+    },
+    {
+      "startTime": 65760,
+      "endTime": 70080,
+      "duration": 4320,
+      "text": "use to discover knowledge hidden in our"
+    },
+    {
+      "startTime": 68560,
+      "endTime": 72159,
+      "duration": 3599,
+      "text": "data."
+    },
+    {
+      "startTime": 70080,
+      "endTime": 73680,
+      "duration": 3600,
+      "text": "Now, let me tell you why this is so"
+    },
+    {
+      "startTime": 72159,
+      "endTime": 76159,
+      "duration": 4000,
+      "text": "important."
+    },
+    {
+      "startTime": 73680,
+      "endTime": 79040,
+      "duration": 5360,
+      "text": "Scientists estimate there are 10 million"
+    },
+    {
+      "startTime": 76159,
+      "endTime": 82400,
+      "duration": 6241,
+      "text": "species sharing the planet with us. But"
+    },
+    {
+      "startTime": 79040,
+      "endTime": 86000,
+      "duration": 6960,
+      "text": "we have only ever observed 2 million of"
+    },
+    {
+      "startTime": 82400,
+      "endTime": 87759,
+      "duration": 5359,
+      "text": "those. That means 8 million species. 80%"
+    },
+    {
+      "startTime": 86000,
+      "endTime": 90479,
+      "duration": 4479,
+      "text": "of the diversity of life on Earth"
+    },
+    {
+      "startTime": 87759,
+      "endTime": 93840,
+      "duration": 6081,
+      "text": "remains unknown."
+    },
+    {
+      "startTime": 90479,
+      "endTime": 96560,
+      "duration": 6081,
+      "text": "And we need to know much more than just"
+    },
+    {
+      "startTime": 93840,
+      "endTime": 99759,
+      "duration": 5919,
+      "text": "a species exists to be able to protect"
+    },
+    {
+      "startTime": 96560,
+      "endTime": 103040,
+      "duration": 6480,
+      "text": "it. Where does it live? What does it"
+    },
+    {
+      "startTime": 99759,
+      "endTime": 105439,
+      "duration": 5680,
+      "text": "eat? Does it migrate? How far? This"
+    },
+    {
+      "startTime": 103040,
+      "endTime": 108560,
+      "duration": 5520,
+      "text": "deeper knowledge about species takes far"
+    },
+    {
+      "startTime": 105439,
+      "endTime": 110880,
+      "duration": 5441,
+      "text": "more than a single observation. But it's"
+    },
+    {
+      "startTime": 108560,
+      "endTime": 112799,
+      "duration": 4239,
+      "text": "necessary to understand what puts"
+    },
+    {
+      "startTime": 110880,
+      "endTime": 115439,
+      "duration": 4559,
+      "text": "species at risk."
+    },
+    {
+      "startTime": 112799,
+      "endTime": 118479,
+      "duration": 5680,
+      "text": "So for an example,"
+    },
+    {
+      "startTime": 115439,
+      "endTime": 121119,
+      "duration": 5680,
+      "text": "what if insect populations crash across"
+    },
+    {
+      "startTime": 118479,
+      "endTime": 123759,
+      "duration": 5280,
+      "text": "North America? We know this is currently"
+    },
+    {
+      "startTime": 121119,
+      "endTime": 126240,
+      "duration": 5121,
+      "text": "happening. What does that mean for birds"
+    },
+    {
+      "startTime": 123759,
+      "endTime": 128080,
+      "duration": 4321,
+      "text": "that eat insects? Which birds are going"
+    },
+    {
+      "startTime": 126240,
+      "endTime": 129840,
+      "duration": 3600,
+      "text": "to be most at risk and which are going"
+    },
+    {
+      "startTime": 128080,
+      "endTime": 133200,
+      "duration": 5120,
+      "text": "to be able to adapt to other food"
+    },
+    {
+      "startTime": 129840,
+      "endTime": 135520,
+      "duration": 5680,
+      "text": "sources? What about predators further up"
+    },
+    {
+      "startTime": 133200,
+      "endTime": 137680,
+      "duration": 4480,
+      "text": "the food chain that eat birds?"
+    },
+    {
+      "startTime": 135520,
+      "endTime": 139520,
+      "duration": 4000,
+      "text": "Everything is interconnected and a"
+    },
+    {
+      "startTime": 137680,
+      "endTime": 141760,
+      "duration": 4080,
+      "text": "threat to one species or a group of"
+    },
+    {
+      "startTime": 139520,
+      "endTime": 143840,
+      "duration": 4320,
+      "text": "species can ripple outward and trigger"
+    },
+    {
+      "startTime": 141760,
+      "endTime": 146080,
+      "duration": 4320,
+      "text": "the complete collapse of an ecosystem as"
+    },
+    {
+      "startTime": 143840,
+      "endTime": 148640,
+      "duration": 4800,
+      "text": "we know it."
+    },
+    {
+      "startTime": 146080,
+      "endTime": 151360,
+      "duration": 5280,
+      "text": "Unfortunately, species are under threat"
+    },
+    {
+      "startTime": 148640,
+      "endTime": 155120,
+      "duration": 6480,
+      "text": "from every direction. Habitats are"
+    },
+    {
+      "startTime": 151360,
+      "endTime": 159120,
+      "duration": 7760,
+      "text": "shrinking. Temperatures are rising."
+    },
+    {
+      "startTime": 155120,
+      "endTime": 161440,
+      "duration": 6320,
+      "text": "Food and water sources are disappearing."
+    },
+    {
+      "startTime": 159120,
+      "endTime": 164720,
+      "duration": 5600,
+      "text": "Natural disasters like fire are causing"
+    },
+    {
+      "startTime": 161440,
+      "endTime": 167360,
+      "duration": 5920,
+      "text": "large-scale death and displacement."
+    },
+    {
+      "startTime": 164720,
+      "endTime": 169040,
+      "duration": 4320,
+      "text": "and invasive species are moving in and"
+    },
+    {
+      "startTime": 167360,
+      "endTime": 170879,
+      "duration": 3519,
+      "text": "out competing native species for"
+    },
+    {
+      "startTime": 169040,
+      "endTime": 172800,
+      "duration": 3760,
+      "text": "resources."
+    },
+    {
+      "startTime": 170879,
+      "endTime": 175120,
+      "duration": 4241,
+      "text": "As a result, extinction rates are now a"
+    },
+    {
+      "startTime": 172800,
+      "endTime": 178000,
+      "duration": 5200,
+      "text": "hundred to a thousand times higher than"
+    },
+    {
+      "startTime": 175120,
+      "endTime": 180239,
+      "duration": 5119,
+      "text": "what we would expect based on past data."
+    },
+    {
+      "startTime": 178000,
+      "endTime": 182000,
+      "duration": 4000,
+      "text": "Scientists, policy makers, and community"
+    },
+    {
+      "startTime": 180239,
+      "endTime": 184959,
+      "duration": 4720,
+      "text": "members worldwide are racing to"
+    },
+    {
+      "startTime": 182000,
+      "endTime": 186080,
+      "duration": 4080,
+      "text": "understand what is causing this. What"
+    },
+    {
+      "startTime": 184959,
+      "endTime": 188159,
+      "duration": 3200,
+      "text": "are the factors that are most"
+    },
+    {
+      "startTime": 186080,
+      "endTime": 190480,
+      "duration": 4400,
+      "text": "contributing to this loss? And what"
+    },
+    {
+      "startTime": 188159,
+      "endTime": 193200,
+      "duration": 5041,
+      "text": "actions we can take to stop it. But"
+    },
+    {
+      "startTime": 190480,
+      "endTime": 195040,
+      "duration": 4560,
+      "text": "unfortunately, it can feel like we're"
+    },
+    {
+      "startTime": 193200,
+      "endTime": 197040,
+      "duration": 3840,
+      "text": "discovering species just in time to"
+    },
+    {
+      "startTime": 195040,
+      "endTime": 199920,
+      "duration": 4880,
+      "text": "write their obituaries."
+    },
+    {
+      "startTime": 197040,
+      "endTime": 202959,
+      "duration": 5919,
+      "text": "Take the topi orangutan. We discovered"
+    },
+    {
+      "startTime": 199920,
+      "endTime": 205040,
+      "duration": 5120,
+      "text": "this orangutan in 2017. It's one of only"
+    },
+    {
+      "startTime": 202959,
+      "endTime": 206800,
+      "duration": 3841,
+      "text": "three species of orangutan on Earth, and"
+    },
+    {
+      "startTime": 205040,
+      "endTime": 208879,
+      "duration": 3839,
+      "text": "it was critically endangered before we"
+    },
+    {
+      "startTime": 206800,
+      "endTime": 211040,
+      "duration": 4240,
+      "text": "even knew it existed."
+    },
+    {
+      "startTime": 208879,
+      "endTime": 213440,
+      "duration": 4561,
+      "text": "Traditional forms of data collection are"
+    },
+    {
+      "startTime": 211040,
+      "endTime": 215760,
+      "duration": 4720,
+      "text": "just too slow to keep up with our"
+    },
+    {
+      "startTime": 213440,
+      "endTime": 217920,
+      "duration": 4480,
+      "text": "current crisis. And this is where I"
+    },
+    {
+      "startTime": 215760,
+      "endTime": 221040,
+      "duration": 5280,
+      "text": "finally have some good news because we"
+    },
+    {
+      "startTime": 217920,
+      "endTime": 223920,
+      "duration": 6000,
+      "text": "are sitting on vast databases of"
+    },
+    {
+      "startTime": 221040,
+      "endTime": 227480,
+      "duration": 6440,
+      "text": "ecological knowledge and we have barely"
+    },
+    {
+      "startTime": 223920,
+      "endTime": 227480,
+      "duration": 3560,
+      "text": "scratched the surface."
+    },
+    {
+      "startTime": 228000,
+      "endTime": 231760,
+      "duration": 3760,
+      "text": "Let's talk about just one of these"
+    },
+    {
+      "startTime": 229280,
+      "endTime": 233360,
+      "duration": 4080,
+      "text": "databases which is a platform called I"
+    },
+    {
+      "startTime": 231760,
+      "endTime": 236080,
+      "duration": 4320,
+      "text": "naturalist."
+    },
+    {
+      "startTime": 233360,
+      "endTime": 239120,
+      "duration": 5760,
+      "text": "300 million images have been uploaded to"
+    },
+    {
+      "startTime": 236080,
+      "endTime": 241760,
+      "duration": 5680,
+      "text": "this platform by passionate volunteers."
+    },
+    {
+      "startTime": 239120,
+      "endTime": 244799,
+      "duration": 5679,
+      "text": "In every single image, the community has"
+    },
+    {
+      "startTime": 241760,
+      "endTime": 246879,
+      "duration": 5119,
+      "text": "identified a species. And that level of"
+    },
+    {
+      "startTime": 244799,
+      "endTime": 249760,
+      "duration": 4961,
+      "text": "species occurrence data has already been"
+    },
+    {
+      "startTime": 246879,
+      "endTime": 251920,
+      "duration": 5041,
+      "text": "transformative for science. But there is"
+    },
+    {
+      "startTime": 249760,
+      "endTime": 254879,
+      "duration": 5119,
+      "text": "a hidden treasure trove of knowledge"
+    },
+    {
+      "startTime": 251920,
+      "endTime": 257280,
+      "duration": 5360,
+      "text": "that remains in the pixels. So let's"
+    },
+    {
+      "startTime": 254879,
+      "endTime": 259359,
+      "duration": 4480,
+      "text": "look at just one of these images in I"
+    },
+    {
+      "startTime": 257280,
+      "endTime": 262400,
+      "duration": 5120,
+      "text": "naturalist. This was labeled Grant"
+    },
+    {
+      "startTime": 259359,
+      "endTime": 264639,
+      "duration": 5280,
+      "text": "Zebra. And it's clearly evidence that"
+    },
+    {
+      "startTime": 262400,
+      "endTime": 267360,
+      "duration": 4960,
+      "text": "Grant Zebra were cited in this place and"
+    },
+    {
+      "startTime": 264639,
+      "endTime": 269520,
+      "duration": 4881,
+      "text": "time. But it shows us so much more than"
+    },
+    {
+      "startTime": 267360,
+      "endTime": 271680,
+      "duration": 4320,
+      "text": "that. There are three grant zebra in"
+    },
+    {
+      "startTime": 269520,
+      "endTime": 273680,
+      "duration": 4160,
+      "text": "this image. We can identify each of them"
+    },
+    {
+      "startTime": 271680,
+      "endTime": 276240,
+      "duration": 4560,
+      "text": "to the individual level based on their"
+    },
+    {
+      "startTime": 273680,
+      "endTime": 278080,
+      "duration": 4400,
+      "text": "unique stripe pattern. By identifying"
+    },
+    {
+      "startTime": 276240,
+      "endTime": 280639,
+      "duration": 4399,
+      "text": "individuals, we can do things like"
+    },
+    {
+      "startTime": 278080,
+      "endTime": 283120,
+      "duration": 5040,
+      "text": "monitoring how species move across the"
+    },
+    {
+      "startTime": 280639,
+      "endTime": 285840,
+      "duration": 5201,
+      "text": "planet, looking at social networks of"
+    },
+    {
+      "startTime": 283120,
+      "endTime": 288639,
+      "duration": 5519,
+      "text": "species, growth, health, even estimating"
+    },
+    {
+      "startTime": 285840,
+      "endTime": 290720,
+      "duration": 4880,
+      "text": "the full population size. These zebra"
+    },
+    {
+      "startTime": 288639,
+      "endTime": 292720,
+      "duration": 4081,
+      "text": "are also coexisting with a herd of"
+    },
+    {
+      "startTime": 290720,
+      "endTime": 295040,
+      "duration": 4320,
+      "text": "wilderbeast. And if we look closely, we"
+    },
+    {
+      "startTime": 292720,
+      "endTime": 297440,
+      "duration": 4720,
+      "text": "can even see an oxpecker, a bird that"
+    },
+    {
+      "startTime": 295040,
+      "endTime": 299280,
+      "duration": 4240,
+      "text": "eats ticks and helps reduce the spread"
+    },
+    {
+      "startTime": 297440,
+      "endTime": 301120,
+      "duration": 3680,
+      "text": "of disease. We could look at the"
+    },
+    {
+      "startTime": 299280,
+      "endTime": 303840,
+      "duration": 4560,
+      "text": "background of the image and identify the"
+    },
+    {
+      "startTime": 301120,
+      "endTime": 306240,
+      "duration": 5120,
+      "text": "type and coverage of vegetation. We can"
+    },
+    {
+      "startTime": 303840,
+      "endTime": 308639,
+      "duration": 4799,
+      "text": "estimate biomass, use that to learn"
+    },
+    {
+      "startTime": 306240,
+      "endTime": 310479,
+      "duration": 4239,
+      "text": "about locally stored carbon. We can look"
+    },
+    {
+      "startTime": 308639,
+      "endTime": 312000,
+      "duration": 3361,
+      "text": "at what the animals are eating in the"
+    },
+    {
+      "startTime": 310479,
+      "endTime": 314160,
+      "duration": 3681,
+      "text": "image and build a stronger knowledge of"
+    },
+    {
+      "startTime": 312000,
+      "endTime": 316080,
+      "duration": 4080,
+      "text": "a local food chain."
+    },
+    {
+      "startTime": 314160,
+      "endTime": 318880,
+      "duration": 4720,
+      "text": "Take this much knowledge in one image"
+    },
+    {
+      "startTime": 316080,
+      "endTime": 321600,
+      "duration": 5520,
+      "text": "and multiply it by 300 million images in"
+    },
+    {
+      "startTime": 318880,
+      "endTime": 324400,
+      "duration": 5520,
+      "text": "I naturalist and then add in our other"
+    },
+    {
+      "startTime": 321600,
+      "endTime": 327039,
+      "duration": 5439,
+      "text": "ecological databases, millions of bio"
+    },
+    {
+      "startTime": 324400,
+      "endTime": 328800,
+      "duration": 4400,
+      "text": "acoustic recordings in Xenocanto, tens"
+    },
+    {
+      "startTime": 327039,
+      "endTime": 331440,
+      "duration": 4401,
+      "text": "of millions of camera trap images and"
+    },
+    {
+      "startTime": 328800,
+      "endTime": 333840,
+      "duration": 5040,
+      "text": "wildlife insights, thousands of hours of"
+    },
+    {
+      "startTime": 331440,
+      "endTime": 336400,
+      "duration": 4960,
+      "text": "deep sea footage in Fathom. We're"
+    },
+    {
+      "startTime": 333840,
+      "endTime": 338400,
+      "duration": 4560,
+      "text": "sitting on an ecological gold mine and"
+    },
+    {
+      "startTime": 336400,
+      "endTime": 340479,
+      "duration": 4079,
+      "text": "the problem is accessing the knowledge"
+    },
+    {
+      "startTime": 338400,
+      "endTime": 342479,
+      "duration": 4079,
+      "text": "efficiently."
+    },
+    {
+      "startTime": 340479,
+      "endTime": 344479,
+      "duration": 4000,
+      "text": "So say you want to look through all this"
+    },
+    {
+      "startTime": 342479,
+      "endTime": 346080,
+      "duration": 3601,
+      "text": "data. Assuming it takes you about a"
+    },
+    {
+      "startTime": 344479,
+      "endTime": 348800,
+      "duration": 4321,
+      "text": "second to look at every image, you would"
+    },
+    {
+      "startTime": 346080,
+      "endTime": 349840,
+      "duration": 3760,
+      "text": "need to work full time for 40 years to"
+    },
+    {
+      "startTime": 348800,
+      "endTime": 352720,
+      "duration": 3920,
+      "text": "look through all the images in I"
+    },
+    {
+      "startTime": 349840,
+      "endTime": 355039,
+      "duration": 5199,
+      "text": "naturalist alone. And this is where AI"
+    },
+    {
+      "startTime": 352720,
+      "endTime": 358720,
+      "duration": 6000,
+      "text": "is transformative. It can just help us"
+    },
+    {
+      "startTime": 355039,
+      "endTime": 361039,
+      "duration": 6000,
+      "text": "look through all the data quickly. So an"
+    },
+    {
+      "startTime": 358720,
+      "endTime": 363440,
+      "duration": 4720,
+      "text": "ecologist today say they're interested"
+    },
+    {
+      "startTime": 361039,
+      "endTime": 365440,
+      "duration": 4401,
+      "text": "in bird diets and they want to find"
+    },
+    {
+      "startTime": 363440,
+      "endTime": 367600,
+      "duration": 4160,
+      "text": "examples of birds eating insects in the"
+    },
+    {
+      "startTime": 365440,
+      "endTime": 370639,
+      "duration": 5199,
+      "text": "database. What they can do is they can"
+    },
+    {
+      "startTime": 367600,
+      "endTime": 372400,
+      "duration": 4800,
+      "text": "train an AI model to help them. So to do"
+    },
+    {
+      "startTime": 370639,
+      "endTime": 374639,
+      "duration": 4000,
+      "text": "this, they collect hundreds or even"
+    },
+    {
+      "startTime": 372400,
+      "endTime": 377280,
+      "duration": 4880,
+      "text": "thousands of examples to teach the model"
+    },
+    {
+      "startTime": 374639,
+      "endTime": 379520,
+      "duration": 4881,
+      "text": "what to look for. Now once they've"
+    },
+    {
+      "startTime": 377280,
+      "endTime": 382240,
+      "duration": 4960,
+      "text": "trained this model, it's an incredible"
+    },
+    {
+      "startTime": 379520,
+      "endTime": 384319,
+      "duration": 4799,
+      "text": "tool. It can very very quickly find new"
+    },
+    {
+      "startTime": 382240,
+      "endTime": 387520,
+      "duration": 5280,
+      "text": "examples of birds eating insects in the"
+    },
+    {
+      "startTime": 384319,
+      "endTime": 389840,
+      "duration": 5521,
+      "text": "database. But this process of collecting"
+    },
+    {
+      "startTime": 387520,
+      "endTime": 392240,
+      "duration": 4720,
+      "text": "hundreds or thousands of examples every"
+    },
+    {
+      "startTime": 389840,
+      "endTime": 394800,
+      "duration": 4960,
+      "text": "time we want to look for something new,"
+    },
+    {
+      "startTime": 392240,
+      "endTime": 396960,
+      "duration": 4720,
+      "text": "it's still too slow. So let's reframe"
+    },
+    {
+      "startTime": 394800,
+      "endTime": 400080,
+      "duration": 5280,
+      "text": "the question."
+    },
+    {
+      "startTime": 396960,
+      "endTime": 403280,
+      "duration": 6320,
+      "text": "Scientific discovery really begins with"
+    },
+    {
+      "startTime": 400080,
+      "endTime": 405199,
+      "duration": 5119,
+      "text": "scientific curiosity, with asking"
+    },
+    {
+      "startTime": 403280,
+      "endTime": 408560,
+      "duration": 5280,
+      "text": "questions about the world and how it"
+    },
+    {
+      "startTime": 405199,
+      "endTime": 410479,
+      "duration": 5280,
+      "text": "works. Things like, how far can a grant"
+    },
+    {
+      "startTime": 408560,
+      "endTime": 412479,
+      "duration": 3919,
+      "text": "zebra migrate?"
+    },
+    {
+      "startTime": 410479,
+      "endTime": 414080,
+      "duration": 3601,
+      "text": "What plants grow back after a forest"
+    },
+    {
+      "startTime": 412479,
+      "endTime": 416800,
+      "duration": 4321,
+      "text": "fire?"
+    },
+    {
+      "startTime": 414080,
+      "endTime": 418560,
+      "duration": 4480,
+      "text": "Do birds eat insects during the winter?"
+    },
+    {
+      "startTime": 416800,
+      "endTime": 421120,
+      "duration": 4320,
+      "text": "Wouldn't it be great if instead we could"
+    },
+    {
+      "startTime": 418560,
+      "endTime": 424720,
+      "duration": 6160,
+      "text": "just directly ask questions to our"
+    },
+    {
+      "startTime": 421120,
+      "endTime": 426639,
+      "duration": 5519,
+      "text": "databases and get answers back? This is"
+    },
+    {
+      "startTime": 424720,
+      "endTime": 428880,
+      "duration": 4160,
+      "text": "what my team at MIT has been working"
+    },
+    {
+      "startTime": 426639,
+      "endTime": 430880,
+      "duration": 4241,
+      "text": "towards. And we've developed a system"
+    },
+    {
+      "startTime": 428880,
+      "endTime": 433759,
+      "duration": 4879,
+      "text": "that we call inquire that helps"
+    },
+    {
+      "startTime": 430880,
+      "endTime": 436000,
+      "duration": 5120,
+      "text": "ecologists find answers in the data"
+    },
+    {
+      "startTime": 433759,
+      "endTime": 438160,
+      "duration": 4401,
+      "text": "without collecting any examples to teach"
+    },
+    {
+      "startTime": 436000,
+      "endTime": 441039,
+      "duration": 5039,
+      "text": "an AI model or needing to write any"
+    },
+    {
+      "startTime": 438160,
+      "endTime": 442639,
+      "duration": 4479,
+      "text": "lines of code. Now, under the hood, what"
+    },
+    {
+      "startTime": 441039,
+      "endTime": 444960,
+      "duration": 3921,
+      "text": "we're doing is we're developing AI"
+    },
+    {
+      "startTime": 442639,
+      "endTime": 447440,
+      "duration": 4801,
+      "text": "models that can learn and understand"
+    },
+    {
+      "startTime": 444960,
+      "endTime": 449759,
+      "duration": 4799,
+      "text": "similarities between images and"
+    },
+    {
+      "startTime": 447440,
+      "endTime": 452479,
+      "duration": 5039,
+      "text": "scientific language. And this is what"
+    },
+    {
+      "startTime": 449759,
+      "endTime": 455039,
+      "duration": 5280,
+      "text": "allows us to just ask. So, how does"
+    },
+    {
+      "startTime": 452479,
+      "endTime": 457280,
+      "duration": 4801,
+      "text": "inquire work? Well, first an ecologist"
+    },
+    {
+      "startTime": 455039,
+      "endTime": 459120,
+      "duration": 4081,
+      "text": "designs an experiment by taking a"
+    },
+    {
+      "startTime": 457280,
+      "endTime": 461360,
+      "duration": 4080,
+      "text": "scientific question and breaking it down"
+    },
+    {
+      "startTime": 459120,
+      "endTime": 463280,
+      "duration": 4160,
+      "text": "into a series of search terms that they"
+    },
+    {
+      "startTime": 461360,
+      "endTime": 465280,
+      "duration": 3920,
+      "text": "can use to discover data that they'll"
+    },
+    {
+      "startTime": 463280,
+      "endTime": 468240,
+      "duration": 4960,
+      "text": "analyze downstream. So, one of those"
+    },
+    {
+      "startTime": 465280,
+      "endTime": 470960,
+      "duration": 5680,
+      "text": "terms might be bird eating insect. Now,"
+    },
+    {
+      "startTime": 468240,
+      "endTime": 473440,
+      "duration": 5200,
+      "text": "what happens is inquire takes that"
+    },
+    {
+      "startTime": 470960,
+      "endTime": 476879,
+      "duration": 5919,
+      "text": "search and it directly compares it to"
+    },
+    {
+      "startTime": 473440,
+      "endTime": 479120,
+      "duration": 5680,
+      "text": "all 300 million images within seconds."
+    },
+    {
+      "startTime": 476879,
+      "endTime": 480720,
+      "duration": 3841,
+      "text": "It's engineered to do this both quickly"
+    },
+    {
+      "startTime": 479120,
+      "endTime": 482319,
+      "duration": 3199,
+      "text": "and efficiently, which is important"
+    },
+    {
+      "startTime": 480720,
+      "endTime": 485120,
+      "duration": 4400,
+      "text": "because it means the system is truly"
+    },
+    {
+      "startTime": 482319,
+      "endTime": 486800,
+      "duration": 4481,
+      "text": "interactive, but it also requires far"
+    },
+    {
+      "startTime": 485120,
+      "endTime": 489599,
+      "duration": 4479,
+      "text": "less computational power than a"
+    },
+    {
+      "startTime": 486800,
+      "endTime": 491520,
+      "duration": 4720,
+      "text": "generative AI approach like chat GBT."
+    },
+    {
+      "startTime": 489599,
+      "endTime": 493520,
+      "duration": 3921,
+      "text": "Now, once all of these images are sorted"
+    },
+    {
+      "startTime": 491520,
+      "endTime": 495840,
+      "duration": 4320,
+      "text": "based on their relevance to the query,"
+    },
+    {
+      "startTime": 493520,
+      "endTime": 497919,
+      "duration": 4399,
+      "text": "it's really easy for a scientist to just"
+    },
+    {
+      "startTime": 495840,
+      "endTime": 500160,
+      "duration": 4320,
+      "text": "focus their attention on the data that's"
+    },
+    {
+      "startTime": 497919,
+      "endTime": 503039,
+      "duration": 5120,
+      "text": "most likely to be relevant to them and"
+    },
+    {
+      "startTime": 500160,
+      "endTime": 505440,
+      "duration": 5280,
+      "text": "quickly verify the true matches. Now you"
+    },
+    {
+      "startTime": 503039,
+      "endTime": 507039,
+      "duration": 4000,
+      "text": "have human verified examples of data"
+    },
+    {
+      "startTime": 505440,
+      "endTime": 509680,
+      "duration": 4240,
+      "text": "that you can directly export and"
+    },
+    {
+      "startTime": 507039,
+      "endTime": 511680,
+      "duration": 4641,
+      "text": "analyze. One of our collaborators used"
+    },
+    {
+      "startTime": 509680,
+      "endTime": 513919,
+      "duration": 4239,
+      "text": "this system and they found thousands of"
+    },
+    {
+      "startTime": 511680,
+      "endTime": 516399,
+      "duration": 4719,
+      "text": "examples of birds eating insects but"
+    },
+    {
+      "startTime": 513919,
+      "endTime": 519200,
+      "duration": 5281,
+      "text": "also seeds, fruit, nuts, kerrion,"
+    },
+    {
+      "startTime": 516399,
+      "endTime": 521440,
+      "duration": 5041,
+      "text": "nectar, plants. And then they took that"
+    },
+    {
+      "startTime": 519200,
+      "endTime": 523599,
+      "duration": 4399,
+      "text": "data that they discovered quickly and"
+    },
+    {
+      "startTime": 521440,
+      "endTime": 526800,
+      "duration": 5360,
+      "text": "they analyzed differences in species"
+    },
+    {
+      "startTime": 523599,
+      "endTime": 528480,
+      "duration": 4881,
+      "text": "diets between summer and winter. Now"
+    },
+    {
+      "startTime": 526800,
+      "endTime": 530480,
+      "duration": 3680,
+      "text": "what they found was that yeah, some"
+    },
+    {
+      "startTime": 528480,
+      "endTime": 533279,
+      "duration": 4799,
+      "text": "birds do eat insects in the winter."
+    },
+    {
+      "startTime": 530480,
+      "endTime": 535120,
+      "duration": 4640,
+      "text": "American robins actually do, but far"
+    },
+    {
+      "startTime": 533279,
+      "endTime": 537279,
+      "duration": 4000,
+      "text": "less than they do in the summer. And"
+    },
+    {
+      "startTime": 535120,
+      "endTime": 539519,
+      "duration": 4399,
+      "text": "some species like American tree sparrow"
+    },
+    {
+      "startTime": 537279,
+      "endTime": 541600,
+      "duration": 4321,
+      "text": "that are incredibly dependent on insects"
+    },
+    {
+      "startTime": 539519,
+      "endTime": 544399,
+      "duration": 4880,
+      "text": "as a food source in the summer don't eat"
+    },
+    {
+      "startTime": 541600,
+      "endTime": 547120,
+      "duration": 5520,
+      "text": "them at all in the winter. This entire"
+    },
+    {
+      "startTime": 544399,
+      "endTime": 552240,
+      "duration": 7841,
+      "text": "process, question to answer, took them"
+    },
+    {
+      "startTime": 547120,
+      "endTime": 554880,
+      "duration": 7760,
+      "text": "about 3 hours. Another team spent 1,560"
+    },
+    {
+      "startTime": 552240,
+      "endTime": 557279,
+      "duration": 5039,
+      "text": "hours manually curating the data to do a"
+    },
+    {
+      "startTime": 554880,
+      "endTime": 559519,
+      "duration": 4639,
+      "text": "similar study. And when you compare the"
+    },
+    {
+      "startTime": 557279,
+      "endTime": 561920,
+      "duration": 4641,
+      "text": "results from Inquire to that study, you"
+    },
+    {
+      "startTime": 559519,
+      "endTime": 564560,
+      "duration": 5041,
+      "text": "see an almost perfect match. I think"
+    },
+    {
+      "startTime": 561920,
+      "endTime": 568160,
+      "duration": 6240,
+      "text": "this is so exciting, right? It it means"
+    },
+    {
+      "startTime": 564560,
+      "endTime": 571440,
+      "duration": 6880,
+      "text": "that that we can start quickly getting"
+    },
+    {
+      "startTime": 568160,
+      "endTime": 575360,
+      "duration": 7200,
+      "text": "access to all of this hidden knowledge."
+    },
+    {
+      "startTime": 571440,
+      "endTime": 577760,
+      "duration": 6320,
+      "text": "And really, I've been so inspired by the"
+    },
+    {
+      "startTime": 575360,
+      "endTime": 580160,
+      "duration": 4800,
+      "text": "the creativity of the scientists using"
+    },
+    {
+      "startTime": 577760,
+      "endTime": 582560,
+      "duration": 4800,
+      "text": "the system, all of the flexible ways"
+    },
+    {
+      "startTime": 580160,
+      "endTime": 585680,
+      "duration": 5520,
+      "text": "that people have explored many, many"
+    },
+    {
+      "startTime": 582560,
+      "endTime": 589040,
+      "duration": 6480,
+      "text": "different questions. things like looking"
+    },
+    {
+      "startTime": 585680,
+      "endTime": 591040,
+      "duration": 5360,
+      "text": "at how forests regenerate after fire or"
+    },
+    {
+      "startTime": 589040,
+      "endTime": 593360,
+      "duration": 4320,
+      "text": "discovering differences in species"
+    },
+    {
+      "startTime": 591040,
+      "endTime": 595920,
+      "duration": 4880,
+      "text": "mortality between urban and rural areas"
+    },
+    {
+      "startTime": 593360,
+      "endTime": 597600,
+      "duration": 4240,
+      "text": "or looking at how flowering events are"
+    },
+    {
+      "startTime": 595920,
+      "endTime": 600240,
+      "duration": 4320,
+      "text": "changing in relation to a changing"
+    },
+    {
+      "startTime": 597600,
+      "endTime": 602560,
+      "duration": 4960,
+      "text": "climate. The possibilities are truly"
+    },
+    {
+      "startTime": 600240,
+      "endTime": 605519,
+      "duration": 5279,
+      "text": "endless. And the fact that it's"
+    },
+    {
+      "startTime": 602560,
+      "endTime": 606959,
+      "duration": 4399,
+      "text": "open-ended means that any scientist can"
+    },
+    {
+      "startTime": 605519,
+      "endTime": 611440,
+      "duration": 5921,
+      "text": "ask the questions they are interested"
+    },
+    {
+      "startTime": 606959,
+      "endTime": 612880,
+      "duration": 5921,
+      "text": "in. Now, this is also just the beginning"
+    },
+    {
+      "startTime": 611440,
+      "endTime": 615440,
+      "duration": 4000,
+      "text": "because we've shown that we can do this"
+    },
+    {
+      "startTime": 612880,
+      "endTime": 617360,
+      "duration": 4480,
+      "text": "for images, but we can also imagine"
+    },
+    {
+      "startTime": 615440,
+      "endTime": 620800,
+      "duration": 5360,
+      "text": "designing similar discoverydriven"
+    },
+    {
+      "startTime": 617360,
+      "endTime": 624399,
+      "duration": 7039,
+      "text": "systems for bio acoustic recordings, for"
+    },
+    {
+      "startTime": 620800,
+      "endTime": 626480,
+      "duration": 5680,
+      "text": "aerial video, for satellite data, for"
+    },
+    {
+      "startTime": 624399,
+      "endTime": 628560,
+      "duration": 4161,
+      "text": "GPS trajectories coming from animal"
+    },
+    {
+      "startTime": 626480,
+      "endTime": 631360,
+      "duration": 4880,
+      "text": "collars, any ecological data type you"
+    },
+    {
+      "startTime": 628560,
+      "endTime": 633120,
+      "duration": 4560,
+      "text": "can think of. And that brings up a whole"
+    },
+    {
+      "startTime": 631360,
+      "endTime": 635600,
+      "duration": 4240,
+      "text": "new opportunity because all of these"
+    },
+    {
+      "startTime": 633120,
+      "endTime": 637120,
+      "duration": 4000,
+      "text": "types of data are innately interrelated."
+    },
+    {
+      "startTime": 635600,
+      "endTime": 639360,
+      "duration": 3760,
+      "text": "They're all looking at the same thing."
+    },
+    {
+      "startTime": 637120,
+      "endTime": 642000,
+      "duration": 4880,
+      "text": "They're capturing complimentary but"
+    },
+    {
+      "startTime": 639360,
+      "endTime": 643760,
+      "duration": 4400,
+      "text": "distinct perspectives of life on Earth."
+    },
+    {
+      "startTime": 642000,
+      "endTime": 645760,
+      "duration": 3760,
+      "text": "And I can imagine a future where we have"
+    },
+    {
+      "startTime": 643760,
+      "endTime": 647680,
+      "duration": 3920,
+      "text": "systems that help scientists quickly"
+    },
+    {
+      "startTime": 645760,
+      "endTime": 649279,
+      "duration": 3519,
+      "text": "discover hidden connections between them"
+    },
+    {
+      "startTime": 647680,
+      "endTime": 653519,
+      "duration": 5839,
+      "text": "all."
+    },
+    {
+      "startTime": 649279,
+      "endTime": 656160,
+      "duration": 6881,
+      "text": "Now, of course, this alone cannot solve"
+    },
+    {
+      "startTime": 653519,
+      "endTime": 658480,
+      "duration": 4961,
+      "text": "our global nature crisis. But what it"
+    },
+    {
+      "startTime": 656160,
+      "endTime": 661040,
+      "duration": 4880,
+      "text": "does do is it helps us maximize the"
+    },
+    {
+      "startTime": 658480,
+      "endTime": 663519,
+      "duration": 5039,
+      "text": "value of data that we've already"
+    },
+    {
+      "startTime": 661040,
+      "endTime": 666480,
+      "duration": 5440,
+      "text": "collected. And that means that then then"
+    },
+    {
+      "startTime": 663519,
+      "endTime": 668640,
+      "duration": 5121,
+      "text": "in turn we can carefully understand what"
+    },
+    {
+      "startTime": 666480,
+      "endTime": 671120,
+      "duration": 4640,
+      "text": "knowledge gaps remain and strategically"
+    },
+    {
+      "startTime": 668640,
+      "endTime": 673519,
+      "duration": 4879,
+      "text": "use our resources to collect new data to"
+    },
+    {
+      "startTime": 671120,
+      "endTime": 676320,
+      "duration": 5200,
+      "text": "fill those. Overall, this means we're"
+    },
+    {
+      "startTime": 673519,
+      "endTime": 678079,
+      "duration": 4560,
+      "text": "reducing the time and the cost of"
+    },
+    {
+      "startTime": 676320,
+      "endTime": 681040,
+      "duration": 4720,
+      "text": "driving information that supports"
+    },
+    {
+      "startTime": 678079,
+      "endTime": 683440,
+      "duration": 5361,
+      "text": "conservation actions. things like"
+    },
+    {
+      "startTime": 681040,
+      "endTime": 685440,
+      "duration": 4400,
+      "text": "understanding how to ensure that food"
+    },
+    {
+      "startTime": 683440,
+      "endTime": 687360,
+      "duration": 3920,
+      "text": "and habitat resources are available to"
+    },
+    {
+      "startTime": 685440,
+      "endTime": 688959,
+      "duration": 3519,
+      "text": "species when they need them most, when"
+    },
+    {
+      "startTime": 687360,
+      "endTime": 691040,
+      "duration": 3680,
+      "text": "they're migrating through an area, when"
+    },
+    {
+      "startTime": 688959,
+      "endTime": 692399,
+      "duration": 3440,
+      "text": "they're breeding or rearing young, or"
+    },
+    {
+      "startTime": 691040,
+      "endTime": 695440,
+      "duration": 4400,
+      "text": "when they're recovering from natural"
+    },
+    {
+      "startTime": 692399,
+      "endTime": 698640,
+      "duration": 6241,
+      "text": "disasters like fire."
+    },
+    {
+      "startTime": 695440,
+      "endTime": 700240,
+      "duration": 4800,
+      "text": "We stand at a unique point in history."
+    },
+    {
+      "startTime": 698640,
+      "endTime": 702640,
+      "duration": 4000,
+      "text": "We have both an unprecedented"
+    },
+    {
+      "startTime": 700240,
+      "endTime": 705600,
+      "duration": 5360,
+      "text": "biodiversity crisis, but we also have"
+    },
+    {
+      "startTime": 702640,
+      "endTime": 708000,
+      "duration": 5360,
+      "text": "unprecedented tools to address it. We"
+    },
+    {
+      "startTime": 705600,
+      "endTime": 709839,
+      "duration": 4239,
+      "text": "have millions of people around the world"
+    },
+    {
+      "startTime": 708000,
+      "endTime": 712480,
+      "duration": 4480,
+      "text": "eager to contribute to nature"
+    },
+    {
+      "startTime": 709839,
+      "endTime": 714959,
+      "duration": 5120,
+      "text": "conservation and scientific discovery."
+    },
+    {
+      "startTime": 712480,
+      "endTime": 716880,
+      "duration": 4400,
+      "text": "And we have AI tools that enable"
+    },
+    {
+      "startTime": 714959,
+      "endTime": 719519,
+      "duration": 4560,
+      "text": "scientists to find patterns in all of"
+    },
+    {
+      "startTime": 716880,
+      "endTime": 721600,
+      "duration": 4720,
+      "text": "that data at scales impossible for"
+    },
+    {
+      "startTime": 719519,
+      "endTime": 723600,
+      "duration": 4081,
+      "text": "humans alone."
+    },
+    {
+      "startTime": 721600,
+      "endTime": 726959,
+      "duration": 5359,
+      "text": "The future of conservation doesn't just"
+    },
+    {
+      "startTime": 723600,
+      "endTime": 729440,
+      "duration": 5840,
+      "text": "lie in remote rainforests or deep ocean"
+    },
+    {
+      "startTime": 726959,
+      "endTime": 732320,
+      "duration": 5361,
+      "text": "trenches. The future of conservation is"
+    },
+    {
+      "startTime": 729440,
+      "endTime": 734560,
+      "duration": 5120,
+      "text": "hiding in our ecological databases. both"
+    },
+    {
+      "startTime": 732320,
+      "endTime": 737839,
+      "duration": 5519,
+      "text": "the ones we have now but also the ones"
+    },
+    {
+      "startTime": 734560,
+      "endTime": 740160,
+      "duration": 5600,
+      "text": "we have yet to collect and that is where"
+    },
+    {
+      "startTime": 737839,
+      "endTime": 743200,
+      "duration": 5361,
+      "text": "all of you come in because everyone can"
+    },
+    {
+      "startTime": 740160,
+      "endTime": 746399,
+      "duration": 6239,
+      "text": "contribute everyone can collect data and"
+    },
+    {
+      "startTime": 743200,
+      "endTime": 748880,
+      "duration": 5680,
+      "text": "upload it to platforms like I naturalist"
+    },
+    {
+      "startTime": 746399,
+      "endTime": 751440,
+      "duration": 5041,
+      "text": "every photo uploaded every sound"
+    },
+    {
+      "startTime": 748880,
+      "endTime": 754639,
+      "duration": 5759,
+      "text": "recorded every observation shared is a"
+    },
+    {
+      "startTime": 751440,
+      "endTime": 757839,
+      "duration": 6399,
+      "text": "piece of the puzzle we know that we need"
+    },
+    {
+      "startTime": 754639,
+      "endTime": 760880,
+      "duration": 6241,
+      "text": "to act now to save nature under threat"
+    },
+    {
+      "startTime": 757839,
+      "endTime": 763839,
+      "duration": 6000,
+      "text": "and together with scientific AI tools in"
+    },
+    {
+      "startTime": 760880,
+      "endTime": 766480,
+      "duration": 5600,
+      "text": "our toolbox box. We can help by building"
+    },
+    {
+      "startTime": 763839,
+      "endTime": 768323,
+      "duration": 4484,
+      "text": "the complete picture of life on Earth."
+    },
+    {
+      "startTime": 766480,
+      "endTime": 770343,
+      "duration": 3863,
+      "text": "Thank you."
+    },
+    {
+      "startTime": 768323,
+      "endTime": 770343,
+      "duration": 2020,
+      "text": "[applause]"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { DatabaseError } from "../../../../db/types.js";
 import { BaseError } from "../../../_common/errors.js";
 import {
   Caption as CaptionDto,
@@ -8,47 +9,52 @@ import { VideoProcessError } from "./process-video.service.types.js";
 
 export type VideoDtoWithAtLeastOneCaption =
   | (VideoDto & {
-      manualCaptions: CaptionDto[] | null;
-      autoCaptions: CaptionDto[];
-    })
+    manualCaptions: CaptionDto[] | null;
+    autoCaptions: CaptionDto[];
+  })
   | (VideoDto & {
-      manualCaptions: null;
-      autoCaptions: CaptionDto[];
-    })
+    manualCaptions: null;
+    autoCaptions: CaptionDto[];
+  })
   | (VideoDto & {
-      manualCaptions: CaptionDto[];
-      autoCaptions: CaptionDto[];
-    });
+    manualCaptions: CaptionDto[];
+    autoCaptions: CaptionDto[];
+  });
 
 export type ChannelInitialProcessError =
   | {
-      type: "CHANNEL_HAS_NO_VIDEOS";
-      channelId: string;
-      processingContext: ChannelProcessingContext;
-    }
+    type: "CHANNEL_HAS_TOO_MANY_VIDEOS";
+    channelId: string;
+    processingContext: ChannelProcessingContext;
+  }
   | {
-      type: "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS";
-      channelId: string;
-      processingContext: ChannelProcessingContext;
-    }
+    type: "CHANNEL_HAS_NO_VIDEOS";
+    channelId: string;
+    processingContext: ChannelProcessingContext;
+  }
   | {
-      type: "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS";
-      channelId: string;
-      processingContext: ChannelProcessingContext;
-    }
+    type: "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS";
+    channelId: string;
+    processingContext: ChannelProcessingContext;
+  }
   | {
-      type: "VIDEO_PERSISTING_FAILED";
-      channelId: string;
-      processingContext: ChannelProcessingContext;
-      error: BaseError;
-    };
+    type: "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS";
+    channelId: string;
+    processingContext: ChannelProcessingContext;
+  }
+  | {
+    type: "VIDEO_PERSISTING_FAILED";
+    channelId: string;
+    processingContext: ChannelProcessingContext;
+    error: BaseError;
+  };
 
 export type ProcessVideoError =
   | {
-      type: "VIDEO_PROCESSING_FAILED";
-      error: VideoProcessError;
-    }
+    type: "VIDEO_PROCESSING_FAILED";
+    error: VideoProcessError;
+  }
   | {
-      type: "VIDEO_PERSISTING_FAILED";
-      error: BaseError;
-    };
+    type: "VIDEO_PERSISTING_FAILED";
+    error: DatabaseError;
+  };

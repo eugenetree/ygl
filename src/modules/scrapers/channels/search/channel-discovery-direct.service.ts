@@ -12,6 +12,7 @@ import {
   CHANNEL_VIDEOS_MIN,
   CHANNEL_VIEWS_MIN,
 } from "./constants.js";
+import { ChannelService } from "../../../domain/channel.service.js";
 
 @injectable()
 export class ChannelDiscoveryDirectService {
@@ -20,6 +21,7 @@ export class ChannelDiscoveryDirectService {
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsDirect,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
+    private readonly channelService: ChannelService,
   ) {
     this.logger.setContext(ChannelDiscoveryDirectService.name);
   }
@@ -133,9 +135,12 @@ export class ChannelDiscoveryDirectService {
     this.logger.info(`Saving channel ${fullChannelInfo.id} into db.`);
 
     const createChannelResult =
-      await this.channelRepository.create(fullChannelInfo, {
-        discoveryStrategy: "direct",
-      });
+      await this.channelRepository.create(
+        this.channelService.create({
+          ...fullChannelInfo,
+          discoveryStrategy: "direct"
+        })
+      );
 
     if (!createChannelResult.ok) {
       this.logger.error({

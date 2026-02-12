@@ -13,7 +13,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("viewCount", "integer", (col) => col.notNull())
     .addColumn("thumbnail", "varchar", (col) => col.notNull())
     .addColumn("languageCode", "varchar", (col) => col.notNull())
-    .addColumn("captionType", "varchar", (col) => col.notNull())
+    .addColumn("hasAutoCaptions", "boolean", (col) => col.notNull())
+    .addColumn("hasManualCaptions", "boolean", (col) => col.notNull())
     .addColumn("channelId", "varchar(24)", (col) =>
       col.notNull().references("channels.id"),
     )

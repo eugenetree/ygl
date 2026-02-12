@@ -18,7 +18,8 @@ type PickBetterCaptionsParams =
 
 type PickBetterCaptionsResult = {
   captions: Caption[];
-  captionType: "manual" | "auto";
+  hasManualCaptions: boolean;
+  hasAutoCaptions: boolean;
 } | null;
 
 @injectable()
@@ -32,14 +33,16 @@ export class VideoCaptionsAnalyzer {
     if (manualCaptions && this.analyzeManualCaptions(manualCaptions).isCaptionsGood) {
       return {
         captions: manualCaptions,
-        captionType: "manual",
+        hasManualCaptions: true,
+        hasAutoCaptions: false,
       };
     }
 
     if (autoCaptions && this.analyzeAutoCaptions().isCaptionsGood) {
       return {
         captions: autoCaptions,
-        captionType: "auto",
+        hasManualCaptions: false,
+        hasAutoCaptions: true,
       };
     }
 

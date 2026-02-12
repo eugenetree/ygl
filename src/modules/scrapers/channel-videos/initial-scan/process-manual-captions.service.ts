@@ -1,6 +1,8 @@
+import { injectable } from "inversify";
 import { Logger } from "../../../_common/logger/logger.js";
-import { Caption } from "../../../domain/caption.js";
+import { Caption } from "../../../youtube-api/youtube-api.types.js";
 
+@injectable()
 export class ProcessManualCaptionsService {
   constructor(private readonly logger: Logger) { }
 

@@ -1,0 +1,2033 @@
+{
+  "responseContext": {
+    "serviceTrackingParams": [
+      {
+        "service": "GFEEDBACK",
+        "params": [
+          {
+            "key": "ipcc",
+            "value": "0"
+          },
+          {
+            "key": "is_alc_surface",
+            "value": "false"
+          },
+          {
+            "key": "is_viewed_live",
+            "value": "False"
+          },
+          {
+            "key": "logged_in",
+            "value": "0"
+          },
+          {
+            "key": "visitor_data",
+            "value": "Cgs5YmhxUWRrekJqYyjAzanMBjInCgJSTxIhEh0SGwsMDg8QERITFBUWFxgZGhscHR4fICEiIyQlJiAtYuACCt0CMTMuWVRFPVVxNzQtVlhnekVvaXdHZzdvVmQ1blJoZFVtTC1wQ1R5MmNIVDViSmEzcHBQcGVTVUNvdFNDc2l2a3Jyemc1NXFUdjNCNnJMTEZxX0lWbEdhREtTOGlJNmNBN2FCQl9iNUMxdnlJS2hxOHB0UW5KQ2hqcjZfUXNPRVFuRllVN1NBZzRCVUxXUU1acUw4MkFiZHNXQWY4a1VnVFFlQkR0MVdhTEpoX2RWWEk5VGdXblZpNkNmWkRzS0RJWEpLOU52czlTYURhbzFDQmhEX1M0WmQwbVJWWWNzMTJVbDRrVXBBMlJmRVJwSzM5YXRGc0IyX3JhUkxjaXBUcGxnNlVQWHBEdGFXNkVCclR1d3JlVDNJUG1aTktyel9FT2g4WDBwWlhhbUthTnFJWENlLUJxVDljQm8zTGdqcGNpeDA0cjhNYzlaaUlSZndaMVZKTjJ1bXRlYkNCUQ%3D%3D"
+          }
+        ]
+      },
+      {
+        "service": "CSI",
+        "params": [
+          {
+            "key": "c",
+            "value": "WEB"
+          },
+          {
+            "key": "cver",
+            "value": "2.20260206.08.00"
+          },
+          {
+            "key": "yt_li",
+            "value": "0"
+          },
+          {
+            "key": "GetPlayer_rid",
+            "value": "0xf441d191eeb8b1fd"
+          }
+        ]
+      },
+      {
+        "service": "GUIDED_HELP",
+        "params": [
+          {
+            "key": "logged_in",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "service": "ECATCHER",
+        "params": [
+          {
+            "key": "client.version",
+            "value": "2.20260206"
+          },
+          {
+            "key": "client.name",
+            "value": "WEB"
+          }
+        ]
+      }
+    ],
+    "maxAgeSeconds": 0,
+    "mainAppWebResponseContext": {
+      "loggedOut": true,
+      "trackingParam": "kx_fmPxhoPZRTBtev8ijg1CDnKebHtfwwQeJTylzsS2-kpzRgkuMsNLBwOcCE59TDtslLKPQ-SS"
+    },
+    "webResponseContextExtensionData": {
+      "webResponseContextPreloadData": {
+        "preloadMessageNames": [
+          "miniplayerRenderer",
+          "playerCaptionsTracklistRenderer",
+          "playerAnnotationsExpandedRenderer",
+          "subscribeButtonRenderer",
+          "confirmDialogRenderer",
+          "buttonRenderer",
+          "playerStoryboardSpecRenderer",
+          "playerMicroformatRenderer",
+          "cardCollectionRenderer",
+          "cardRenderer",
+          "simpleCardTeaserRenderer",
+          "infoCardIconRenderer"
+        ]
+      },
+      "hasDecorated": true
+    }
+  },
+  "playabilityStatus": {
+    "status": "OK",
+    "playableInEmbed": true,
+    "miniplayer": {
+      "miniplayerRenderer": {
+        "playbackMode": "PLAYBACK_MODE_ALLOW"
+      }
+    },
+    "contextParams": "Q0FFU0FnZ0M="
+  },
+  "streamingData": {
+    "expiresInSeconds": "21540",
+    "formats": [
+      {
+        "itag": 18,
+        "url": "https://rr2---sn-gqn-vu26.googlevideo.com/videoplayback?expire=1770699552&ei=wGaKacvCKKa8zPsPy-H22AE&ip=79.119.88.197&id=o-AO9vg1iJcExJnH8Qt0O5l6NEOkS4kzNI30M46bb0UD1d&itag=18&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&cps=471&met=1770677952%2C&mh=-y&mm=31%2C29&mn=sn-gqn-vu26%2Csn-c0q7lns7&ms=au%2Crdu&mv=m&mvi=2&pl=24&rms=au%2Cau&pcm2=yes&initcwndbps=3223750&bui=AW-iu_ozhmtfcCrrACV44GmYizybY2qi35akzxxhi0vWH8Ow9-QAIknngK6WzfhH7QSmGlsW7msf0yx6&spc=q5xjPIJgA9TRiUx50TRTv9cmoef2YWsr1DEqq8U87e5yfibZdmdAPMnwypnGj08JO3svKLIz&vprv=1&svpuc=1&mime=video%2Fmp4&ns=kO5ZkPDOEaQ1507P_apvAuwS&rqh=1&cnr=14&ratebypass=yes&dur=3065.382&lmt=1736213067466556&mt=1770677381&fvip=2&fexp=51355912%2C51552689%2C51565115%2C51565681%2C51580968&c=WEB&sefc=1&txp=8208224&n=M0hyG1PGZtovdtD_B&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cpcm2%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AJEij0EwRQIgSZfH7NVlgZ0tHgylOU4N3_XT2a8O3NZwmWgQACD-j_cCIQCr24xVlt6AgWw9YirJW_BY4sa_ygk1kXzAEV63FGvdeA%3D%3D&lsparams=cps%2Cmet%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=APaTxxMwRQIhAL9S_MgNxKapyixVMhqtUxS-Hsn6yLCkz_tyUHOrGKUiAiB28DX1vxKtmj3R0LmjEOlUAukSH4K_QHHnowNoqa0w3w%3D%3D",
+        "mimeType": "video/mp4; codecs=\"avc1.42001E, mp4a.40.2\"",
+        "bitrate": 453096,
+        "width": 640,
+        "height": 360,
+        "lastModified": "1736213067466556",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "3065382",
+        "audioSampleRate": "44100",
+        "audioChannels": 2,
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      }
+    ],
+    "adaptiveFormats": [
+      {
+        "itag": 136,
+        "mimeType": "video/mp4; codecs=\"avc1.4d401f\"",
+        "bitrate": 2313316,
+        "width": 1280,
+        "height": 720,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "6518"
+        },
+        "lastModified": "1736212983208915",
+        "contentLength": "508156666",
+        "quality": "hd720",
+        "fps": 30,
+        "qualityLabel": "720p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 1326205,
+        "approxDurationMs": "3065328",
+        "qualityOrdinal": "QUALITY_ORDINAL_720P"
+      },
+      {
+        "itag": 134,
+        "mimeType": "video/mp4; codecs=\"avc1.4d401e\"",
+        "bitrate": 606823,
+        "width": 640,
+        "height": 360,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "6518"
+        },
+        "lastModified": "1736212989131807",
+        "contentLength": "124131066",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 323961,
+        "highReplication": true,
+        "approxDurationMs": "3065328",
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      },
+      {
+        "itag": 243,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 422210,
+        "width": 640,
+        "height": 360,
+        "initRange": {
+          "start": "0",
+          "end": "219"
+        },
+        "indexRange": {
+          "start": "220",
+          "end": "11159"
+        },
+        "lastModified": "1544965835166394",
+        "contentLength": "105081425",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 274245,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "3065328",
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      },
+      {
+        "itag": 160,
+        "mimeType": "video/mp4; codecs=\"avc1.4d400c\"",
+        "bitrate": 130701,
+        "width": 256,
+        "height": 144,
+        "initRange": {
+          "start": "0",
+          "end": "737"
+        },
+        "indexRange": {
+          "start": "738",
+          "end": "6517"
+        },
+        "lastModified": "1736212999050347",
+        "contentLength": "42722306",
+        "quality": "tiny",
+        "fps": 30,
+        "qualityLabel": "144p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 111498,
+        "approxDurationMs": "3065328",
+        "qualityOrdinal": "QUALITY_ORDINAL_144P"
+      },
+      {
+        "itag": 140,
+        "mimeType": "audio/mp4; codecs=\"mp4a.40.2\"",
+        "bitrate": 136689,
+        "initRange": {
+          "start": "0",
+          "end": "722"
+        },
+        "indexRange": {
+          "start": "723",
+          "end": "4450"
+        },
+        "lastModified": "1736208600822507",
+        "contentLength": "49610660",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 129473,
+        "highReplication": true,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "3065382",
+        "audioSampleRate": "44100",
+        "audioChannels": 2,
+        "loudnessDb": -7.2000008,
+        "trackAbsoluteLoudnessLkfs": -21.200001,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 251,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 120772,
+        "initRange": {
+          "start": "0",
+          "end": "265"
+        },
+        "indexRange": {
+          "start": "266",
+          "end": "5657"
+        },
+        "lastModified": "1743018894103027",
+        "contentLength": "40035267",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 104484,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "3065361",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": -7.2000008,
+        "trackAbsoluteLoudnessLkfs": -21.200001,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      }
+    ],
+    "serverAbrStreamingUrl": "https://rr2---sn-gqn-vu26.googlevideo.com/videoplayback?expire=1770699552&ei=wGaKacvCKKa8zPsPy-H22AE&ip=79.119.88.197&id=o-AO9vg1iJcExJnH8Qt0O5l6NEOkS4kzNI30M46bb0UD1d&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&cps=471&met=1770677952%2C&mh=-y&mm=31%2C29&mn=sn-gqn-vu26%2Csn-c0q7lns7&ms=au%2Crdu&mv=m&mvi=2&pl=24&rms=au%2Cau&pcm2=yes&initcwndbps=3223750&spc=q5xjPIJjA9TRiUx50TRTv9cmoef3YWsr1DEqq8U87e5yfibZdmdAPMnwypnGj085PpMvsA&svpuc=1&ns=hp8rK95N10vhZO9dn5m2_50S&sabr=1&rqh=1&mt=1770677381&fvip=2&keepalive=yes&fexp=51355912%2C51552689%2C51565115%2C51565681%2C51580968&c=WEB&n=WsqRIsQE54RJf_8ii&sparams=expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Cxpc%2Cpcm2%2Cspc%2Csvpuc%2Cns%2Csabr%2Crqh&sig=AJEij0EwRQIhALle4Z0v92HeIoyLf96lj_BX-nRZ6HaHRLsqMMV_7fCRAiBwqP6GAHR5e7eF1sppwObjcyJpTR5F6uifv3Zi_GdkCQ%3D%3D&lsparams=cps%2Cmet%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=APaTxxMwRQIhAL9S_MgNxKapyixVMhqtUxS-Hsn6yLCkz_tyUHOrGKUiAiB28DX1vxKtmj3R0LmjEOlUAukSH4K_QHHnowNoqa0w3w%3D%3D"
+  },
+  "playbackTracking": {
+    "videostatsPlaybackUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/playback?cl=864068801&docid=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&fexp=&ns=yt&plid=AAZKbBZhfmhP-OqF&el=detailpage&len=3066&of=gPp87b2Ki_Ih48m12bPhiQ&vm=CAEQABgEOjJBSHFpSlRJTm96NjVCSmx1OG9VNDE5bXhDVGZiNnh2VUxPMHdzMkFZUms4WERFM1kzd2JaQUx6bG9uZ2g4T2tSdFdDenVmeGZQdWNqODhGSzRoa1dYd0NESkROSGxHWFJBd0wtTVFIbUFxYWJRRUplQUlhWVB5VF9iQ0lJWEg2em4xMWJpbXZUOFd2MHZ3"
+    },
+    "videostatsDelayplayUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/delayplay?cl=864068801&docid=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&fexp=&ns=yt&plid=AAZKbBZhfmhP-OqF&el=detailpage&len=3066&of=gPp87b2Ki_Ih48m12bPhiQ&vm=CAEQABgEOjJBSHFpSlRJTm96NjVCSmx1OG9VNDE5bXhDVGZiNnh2VUxPMHdzMkFZUms4WERFM1kzd2JaQUx6bG9uZ2g4T2tSdFdDenVmeGZQdWNqODhGSzRoa1dYd0NESkROSGxHWFJBd0wtTVFIbUFxYWJRRUplQUlhWVB5VF9iQ0lJWEg2em4xMWJpbXZUOFd2MHZ3"
+    },
+    "videostatsWatchtimeUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/watchtime?cl=864068801&docid=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&fexp=&ns=yt&plid=AAZKbBZhfmhP-OqF&el=detailpage&len=3066&of=gPp87b2Ki_Ih48m12bPhiQ&vm=CAEQABgEOjJBSHFpSlRJTm96NjVCSmx1OG9VNDE5bXhDVGZiNnh2VUxPMHdzMkFZUms4WERFM1kzd2JaQUx6bG9uZ2g4T2tSdFdDenVmeGZQdWNqODhGSzRoa1dYd0NESkROSGxHWFJBd0wtTVFIbUFxYWJRRUplQUlhWVB5VF9iQ0lJWEg2em4xMWJpbXZUOFd2MHZ3"
+    },
+    "ptrackingUrl": {
+      "baseUrl": "https://www.youtube.com/ptracking?ei=wGaKacvCKKa8zPsPy-H22AE&plid=AAZKbBZhfmhP-OqF&pltype=contentugc&ptk=youtube_none&video_id=EdRV8ccyEE0"
+    },
+    "qoeUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/qoe?cl=864068801&docid=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&el=detailpage&event=streamingstats&fexp=&ns=yt&plid=AAZKbBZhfmhP-OqF"
+    },
+    "atrUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/atr?c=WEB&docid=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&len=3066&ns=yt&plid=AAZKbBZhfmhP-OqF&ver=2&vm=CAEQABgEOjJBSHFpSlRJTm96NjVCSmx1OG9VNDE5bXhDVGZiNnh2VUxPMHdzMkFZUms4WERFM1kzd2JaQUx6bG9uZ2g4T2tSdFdDenVmeGZQdWNqODhGSzRoa1dYd0NESkROSGxHWFJBd0wtTVFIbUFxYWJRRUplQUlhWVB5VF9iQ0lJWEg2em4xMWJpbXZUOFd2MHZ3",
+      "elapsedMediaTimeSeconds": 5
+    },
+    "videostatsScheduledFlushWalltimeSeconds": [
+      10,
+      20,
+      30
+    ],
+    "videostatsDefaultFlushIntervalSeconds": 40
+  },
+  "captions": {
+    "playerCaptionsTracklistRenderer": {
+      "captionTracks": [
+        {
+          "baseUrl": "https://www.youtube.com/api/timedtext?v=EdRV8ccyEE0&ei=wGaKacvCKKa8zPsPy-H22AE&caps=asr&opi=112496729&exp=xpe&xoaf=5&xowf=1&hl=ro&ip=0.0.0.0&ipbits=0&expire=1770703152&sparams=ip,ipbits,expire,v,ei,caps,opi,exp,xoaf&signature=2579B6F6EBB4EE702E5755BF858C4F230F1E189C.71BCE5CD2667CB0A04D47E0078244B1EC902C665&key=yt8&lang=en",
+          "name": {
+            "simpleText": "engleză"
+          },
+          "vssId": ".en",
+          "languageCode": "en",
+          "isTranslatable": true,
+          "trackName": ""
+        }
+      ],
+      "audioTracks": [
+        {
+          "captionTrackIndices": [
+            0
+          ]
+        }
+      ],
+      "translationLanguages": [
+        {
+          "languageCode": "ab",
+          "languageName": {
+            "simpleText": "Abhază"
+          }
+        },
+        {
+          "languageCode": "aa",
+          "languageName": {
+            "simpleText": "Afar"
+          }
+        },
+        {
+          "languageCode": "af",
+          "languageName": {
+            "simpleText": "Afrikaans"
+          }
+        },
+        {
+          "languageCode": "ak",
+          "languageName": {
+            "simpleText": "Akan"
+          }
+        },
+        {
+          "languageCode": "sq",
+          "languageName": {
+            "simpleText": "Albaneză"
+          }
+        },
+        {
+          "languageCode": "am",
+          "languageName": {
+            "simpleText": "Amharică"
+          }
+        },
+        {
+          "languageCode": "ar",
+          "languageName": {
+            "simpleText": "Arabă"
+          }
+        },
+        {
+          "languageCode": "hy",
+          "languageName": {
+            "simpleText": "Armeană"
+          }
+        },
+        {
+          "languageCode": "as",
+          "languageName": {
+            "simpleText": "Asameză"
+          }
+        },
+        {
+          "languageCode": "ay",
+          "languageName": {
+            "simpleText": "Aymara"
+          }
+        },
+        {
+          "languageCode": "az",
+          "languageName": {
+            "simpleText": "Azeră"
+          }
+        },
+        {
+          "languageCode": "eu",
+          "languageName": {
+            "simpleText": "Bască"
+          }
+        },
+        {
+          "languageCode": "ba",
+          "languageName": {
+            "simpleText": "Bașkiră"
+          }
+        },
+        {
+          "languageCode": "be",
+          "languageName": {
+            "simpleText": "Belarusă"
+          }
+        },
+        {
+          "languageCode": "bn",
+          "languageName": {
+            "simpleText": "Bengaleză"
+          }
+        },
+        {
+          "languageCode": "bho",
+          "languageName": {
+            "simpleText": "Bhojpuri"
+          }
+        },
+        {
+          "languageCode": "my",
+          "languageName": {
+            "simpleText": "Birmană"
+          }
+        },
+        {
+          "languageCode": "bs",
+          "languageName": {
+            "simpleText": "Bosniacă"
+          }
+        },
+        {
+          "languageCode": "br",
+          "languageName": {
+            "simpleText": "Bretonă"
+          }
+        },
+        {
+          "languageCode": "bg",
+          "languageName": {
+            "simpleText": "Bulgară"
+          }
+        },
+        {
+          "languageCode": "ca",
+          "languageName": {
+            "simpleText": "Catalană"
+          }
+        },
+        {
+          "languageCode": "ceb",
+          "languageName": {
+            "simpleText": "Cebuană"
+          }
+        },
+        {
+          "languageCode": "cs",
+          "languageName": {
+            "simpleText": "Cehă"
+          }
+        },
+        {
+          "languageCode": "zh-Hans",
+          "languageName": {
+            "simpleText": "Chineză (Simplificată)"
+          }
+        },
+        {
+          "languageCode": "zh-Hant",
+          "languageName": {
+            "simpleText": "Chineză (Tradițională)"
+          }
+        },
+        {
+          "languageCode": "ko",
+          "languageName": {
+            "simpleText": "Coreeană"
+          }
+        },
+        {
+          "languageCode": "co",
+          "languageName": {
+            "simpleText": "Corsicană"
+          }
+        },
+        {
+          "languageCode": "crs",
+          "languageName": {
+            "simpleText": "Creolă Franceză Seselwa"
+          }
+        },
+        {
+          "languageCode": "hr",
+          "languageName": {
+            "simpleText": "Croată"
+          }
+        },
+        {
+          "languageCode": "da",
+          "languageName": {
+            "simpleText": "Daneză"
+          }
+        },
+        {
+          "languageCode": "dv",
+          "languageName": {
+            "simpleText": "Divehi"
+          }
+        },
+        {
+          "languageCode": "dz",
+          "languageName": {
+            "simpleText": "Dzongkha"
+          }
+        },
+        {
+          "languageCode": "iw",
+          "languageName": {
+            "simpleText": "Ebraică"
+          }
+        },
+        {
+          "languageCode": "en",
+          "languageName": {
+            "simpleText": "Engleză"
+          }
+        },
+        {
+          "languageCode": "eo",
+          "languageName": {
+            "simpleText": "Esperanto"
+          }
+        },
+        {
+          "languageCode": "et",
+          "languageName": {
+            "simpleText": "Estonă"
+          }
+        },
+        {
+          "languageCode": "ee",
+          "languageName": {
+            "simpleText": "Ewe"
+          }
+        },
+        {
+          "languageCode": "fo",
+          "languageName": {
+            "simpleText": "Feroeză"
+          }
+        },
+        {
+          "languageCode": "fj",
+          "languageName": {
+            "simpleText": "Fijiană"
+          }
+        },
+        {
+          "languageCode": "fil",
+          "languageName": {
+            "simpleText": "Filipineză"
+          }
+        },
+        {
+          "languageCode": "fi",
+          "languageName": {
+            "simpleText": "Finlandeză"
+          }
+        },
+        {
+          "languageCode": "fr",
+          "languageName": {
+            "simpleText": "Franceză"
+          }
+        },
+        {
+          "languageCode": "fy",
+          "languageName": {
+            "simpleText": "Frizonă Occidentală"
+          }
+        },
+        {
+          "languageCode": "gaa",
+          "languageName": {
+            "simpleText": "Ga"
+          }
+        },
+        {
+          "languageCode": "gd",
+          "languageName": {
+            "simpleText": "Gaelică Scoțiană"
+          }
+        },
+        {
+          "languageCode": "cy",
+          "languageName": {
+            "simpleText": "Galeză"
+          }
+        },
+        {
+          "languageCode": "gl",
+          "languageName": {
+            "simpleText": "Galiciană"
+          }
+        },
+        {
+          "languageCode": "lg",
+          "languageName": {
+            "simpleText": "Ganda"
+          }
+        },
+        {
+          "languageCode": "ka",
+          "languageName": {
+            "simpleText": "Georgiană"
+          }
+        },
+        {
+          "languageCode": "de",
+          "languageName": {
+            "simpleText": "Germană"
+          }
+        },
+        {
+          "languageCode": "el",
+          "languageName": {
+            "simpleText": "Greacă"
+          }
+        },
+        {
+          "languageCode": "gn",
+          "languageName": {
+            "simpleText": "Guarani"
+          }
+        },
+        {
+          "languageCode": "gu",
+          "languageName": {
+            "simpleText": "Gujarati"
+          }
+        },
+        {
+          "languageCode": "ht",
+          "languageName": {
+            "simpleText": "Haitiană"
+          }
+        },
+        {
+          "languageCode": "ha",
+          "languageName": {
+            "simpleText": "Hausa"
+          }
+        },
+        {
+          "languageCode": "haw",
+          "languageName": {
+            "simpleText": "Hawaiiană"
+          }
+        },
+        {
+          "languageCode": "hi",
+          "languageName": {
+            "simpleText": "Hindi"
+          }
+        },
+        {
+          "languageCode": "hmn",
+          "languageName": {
+            "simpleText": "Hmong"
+          }
+        },
+        {
+          "languageCode": "yi",
+          "languageName": {
+            "simpleText": "Idiș"
+          }
+        },
+        {
+          "languageCode": "ig",
+          "languageName": {
+            "simpleText": "Igbo"
+          }
+        },
+        {
+          "languageCode": "id",
+          "languageName": {
+            "simpleText": "Indoneziană"
+          }
+        },
+        {
+          "languageCode": "iu",
+          "languageName": {
+            "simpleText": "Inuktitut"
+          }
+        },
+        {
+          "languageCode": "ga",
+          "languageName": {
+            "simpleText": "Irlandeză"
+          }
+        },
+        {
+          "languageCode": "is",
+          "languageName": {
+            "simpleText": "Islandeză"
+          }
+        },
+        {
+          "languageCode": "it",
+          "languageName": {
+            "simpleText": "Italiană"
+          }
+        },
+        {
+          "languageCode": "ja",
+          "languageName": {
+            "simpleText": "Japoneză"
+          }
+        },
+        {
+          "languageCode": "jv",
+          "languageName": {
+            "simpleText": "Javaneză"
+          }
+        },
+        {
+          "languageCode": "kl",
+          "languageName": {
+            "simpleText": "Kalaallisut"
+          }
+        },
+        {
+          "languageCode": "kn",
+          "languageName": {
+            "simpleText": "Kannada"
+          }
+        },
+        {
+          "languageCode": "kk",
+          "languageName": {
+            "simpleText": "Kazahă"
+          }
+        },
+        {
+          "languageCode": "ky",
+          "languageName": {
+            "simpleText": "Kârgâză"
+          }
+        },
+        {
+          "languageCode": "kha",
+          "languageName": {
+            "simpleText": "Khasi"
+          }
+        },
+        {
+          "languageCode": "km",
+          "languageName": {
+            "simpleText": "Khmeră"
+          }
+        },
+        {
+          "languageCode": "rw",
+          "languageName": {
+            "simpleText": "Kinyarwanda"
+          }
+        },
+        {
+          "languageCode": "rn",
+          "languageName": {
+            "simpleText": "Kirundi"
+          }
+        },
+        {
+          "languageCode": "kri",
+          "languageName": {
+            "simpleText": "Kri"
+          }
+        },
+        {
+          "languageCode": "ku",
+          "languageName": {
+            "simpleText": "Kurdă"
+          }
+        },
+        {
+          "languageCode": "lo",
+          "languageName": {
+            "simpleText": "Laoțiană"
+          }
+        },
+        {
+          "languageCode": "la",
+          "languageName": {
+            "simpleText": "Latină"
+          }
+        },
+        {
+          "languageCode": "lv",
+          "languageName": {
+            "simpleText": "Letonă"
+          }
+        },
+        {
+          "languageCode": "ln",
+          "languageName": {
+            "simpleText": "Lingala"
+          }
+        },
+        {
+          "languageCode": "lt",
+          "languageName": {
+            "simpleText": "Lituaniană"
+          }
+        },
+        {
+          "languageCode": "lua",
+          "languageName": {
+            "simpleText": "Luba-Lulua"
+          }
+        },
+        {
+          "languageCode": "luo",
+          "languageName": {
+            "simpleText": "Luo"
+          }
+        },
+        {
+          "languageCode": "lb",
+          "languageName": {
+            "simpleText": "Luxemburgheză"
+          }
+        },
+        {
+          "languageCode": "mk",
+          "languageName": {
+            "simpleText": "Macedoneană"
+          }
+        },
+        {
+          "languageCode": "hu",
+          "languageName": {
+            "simpleText": "Maghiară"
+          }
+        },
+        {
+          "languageCode": "ms",
+          "languageName": {
+            "simpleText": "Malaeză"
+          }
+        },
+        {
+          "languageCode": "ml",
+          "languageName": {
+            "simpleText": "Malayalam"
+          }
+        },
+        {
+          "languageCode": "mg",
+          "languageName": {
+            "simpleText": "Malgașă"
+          }
+        },
+        {
+          "languageCode": "mt",
+          "languageName": {
+            "simpleText": "Malteză"
+          }
+        },
+        {
+          "languageCode": "gv",
+          "languageName": {
+            "simpleText": "Manx"
+          }
+        },
+        {
+          "languageCode": "mi",
+          "languageName": {
+            "simpleText": "Maori"
+          }
+        },
+        {
+          "languageCode": "mr",
+          "languageName": {
+            "simpleText": "Marathi"
+          }
+        },
+        {
+          "languageCode": "mn",
+          "languageName": {
+            "simpleText": "Mongolă"
+          }
+        },
+        {
+          "languageCode": "mfe",
+          "languageName": {
+            "simpleText": "Morisyen"
+          }
+        },
+        {
+          "languageCode": "nl",
+          "languageName": {
+            "simpleText": "Neerlandeză"
+          }
+        },
+        {
+          "languageCode": "ne",
+          "languageName": {
+            "simpleText": "Nepaleză"
+          }
+        },
+        {
+          "languageCode": "new",
+          "languageName": {
+            "simpleText": "Newari"
+          }
+        },
+        {
+          "languageCode": "no",
+          "languageName": {
+            "simpleText": "Norvegiană"
+          }
+        },
+        {
+          "languageCode": "ny",
+          "languageName": {
+            "simpleText": "Nyanja"
+          }
+        },
+        {
+          "languageCode": "oc",
+          "languageName": {
+            "simpleText": "Occitană"
+          }
+        },
+        {
+          "languageCode": "or",
+          "languageName": {
+            "simpleText": "Odia"
+          }
+        },
+        {
+          "languageCode": "om",
+          "languageName": {
+            "simpleText": "Oromo"
+          }
+        },
+        {
+          "languageCode": "os",
+          "languageName": {
+            "simpleText": "Osetă"
+          }
+        },
+        {
+          "languageCode": "pam",
+          "languageName": {
+            "simpleText": "Pampanga"
+          }
+        },
+        {
+          "languageCode": "ps",
+          "languageName": {
+            "simpleText": "Paștună"
+          }
+        },
+        {
+          "languageCode": "fa",
+          "languageName": {
+            "simpleText": "Persană"
+          }
+        },
+        {
+          "languageCode": "pl",
+          "languageName": {
+            "simpleText": "Poloneză"
+          }
+        },
+        {
+          "languageCode": "pt",
+          "languageName": {
+            "simpleText": "Portugheză"
+          }
+        },
+        {
+          "languageCode": "pt-PT",
+          "languageName": {
+            "simpleText": "Portugheză (Portugalia)"
+          }
+        },
+        {
+          "languageCode": "pa",
+          "languageName": {
+            "simpleText": "Punjabi"
+          }
+        },
+        {
+          "languageCode": "qu",
+          "languageName": {
+            "simpleText": "Quechua"
+          }
+        },
+        {
+          "languageCode": "ro",
+          "languageName": {
+            "simpleText": "Română"
+          }
+        },
+        {
+          "languageCode": "ru",
+          "languageName": {
+            "simpleText": "Rusă"
+          }
+        },
+        {
+          "languageCode": "sm",
+          "languageName": {
+            "simpleText": "Samoană"
+          }
+        },
+        {
+          "languageCode": "sg",
+          "languageName": {
+            "simpleText": "Sango"
+          }
+        },
+        {
+          "languageCode": "sa",
+          "languageName": {
+            "simpleText": "Sanscrită"
+          }
+        },
+        {
+          "languageCode": "sr",
+          "languageName": {
+            "simpleText": "Sârbă"
+          }
+        },
+        {
+          "languageCode": "st",
+          "languageName": {
+            "simpleText": "Sesotho"
+          }
+        },
+        {
+          "languageCode": "tn",
+          "languageName": {
+            "simpleText": "Setswana"
+          }
+        },
+        {
+          "languageCode": "sn",
+          "languageName": {
+            "simpleText": "Shona"
+          }
+        },
+        {
+          "languageCode": "sd",
+          "languageName": {
+            "simpleText": "Sindhi"
+          }
+        },
+        {
+          "languageCode": "si",
+          "languageName": {
+            "simpleText": "Singhaleză"
+          }
+        },
+        {
+          "languageCode": "sk",
+          "languageName": {
+            "simpleText": "Slovacă"
+          }
+        },
+        {
+          "languageCode": "sl",
+          "languageName": {
+            "simpleText": "Slovenă"
+          }
+        },
+        {
+          "languageCode": "so",
+          "languageName": {
+            "simpleText": "Somaleză"
+          }
+        },
+        {
+          "languageCode": "nso",
+          "languageName": {
+            "simpleText": "Sotho De Nord"
+          }
+        },
+        {
+          "languageCode": "es",
+          "languageName": {
+            "simpleText": "Spaniolă"
+          }
+        },
+        {
+          "languageCode": "sv",
+          "languageName": {
+            "simpleText": "Suedeză"
+          }
+        },
+        {
+          "languageCode": "su",
+          "languageName": {
+            "simpleText": "Sundaneză"
+          }
+        },
+        {
+          "languageCode": "sw",
+          "languageName": {
+            "simpleText": "Swahili"
+          }
+        },
+        {
+          "languageCode": "ss",
+          "languageName": {
+            "simpleText": "Swati"
+          }
+        },
+        {
+          "languageCode": "tg",
+          "languageName": {
+            "simpleText": "Tadjică"
+          }
+        },
+        {
+          "languageCode": "ta",
+          "languageName": {
+            "simpleText": "Tamilă"
+          }
+        },
+        {
+          "languageCode": "tt",
+          "languageName": {
+            "simpleText": "Tătară"
+          }
+        },
+        {
+          "languageCode": "te",
+          "languageName": {
+            "simpleText": "Telugu"
+          }
+        },
+        {
+          "languageCode": "th",
+          "languageName": {
+            "simpleText": "Thailandeză"
+          }
+        },
+        {
+          "languageCode": "bo",
+          "languageName": {
+            "simpleText": "Tibetană"
+          }
+        },
+        {
+          "languageCode": "ti",
+          "languageName": {
+            "simpleText": "Tigrină"
+          }
+        },
+        {
+          "languageCode": "to",
+          "languageName": {
+            "simpleText": "Tongană"
+          }
+        },
+        {
+          "languageCode": "ts",
+          "languageName": {
+            "simpleText": "Tsonga"
+          }
+        },
+        {
+          "languageCode": "tum",
+          "languageName": {
+            "simpleText": "Tumbuka"
+          }
+        },
+        {
+          "languageCode": "tr",
+          "languageName": {
+            "simpleText": "Turcă"
+          }
+        },
+        {
+          "languageCode": "tk",
+          "languageName": {
+            "simpleText": "Turkmenă"
+          }
+        },
+        {
+          "languageCode": "uk",
+          "languageName": {
+            "simpleText": "Ucraineană"
+          }
+        },
+        {
+          "languageCode": "ug",
+          "languageName": {
+            "simpleText": "Uigură"
+          }
+        },
+        {
+          "languageCode": "ur",
+          "languageName": {
+            "simpleText": "Urdu"
+          }
+        },
+        {
+          "languageCode": "uz",
+          "languageName": {
+            "simpleText": "Uzbecă"
+          }
+        },
+        {
+          "languageCode": "ve",
+          "languageName": {
+            "simpleText": "Venda"
+          }
+        },
+        {
+          "languageCode": "vi",
+          "languageName": {
+            "simpleText": "Vietnameză"
+          }
+        },
+        {
+          "languageCode": "war",
+          "languageName": {
+            "simpleText": "Waray"
+          }
+        },
+        {
+          "languageCode": "wo",
+          "languageName": {
+            "simpleText": "Wolof"
+          }
+        },
+        {
+          "languageCode": "xh",
+          "languageName": {
+            "simpleText": "Xhosa"
+          }
+        },
+        {
+          "languageCode": "yo",
+          "languageName": {
+            "simpleText": "Yoruba"
+          }
+        },
+        {
+          "languageCode": "zu",
+          "languageName": {
+            "simpleText": "Zulu"
+          }
+        }
+      ],
+      "defaultAudioTrackIndex": 0
+    }
+  },
+  "videoDetails": {
+    "videoId": "EdRV8ccyEE0",
+    "title": "The Knowledge | Lewis Dartnell | Talks at Google",
+    "lengthSeconds": "3065",
+    "keywords": [
+      "talks at google",
+      "ted talks",
+      "inspirational talks",
+      "educational talks",
+      "The Knowledge",
+      "Lewis Dartnell",
+      "lewis dartnell the knowledge",
+      "lewis dartnell origins",
+      "lewis dartnell astrobiology",
+      "the knowledge"
+    ],
+    "channelId": "UCbmNph6atAoGfqLoCL_duAg",
+    "isOwnerViewing": false,
+    "shortDescription": "How would you go about rebuilding a technological society from scratch?\n\nTo explore this topic further, have a look at the book’s website www.the-knowledge.org – for lots of extra material including videos, How To guides (including instructions for making your own gasifier stove) and recommended lists of the best films, books and sci-fi novels on the post-apocalyptic world and rebuilding from scratch.\n \nIf our technological society collapsed tomorrow, perhaps from a viral pandemic or catastrophic asteroid impact, what would be the one book you would want to press into the hands of the  postapocalyptic survivors? What crucial knowledge would they need to survive in the immediate aftermath and to rebuild civilization as quickly as possible—a guide for rebooting the\nworld?\n \nHuman knowledge is collective, distributed across the population. It has built on itself for centuries, becoming vast and increasingly specialized. Most of us are ignorant about the fundamental principles of the civilization that supports us, happily utilizing the latest—or even the most basic—technology without having the slightest idea of why it works or how it came to be. If you had to go back to absolute basics, like some sort of postcataclysmic Robinson Crusoe, would you know how to re-create an internal combustion engine, put together a microscope, get metals out of\nrock, accurately tell time, weave fibers into clothing, or even how to produce food for yourself?\n \nRegarded as one of the brightest young scientists of his generation, Lewis Dartnell proposes that the key to preserving civilization in an apocalyptic scenario is to provide a quickstart guide, adapted to cataclysmic circumstances. The Knowledge describes many of the modern technologies we employ, but first it explains the fundamentals upon which they are built.\nEvery piece of technology rests on an enormous support network of other technologies, all interlinked and mutually dependent. You can’t hope to build a radio, for example, without understanding how to acquire the raw materials it requires, as well as generate the electricity needed to run it. But Dartnell doesn’t just provide specific information for starting over; he also reveals the greatest invention of them all—the phenomenal knowledge-generating machine that is the scientific method itself. This would allow survivors to learn technological advances not explicitly\nexplored in The Knowledge as well as things we have yet to discover. \n \nThe Knowledge is a brilliantly original guide to the fundamentals of\nscience and how it built our modern world as well as a thought experiment about the very idea of scientific knowledge itself.\n\nThis Authors at Google talk was hosted by Boris Debic.",
+    "isCrawlable": true,
+    "thumbnail": {
+      "thumbnails": [
+        {
+          "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBzxEb81k1BsoCVpL6E-9Gpe-PLOQ",
+          "width": 168,
+          "height": 94
+        },
+        {
+          "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDjwJuWLQhdgHtHSgD8E1bYbyFeOw",
+          "width": 196,
+          "height": 110
+        },
+        {
+          "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAv4tkwCAsY4blYraUkOXjf9jbi_A",
+          "width": 246,
+          "height": 138
+        },
+        {
+          "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBQDQwp59kOdk8mtgMvAXhz3KPVCw",
+          "width": 336,
+          "height": 188
+        },
+        {
+          "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/maxresdefault.jpg",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    "allowRatings": true,
+    "viewCount": "19568",
+    "author": "Talks at Google",
+    "isPrivate": false,
+    "isUnpluggedCorpus": false,
+    "isLiveContent": false
+  },
+  "annotations": [
+    {
+      "playerAnnotationsExpandedRenderer": {
+        "featuredChannel": {
+          "startTimeMs": "0",
+          "endTimeMs": "3066000",
+          "watermark": {
+            "thumbnails": [
+              {
+                "url": "https://i.ytimg.com/an/bmNph6atAoGfqLoCL_duAg/featured_channel.jpg?v=5ec3f740",
+                "width": 40,
+                "height": 40
+              }
+            ]
+          },
+          "trackingParams": "CAYQ8zciEwjLooWzwc2SAxUmHnMJHcuwHRs=",
+          "navigationEndpoint": {
+            "clickTrackingParams": "CAYQ8zciEwjLooWzwc2SAxUmHnMJHcuwHRsyAml2ygEEPys6mA==",
+            "commandMetadata": {
+              "webCommandMetadata": {
+                "url": "/channel/UCbmNph6atAoGfqLoCL_duAg",
+                "webPageType": "WEB_PAGE_TYPE_CHANNEL",
+                "rootVe": 3611,
+                "apiUrl": "/youtubei/v1/browse"
+              }
+            },
+            "browseEndpoint": {
+              "browseId": "UCbmNph6atAoGfqLoCL_duAg"
+            }
+          },
+          "channelName": "Talks at Google",
+          "subscribeButton": {
+            "subscribeButtonRenderer": {
+              "buttonText": {
+                "runs": [
+                  {
+                    "text": "ABONEAZĂ-TE"
+                  }
+                ]
+              },
+              "subscribed": false,
+              "enabled": true,
+              "type": "FREE",
+              "channelId": "UCbmNph6atAoGfqLoCL_duAg",
+              "showPreferences": false,
+              "subscribedButtonText": {
+                "runs": [
+                  {
+                    "text": "ABONAT(Ă)"
+                  }
+                ]
+              },
+              "unsubscribedButtonText": {
+                "runs": [
+                  {
+                    "text": "ABONEAZĂ-TE"
+                  }
+                ]
+              },
+              "trackingParams": "CAcQmysiEwjLooWzwc2SAxUmHnMJHcuwHRsyAml2",
+              "unsubscribeButtonText": {
+                "runs": [
+                  {
+                    "text": "DEZABONEAZĂ-TE"
+                  }
+                ]
+              },
+              "serviceEndpoints": [
+                {
+                  "clickTrackingParams": "CAcQmysiEwjLooWzwc2SAxUmHnMJHcuwHRsyAml2ygEEPys6mA==",
+                  "commandMetadata": {
+                    "webCommandMetadata": {
+                      "sendPost": true,
+                      "apiUrl": "/youtubei/v1/subscription/subscribe"
+                    }
+                  },
+                  "subscribeEndpoint": {
+                    "channelIds": [
+                      "UCbmNph6atAoGfqLoCL_duAg"
+                    ],
+                    "params": "EgIIBBgA"
+                  }
+                },
+                {
+                  "clickTrackingParams": "CAcQmysiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+                  "commandMetadata": {
+                    "webCommandMetadata": {
+                      "sendPost": true
+                    }
+                  },
+                  "signalServiceEndpoint": {
+                    "signal": "CLIENT_SIGNAL",
+                    "actions": [
+                      {
+                        "clickTrackingParams": "CAcQmysiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+                        "openPopupAction": {
+                          "popup": {
+                            "confirmDialogRenderer": {
+                              "trackingParams": "CAgQxjgiEwjLooWzwc2SAxUmHnMJHcuwHRs=",
+                              "dialogMessages": [
+                                {
+                                  "runs": [
+                                    {
+                                      "text": "Te dezabonezi de la "
+                                    },
+                                    {
+                                      "text": "Talks at Google"
+                                    },
+                                    {
+                                      "text": "?"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "confirmButton": {
+                                "buttonRenderer": {
+                                  "style": "STYLE_BLUE_TEXT",
+                                  "size": "SIZE_DEFAULT",
+                                  "isDisabled": false,
+                                  "text": {
+                                    "runs": [
+                                      {
+                                        "text": "Dezabonează-te"
+                                      }
+                                    ]
+                                  },
+                                  "serviceEndpoint": {
+                                    "clickTrackingParams": "CAoQ8FsiEwjLooWzwc2SAxUmHnMJHcuwHRsyAml2ygEEPys6mA==",
+                                    "commandMetadata": {
+                                      "webCommandMetadata": {
+                                        "sendPost": true,
+                                        "apiUrl": "/youtubei/v1/subscription/unsubscribe"
+                                      }
+                                    },
+                                    "unsubscribeEndpoint": {
+                                      "channelIds": [
+                                        "UCbmNph6atAoGfqLoCL_duAg"
+                                      ],
+                                      "params": "CgIIBBgA"
+                                    }
+                                  },
+                                  "accessibility": {
+                                    "label": "Dezabonează-te"
+                                  },
+                                  "trackingParams": "CAoQ8FsiEwjLooWzwc2SAxUmHnMJHcuwHRs="
+                                }
+                              },
+                              "cancelButton": {
+                                "buttonRenderer": {
+                                  "style": "STYLE_TEXT",
+                                  "size": "SIZE_DEFAULT",
+                                  "isDisabled": false,
+                                  "text": {
+                                    "runs": [
+                                      {
+                                        "text": "Anulează"
+                                      }
+                                    ]
+                                  },
+                                  "accessibility": {
+                                    "label": "Anulează"
+                                  },
+                                  "trackingParams": "CAkQ8FsiEwjLooWzwc2SAxUmHnMJHcuwHRs="
+                                }
+                              },
+                              "primaryIsCancel": false
+                            }
+                          },
+                          "popupType": "DIALOG"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "subscribeAccessibility": {
+                "accessibilityData": {
+                  "label": "Abonează-te la Talks at Google."
+                }
+              },
+              "unsubscribeAccessibility": {
+                "accessibilityData": {
+                  "label": "Dezabonează-te de la Talks at Google."
+                }
+              },
+              "signInEndpoint": {
+                "clickTrackingParams": "CAcQmysiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+                "commandMetadata": {
+                  "webCommandMetadata": {
+                    "url": "https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=http%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dro%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fchannel%252FUCbmNph6atAoGfqLoCL_duAg%26feature%3Div%26continue_action%3DQUFFLUhqbkJtLUtDVkRDQ0dOVUNBNWk1cjBEYW9nSVJzUXxBQ3Jtc0tsbjlFWERqaGlWdnJIc0E2SEoxNHpXYUVsbEExaTRFTFZPaXg3Z3ViTm1Xc3A3Qy1BNlZqSl9fdDY3VkREUXAtTzlsVWVxTmptUUhzTlVLWWpSRkNBcE9FdlhOZGYzOW5OajhieDNIa2VMZjgxZlRkVmJqX0VjdGF2dzJQT2FLQU13S3hRVXR6WjN1cEV0djhaS3NPcFdaeWJFTXIyQmZGVVE1X09TQVczZWJZN3F0Nm9fMVpMLUJHZ3QzWk5lRFhDNHp3Vm8%253D&hl=ro"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "allowSwipeDismiss": true,
+        "annotationId": "5ec3c51f-0000-252d-87a4-24058874aacc"
+      }
+    }
+  ],
+  "playerConfig": {
+    "granularVariableSpeedConfig": {
+      "minimumPlaybackRate": 25,
+      "maximumPlaybackRate": 200
+    },
+    "vssClientConfig": {
+      "vssUsePostRequest": false
+    },
+    "audioConfig": {
+      "loudnessDb": -7.2000008,
+      "perceptualLoudnessDb": -21.200001,
+      "enablePerFormatLoudness": true,
+      "trackAbsoluteLoudnessLkfs": -21.200001,
+      "loudnessTargetLkfs": -14
+    },
+    "streamSelectionConfig": {
+      "maxBitrate": "25790000"
+    },
+    "daiConfig": {
+      "allowUstreamerRequestAdconfig": true,
+      "sendSsdaiMissingAdBreakReasons": true
+    },
+    "mediaCommonConfig": {
+      "dynamicReadaheadConfig": {
+        "maxReadAheadMediaTimeMs": 120000,
+        "minReadAheadMediaTimeMs": 15000,
+        "readAheadGrowthRateMs": 1000
+      },
+      "mediaUstreamerRequestConfig": {
+        "videoPlaybackUstreamerConfig": "CsgGCqYFCAAlAACAPy0zM3M_NT0Klz9YAWgBchoKFm1mczJfY21mc193ZWJfdjNfMl8wMDMYAKABAagBALgCANoChgEQsOoBGIDd2wEgoJwBKKCcATCYdXCIJ4AB9APgAQOYAgzQAgLoAgSAAwKIA4gnqAMDwAMByAMBgAQB0AQB2AQB-AQHgAV9wAUByAUB4AXQD-gFAfgF0A-QBgHQBgHwBgGAB9APwAcBgAgBiAgBnQjNzEw-oAjoB-AIAegI____________AfoCigEtAACgQjUAAKpCZQAAgEBowHCoAdCGA4UCmpkZP40CAACAP5UC-u1rO7UCAACAP8AC3wP9As3MzD2QAwGdAwrXIz3VAwAAekTVBAAAIEGgBgG1Br03hjW9BjMzg0DABwHIBwHlBwCACUTwBwGACAGhCAAAAAAAAPC_qQgAAAAAAADwv7AI3wO4CgGoAwGwAwPQAwHYAwHKBBwKEwjAqQcQmHUY6AclAAAAACgAMAAQ4NQDGNAP0gQPCggIsAkQsAkgASCIJygB2gQNCgYI8C4Q8C4g8C4oAfAFAZgGAagGgIAC0gYUCOgHEGQaDQiIJxUAAAA_Hc3MTD_YBgHwBgG4BwGgCAHSCAYIARABGAGpCQAAAAAAAPC_sQkAAAAAAADwv9AJAdoJJEtpR3hvZ0F5SGJsUmRtR0gvSzl5Y2tGK3RJeUptWk1sWkl3WeoLBIsGjAaADAGoDJAB4A0ByA8B0A8B6BABkBEBoBEBshEYQ0FNU0RCVU51YmJKREpRQ25BN01CUT090BIB4BIBgBMBsBMB2BMB6BMBiBQBkRQAAAAAAADwv5kUAAAAAAAA8L-wFAHKFBF2MjAyNTA5MjJfMTIyNi4wMNgUiCfoFAGBFQAAAAAAAPC_iKehygsBMgwIiAEQ07f5sLniigMyDAiGARCf-OKzueKKAzIMCPMBELqlrp62pN8CMgwIoAEQ66jAuLniigMyDAiMARDr5aGHqeKKAzIMCPsBEPOjlLDDqIwDOgBSKhoCZW4oADIYVUNibU5waDZhdEFvR2ZxTG9DTF9kdUFnOABAAFgAYAB4AKABAbABBboBAwQFMcIBCAECAwQFCDBe0AEAgAIAEkwACaurTTBFAiEA4GeZBDag8M8tf_JcXxIjOf8P1ULsx_kTzAtnVO_lHVQCIE_MxvymV2BC8W6P2T1WoPljOihVpvTEx3CH4hjZHMOnGgJlaQ=="
+      },
+      "useServerDrivenAbr": true,
+      "serverPlaybackStartConfig": {
+        "enable": true,
+        "playbackStartPolicy": {
+          "startMinReadaheadPolicy": [
+            {
+              "minReadaheadMs": 1200
+            }
+          ]
+        }
+      },
+      "platypusUseEnvoyNetFetch": false,
+      "fixLivePlaybackModelDefaultPosition": false
+    },
+    "webPlayerConfig": {
+      "useCobaltTvosDash": true,
+      "webPlayerActionsPorting": {
+        "getSharePanelCommand": {
+          "clickTrackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/share/get_web_player_share_panel"
+            }
+          },
+          "webPlayerShareEntityServiceEndpoint": {
+            "serializedShareEntity": "CgtFZFJWOGNjeUVFMA%3D%3D"
+          }
+        },
+        "subscribeCommand": {
+          "clickTrackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/subscription/subscribe"
+            }
+          },
+          "subscribeEndpoint": {
+            "channelIds": [
+              "UCbmNph6atAoGfqLoCL_duAg"
+            ],
+            "params": "EgIIBxgA"
+          }
+        },
+        "unsubscribeCommand": {
+          "clickTrackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/subscription/unsubscribe"
+            }
+          },
+          "unsubscribeEndpoint": {
+            "channelIds": [
+              "UCbmNph6atAoGfqLoCL_duAg"
+            ],
+            "params": "CgIIBxgA"
+          }
+        },
+        "addToWatchLaterCommand": {
+          "clickTrackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/browse/edit_playlist"
+            }
+          },
+          "playlistEditEndpoint": {
+            "playlistId": "WL",
+            "actions": [
+              {
+                "addedVideoId": "EdRV8ccyEE0",
+                "action": "ACTION_ADD_VIDEO"
+              }
+            ]
+          }
+        },
+        "removeFromWatchLaterCommand": {
+          "clickTrackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/browse/edit_playlist"
+            }
+          },
+          "playlistEditEndpoint": {
+            "playlistId": "WL",
+            "actions": [
+              {
+                "action": "ACTION_REMOVE_VIDEO_BY_VIDEO_ID",
+                "removedVideoId": "EdRV8ccyEE0"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "storyboards": {
+    "playerStoryboardSpecRenderer": {
+      "spec": "https://i.ytimg.com/sb/EdRV8ccyEE0/storyboard3_L$L/$N.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCKyJ5qgF|48#27#100#10#10#0#default#rs$AOn4CLBDYBd7ZrMcAfdkCWrKiVzcTJcFEg|80#45#308#10#10#10000#M$M#rs$AOn4CLB4_W92wkIaWAYuImo7zS4A2B7f0Q|160#90#308#5#5#10000#M$M#rs$AOn4CLAUeHTu--AerM2V05plL5zqtccTJQ",
+      "recommendedLevel": 2,
+      "highResolutionRecommendedLevel": 2
+    }
+  },
+  "microformat": {
+    "playerMicroformatRenderer": {
+      "thumbnail": {
+        "thumbnails": [
+          {
+            "url": "https://i.ytimg.com/vi/EdRV8ccyEE0/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        ]
+      },
+      "embed": {
+        "iframeUrl": "https://www.youtube.com/embed/EdRV8ccyEE0",
+        "width": 1280,
+        "height": 720
+      },
+      "title": {
+        "simpleText": "The Knowledge | Lewis Dartnell | Talks at Google"
+      },
+      "description": {
+        "simpleText": "How would you go about rebuilding a technological society from scratch?\n\nTo explore this topic further, have a look at the book’s website www.the-knowledge.org – for lots of extra material including videos, How To guides (including instructions for making your own gasifier stove) and recommended lists of the best films, books and sci-fi novels on the post-apocalyptic world and rebuilding from scratch.\n \nIf our technological society collapsed tomorrow, perhaps from a viral pandemic or catastrophic asteroid impact, what would be the one book you would want to press into the hands of the  postapocalyptic survivors? What crucial knowledge would they need to survive in the immediate aftermath and to rebuild civilization as quickly as possible—a guide for rebooting the\nworld?\n \nHuman knowledge is collective, distributed across the population. It has built on itself for centuries, becoming vast and increasingly specialized. Most of us are ignorant about the fundamental principles of the civilization that supports us, happily utilizing the latest—or even the most basic—technology without having the slightest idea of why it works or how it came to be. If you had to go back to absolute basics, like some sort of postcataclysmic Robinson Crusoe, would you know how to re-create an internal combustion engine, put together a microscope, get metals out of\nrock, accurately tell time, weave fibers into clothing, or even how to produce food for yourself?\n \nRegarded as one of the brightest young scientists of his generation, Lewis Dartnell proposes that the key to preserving civilization in an apocalyptic scenario is to provide a quickstart guide, adapted to cataclysmic circumstances. The Knowledge describes many of the modern technologies we employ, but first it explains the fundamentals upon which they are built.\nEvery piece of technology rests on an enormous support network of other technologies, all interlinked and mutually dependent. You can’t hope to build a radio, for example, without understanding how to acquire the raw materials it requires, as well as generate the electricity needed to run it. But Dartnell doesn’t just provide specific information for starting over; he also reveals the greatest invention of them all—the phenomenal knowledge-generating machine that is the scientific method itself. This would allow survivors to learn technological advances not explicitly\nexplored in The Knowledge as well as things we have yet to discover. \n \nThe Knowledge is a brilliantly original guide to the fundamentals of\nscience and how it built our modern world as well as a thought experiment about the very idea of scientific knowledge itself.\n\nThis Authors at Google talk was hosted by Boris Debic."
+      },
+      "lengthSeconds": "3066",
+      "ownerProfileUrl": "http://www.youtube.com/@talksatgoogle",
+      "externalChannelId": "UCbmNph6atAoGfqLoCL_duAg",
+      "isFamilySafe": true,
+      "availableCountries": [
+        "AD",
+        "AE",
+        "AF",
+        "AG",
+        "AI",
+        "AL",
+        "AM",
+        "AO",
+        "AQ",
+        "AR",
+        "AS",
+        "AT",
+        "AU",
+        "AW",
+        "AX",
+        "AZ",
+        "BA",
+        "BB",
+        "BD",
+        "BE",
+        "BF",
+        "BG",
+        "BH",
+        "BI",
+        "BJ",
+        "BL",
+        "BM",
+        "BN",
+        "BO",
+        "BQ",
+        "BR",
+        "BS",
+        "BT",
+        "BV",
+        "BW",
+        "BY",
+        "BZ",
+        "CA",
+        "CC",
+        "CD",
+        "CF",
+        "CG",
+        "CH",
+        "CI",
+        "CK",
+        "CL",
+        "CM",
+        "CN",
+        "CO",
+        "CR",
+        "CU",
+        "CV",
+        "CW",
+        "CX",
+        "CY",
+        "CZ",
+        "DE",
+        "DJ",
+        "DK",
+        "DM",
+        "DO",
+        "DZ",
+        "EC",
+        "EE",
+        "EG",
+        "EH",
+        "ER",
+        "ES",
+        "ET",
+        "FI",
+        "FJ",
+        "FK",
+        "FM",
+        "FO",
+        "FR",
+        "GA",
+        "GB",
+        "GD",
+        "GE",
+        "GF",
+        "GG",
+        "GH",
+        "GI",
+        "GL",
+        "GM",
+        "GN",
+        "GP",
+        "GQ",
+        "GR",
+        "GS",
+        "GT",
+        "GU",
+        "GW",
+        "GY",
+        "HK",
+        "HM",
+        "HN",
+        "HR",
+        "HT",
+        "HU",
+        "ID",
+        "IE",
+        "IL",
+        "IM",
+        "IN",
+        "IO",
+        "IQ",
+        "IR",
+        "IS",
+        "IT",
+        "JE",
+        "JM",
+        "JO",
+        "JP",
+        "KE",
+        "KG",
+        "KH",
+        "KI",
+        "KM",
+        "KN",
+        "KP",
+        "KR",
+        "KW",
+        "KY",
+        "KZ",
+        "LA",
+        "LB",
+        "LC",
+        "LI",
+        "LK",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LY",
+        "MA",
+        "MC",
+        "MD",
+        "ME",
+        "MF",
+        "MG",
+        "MH",
+        "MK",
+        "ML",
+        "MM",
+        "MN",
+        "MO",
+        "MP",
+        "MQ",
+        "MR",
+        "MS",
+        "MT",
+        "MU",
+        "MV",
+        "MW",
+        "MX",
+        "MY",
+        "MZ",
+        "NA",
+        "NC",
+        "NE",
+        "NF",
+        "NG",
+        "NI",
+        "NL",
+        "NO",
+        "NP",
+        "NR",
+        "NU",
+        "NZ",
+        "OM",
+        "PA",
+        "PE",
+        "PF",
+        "PG",
+        "PH",
+        "PK",
+        "PL",
+        "PM",
+        "PN",
+        "PR",
+        "PS",
+        "PT",
+        "PW",
+        "PY",
+        "QA",
+        "RE",
+        "RO",
+        "RS",
+        "RU",
+        "RW",
+        "SA",
+        "SB",
+        "SC",
+        "SD",
+        "SE",
+        "SG",
+        "SH",
+        "SI",
+        "SJ",
+        "SK",
+        "SL",
+        "SM",
+        "SN",
+        "SO",
+        "SR",
+        "SS",
+        "ST",
+        "SV",
+        "SX",
+        "SY",
+        "SZ",
+        "TC",
+        "TD",
+        "TF",
+        "TG",
+        "TH",
+        "TJ",
+        "TK",
+        "TL",
+        "TM",
+        "TN",
+        "TO",
+        "TR",
+        "TT",
+        "TV",
+        "TW",
+        "TZ",
+        "UA",
+        "UG",
+        "UM",
+        "US",
+        "UY",
+        "UZ",
+        "VA",
+        "VC",
+        "VE",
+        "VG",
+        "VI",
+        "VN",
+        "VU",
+        "WF",
+        "WS",
+        "YE",
+        "YT",
+        "ZA",
+        "ZM",
+        "ZW"
+      ],
+      "isUnlisted": false,
+      "hasYpcMetadata": false,
+      "viewCount": "19568",
+      "category": "Education",
+      "publishDate": "2015-03-30T10:45:04-07:00",
+      "ownerChannelName": "Talks at Google",
+      "uploadDate": "2015-03-30T10:45:04-07:00",
+      "isShortsEligible": false,
+      "externalVideoId": "EdRV8ccyEE0",
+      "likeCount": "151",
+      "canonicalUrl": "https://www.youtube.com/watch?v=EdRV8ccyEE0"
+    }
+  },
+  "cards": {
+    "cardCollectionRenderer": {
+      "cards": [
+        {
+          "cardRenderer": {
+            "teaser": {
+              "simpleCardTeaserRenderer": {
+                "message": {
+                  "simpleText": "Vezi corecturile"
+                },
+                "trackingParams": "CAUQ0DYiEwjLooWzwc2SAxUmHnMJHcuwHRs=",
+                "prominent": true,
+                "logVisibilityUpdates": true,
+                "onTapCommand": {
+                  "clickTrackingParams": "CAUQ0DYiEwjLooWzwc2SAxUmHnMJHcuwHRvKAQQ_KzqY",
+                  "changeEngagementPanelVisibilityAction": {
+                    "targetId": "engagement-panel-error-corrections",
+                    "visibility": "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"
+                  }
+                }
+              }
+            },
+            "cueRanges": [
+              {
+                "startCardActiveMs": "0",
+                "endCardActiveMs": "5000",
+                "teaserDurationMs": "6000",
+                "iconAfterTeaserMs": "5000"
+              }
+            ],
+            "trackingParams": "CAQQtZcBGAAiEwjLooWzwc2SAxUmHnMJHcuwHRs="
+          }
+        }
+      ],
+      "headerText": {
+        "simpleText": "De la Talks at Google"
+      },
+      "icon": {
+        "infoCardIconRenderer": {
+          "trackingParams": "CAMQsJcBIhMIy6KFs8HNkgMVJh5zCR3LsB0b"
+        }
+      },
+      "closeButton": {
+        "infoCardIconRenderer": {
+          "trackingParams": "CAIQsZcBIhMIy6KFs8HNkgMVJh5zCR3LsB0b"
+        }
+      },
+      "trackingParams": "CAEQwjciEwjLooWzwc2SAxUmHnMJHcuwHRs=",
+      "allowTeaserDismiss": true,
+      "logIconVisibilityUpdates": true
+    }
+  },
+  "trackingParams": "CAAQu2kiEwjLooWzwc2SAxUmHnMJHcuwHRs=",
+  "adBreakHeartbeatParams": "Q0FBJTNE",
+  "frameworkUpdates": {
+    "entityBatchUpdate": {
+      "mutations": [
+        {
+          "entityKey": "Eg0KC0VkUlY4Y2N5RUUwIPYBKAE%3D",
+          "type": "ENTITY_MUTATION_TYPE_REPLACE",
+          "payload": {
+            "offlineabilityEntity": {
+              "key": "Eg0KC0VkUlY4Y2N5RUUwIPYBKAE%3D",
+              "addToOfflineButtonState": "ADD_TO_OFFLINE_BUTTON_STATE_UNKNOWN"
+            }
+          }
+        }
+      ],
+      "timestamp": {
+        "seconds": "1770677952",
+        "nanos": 703269802
+      }
+    }
+  }
+}

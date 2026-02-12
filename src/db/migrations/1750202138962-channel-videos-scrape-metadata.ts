@@ -8,24 +8,32 @@ export async function up(db: Kysely<any>): Promise<void> {
       col.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
 
+    .addColumn("firstVideoId", "varchar(11)")
+    .addColumn("lastVideoId", "varchar(11)")
+
     .addColumn("processingStatus", "varchar", (col) => col.notNull())
     .addColumn("processingStartedAt", "timestamp")
     .addColumn("processingCompletedAt", "timestamp")
 
-    .addColumn("failReason", "varchar")
+    .addColumn("failureReason", "varchar")
+    .addColumn("terminationReason", "varchar")
 
-    .addColumn("videosWithValidCaptionsCount", "integer", (col) =>
+    .addColumn("videosBothCaptionsValid", "integer", (col) =>
       col.notNull(),
     )
-    .addColumn("videosWithNoCaptionsCount", "integer", (col) => col.notNull())
-    .addColumn("videosWithNotSuitableCaptionsCount", "integer", (col) =>
+    .addColumn("videosNoCaptionsValid", "integer", (col) => col.notNull())
+    .addColumn("videosOnlyManualCaptionsValid", "integer", (col) =>
       col.notNull(),
     )
-    .addColumn("consecutiveFailedVideosCount", "integer", (col) =>
+    .addColumn("videosOnlyAutoCaptionsValid", "integer", (col) =>
       col.notNull(),
     )
-    .addColumn("totalFailedVideosCount", "integer", (col) => col.notNull())
-    .addColumn("processedVideosCount", "integer", (col) => col.notNull())
+    .addColumn("videosAll", "integer", (col) => col.notNull())
+    .addColumn("videosSkippedAlreadyProcessed", "integer", (col) =>
+      col.notNull(),
+    )
+    .addColumn("videosFailed", "integer", (col) => col.notNull())
+    .addColumn("videosProcessed", "integer", (col) => col.notNull())
 
     .addColumn("channelId", "varchar(24)", (col) =>
       col.references("channels.id").onDelete("cascade").notNull(),

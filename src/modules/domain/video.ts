@@ -8,7 +8,8 @@ export type Video = {
   viewCount: number;
   thumbnail: string;
   languageCode: LanguageCode;
-  captionType: "manual" | "auto";
+  hasAutoCaptions: boolean;
+  hasManualCaptions: boolean;
   channelId: string;
   createdAt: Date;
   updatedAt: Date;

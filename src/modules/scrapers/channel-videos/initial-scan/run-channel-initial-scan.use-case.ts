@@ -10,7 +10,7 @@ import {
 } from "./constants.js";
 import { ChannelRepository } from "./repositories/channel-repository.js";
 import { ChannelInitialProcessor } from "./channel-initial-scan.service.js";
-import { ChannelVideosScrapeMetadataService } from "../../../domain/channel-videos-scrape-metadata.service.js";  
+import { ChannelVideosScrapeMetadataService } from "../../../domain/channel-videos-scrape-metadata.service.js";
 
 @injectable()
 export class RunChannelInitialScanUseCase {
@@ -19,7 +19,7 @@ export class RunChannelInitialScanUseCase {
     private readonly channelRepository: ChannelRepository,
     private readonly channelInitialProcessor: ChannelInitialProcessor,
     private readonly channelVideosScrapeMetadataService: ChannelVideosScrapeMetadataService,
-  ) {}
+  ) { }
 
   async execute() {
     const channelResult =
@@ -52,17 +52,39 @@ export class RunChannelInitialScanUseCase {
 
     const { channel, videosScrapeMetadata } = channelResult.value;
 
+    const updateMetadataResult = await this.channelRepository.saveMetadata(
+      this.channelVideosScrapeMetadataService.markAsInProgress({
+        videosScrapeMetadata,
+      }),
+    )
+
+    if (!updateMetadataResult.ok) {
+      this.logger.error({
+        message: `Failed to update metadata.`,
+        error: updateMetadataResult.error,
+      });
+
+      return Failure({
+        waitFor: DELAY_WHEN_FAILED_TO_PROCESS_CHANNEL,
+        error: updateMetadataResult.error,
+      });
+    }
+
     const processResult = await this.channelInitialProcessor.process(
-      channel,
+      {
+        channel,
+        previousMetadata: videosScrapeMetadata,
+      },
     );
 
     if (!processResult.ok) {
       const saveMetadataResult = await this.channelRepository.saveMetadata(
-          this.channelVideosScrapeMetadataService.markAsFailed({ 
-            videosScrapeMetadata,
-            processingContext: processResult.error.processingContext.currentContext 
-          }),
-        )
+        this.channelVideosScrapeMetadataService.markAsFailed({
+          videosScrapeMetadata,
+          processingContext: processResult.error.processingContext.currentContext,
+          ...this.mapFailureState(processResult.error.type),
+        }),
+      )
 
       if (!saveMetadataResult.ok) {
         this.logger.error({
@@ -87,7 +109,7 @@ export class RunChannelInitialScanUseCase {
     }
 
     const saveMetadataResult = await this.channelRepository.saveMetadata(
-      this.channelVideosScrapeMetadataService.markAsSuccess({
+      this.channelVideosScrapeMetadataService.markAsCompleted({
         videosScrapeMetadata,
         processingContext: processResult.value.processingContext,
       }),
@@ -108,5 +130,40 @@ export class RunChannelInitialScanUseCase {
     return Success({
       waitFor: DELAY_WHEN_SUCCESS_PROCESSING_CHANNEL,
     });
+  }
+
+  private mapFailureState(
+    errorType:
+      | "CHANNEL_HAS_NO_VIDEOS"
+      | "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS"
+      | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
+      | "VIDEO_PERSISTING_FAILED",
+  ): {
+    processingStatus: "FAILED" | "TERMINATED_EARLY";
+    failureReason?: "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS";
+    terminationReason?:
+    | "CHANNEL_HAS_NO_VIDEOS"
+    | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS";
+  } {
+    if (errorType === "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS") {
+      return {
+        processingStatus: "FAILED",
+        failureReason: "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS",
+      };
+    }
+
+    if (
+      errorType === "CHANNEL_HAS_NO_VIDEOS" ||
+      errorType === "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
+    ) {
+      return {
+        processingStatus: "TERMINATED_EARLY",
+        terminationReason: errorType,
+      };
+    }
+
+    return {
+      processingStatus: "FAILED",
+    };
   }
 }

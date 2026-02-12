@@ -9,7 +9,7 @@ import { DatabaseError } from "../../../../../db/types.js";
 
 @injectable()
 export class VideoRepository {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: Logger) { }
 
   async createWithCaptions(video: Video, captions: Caption[]): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
@@ -18,7 +18,6 @@ export class VideoRepository {
           .insertInto("videos")
           .values({
             ...video,
-            captionType: video.captionType, // TODO: fix
           })
           .execute();
 

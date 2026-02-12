@@ -8,6 +8,13 @@ export type ProcessingStatus =
   | "SUCCESS"
   | "FAIL";
 
+export type ChannelVideosScrapeProcessingStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "FAILED"
+  | "TERMINATED_EARLY";
+
 export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
 
 export interface Database {
@@ -66,7 +73,8 @@ export interface VideosTable {
   viewCount: number;
   thumbnail: string;
   languageCode: LanguageCode;
-  captionType: "manual" | "auto";
+  hasAutoCaptions: boolean;
+  hasManualCaptions: boolean;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -85,22 +93,28 @@ export interface CaptionsTable {
 export interface ChannelVideosScrapeMetadataTable {
   id: Generated<string>;
   channelId: string;
-  firstProcessedVideoId: string | null;
-  lastProcessedVideoId: string | null;
-  processingStatus: ProcessingStatus;
+  firstVideoId: string | null;
+  lastVideoId: string | null;
+  processingStatus: ChannelVideosScrapeProcessingStatus;
   processingStartedAt: Date | null;
   processingCompletedAt: Date | null;
-  failReason:
-  | "CHANNEL_HAS_NO_VIDEOS"
+  failureReason:
   | "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS"
-  | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
+  | (string & {})
   | null;
-  videosWithValidCaptionsCount: number;
-  videosWithNoCaptionsCount: number;
-  videosWithNotSuitableCaptionsCount: number;
-  consecutiveFailedVideosCount: number;
-  totalFailedVideosCount: number;
-  processedVideosCount: number;
+  terminationReason:
+  | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS"
+  | "CHANNEL_HAS_TOO_MANY_VIDEOS"
+  | "CHANNEL_HAS_NO_VIDEOS"
+  | null;
+  videosBothCaptionsValid: number;
+  videosNoCaptionsValid: number;
+  videosOnlyManualCaptionsValid: number;
+  videosOnlyAutoCaptionsValid: number;
+  videosAll: number;
+  videosSkippedAlreadyProcessed: number;
+  videosFailed: number;
+  videosProcessed: number;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

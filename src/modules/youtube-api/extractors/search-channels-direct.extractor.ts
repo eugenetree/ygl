@@ -10,7 +10,6 @@ import { validator } from "../../_common/validation/validator.js";
 import { abbreviatedNumberParser } from "../parsers/abbreviated-number.parser.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
 import { inputSchemas, outputSchemas } from "./search-channels-direct.schemas.js";
-import { writeFileSync } from "fs";
 
 class SearchChannelsDirectExtractor {
   private logger = new Logger({ context: SearchChannelsDirectExtractor.name });
@@ -21,13 +20,10 @@ class SearchChannelsDirectExtractor {
     z.infer<typeof outputSchemas.result>,
     ValidationError | ParsingError
   > {
-    console.log("debug: extracting from html");
     const rawInitialResponseResult = jsonFromHtmlExtractor.getInitialData(html);
     if (!rawInitialResponseResult.ok) {
       return Failure(rawInitialResponseResult.error);
     }
-
-    writeFileSync("initial-response.json", JSON.stringify(rawInitialResponseResult.value, null, 2));
 
     const initialResponse = inputSchemas.initialResponse.safeParse(
       rawInitialResponseResult.value,

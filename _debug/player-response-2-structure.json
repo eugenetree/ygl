@@ -1,0 +1,2739 @@
+{
+  "responseContext": {
+    "serviceTrackingParams": [
+      {
+        "service": "GFEEDBACK",
+        "params": [
+          {
+            "key": "ipcc",
+            "value": "0"
+          },
+          {
+            "key": "is_viewed_live",
+            "value": "False"
+          },
+          {
+            "key": "is_alc_surface",
+            "value": "false"
+          },
+          {
+            "key": "logged_in",
+            "value": "0"
+          },
+          {
+            "key": "visitor_data",
+            "value": "Cgs2dEppeFRGQTJPYyjww6nMBjIKCgJERRIEEgAgUGLgAgrdAjEzLllURT1zQjdWSUM3QmJvd1R2OWlDOFNQb1NvbXRLdUZpMkJBV0Z4b0tDWEFYZC1pSDNIVzZweThLVkd4OFpwRGlUUXRMVUw1NE5lZjZRSGVGNF9PbW9yby1JTnUyM1NCdHltNTJDNG5ZUFRxOEtvWG8zLTFzSWpUaThteXQ2U0NKbGJOeHhJTDhuYmxfb0sxMkstU1QzV0p0M2xlSTUyT0hMMzliV0xKYkJ2ZUJzNmluS3lUTmxoaEJqQ2ZJMUhqX0FNY0xBZDZISHFJX05LeFI1V282UjBGTC1JdnIydTJMelNMc0k0MFZxZzJYdTJYQWFQNnMtcmVJWFNGZFFCY2ZBRF81Mjd6b055bEZIOUZ4M0tueHR4SG4wSXRxOUJCbUY1NUpsVUJ3d2NmS3lrUk1KeWo4RVJqa0FCWTRKVktKWUo4REdhTU81SGhadlloWDNnT3J3SkJrZWc%3D"
+          }
+        ]
+      },
+      {
+        "service": "CSI",
+        "params": [
+          {
+            "key": "c",
+            "value": "WEB"
+          },
+          {
+            "key": "cver",
+            "value": "2.20260206.08.00"
+          },
+          {
+            "key": "yt_li",
+            "value": "0"
+          },
+          {
+            "key": "GetPlayer_rid",
+            "value": "0xf749d9a304f0c447"
+          }
+        ]
+      },
+      {
+        "service": "GUIDED_HELP",
+        "params": [
+          {
+            "key": "logged_in",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "service": "ECATCHER",
+        "params": [
+          {
+            "key": "client.version",
+            "value": "2.20260206"
+          },
+          {
+            "key": "client.name",
+            "value": "WEB"
+          }
+        ]
+      }
+    ],
+    "maxAgeSeconds": 0,
+    "mainAppWebResponseContext": {
+      "loggedOut": true,
+      "trackingParam": "kx_fmPxhoPZRj1GfLfwK4mDFfhh0DlgK0yfLTolnUc3AEZzRgkuMsNLBwOcCE59TDtslLKPQ-SS"
+    },
+    "webResponseContextExtensionData": {
+      "webResponseContextPreloadData": {
+        "preloadMessageNames": [
+          "miniplayerRenderer",
+          "playerCaptionsTracklistRenderer",
+          "playerStoryboardSpecRenderer",
+          "playerMicroformatRenderer",
+          "cardCollectionRenderer",
+          "cardRenderer",
+          "simpleCardTeaserRenderer",
+          "infoCardIconRenderer",
+          "endscreenRenderer",
+          "endscreenElementRenderer",
+          "subscribeButtonRenderer",
+          "confirmDialogRenderer",
+          "buttonRenderer",
+          "thumbnailOverlayTimeStatusRenderer",
+          "toggleButtonViewModel",
+          "buttonViewModel"
+        ]
+      },
+      "hasDecorated": true
+    }
+  },
+  "playabilityStatus": {
+    "status": "OK",
+    "playableInEmbed": true,
+    "miniplayer": {
+      "miniplayerRenderer": {
+        "playbackMode": "PLAYBACK_MODE_ALLOW"
+      }
+    },
+    "contextParams": "Q0FFU0FnZ0M="
+  },
+  "streamingData": {
+    "expiresInSeconds": "21540",
+    "formats": [
+      {
+        "itag": 18,
+        "url": "https://rr3---sn-ab5sznzs.googlevideo.com/videoplayback?expire=1770698320&ei=8GGKaYfyGuGW2_gPhIPasQc&ip=38.132.98.197&id=o-APHgN9jUYPrOOXiihl5Ips1Cgez38R9h509VILqXHx0U&itag=18&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&cps=1284&met=1770676720%2C&mh=S2&mm=31%2C26&mn=sn-ab5sznzs%2Csn-p5qs7nzy&ms=au%2Conr&mv=m&mvi=3&pl=24&rms=au%2Cau&initcwndbps=753750&bui=AW-iu_osqcyeFRGH3C833ioehqC8PEWMhnWFDh0zeLrJJ2czVoank_xBhtrBw0E3c1UrdGnOCVLe51DG&spc=q5xjPM8gd6pj_XdZSblE-8RG9RM3j3JwznzHmxJaUsC5ylUE75p7ILuqFZHc2lTBnQePQ3VW&vprv=1&svpuc=1&mime=video%2Fmp4&ns=oYT0QNR3IGl1tPNcjCooY-gS&rqh=1&gir=yes&clen=13920289&ratebypass=yes&dur=301.998&lmt=1770670164101292&mt=1770676211&fvip=1&fexp=51355912%2C51552689%2C51565115%2C51565682%2C51580968&c=WEB&sefc=1&txp=3309224&n=9R0iRhKYwd9l9pbvK&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cratebypass%2Cdur%2Clmt&sig=AJEij0EwRgIhAOIdd71RGbQCdxPzEQ9sNKiZIvwQCOmqCj6BqGxUS7wLAiEAwDxpNByJlc_qIjiHgM9pqFdDipanMy8uHd-NTdmU0oM%3D&lsparams=cps%2Cmet%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=APaTxxMwRQIgNOKcjIvdY7Y6Fu-VJm3nnC494-FxpIdnniDUT2P40fACIQD3pBQxtvKn-hFId-airh8kd3mY65EVSVu31JnGjnfC5w%3D%3D",
+        "mimeType": "video/mp4; codecs=\"avc1.42001E, mp4a.40.2\"",
+        "bitrate": 368870,
+        "width": 640,
+        "height": 360,
+        "lastModified": "1770670164101292",
+        "contentLength": "13920289",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 368751,
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "301998",
+        "audioSampleRate": "22050",
+        "audioChannels": 2,
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      }
+    ],
+    "adaptiveFormats": [
+      {
+        "itag": 136,
+        "mimeType": "video/mp4; codecs=\"avc1.64001f\"",
+        "bitrate": 2028683,
+        "width": 1280,
+        "height": 720,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "1490"
+        },
+        "lastModified": "1770670164075008",
+        "contentLength": "40601666",
+        "quality": "hd720",
+        "fps": 30,
+        "qualityLabel": "720p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 1075893,
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_720P"
+      },
+      {
+        "itag": 247,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 2418231,
+        "width": 1280,
+        "height": 720,
+        "initRange": {
+          "start": "0",
+          "end": "219"
+        },
+        "indexRange": {
+          "start": "220",
+          "end": "1269"
+        },
+        "lastModified": "1770670165227329",
+        "contentLength": "42965596",
+        "quality": "hd720",
+        "fps": 30,
+        "qualityLabel": "720p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 1138530,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301902",
+        "qualityOrdinal": "QUALITY_ORDINAL_720P"
+      },
+      {
+        "itag": 398,
+        "mimeType": "video/mp4; codecs=\"av01.0.05M.08\"",
+        "bitrate": 1539223,
+        "width": 1280,
+        "height": 720,
+        "initRange": {
+          "start": "0",
+          "end": "699"
+        },
+        "indexRange": {
+          "start": "700",
+          "end": "1451"
+        },
+        "lastModified": "1770670142486996",
+        "contentLength": "28072553",
+        "quality": "hd720",
+        "fps": 30,
+        "qualityLabel": "720p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 743887,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_720P"
+      },
+      {
+        "itag": 135,
+        "mimeType": "video/mp4; codecs=\"avc1.4d401f\"",
+        "bitrate": 1169691,
+        "width": 854,
+        "height": 480,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "1490"
+        },
+        "lastModified": "1770670163912414",
+        "contentLength": "21392940",
+        "quality": "large",
+        "fps": 30,
+        "qualityLabel": "480p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 566886,
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_480P"
+      },
+      {
+        "itag": 244,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 1201392,
+        "width": 854,
+        "height": 480,
+        "initRange": {
+          "start": "0",
+          "end": "219"
+        },
+        "indexRange": {
+          "start": "220",
+          "end": "1253"
+        },
+        "lastModified": "1770670165057066",
+        "contentLength": "21201256",
+        "quality": "large",
+        "fps": 30,
+        "qualityLabel": "480p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 561804,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301902",
+        "qualityOrdinal": "QUALITY_ORDINAL_480P"
+      },
+      {
+        "itag": 397,
+        "mimeType": "video/mp4; codecs=\"av01.0.04M.08\"",
+        "bitrate": 769886,
+        "width": 854,
+        "height": 480,
+        "initRange": {
+          "start": "0",
+          "end": "699"
+        },
+        "indexRange": {
+          "start": "700",
+          "end": "1451"
+        },
+        "lastModified": "1770670142339687",
+        "contentLength": "14382957",
+        "quality": "large",
+        "fps": 30,
+        "qualityLabel": "480p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 381130,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_480P"
+      },
+      {
+        "itag": 134,
+        "mimeType": "video/mp4; codecs=\"avc1.4d401e\"",
+        "bitrate": 723260,
+        "width": 640,
+        "height": 360,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "1490"
+        },
+        "lastModified": "1770670163766313",
+        "contentLength": "12129557",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 321418,
+        "highReplication": true,
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      },
+      {
+        "itag": 243,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 646769,
+        "width": 640,
+        "height": 360,
+        "initRange": {
+          "start": "0",
+          "end": "219"
+        },
+        "indexRange": {
+          "start": "220",
+          "end": "1230"
+        },
+        "lastModified": "1770670165011521",
+        "contentLength": "12375450",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 327932,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301902",
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      },
+      {
+        "itag": 396,
+        "mimeType": "video/mp4; codecs=\"av01.0.01M.08\"",
+        "bitrate": 399522,
+        "width": 640,
+        "height": 360,
+        "initRange": {
+          "start": "0",
+          "end": "699"
+        },
+        "indexRange": {
+          "start": "700",
+          "end": "1451"
+        },
+        "lastModified": "1770670142274391",
+        "contentLength": "8351885",
+        "quality": "medium",
+        "fps": 30,
+        "qualityLabel": "360p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 221314,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_360P"
+      },
+      {
+        "itag": 133,
+        "mimeType": "video/mp4; codecs=\"avc1.4d4015\"",
+        "bitrate": 281954,
+        "width": 426,
+        "height": 240,
+        "initRange": {
+          "start": "0",
+          "end": "738"
+        },
+        "indexRange": {
+          "start": "739",
+          "end": "1490"
+        },
+        "lastModified": "1770670163721846",
+        "contentLength": "5999835",
+        "quality": "small",
+        "fps": 30,
+        "qualityLabel": "240p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 158988,
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_240P"
+      },
+      {
+        "itag": 242,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 330985,
+        "width": 426,
+        "height": 240,
+        "initRange": {
+          "start": "0",
+          "end": "218"
+        },
+        "indexRange": {
+          "start": "219",
+          "end": "1229"
+        },
+        "lastModified": "1770670165024553",
+        "contentLength": "6509954",
+        "quality": "small",
+        "fps": 30,
+        "qualityLabel": "240p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 172505,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301902",
+        "qualityOrdinal": "QUALITY_ORDINAL_240P"
+      },
+      {
+        "itag": 395,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "bitrate": 198494,
+        "width": 426,
+        "height": 240,
+        "initRange": {
+          "start": "0",
+          "end": "699"
+        },
+        "indexRange": {
+          "start": "700",
+          "end": "1451"
+        },
+        "lastModified": "1770670142268827",
+        "contentLength": "4247174",
+        "quality": "small",
+        "fps": 30,
+        "qualityLabel": "240p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 112544,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_240P"
+      },
+      {
+        "itag": 160,
+        "mimeType": "video/mp4; codecs=\"avc1.4d400c\"",
+        "bitrate": 121737,
+        "width": 256,
+        "height": 144,
+        "initRange": {
+          "start": "0",
+          "end": "737"
+        },
+        "indexRange": {
+          "start": "738",
+          "end": "1489"
+        },
+        "lastModified": "1770670163686502",
+        "contentLength": "2551978",
+        "quality": "tiny",
+        "fps": 30,
+        "qualityLabel": "144p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 67624,
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_144P"
+      },
+      {
+        "itag": 278,
+        "mimeType": "video/webm; codecs=\"vp9\"",
+        "bitrate": 160986,
+        "width": 256,
+        "height": 144,
+        "initRange": {
+          "start": "0",
+          "end": "218"
+        },
+        "indexRange": {
+          "start": "219",
+          "end": "1229"
+        },
+        "lastModified": "1770670165282550",
+        "contentLength": "3821664",
+        "quality": "tiny",
+        "fps": 30,
+        "qualityLabel": "144p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 101268,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301902",
+        "qualityOrdinal": "QUALITY_ORDINAL_144P"
+      },
+      {
+        "itag": 394,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "bitrate": 94041,
+        "width": 256,
+        "height": 144,
+        "initRange": {
+          "start": "0",
+          "end": "699"
+        },
+        "indexRange": {
+          "start": "700",
+          "end": "1451"
+        },
+        "lastModified": "1770670141977831",
+        "contentLength": "2064786",
+        "quality": "tiny",
+        "fps": 30,
+        "qualityLabel": "144p",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 54714,
+        "colorInfo": {
+          "primaries": "COLOR_PRIMARIES_BT709",
+          "transferCharacteristics": "COLOR_TRANSFER_CHARACTERISTICS_BT709",
+          "matrixCoefficients": "COLOR_MATRIX_COEFFICIENTS_BT709"
+        },
+        "approxDurationMs": "301901",
+        "qualityOrdinal": "QUALITY_ORDINAL_144P"
+      },
+      {
+        "itag": 140,
+        "mimeType": "audio/mp4; codecs=\"mp4a.40.2\"",
+        "bitrate": 130541,
+        "initRange": {
+          "start": "0",
+          "end": "722"
+        },
+        "indexRange": {
+          "start": "723",
+          "end": "1126"
+        },
+        "lastModified": "1770670138533270",
+        "contentLength": "4887228",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 129493,
+        "highReplication": true,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "301929",
+        "audioSampleRate": "44100",
+        "audioChannels": 2,
+        "loudnessDb": -9.5200005,
+        "trackAbsoluteLoudnessLkfs": -23.52,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 140,
+        "mimeType": "audio/mp4; codecs=\"mp4a.40.2\"",
+        "bitrate": 130594,
+        "initRange": {
+          "start": "0",
+          "end": "722"
+        },
+        "indexRange": {
+          "start": "723",
+          "end": "1126"
+        },
+        "lastModified": "1770670194118705",
+        "contentLength": "4887749",
+        "quality": "tiny",
+        "xtags": "CgcKAnZiEgEx",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 129507,
+        "highReplication": true,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "301929",
+        "audioSampleRate": "44100",
+        "audioChannels": 2,
+        "loudnessDb": 0.60000038,
+        "trackAbsoluteLoudnessLkfs": -13.4,
+        "isVb": true,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 249,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 51428,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "781"
+        },
+        "lastModified": "1770670153419167",
+        "contentLength": "1867661",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 49490,
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": -9.5300007,
+        "trackAbsoluteLoudnessLkfs": -23.530001,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 249,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 51527,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "781"
+        },
+        "lastModified": "1770670208670652",
+        "contentLength": "1908543",
+        "quality": "tiny",
+        "xtags": "CgcKAnZiEgEx",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 50574,
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": 0.60000038,
+        "trackAbsoluteLoudnessLkfs": -13.4,
+        "isVb": true,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 250,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 67773,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "782"
+        },
+        "lastModified": "1770670153370303",
+        "contentLength": "2327749",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 61682,
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": -9.5300007,
+        "trackAbsoluteLoudnessLkfs": -23.530001,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 250,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 65433,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "782"
+        },
+        "lastModified": "1770670208654748",
+        "contentLength": "2288806",
+        "quality": "tiny",
+        "xtags": "CgcKAnZiEgEx",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 60650,
+        "audioQuality": "AUDIO_QUALITY_LOW",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": 0.60000038,
+        "trackAbsoluteLoudnessLkfs": -13.4,
+        "isVb": true,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 251,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 129756,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "782"
+        },
+        "lastModified": "1770670153369488",
+        "contentLength": "4288520",
+        "quality": "tiny",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 113640,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": -9.5300007,
+        "trackAbsoluteLoudnessLkfs": -23.530001,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      },
+      {
+        "itag": 251,
+        "mimeType": "audio/webm; codecs=\"opus\"",
+        "bitrate": 134668,
+        "initRange": {
+          "start": "0",
+          "end": "258"
+        },
+        "indexRange": {
+          "start": "259",
+          "end": "782"
+        },
+        "lastModified": "1770670208667906",
+        "contentLength": "4630492",
+        "quality": "tiny",
+        "xtags": "CgcKAnZiEgEx",
+        "projectionType": "RECTANGULAR",
+        "averageBitrate": 122702,
+        "audioQuality": "AUDIO_QUALITY_MEDIUM",
+        "approxDurationMs": "301901",
+        "audioSampleRate": "48000",
+        "audioChannels": 2,
+        "loudnessDb": 0.60000038,
+        "trackAbsoluteLoudnessLkfs": -13.4,
+        "isVb": true,
+        "qualityOrdinal": "QUALITY_ORDINAL_UNKNOWN"
+      }
+    ],
+    "serverAbrStreamingUrl": "https://rr3---sn-ab5sznzs.googlevideo.com/videoplayback?expire=1770698320&ei=8GGKaYfyGuGW2_gPhIPasQc&ip=38.132.98.197&id=o-APHgN9jUYPrOOXiihl5Ips1Cgez38R9h509VILqXHx0U&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&cps=1284&met=1770676720%2C&mh=S2&mm=31%2C26&mn=sn-ab5sznzs%2Csn-p5qs7nzy&ms=au%2Conr&mv=m&mvi=3&pl=24&rms=au%2Cau&initcwndbps=753750&spc=q5xjPM8jd6pj_XdZSblE-8RG9RM2j3JwznzHmxJaUsC5ylUE75p7ILuqFZHc2lTxmO-P2w&svpuc=1&ns=Ajh2tLCekRS7cHcC79ItDyQS&sabr=1&rqh=1&mt=1770676211&fvip=1&keepalive=yes&fexp=51355912%2C51552689%2C51565115%2C51565682%2C51580968&c=WEB&n=vouQrDuHvEiI5Ysfy&sparams=expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Cxpc%2Cspc%2Csvpuc%2Cns%2Csabr%2Crqh&sig=AJEij0EwRgIhAOIKpTxqQ9tJY6LDr7UER9F_msUHWfKlHkeDTHn2FSGzAiEA_GvpX3lmf39gWEDhz9fYBhVZk5VuAyNoUen_F8EszaA%3D&lsparams=cps%2Cmet%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=APaTxxMwRQIgNOKcjIvdY7Y6Fu-VJm3nnC494-FxpIdnniDUT2P40fACIQD3pBQxtvKn-hFId-airh8kd3mY65EVSVu31JnGjnfC5w%3D%3D"
+  },
+  "playbackTracking": {
+    "videostatsPlaybackUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/playback?cl=864068801&docid=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&fexp=&ns=yt&plid=AAZKa8zvjsSAhkl0&el=detailpage&len=302&of=qy1uI1cViM6-G34_bkL_PA&vm=CAEQABgEOjJBSHFpSlRKRkhoN2hQb2Vvem9wcVk5cjE5d3lLWlVtUlhILWdfdVdKaHF5dkJNTjdvZ2JaQUx6bG9uaXV0QUR6cmJkNWtWeTVpaGhDQkRPMlN1QXRIN0RaQTloUHVMd0NTTXQzaWg0LWUtSW5pSEJVbVRPS1dFVUV2WkVhYzhSYW9MVVBOWThOSkNWWmdn"
+    },
+    "videostatsDelayplayUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/delayplay?cl=864068801&docid=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&fexp=&ns=yt&plid=AAZKa8zvjsSAhkl0&el=detailpage&len=302&of=qy1uI1cViM6-G34_bkL_PA&vm=CAEQABgEOjJBSHFpSlRKRkhoN2hQb2Vvem9wcVk5cjE5d3lLWlVtUlhILWdfdVdKaHF5dkJNTjdvZ2JaQUx6bG9uaXV0QUR6cmJkNWtWeTVpaGhDQkRPMlN1QXRIN0RaQTloUHVMd0NTTXQzaWg0LWUtSW5pSEJVbVRPS1dFVUV2WkVhYzhSYW9MVVBOWThOSkNWWmdn"
+    },
+    "videostatsWatchtimeUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/watchtime?cl=864068801&docid=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&fexp=&ns=yt&plid=AAZKa8zvjsSAhkl0&el=detailpage&len=302&of=qy1uI1cViM6-G34_bkL_PA&vm=CAEQABgEOjJBSHFpSlRKRkhoN2hQb2Vvem9wcVk5cjE5d3lLWlVtUlhILWdfdVdKaHF5dkJNTjdvZ2JaQUx6bG9uaXV0QUR6cmJkNWtWeTVpaGhDQkRPMlN1QXRIN0RaQTloUHVMd0NTTXQzaWg0LWUtSW5pSEJVbVRPS1dFVUV2WkVhYzhSYW9MVVBOWThOSkNWWmdn"
+    },
+    "ptrackingUrl": {
+      "baseUrl": "https://www.youtube.com/ptracking?ei=8GGKaYfyGuGW2_gPhIPasQc&m=Av_LDqRsFzkWBeB02LD5YShFUyhsfOAM7LBJuNcEBixvvUQT62AD0WdGni0xQnR6DWb1ODSWgbNuGp8mbflBhWeF&oid=pHs6OJ8c_tm4M6YUoq5W3A&plid=AAZKa8zvjsSAhkl0&pltype=content&ptchn=XIJgqnII2ZOINSWNOGFThA&ptk=youtube_single&video_id=Sglc4bchQTs"
+    },
+    "qoeUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/qoe?cl=864068801&docid=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&el=detailpage&event=streamingstats&fexp=&ns=yt&plid=AAZKa8zvjsSAhkl0&stmp=vb%3A1"
+    },
+    "atrUrl": {
+      "baseUrl": "https://s.youtube.com/api/stats/atr?c=WEB&docid=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&len=302&ns=yt&plid=AAZKa8zvjsSAhkl0&ver=2&vm=CAEQABgEOjJBSHFpSlRKRkhoN2hQb2Vvem9wcVk5cjE5d3lLWlVtUlhILWdfdVdKaHF5dkJNTjdvZ2JaQUx6bG9uaXV0QUR6cmJkNWtWeTVpaGhDQkRPMlN1QXRIN0RaQTloUHVMd0NTTXQzaWg0LWUtSW5pSEJVbVRPS1dFVUV2WkVhYzhSYW9MVVBOWThOSkNWWmdn",
+      "elapsedMediaTimeSeconds": 5
+    },
+    "videostatsScheduledFlushWalltimeSeconds": [
+      10,
+      20,
+      30
+    ],
+    "videostatsDefaultFlushIntervalSeconds": 40
+  },
+  "captions": {
+    "playerCaptionsTracklistRenderer": {
+      "captionTracks": [
+        {
+          "baseUrl": "https://www.youtube.com/api/timedtext?v=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&caps=asr&opi=112496729&exp=xpe&xoaf=5&xowf=1&xospf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1770701920&sparams=ip,ipbits,expire,v,ei,caps,opi,exp,xoaf&signature=8F74343D3B7207B39FFB53C6F1B1C89D7083D5C3.68E21C13A6552F93C3394B1B9A01464A487F0F3D&key=yt8&kind=asr&lang=en",
+          "name": {
+            "simpleText": "English (auto-generated)"
+          },
+          "vssId": "a.en",
+          "languageCode": "en",
+          "kind": "asr",
+          "isTranslatable": true,
+          "trackName": ""
+        },
+        {
+          "baseUrl": "https://www.youtube.com/api/timedtext?v=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&caps=asr&opi=112496729&exp=xpe&xoaf=5&xowf=1&xospf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1770701920&sparams=ip,ipbits,expire,v,ei,caps,opi,exp,xoaf&signature=8F74343D3B7207B39FFB53C6F1B1C89D7083D5C3.68E21C13A6552F93C3394B1B9A01464A487F0F3D&key=yt8&lang=en&name=CC1",
+          "name": {
+            "simpleText": "English - CC1"
+          },
+          "vssId": ".en.uYU-mmqFLq8",
+          "languageCode": "en",
+          "isTranslatable": true,
+          "trackName": "CC1"
+        },
+        {
+          "baseUrl": "https://www.youtube.com/api/timedtext?v=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&caps=asr&opi=112496729&exp=xpe&xoaf=5&xowf=1&xospf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1770701920&sparams=ip,ipbits,expire,v,ei,caps,opi,exp,xoaf&signature=8F74343D3B7207B39FFB53C6F1B1C89D7083D5C3.68E21C13A6552F93C3394B1B9A01464A487F0F3D&key=yt8&lang=en&name=DTVCC1",
+          "name": {
+            "simpleText": "English - DTVCC1"
+          },
+          "vssId": ".en.JkeT_87f4cc",
+          "languageCode": "en",
+          "isTranslatable": true,
+          "trackName": "DTVCC1"
+        },
+        {
+          "baseUrl": "https://www.youtube.com/api/timedtext?v=Sglc4bchQTs&ei=8GGKaYfyGuGW2_gPhIPasQc&caps=asr&opi=112496729&exp=xpe&xoaf=5&xowf=1&xospf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1770701920&sparams=ip,ipbits,expire,v,ei,caps,opi,exp,xoaf&signature=8F74343D3B7207B39FFB53C6F1B1C89D7083D5C3.68E21C13A6552F93C3394B1B9A01464A487F0F3D&key=yt8&lang=en-US",
+          "name": {
+            "simpleText": "English (United States)"
+          },
+          "vssId": ".en-US",
+          "languageCode": "en-US",
+          "isTranslatable": true,
+          "trackName": ""
+        }
+      ],
+      "audioTracks": [
+        {
+          "captionTrackIndices": [
+            1,
+            2,
+            3,
+            0
+          ],
+          "defaultCaptionTrackIndex": 1,
+          "hasDefaultTrack": true,
+          "captionsInitialState": "CAPTIONS_INITIAL_STATE_OFF_RECOMMENDED"
+        }
+      ],
+      "translationLanguages": [
+        {
+          "languageCode": "ab",
+          "languageName": {
+            "simpleText": "Abkhazian"
+          }
+        },
+        {
+          "languageCode": "aa",
+          "languageName": {
+            "simpleText": "Afar"
+          }
+        },
+        {
+          "languageCode": "af",
+          "languageName": {
+            "simpleText": "Afrikaans"
+          }
+        },
+        {
+          "languageCode": "ak",
+          "languageName": {
+            "simpleText": "Akan"
+          }
+        },
+        {
+          "languageCode": "sq",
+          "languageName": {
+            "simpleText": "Albanian"
+          }
+        },
+        {
+          "languageCode": "am",
+          "languageName": {
+            "simpleText": "Amharic"
+          }
+        },
+        {
+          "languageCode": "ar",
+          "languageName": {
+            "simpleText": "Arabic"
+          }
+        },
+        {
+          "languageCode": "hy",
+          "languageName": {
+            "simpleText": "Armenian"
+          }
+        },
+        {
+          "languageCode": "as",
+          "languageName": {
+            "simpleText": "Assamese"
+          }
+        },
+        {
+          "languageCode": "ay",
+          "languageName": {
+            "simpleText": "Aymara"
+          }
+        },
+        {
+          "languageCode": "az",
+          "languageName": {
+            "simpleText": "Azerbaijani"
+          }
+        },
+        {
+          "languageCode": "bn",
+          "languageName": {
+            "simpleText": "Bangla"
+          }
+        },
+        {
+          "languageCode": "ba",
+          "languageName": {
+            "simpleText": "Bashkir"
+          }
+        },
+        {
+          "languageCode": "eu",
+          "languageName": {
+            "simpleText": "Basque"
+          }
+        },
+        {
+          "languageCode": "be",
+          "languageName": {
+            "simpleText": "Belarusian"
+          }
+        },
+        {
+          "languageCode": "bho",
+          "languageName": {
+            "simpleText": "Bhojpuri"
+          }
+        },
+        {
+          "languageCode": "bs",
+          "languageName": {
+            "simpleText": "Bosnian"
+          }
+        },
+        {
+          "languageCode": "br",
+          "languageName": {
+            "simpleText": "Breton"
+          }
+        },
+        {
+          "languageCode": "bg",
+          "languageName": {
+            "simpleText": "Bulgarian"
+          }
+        },
+        {
+          "languageCode": "my",
+          "languageName": {
+            "simpleText": "Burmese"
+          }
+        },
+        {
+          "languageCode": "ca",
+          "languageName": {
+            "simpleText": "Catalan"
+          }
+        },
+        {
+          "languageCode": "ceb",
+          "languageName": {
+            "simpleText": "Cebuano"
+          }
+        },
+        {
+          "languageCode": "zh-Hans",
+          "languageName": {
+            "simpleText": "Chinese (Simplified)"
+          }
+        },
+        {
+          "languageCode": "zh-Hant",
+          "languageName": {
+            "simpleText": "Chinese (Traditional)"
+          }
+        },
+        {
+          "languageCode": "co",
+          "languageName": {
+            "simpleText": "Corsican"
+          }
+        },
+        {
+          "languageCode": "hr",
+          "languageName": {
+            "simpleText": "Croatian"
+          }
+        },
+        {
+          "languageCode": "cs",
+          "languageName": {
+            "simpleText": "Czech"
+          }
+        },
+        {
+          "languageCode": "da",
+          "languageName": {
+            "simpleText": "Danish"
+          }
+        },
+        {
+          "languageCode": "dv",
+          "languageName": {
+            "simpleText": "Divehi"
+          }
+        },
+        {
+          "languageCode": "nl",
+          "languageName": {
+            "simpleText": "Dutch"
+          }
+        },
+        {
+          "languageCode": "dz",
+          "languageName": {
+            "simpleText": "Dzongkha"
+          }
+        },
+        {
+          "languageCode": "en",
+          "languageName": {
+            "simpleText": "English"
+          }
+        },
+        {
+          "languageCode": "eo",
+          "languageName": {
+            "simpleText": "Esperanto"
+          }
+        },
+        {
+          "languageCode": "et",
+          "languageName": {
+            "simpleText": "Estonian"
+          }
+        },
+        {
+          "languageCode": "ee",
+          "languageName": {
+            "simpleText": "Ewe"
+          }
+        },
+        {
+          "languageCode": "fo",
+          "languageName": {
+            "simpleText": "Faroese"
+          }
+        },
+        {
+          "languageCode": "fj",
+          "languageName": {
+            "simpleText": "Fijian"
+          }
+        },
+        {
+          "languageCode": "fil",
+          "languageName": {
+            "simpleText": "Filipino"
+          }
+        },
+        {
+          "languageCode": "fi",
+          "languageName": {
+            "simpleText": "Finnish"
+          }
+        },
+        {
+          "languageCode": "fr",
+          "languageName": {
+            "simpleText": "French"
+          }
+        },
+        {
+          "languageCode": "gaa",
+          "languageName": {
+            "simpleText": "Ga"
+          }
+        },
+        {
+          "languageCode": "gl",
+          "languageName": {
+            "simpleText": "Galician"
+          }
+        },
+        {
+          "languageCode": "lg",
+          "languageName": {
+            "simpleText": "Ganda"
+          }
+        },
+        {
+          "languageCode": "ka",
+          "languageName": {
+            "simpleText": "Georgian"
+          }
+        },
+        {
+          "languageCode": "de",
+          "languageName": {
+            "simpleText": "German"
+          }
+        },
+        {
+          "languageCode": "el",
+          "languageName": {
+            "simpleText": "Greek"
+          }
+        },
+        {
+          "languageCode": "gn",
+          "languageName": {
+            "simpleText": "Guarani"
+          }
+        },
+        {
+          "languageCode": "gu",
+          "languageName": {
+            "simpleText": "Gujarati"
+          }
+        },
+        {
+          "languageCode": "ht",
+          "languageName": {
+            "simpleText": "Haitian Creole"
+          }
+        },
+        {
+          "languageCode": "ha",
+          "languageName": {
+            "simpleText": "Hausa"
+          }
+        },
+        {
+          "languageCode": "haw",
+          "languageName": {
+            "simpleText": "Hawaiian"
+          }
+        },
+        {
+          "languageCode": "iw",
+          "languageName": {
+            "simpleText": "Hebrew"
+          }
+        },
+        {
+          "languageCode": "hi",
+          "languageName": {
+            "simpleText": "Hindi"
+          }
+        },
+        {
+          "languageCode": "hmn",
+          "languageName": {
+            "simpleText": "Hmong"
+          }
+        },
+        {
+          "languageCode": "hu",
+          "languageName": {
+            "simpleText": "Hungarian"
+          }
+        },
+        {
+          "languageCode": "is",
+          "languageName": {
+            "simpleText": "Icelandic"
+          }
+        },
+        {
+          "languageCode": "ig",
+          "languageName": {
+            "simpleText": "Igbo"
+          }
+        },
+        {
+          "languageCode": "id",
+          "languageName": {
+            "simpleText": "Indonesian"
+          }
+        },
+        {
+          "languageCode": "iu",
+          "languageName": {
+            "simpleText": "Inuktitut"
+          }
+        },
+        {
+          "languageCode": "ga",
+          "languageName": {
+            "simpleText": "Irish"
+          }
+        },
+        {
+          "languageCode": "it",
+          "languageName": {
+            "simpleText": "Italian"
+          }
+        },
+        {
+          "languageCode": "ja",
+          "languageName": {
+            "simpleText": "Japanese"
+          }
+        },
+        {
+          "languageCode": "jv",
+          "languageName": {
+            "simpleText": "Javanese"
+          }
+        },
+        {
+          "languageCode": "kl",
+          "languageName": {
+            "simpleText": "Kalaallisut"
+          }
+        },
+        {
+          "languageCode": "kn",
+          "languageName": {
+            "simpleText": "Kannada"
+          }
+        },
+        {
+          "languageCode": "kk",
+          "languageName": {
+            "simpleText": "Kazakh"
+          }
+        },
+        {
+          "languageCode": "kha",
+          "languageName": {
+            "simpleText": "Khasi"
+          }
+        },
+        {
+          "languageCode": "km",
+          "languageName": {
+            "simpleText": "Khmer"
+          }
+        },
+        {
+          "languageCode": "rw",
+          "languageName": {
+            "simpleText": "Kinyarwanda"
+          }
+        },
+        {
+          "languageCode": "ko",
+          "languageName": {
+            "simpleText": "Korean"
+          }
+        },
+        {
+          "languageCode": "kri",
+          "languageName": {
+            "simpleText": "Krio"
+          }
+        },
+        {
+          "languageCode": "ku",
+          "languageName": {
+            "simpleText": "Kurdish"
+          }
+        },
+        {
+          "languageCode": "ky",
+          "languageName": {
+            "simpleText": "Kyrgyz"
+          }
+        },
+        {
+          "languageCode": "lo",
+          "languageName": {
+            "simpleText": "Lao"
+          }
+        },
+        {
+          "languageCode": "la",
+          "languageName": {
+            "simpleText": "Latin"
+          }
+        },
+        {
+          "languageCode": "lv",
+          "languageName": {
+            "simpleText": "Latvian"
+          }
+        },
+        {
+          "languageCode": "ln",
+          "languageName": {
+            "simpleText": "Lingala"
+          }
+        },
+        {
+          "languageCode": "lt",
+          "languageName": {
+            "simpleText": "Lithuanian"
+          }
+        },
+        {
+          "languageCode": "lua",
+          "languageName": {
+            "simpleText": "Luba-Lulua"
+          }
+        },
+        {
+          "languageCode": "luo",
+          "languageName": {
+            "simpleText": "Luo"
+          }
+        },
+        {
+          "languageCode": "lb",
+          "languageName": {
+            "simpleText": "Luxembourgish"
+          }
+        },
+        {
+          "languageCode": "mk",
+          "languageName": {
+            "simpleText": "Macedonian"
+          }
+        },
+        {
+          "languageCode": "mg",
+          "languageName": {
+            "simpleText": "Malagasy"
+          }
+        },
+        {
+          "languageCode": "ms",
+          "languageName": {
+            "simpleText": "Malay"
+          }
+        },
+        {
+          "languageCode": "ml",
+          "languageName": {
+            "simpleText": "Malayalam"
+          }
+        },
+        {
+          "languageCode": "mt",
+          "languageName": {
+            "simpleText": "Maltese"
+          }
+        },
+        {
+          "languageCode": "gv",
+          "languageName": {
+            "simpleText": "Manx"
+          }
+        },
+        {
+          "languageCode": "mi",
+          "languageName": {
+            "simpleText": "Māori"
+          }
+        },
+        {
+          "languageCode": "mr",
+          "languageName": {
+            "simpleText": "Marathi"
+          }
+        },
+        {
+          "languageCode": "mn",
+          "languageName": {
+            "simpleText": "Mongolian"
+          }
+        },
+        {
+          "languageCode": "mfe",
+          "languageName": {
+            "simpleText": "Morisyen"
+          }
+        },
+        {
+          "languageCode": "ne",
+          "languageName": {
+            "simpleText": "Nepali"
+          }
+        },
+        {
+          "languageCode": "new",
+          "languageName": {
+            "simpleText": "Newari"
+          }
+        },
+        {
+          "languageCode": "nso",
+          "languageName": {
+            "simpleText": "Northern Sotho"
+          }
+        },
+        {
+          "languageCode": "no",
+          "languageName": {
+            "simpleText": "Norwegian"
+          }
+        },
+        {
+          "languageCode": "ny",
+          "languageName": {
+            "simpleText": "Nyanja"
+          }
+        },
+        {
+          "languageCode": "oc",
+          "languageName": {
+            "simpleText": "Occitan"
+          }
+        },
+        {
+          "languageCode": "or",
+          "languageName": {
+            "simpleText": "Odia"
+          }
+        },
+        {
+          "languageCode": "om",
+          "languageName": {
+            "simpleText": "Oromo"
+          }
+        },
+        {
+          "languageCode": "os",
+          "languageName": {
+            "simpleText": "Ossetic"
+          }
+        },
+        {
+          "languageCode": "pam",
+          "languageName": {
+            "simpleText": "Pampanga"
+          }
+        },
+        {
+          "languageCode": "ps",
+          "languageName": {
+            "simpleText": "Pashto"
+          }
+        },
+        {
+          "languageCode": "fa",
+          "languageName": {
+            "simpleText": "Persian"
+          }
+        },
+        {
+          "languageCode": "pl",
+          "languageName": {
+            "simpleText": "Polish"
+          }
+        },
+        {
+          "languageCode": "pt",
+          "languageName": {
+            "simpleText": "Portuguese"
+          }
+        },
+        {
+          "languageCode": "pt-PT",
+          "languageName": {
+            "simpleText": "Portuguese (Portugal)"
+          }
+        },
+        {
+          "languageCode": "pa",
+          "languageName": {
+            "simpleText": "Punjabi"
+          }
+        },
+        {
+          "languageCode": "qu",
+          "languageName": {
+            "simpleText": "Quechua"
+          }
+        },
+        {
+          "languageCode": "ro",
+          "languageName": {
+            "simpleText": "Romanian"
+          }
+        },
+        {
+          "languageCode": "rn",
+          "languageName": {
+            "simpleText": "Rundi"
+          }
+        },
+        {
+          "languageCode": "ru",
+          "languageName": {
+            "simpleText": "Russian"
+          }
+        },
+        {
+          "languageCode": "sm",
+          "languageName": {
+            "simpleText": "Samoan"
+          }
+        },
+        {
+          "languageCode": "sg",
+          "languageName": {
+            "simpleText": "Sango"
+          }
+        },
+        {
+          "languageCode": "sa",
+          "languageName": {
+            "simpleText": "Sanskrit"
+          }
+        },
+        {
+          "languageCode": "gd",
+          "languageName": {
+            "simpleText": "Scottish Gaelic"
+          }
+        },
+        {
+          "languageCode": "sr",
+          "languageName": {
+            "simpleText": "Serbian"
+          }
+        },
+        {
+          "languageCode": "crs",
+          "languageName": {
+            "simpleText": "Seselwa Creole French"
+          }
+        },
+        {
+          "languageCode": "sn",
+          "languageName": {
+            "simpleText": "Shona"
+          }
+        },
+        {
+          "languageCode": "sd",
+          "languageName": {
+            "simpleText": "Sindhi"
+          }
+        },
+        {
+          "languageCode": "si",
+          "languageName": {
+            "simpleText": "Sinhala"
+          }
+        },
+        {
+          "languageCode": "sk",
+          "languageName": {
+            "simpleText": "Slovak"
+          }
+        },
+        {
+          "languageCode": "sl",
+          "languageName": {
+            "simpleText": "Slovenian"
+          }
+        },
+        {
+          "languageCode": "so",
+          "languageName": {
+            "simpleText": "Somali"
+          }
+        },
+        {
+          "languageCode": "st",
+          "languageName": {
+            "simpleText": "Southern Sotho"
+          }
+        },
+        {
+          "languageCode": "es",
+          "languageName": {
+            "simpleText": "Spanish"
+          }
+        },
+        {
+          "languageCode": "su",
+          "languageName": {
+            "simpleText": "Sundanese"
+          }
+        },
+        {
+          "languageCode": "sw",
+          "languageName": {
+            "simpleText": "Swahili"
+          }
+        },
+        {
+          "languageCode": "ss",
+          "languageName": {
+            "simpleText": "Swati"
+          }
+        },
+        {
+          "languageCode": "sv",
+          "languageName": {
+            "simpleText": "Swedish"
+          }
+        },
+        {
+          "languageCode": "tg",
+          "languageName": {
+            "simpleText": "Tajik"
+          }
+        },
+        {
+          "languageCode": "ta",
+          "languageName": {
+            "simpleText": "Tamil"
+          }
+        },
+        {
+          "languageCode": "tt",
+          "languageName": {
+            "simpleText": "Tatar"
+          }
+        },
+        {
+          "languageCode": "te",
+          "languageName": {
+            "simpleText": "Telugu"
+          }
+        },
+        {
+          "languageCode": "th",
+          "languageName": {
+            "simpleText": "Thai"
+          }
+        },
+        {
+          "languageCode": "bo",
+          "languageName": {
+            "simpleText": "Tibetan"
+          }
+        },
+        {
+          "languageCode": "ti",
+          "languageName": {
+            "simpleText": "Tigrinya"
+          }
+        },
+        {
+          "languageCode": "to",
+          "languageName": {
+            "simpleText": "Tongan"
+          }
+        },
+        {
+          "languageCode": "ts",
+          "languageName": {
+            "simpleText": "Tsonga"
+          }
+        },
+        {
+          "languageCode": "tn",
+          "languageName": {
+            "simpleText": "Tswana"
+          }
+        },
+        {
+          "languageCode": "tum",
+          "languageName": {
+            "simpleText": "Tumbuka"
+          }
+        },
+        {
+          "languageCode": "tr",
+          "languageName": {
+            "simpleText": "Turkish"
+          }
+        },
+        {
+          "languageCode": "tk",
+          "languageName": {
+            "simpleText": "Turkmen"
+          }
+        },
+        {
+          "languageCode": "uk",
+          "languageName": {
+            "simpleText": "Ukrainian"
+          }
+        },
+        {
+          "languageCode": "ur",
+          "languageName": {
+            "simpleText": "Urdu"
+          }
+        },
+        {
+          "languageCode": "ug",
+          "languageName": {
+            "simpleText": "Uyghur"
+          }
+        },
+        {
+          "languageCode": "uz",
+          "languageName": {
+            "simpleText": "Uzbek"
+          }
+        },
+        {
+          "languageCode": "ve",
+          "languageName": {
+            "simpleText": "Venda"
+          }
+        },
+        {
+          "languageCode": "vi",
+          "languageName": {
+            "simpleText": "Vietnamese"
+          }
+        },
+        {
+          "languageCode": "war",
+          "languageName": {
+            "simpleText": "Waray"
+          }
+        },
+        {
+          "languageCode": "cy",
+          "languageName": {
+            "simpleText": "Welsh"
+          }
+        },
+        {
+          "languageCode": "fy",
+          "languageName": {
+            "simpleText": "Western Frisian"
+          }
+        },
+        {
+          "languageCode": "wo",
+          "languageName": {
+            "simpleText": "Wolof"
+          }
+        },
+        {
+          "languageCode": "xh",
+          "languageName": {
+            "simpleText": "Xhosa"
+          }
+        },
+        {
+          "languageCode": "yi",
+          "languageName": {
+            "simpleText": "Yiddish"
+          }
+        },
+        {
+          "languageCode": "yo",
+          "languageName": {
+            "simpleText": "Yoruba"
+          }
+        },
+        {
+          "languageCode": "zu",
+          "languageName": {
+            "simpleText": "Zulu"
+          }
+        }
+      ],
+      "defaultAudioTrackIndex": 0
+    }
+  },
+  "videoDetails": {
+    "videoId": "Sglc4bchQTs",
+    "title": "BREAKING: Savannah Guthrie in new video: 'We believe our mom is still out there - we need your help'",
+    "lengthSeconds": "302",
+    "keywords": [
+      "media",
+      "breaking news",
+      "usa",
+      "fox news channel",
+      "the story youtube",
+      "savannah guthrie",
+      "missing mother",
+      "search effort",
+      "elderly woman",
+      "family plea",
+      "public assistance",
+      "investigation update",
+      "correspondent report",
+      "jonathan hunt",
+      "national coverage"
+    ],
+    "channelId": "UCXIJgqnII2ZOINSWNOGFThA",
+    "isOwnerViewing": false,
+    "shortDescription": "NBC host makes plea to the public for help finding her mother Nancy in hour of 'desperation' as another purported ransom deadline looms. #fox #foxnews #media #breakingnews #us #usa #new #news #breaking #savannahguthrie #guthrie #missing #search #family #help #crime #crimenews #crimestory #criminal #police #elderly #woman #investigation #public #thestorywithmarthamaccallum\n\nDon’t just watch Fox News—be part of it. Become a Fox News Patriot today. https://youtube.com/foxnews/join\n\nSubscribe to Fox News: https://bit.ly/2vBUvAS\nWatch more Fox News Video: http://video.foxnews.com\nWatch Fox News Channel Live: http://www.foxnewsgo.com/\n\nDownload the Fox News app: https://foxnews.onelink.me/xLDS/cd5yhg3o\n\nFOX News Channel (FNC) is a 24-hour all-encompassing news service delivering breaking news as well as political and business news. The number one network in cable, FNC has been the most-watched television news channel for 18 consecutive years. According to a 2020 Brand Keys Consumer Loyalty Engagement Index report, FOX News is the top brand in the country for morning and evening news coverage. A 2019 Suffolk University poll named FOX News as the most trusted source for television news or commentary, while a 2019 Brand Keys Emotion Engagement Analysis survey found that FOX News was the most trusted cable news brand. A 2017 Gallup/Knight Foundation survey also found that among Americans who could name an objective news source, FOX News was the top-cited outlet. Owned by FOX Corporation, FNC is available in nearly 90 million homes and dominates the cable news landscape, routinely notching the top ten programs in the genre.\n\nWatch full episodes of your favorite shows\nThe Five: https://www.foxnews.com/video/shows/the-five\nSpecial Report with Bret Baier: https://www.foxnews.com/video/shows/special-report\nJesse Watters Primetime: https://www.foxnews.com/video/shows/jesse-watters-primetime\nHannity: https://www.foxnews.com/video/shows/hannity\nThe Ingraham Angle: https://www.foxnews.com/video/shows/ingraham-angle\nGutfeld!: https://www.foxnews.com/video/shows/gutfeld\nFox News @ Night: https://www.foxnews.com/video/shows/fox-news-night\nFollow Fox News on Facebook: https://www.facebook.com/FoxNews/\nFollow Fox News on X: https://x.com/foxnews\nFollow Fox News on Instagram: https://www.instagram.com/foxnews/",
+    "isCrawlable": true,
+    "thumbnail": {
+      "thumbnails": [
+        {
+          "url": "https://i.ytimg.com/vi/Sglc4bchQTs/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLABzrvGu45Rjic4pm1__oyEgykopA",
+          "width": 168,
+          "height": 94
+        },
+        {
+          "url": "https://i.ytimg.com/vi/Sglc4bchQTs/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLA0zRuxA0Eaz5-vdSIZYOIGfKFYwg",
+          "width": 196,
+          "height": 110
+        },
+        {
+          "url": "https://i.ytimg.com/vi/Sglc4bchQTs/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBCqgdvtx98exa5xUa8XAdOCmPd0Q",
+          "width": 246,
+          "height": 138
+        },
+        {
+          "url": "https://i.ytimg.com/vi/Sglc4bchQTs/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAk67ZYtNG4btHsz9UUX2CjODxCyg",
+          "width": 336,
+          "height": 188
+        },
+        {
+          "url": "https://i.ytimg.com/vi/Sglc4bchQTs/maxresdefault.jpg",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    "allowRatings": true,
+    "viewCount": "189108",
+    "author": "Fox News",
+    "isPrivate": false,
+    "isUnpluggedCorpus": false,
+    "isLiveContent": false
+  },
+  "playerConfig": {
+    "granularVariableSpeedConfig": {
+      "minimumPlaybackRate": 25,
+      "maximumPlaybackRate": 200
+    },
+    "vssClientConfig": {
+      "vssUsePostRequest": false
+    },
+    "audioConfig": {
+      "loudnessDb": -9.5200005,
+      "perceptualLoudnessDb": -23.52,
+      "enablePerFormatLoudness": true,
+      "trackAbsoluteLoudnessLkfs": -23.52,
+      "loudnessTargetLkfs": -14
+    },
+    "streamSelectionConfig": {
+      "maxBitrate": "6030000"
+    },
+    "daiConfig": {
+      "allowUstreamerRequestAdconfig": true,
+      "sendSsdaiMissingAdBreakReasons": true
+    },
+    "mediaCommonConfig": {
+      "dynamicReadaheadConfig": {
+        "maxReadAheadMediaTimeMs": 120000,
+        "minReadAheadMediaTimeMs": 15000,
+        "readAheadGrowthRateMs": 1000
+      },
+      "mediaUstreamerRequestConfig": {
+        "videoPlaybackUstreamerConfig": "Cv8ICrcFCAAlAACAPy0zM3M_NT0Klz9YAWgBchoKFm1mczJfY21mc193ZWJfdjNfMl8wMDMYAKABAagBALgCANoChgEQsOoBGIDd2wEgoJwBKKCcATCYdXCIJ4AB9APgAQOYAgzQAgLoAgSAAwKIA4gnqAMDwAMByAMBgAQB0AQB2AQB-AQHgAV9wAUByAUB4AXQD-gFAfgF0A-QBgHQBgHwBgGAB9APwAcBgAgBiAgBnQjNzEw-oAjoB-AIAegI____________AfoCigEtAACgQjUAAKpCZQAAgEBowHCoAdCGA4UCmpkZP40CAACAP5UC-u1rO7UCAACAP8AC3wP9As3MzD2QAwGdAwrXIz3VAwAAekTVBAAAIEGgBgG1Br03hjW9BjMzg0DABwHIBwHlBwCACUTwBwGACAGhCAAAAAAAAPC_qQgAAAAAAADwv7AI3wO4CgGoAwGwAwPQAwHYAwHKBBwKEwjAqQcQmHUY6AclAAAAACgAMAAQ4NQDGNAP0gQPCggIsAkQsAkgASCIJygB2gQNCgYI8C4Q8C4g8C4oAfAFAZgGAagGgIAC0gYUCOgHEGQaDQiIJxUAAAA_Hc3MTD_YBgHwBgG4BwGgCAHSCAYIARABGAGpCQAAAAAAAPC_sQkAAAAAAADwv9AJAdoJJFRud3N6Y21YVXBhUEMxbDJYWkk2bThPUVhKYkxMbVlNSmpzQpgK997JGKIKCPbeyRj33skY6gsEiwaMBoAMAagMkAHgDQHIDwHQDwHoEAGQEQGgEQGyERhDQU1TREJVTnViYkpESlFDbkE3TUJRPT3QEgHgEgGAEwGwEwHYEwHoEwGIFAGRFAAAAAAAAPC_mRQAAAAAAADwv7AUAcoUEXYyMDI1MDkyMl8xMjI2LjAw2BSIJ-gUAYEVAAAAAAAA8L-Ip6HKCwEyDAiIARCAxJOxpM2SAzIMCPcBEMHu2bGkzZIDMgwIjgMQ1PPtpqTNkgMyDAiHARDezYmxpM2SAzIMCPQBEKq8z7GkzZIDMgwIjQMQ5_TkpqTNkgMyDAiGARCp2ICxpM2SAzIMCPMBEMHYzLGkzZIDMgwIjAMQ1_bgpqTNkgMyDAiFARD2_P2wpM2SAzIMCPIBEKm-zbGkzZIDMgwIiwMQm8vgpqTNkgMyDAigARDm6PuwpM2SAzIMCJYCEPad3bGkzZIDMgwIigMQ5-nOpqTNkgMyDAiMARCWy_ykpM2SAzIaCIwBELGgvb-kzZIDGgxDZ2NLQW5aaUVnRXgyDAj5ARCfk4mspM2SAzIaCPkBELy3tcakzZIDGgxDZ2NLQW5aaUVnRXgyDAj6ARC_lYaspM2SAzIaCPoBEJy7tMakzZIDGgxDZ2NLQW5aaUVnRXgyDAj7ARCQj4aspM2SAzIaCPsBEIKitcakzZIDGgxDZ2NLQW5aaUVnRXg6AFIqGgJlbigAMhhVQ1hJSmdxbklJMlpPSU5TV05PR0ZUaEE4AEAAWABgAHgAoAEBsAEFugEDBAUxwgEIAQIDBAUIMF7QAQCAAgASTAAJq6tNMEUCIQCV-JUmSZDb8yVxItDVjo3qOY59eK2ZTX0lQPZvN_SZuwIgeX50BfDZAjE_Oo0M5MZpkLUesDSg34wf_2j8TskrRYEaAmVp"
+      },
+      "useServerDrivenAbr": true,
+      "serverPlaybackStartConfig": {
+        "enable": true,
+        "playbackStartPolicy": {
+          "startMinReadaheadPolicy": [
+            {
+              "minReadaheadMs": 1200
+            }
+          ]
+        }
+      },
+      "platypusUseEnvoyNetFetch": false,
+      "fixLivePlaybackModelDefaultPosition": false
+    },
+    "webPlayerConfig": {
+      "useCobaltTvosDash": true,
+      "webPlayerActionsPorting": {
+        "getSharePanelCommand": {
+          "clickTrackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/share/get_web_player_share_panel"
+            }
+          },
+          "webPlayerShareEntityServiceEndpoint": {
+            "serializedShareEntity": "CgtTZ2xjNGJjaFFUcw%3D%3D"
+          }
+        },
+        "subscribeCommand": {
+          "clickTrackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/subscription/subscribe"
+            }
+          },
+          "subscribeEndpoint": {
+            "channelIds": [
+              "UCXIJgqnII2ZOINSWNOGFThA"
+            ],
+            "params": "EgIIBxgA"
+          }
+        },
+        "unsubscribeCommand": {
+          "clickTrackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/subscription/unsubscribe"
+            }
+          },
+          "unsubscribeEndpoint": {
+            "channelIds": [
+              "UCXIJgqnII2ZOINSWNOGFThA"
+            ],
+            "params": "CgIIBxgA"
+          }
+        },
+        "addToWatchLaterCommand": {
+          "clickTrackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/browse/edit_playlist"
+            }
+          },
+          "playlistEditEndpoint": {
+            "playlistId": "WL",
+            "actions": [
+              {
+                "addedVideoId": "Sglc4bchQTs",
+                "action": "ACTION_ADD_VIDEO"
+              }
+            ]
+          }
+        },
+        "removeFromWatchLaterCommand": {
+          "clickTrackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+          "commandMetadata": {
+            "webCommandMetadata": {
+              "sendPost": true,
+              "apiUrl": "/youtubei/v1/browse/edit_playlist"
+            }
+          },
+          "playlistEditEndpoint": {
+            "playlistId": "WL",
+            "actions": [
+              {
+                "action": "ACTION_REMOVE_VIDEO_BY_VIDEO_ID",
+                "removedVideoId": "Sglc4bchQTs"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "storyboards": {
+    "playerStoryboardSpecRenderer": {
+      "spec": "https://i.ytimg.com/sb/Sglc4bchQTs/storyboard3_L$L/$N.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCMCQqcwG|48#27#100#10#10#0#default#rs$AOn4CLDfbKMZpi8I7VuYkJ79gfLXIiSWxQ|80#45#62#10#10#5000#M$M#rs$AOn4CLBx2bIKN-Q-1h66fUDt_ixzaoFBDg|160#90#62#5#5#5000#M$M#rs$AOn4CLDyuDod0cDZgk8p6XHBhRIHQuXF5w|320#180#62#3#3#5000#M$M#rs$AOn4CLBAvxarsyfiHecXauF45p7ijdoAig",
+      "recommendedLevel": 3,
+      "fineScrubbingRecommendedLevel": 2,
+      "highResolutionRecommendedLevel": 3
+    }
+  },
+  "microformat": {
+    "playerMicroformatRenderer": {
+      "thumbnail": {
+        "thumbnails": [
+          {
+            "url": "https://i.ytimg.com/vi/Sglc4bchQTs/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        ]
+      },
+      "embed": {
+        "iframeUrl": "https://www.youtube.com/embed/Sglc4bchQTs",
+        "width": 1280,
+        "height": 720
+      },
+      "title": {
+        "simpleText": "BREAKING: Savannah Guthrie in new video: 'We believe our mom is still out there - we need your help'"
+      },
+      "description": {
+        "simpleText": "NBC host makes plea to the public for help finding her mother Nancy in hour of 'desperation' as another purported ransom deadline looms. #fox #foxnews #media #breakingnews #us #usa #new #news #breaking #savannahguthrie #guthrie #missing #search #family #help #crime #crimenews #crimestory #criminal #police #elderly #woman #investigation #public #thestorywithmarthamaccallum\n\nDon’t just watch Fox News—be part of it. Become a Fox News Patriot today. https://youtube.com/foxnews/join\n\nSubscribe to Fox News: https://bit.ly/2vBUvAS\nWatch more Fox News Video: http://video.foxnews.com\nWatch Fox News Channel Live: http://www.foxnewsgo.com/\n\nDownload the Fox News app: https://foxnews.onelink.me/xLDS/cd5yhg3o\n\nFOX News Channel (FNC) is a 24-hour all-encompassing news service delivering breaking news as well as political and business news. The number one network in cable, FNC has been the most-watched television news channel for 18 consecutive years. According to a 2020 Brand Keys Consumer Loyalty Engagement Index report, FOX News is the top brand in the country for morning and evening news coverage. A 2019 Suffolk University poll named FOX News as the most trusted source for television news or commentary, while a 2019 Brand Keys Emotion Engagement Analysis survey found that FOX News was the most trusted cable news brand. A 2017 Gallup/Knight Foundation survey also found that among Americans who could name an objective news source, FOX News was the top-cited outlet. Owned by FOX Corporation, FNC is available in nearly 90 million homes and dominates the cable news landscape, routinely notching the top ten programs in the genre.\n\nWatch full episodes of your favorite shows\nThe Five: https://www.foxnews.com/video/shows/the-five\nSpecial Report with Bret Baier: https://www.foxnews.com/video/shows/special-report\nJesse Watters Primetime: https://www.foxnews.com/video/shows/jesse-watters-primetime\nHannity: https://www.foxnews.com/video/shows/hannity\nThe Ingraham Angle: https://www.foxnews.com/video/shows/ingraham-angle\nGutfeld!: https://www.foxnews.com/video/shows/gutfeld\nFox News @ Night: https://www.foxnews.com/video/shows/fox-news-night\nFollow Fox News on Facebook: https://www.facebook.com/FoxNews/\nFollow Fox News on X: https://x.com/foxnews\nFollow Fox News on Instagram: https://www.instagram.com/foxnews/"
+      },
+      "lengthSeconds": "302",
+      "ownerProfileUrl": "http://www.youtube.com/@FoxNews",
+      "externalChannelId": "UCXIJgqnII2ZOINSWNOGFThA",
+      "isFamilySafe": true,
+      "availableCountries": [
+        "AD",
+        "AE",
+        "AF",
+        "AG",
+        "AI",
+        "AL",
+        "AM",
+        "AO",
+        "AQ",
+        "AR",
+        "AS",
+        "AT",
+        "AU",
+        "AW",
+        "AX",
+        "AZ",
+        "BA",
+        "BB",
+        "BD",
+        "BE",
+        "BF",
+        "BG",
+        "BH",
+        "BI",
+        "BJ",
+        "BL",
+        "BM",
+        "BN",
+        "BO",
+        "BQ",
+        "BR",
+        "BS",
+        "BT",
+        "BV",
+        "BW",
+        "BY",
+        "BZ",
+        "CA",
+        "CC",
+        "CD",
+        "CF",
+        "CG",
+        "CH",
+        "CI",
+        "CK",
+        "CL",
+        "CM",
+        "CN",
+        "CO",
+        "CR",
+        "CU",
+        "CV",
+        "CW",
+        "CX",
+        "CY",
+        "CZ",
+        "DE",
+        "DJ",
+        "DK",
+        "DM",
+        "DO",
+        "DZ",
+        "EC",
+        "EE",
+        "EG",
+        "EH",
+        "ER",
+        "ES",
+        "ET",
+        "FI",
+        "FJ",
+        "FK",
+        "FM",
+        "FO",
+        "FR",
+        "GA",
+        "GB",
+        "GD",
+        "GE",
+        "GF",
+        "GG",
+        "GH",
+        "GI",
+        "GL",
+        "GM",
+        "GN",
+        "GP",
+        "GQ",
+        "GR",
+        "GS",
+        "GT",
+        "GU",
+        "GW",
+        "GY",
+        "HK",
+        "HM",
+        "HN",
+        "HR",
+        "HT",
+        "HU",
+        "ID",
+        "IE",
+        "IL",
+        "IM",
+        "IN",
+        "IO",
+        "IQ",
+        "IR",
+        "IS",
+        "IT",
+        "JE",
+        "JM",
+        "JO",
+        "JP",
+        "KE",
+        "KG",
+        "KH",
+        "KI",
+        "KM",
+        "KN",
+        "KP",
+        "KR",
+        "KW",
+        "KY",
+        "KZ",
+        "LA",
+        "LB",
+        "LC",
+        "LI",
+        "LK",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LY",
+        "MA",
+        "MC",
+        "MD",
+        "ME",
+        "MF",
+        "MG",
+        "MH",
+        "MK",
+        "ML",
+        "MM",
+        "MN",
+        "MO",
+        "MP",
+        "MQ",
+        "MR",
+        "MS",
+        "MT",
+        "MU",
+        "MV",
+        "MW",
+        "MX",
+        "MY",
+        "MZ",
+        "NA",
+        "NC",
+        "NE",
+        "NF",
+        "NG",
+        "NI",
+        "NL",
+        "NO",
+        "NP",
+        "NR",
+        "NU",
+        "NZ",
+        "OM",
+        "PA",
+        "PE",
+        "PF",
+        "PG",
+        "PH",
+        "PK",
+        "PL",
+        "PM",
+        "PN",
+        "PR",
+        "PS",
+        "PT",
+        "PW",
+        "PY",
+        "QA",
+        "RE",
+        "RO",
+        "RS",
+        "RU",
+        "RW",
+        "SA",
+        "SB",
+        "SC",
+        "SD",
+        "SE",
+        "SG",
+        "SH",
+        "SI",
+        "SJ",
+        "SK",
+        "SL",
+        "SM",
+        "SN",
+        "SO",
+        "SR",
+        "SS",
+        "ST",
+        "SV",
+        "SX",
+        "SY",
+        "SZ",
+        "TC",
+        "TD",
+        "TF",
+        "TG",
+        "TH",
+        "TJ",
+        "TK",
+        "TL",
+        "TM",
+        "TN",
+        "TO",
+        "TR",
+        "TT",
+        "TV",
+        "TW",
+        "TZ",
+        "UA",
+        "UG",
+        "UM",
+        "US",
+        "UY",
+        "UZ",
+        "VA",
+        "VC",
+        "VE",
+        "VG",
+        "VI",
+        "VN",
+        "VU",
+        "WF",
+        "WS",
+        "YE",
+        "YT",
+        "ZA",
+        "ZM",
+        "ZW"
+      ],
+      "isUnlisted": false,
+      "hasYpcMetadata": false,
+      "viewCount": "189108",
+      "category": "News & Politics",
+      "publishDate": "2026-02-09T12:50:53-08:00",
+      "ownerChannelName": "Fox News",
+      "uploadDate": "2026-02-09T12:50:53-08:00",
+      "isShortsEligible": false,
+      "externalVideoId": "Sglc4bchQTs",
+      "likeCount": "5214",
+      "canonicalUrl": "https://www.youtube.com/watch?v=Sglc4bchQTs"
+    }
+  },
+  "cards": {
+    "cardCollectionRenderer": {
+      "cards": [
+        {
+          "cardRenderer": {
+            "teaser": {
+              "simpleCardTeaserRenderer": {
+                "message": {
+                  "simpleText": "View corrections"
+                },
+                "trackingParams": "CA8Q0DYiEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+                "prominent": true,
+                "logVisibilityUpdates": true,
+                "onTapCommand": {
+                  "clickTrackingParams": "CA8Q0DYiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+                  "changeEngagementPanelVisibilityAction": {
+                    "targetId": "engagement-panel-error-corrections",
+                    "visibility": "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"
+                  }
+                }
+              }
+            },
+            "cueRanges": [
+              {
+                "startCardActiveMs": "0",
+                "endCardActiveMs": "5000",
+                "teaserDurationMs": "6000",
+                "iconAfterTeaserMs": "5000"
+              }
+            ],
+            "trackingParams": "CA4QtZcBGAAiEwiHqrznvM2SAxVhyxYJHYSBNnY="
+          }
+        }
+      ],
+      "headerText": {
+        "simpleText": "From Fox News"
+      },
+      "icon": {
+        "infoCardIconRenderer": {
+          "trackingParams": "CA0QsJcBIhMIh6q857zNkgMVYcsWCR2EgTZ2"
+        }
+      },
+      "closeButton": {
+        "infoCardIconRenderer": {
+          "trackingParams": "CAwQsZcBIhMIh6q857zNkgMVYcsWCR2EgTZ2"
+        }
+      },
+      "trackingParams": "CAsQwjciEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+      "allowTeaserDismiss": true,
+      "logIconVisibilityUpdates": true
+    }
+  },
+  "trackingParams": "CAAQu2kiEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+  "endscreen": {
+    "endscreenRenderer": {
+      "elements": [
+        {
+          "endscreenElementRenderer": {
+            "style": "CHANNEL",
+            "image": {
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/G3gLy3HBgiZ21mEt1uzR0VPA6VXpsgJReuD7Z91nHwcgyFVu_QpHNpxuULN1D0YEQBwD0F1HwQ=s250-c-k-c0x00ffffff-no-rj",
+                  "width": 250,
+                  "height": 250
+                },
+                {
+                  "url": "https://yt3.ggpht.com/G3gLy3HBgiZ21mEt1uzR0VPA6VXpsgJReuD7Z91nHwcgyFVu_QpHNpxuULN1D0YEQBwD0F1HwQ=s400-c-k-c0x00ffffff-no-rj",
+                  "width": 400,
+                  "height": 400
+                }
+              ]
+            },
+            "icon": {
+              "thumbnails": [
+                {
+                  "url": "https://www.gstatic.com/youtube/img/annotations/youtube.png"
+                }
+              ]
+            },
+            "left": 0.82280701,
+            "width": 0.15438597,
+            "top": 0.54906541,
+            "aspectRatio": 1,
+            "startMs": "281901",
+            "endMs": "301901",
+            "title": {
+              "accessibility": {
+                "accessibilityData": {
+                  "label": "Fox News, channel"
+                }
+              },
+              "simpleText": "Fox News"
+            },
+            "metadata": {
+              "simpleText": "FOX News Channel (FNC) is a 24-hour all-encompassing news service dedicated to delivering breaking news as well as political and business news. A top cable network in both total viewers and Adults 25-54, FNC has been the most-watched news channel in the country for almost two decades and according to Public Policy Polling is the most trusted television news source in the country. FNC is available in more than 89 million homes and dominates the cable news landscape, routinely notching 12 of the top 15 programs in the genre."
+            },
+            "callToAction": {
+              "simpleText": "VISIT CHANNEL"
+            },
+            "dismiss": {
+              "simpleText": "CANCEL"
+            },
+            "endpoint": {
+              "clickTrackingParams": "CAYQ-N4BGAAiEwiHqrznvM2SAxVhyxYJHYSBNnYyDGl2LWVuZHNjcmVlbki7goW5m5zXhErKAQT6li-p",
+              "commandMetadata": {
+                "webCommandMetadata": {
+                  "url": "/channel/UCXIJgqnII2ZOINSWNOGFThA",
+                  "webPageType": "WEB_PAGE_TYPE_CHANNEL",
+                  "rootVe": 3611,
+                  "apiUrl": "/youtubei/v1/browse"
+                }
+              },
+              "browseEndpoint": {
+                "browseId": "UCXIJgqnII2ZOINSWNOGFThA"
+              }
+            },
+            "hovercardButton": {
+              "subscribeButtonRenderer": {
+                "buttonText": {
+                  "runs": [
+                    {
+                      "text": "SUBSCRIBE"
+                    }
+                  ]
+                },
+                "subscribed": false,
+                "enabled": true,
+                "type": "FREE",
+                "channelId": "UCXIJgqnII2ZOINSWNOGFThA",
+                "showPreferences": false,
+                "subscribedButtonText": {
+                  "runs": [
+                    {
+                      "text": "SUBSCRIBED"
+                    }
+                  ]
+                },
+                "unsubscribedButtonText": {
+                  "runs": [
+                    {
+                      "text": "SUBSCRIBE"
+                    }
+                  ]
+                },
+                "trackingParams": "CAcQmysiEwiHqrznvM2SAxVhyxYJHYSBNnYyDGl2LWVuZHNjcmVlbg==",
+                "unsubscribeButtonText": {
+                  "runs": [
+                    {
+                      "text": "UNSUBSCRIBE"
+                    }
+                  ]
+                },
+                "serviceEndpoints": [
+                  {
+                    "clickTrackingParams": "CAcQmysiEwiHqrznvM2SAxVhyxYJHYSBNnYyDGl2LWVuZHNjcmVlbsoBBPqWL6k=",
+                    "commandMetadata": {
+                      "webCommandMetadata": {
+                        "sendPost": true,
+                        "apiUrl": "/youtubei/v1/subscription/subscribe"
+                      }
+                    },
+                    "subscribeEndpoint": {
+                      "channelIds": [
+                        "UCXIJgqnII2ZOINSWNOGFThA"
+                      ],
+                      "params": "EgIIBBgA"
+                    }
+                  },
+                  {
+                    "clickTrackingParams": "CAcQmysiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+                    "commandMetadata": {
+                      "webCommandMetadata": {
+                        "sendPost": true
+                      }
+                    },
+                    "signalServiceEndpoint": {
+                      "signal": "CLIENT_SIGNAL",
+                      "actions": [
+                        {
+                          "clickTrackingParams": "CAcQmysiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+                          "openPopupAction": {
+                            "popup": {
+                              "confirmDialogRenderer": {
+                                "trackingParams": "CAgQxjgiEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+                                "dialogMessages": [
+                                  {
+                                    "runs": [
+                                      {
+                                        "text": "Unsubscribe from "
+                                      },
+                                      {
+                                        "text": "Fox News"
+                                      },
+                                      {
+                                        "text": "?"
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "confirmButton": {
+                                  "buttonRenderer": {
+                                    "style": "STYLE_BLUE_TEXT",
+                                    "size": "SIZE_DEFAULT",
+                                    "isDisabled": false,
+                                    "text": {
+                                      "runs": [
+                                        {
+                                          "text": "Unsubscribe"
+                                        }
+                                      ]
+                                    },
+                                    "serviceEndpoint": {
+                                      "clickTrackingParams": "CAoQ8FsiEwiHqrznvM2SAxVhyxYJHYSBNnYyDGl2LWVuZHNjcmVlbsoBBPqWL6k=",
+                                      "commandMetadata": {
+                                        "webCommandMetadata": {
+                                          "sendPost": true,
+                                          "apiUrl": "/youtubei/v1/subscription/unsubscribe"
+                                        }
+                                      },
+                                      "unsubscribeEndpoint": {
+                                        "channelIds": [
+                                          "UCXIJgqnII2ZOINSWNOGFThA"
+                                        ],
+                                        "params": "CgIIBBgA"
+                                      }
+                                    },
+                                    "accessibility": {
+                                      "label": "Unsubscribe"
+                                    },
+                                    "trackingParams": "CAoQ8FsiEwiHqrznvM2SAxVhyxYJHYSBNnY="
+                                  }
+                                },
+                                "cancelButton": {
+                                  "buttonRenderer": {
+                                    "style": "STYLE_TEXT",
+                                    "size": "SIZE_DEFAULT",
+                                    "isDisabled": false,
+                                    "text": {
+                                      "runs": [
+                                        {
+                                          "text": "Cancel"
+                                        }
+                                      ]
+                                    },
+                                    "accessibility": {
+                                      "label": "Cancel"
+                                    },
+                                    "trackingParams": "CAkQ8FsiEwiHqrznvM2SAxVhyxYJHYSBNnY="
+                                  }
+                                },
+                                "primaryIsCancel": false
+                              }
+                            },
+                            "popupType": "DIALOG"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "subscribeAccessibility": {
+                  "accessibilityData": {
+                    "label": "Subscribe to Fox News."
+                  }
+                },
+                "unsubscribeAccessibility": {
+                  "accessibilityData": {
+                    "label": "Unsubscribe from Fox News."
+                  }
+                },
+                "signInEndpoint": {
+                  "clickTrackingParams": "CAcQmysiEwiHqrznvM2SAxVhyxYJHYSBNnbKAQT6li-p",
+                  "commandMetadata": {
+                    "webCommandMetadata": {
+                      "url": "https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=http%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fchannel%252FUCXIJgqnII2ZOINSWNOGFThA%26feature%3Div-endscreen%26continue_action%3DQUFFLUhqbFU3LXdUTjA3X2ZqdGMwa3hFdEJva3BIdlB0UXxBQ3Jtc0tua0pZWjhaOUZWY19URFQydWNkOXFOWG11d3ZOa2xhVHhjV3Mta0NCTVNHeFNVMnpLWXJzOVNNRXRrbm1CVnNfMnpyMGVIeXR2WDhKWnJod0RpVGk5b3pUVmFrcHBDMVlFMlN2LTdQOFQ0NzQzd0JVM21lU25KR2ppTWhRZzRyMUd0azFORWNaMlg3VDlMUUdlSGZLXzlGU1hoblpWdV9XZzFGMWVxeTR5WTJFbDg2NG1DQWd5YUlGNDRQc21VQmVzSW05U08%253D&hl=en"
+                    }
+                  }
+                }
+              }
+            },
+            "trackingParams": "CAYQ-N4BGAAiEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+            "isSubscribe": true,
+            "id": "11842601303617699147"
+          }
+        },
+        {
+          "endscreenElementRenderer": {
+            "style": "VIDEO",
+            "image": {
+              "thumbnails": [
+                {
+                  "url": "https://i.ytimg.com/vi/7rQH3BAA6Aw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLD8zWWTsPPm5NYAAYA5vZP7ByscZw",
+                  "width": 168,
+                  "height": 94
+                },
+                {
+                  "url": "https://i.ytimg.com/vi/7rQH3BAA6Aw/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDgaDvzUWWxSHoM45GRdq1CaqzU6g",
+                  "width": 196,
+                  "height": 110
+                },
+                {
+                  "url": "https://i.ytimg.com/vi/7rQH3BAA6Aw/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBgZs5J-aCzboyjoWndfYP5xyN_XQ",
+                  "width": 246,
+                  "height": 138
+                },
+                {
+                  "url": "https://i.ytimg.com/vi/7rQH3BAA6Aw/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBTOvHeJ1V-VfIP0s1RPpX7nAboPA",
+                  "width": 336,
+                  "height": 188
+                },
+                {
+                  "url": "https://i.ytimg.com/vi/7rQH3BAA6Aw/maxresdefault.jpg",
+                  "width": 1920,
+                  "height": 1080
+                }
+              ]
+            },
+            "left": 0.022807017,
+            "width": 0.32280701,
+            "top": 0.52492213,
+            "aspectRatio": 1.7777778,
+            "startMs": "281901",
+            "endMs": "301901",
+            "title": {
+              "accessibility": {
+                "accessibilityData": {
+                  "label": "We are in 'uncharted territory' in Nancy Guthrie case, former FBI special agent explains, video"
+                }
+              },
+              "simpleText": "We are in 'uncharted territory' in Nancy Guthrie case, former FBI special agent explains"
+            },
+            "metadata": {
+              "simpleText": "31,953 views"
+            },
+            "endpoint": {
+              "clickTrackingParams": "CAUQ8t4BGAEiEwiHqrznvM2SAxVhyxYJHYSBNnYyDGl2LWVuZHNjcmVlbki7goW5m5zXhEqaAQMQu2nKAQT6li-p",
+              "commandMetadata": {
+                "webCommandMetadata": {
+                  "url": "/watch?v=7rQH3BAA6Aw&pp=0gcJCesAHUcdqGbM",
+                  "webPageType": "WEB_PAGE_TYPE_WATCH",
+                  "rootVe": 3832
+                },
+                "interactionLoggingCommandMetadata": {
+                  "loggingExpectations": {
+                    "screenCreatedLoggingExpectations": {
+                      "expectedParentScreens": [
+                        {
+                          "screenVeType": 3832
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "watchEndpoint": {
+                "videoId": "7rQH3BAA6Aw",
+                "playerParams": "0gcJCesAHUcdqGbM",
+                "watchEndpointSupportedOnesieConfig": {
+                  "html5PlaybackOnesieConfig": {
+                    "commonConfig": {
+                      "url": "https://rr1---sn-ab5l6nk6.googlevideo.com/initplayback?source=youtube&oeis=1&c=WEB&oad=3200&ovd=3200&oaad=11000&oavd=11000&ocs=700&oewis=1&oputc=1&ofpcc=1&msp=1&odepv=1&id=eeb407dc1000e80c&ip=38.132.98.197&initcwndbps=753750&mt=1770676211&oweuc=&pxtags=Cg4KAnR4Egg1MTUzOTgzMQ&rxtags=Cg4KAnR4Egg1MTUzOTgzMA%2CCg4KAnR4Egg1MTUzOTgzMQ"
+                    }
+                  }
+                }
+              }
+            },
+            "trackingParams": "CAUQ8t4BGAEiEwiHqrznvM2SAxVhyxYJHYSBNnY=",
+            "id": "11842601303617696450",
+            "thumbnailOverlays": [
+              {
+                "thumbnailOverlayTimeStatusRenderer": {
+                  "text": {
+                    "accessibility": {
+                      "accessibilityData": {
+                        "label": "9 minutes, 26 seconds"
+                      }
+                    },
+                    "simpleText": "9:26"
+                  },
+                  "style": "DEFAULT"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "startMs": "281901",
+      "trackingParams": "CAEQ794BIhMIh6q857zNkgMVYcsWCR2EgTZ2",
+      "hideButton": {
+        "toggleButtonViewModel": {
+          "defaultButtonViewModel": {
+            "buttonViewModel": {
+              "iconName": "VISIBILITY_OFF",
+              "title": "Hide",
+              "onTap": {
+                "innertubeCommand": {
+                  "clickTrackingParams": "CAQQ088OIhMIh6q857zNkgMVYcsWCR2EgTZ2ygEE-pYvqQ==",
+                  "changeCreatorEndscreenVisibilityCommand": {
+                    "hide": true
+                  }
+                }
+              },
+              "accessibilityText": "Hide endscreen cards",
+              "style": "BUTTON_VIEW_MODEL_STYLE_OVERLAY",
+              "trackingParams": "CAQQ088OIhMIh6q857zNkgMVYcsWCR2EgTZ2",
+              "type": "BUTTON_VIEW_MODEL_TYPE_FILLED",
+              "buttonSize": "BUTTON_VIEW_MODEL_SIZE_XSMALL"
+            }
+          },
+          "toggledButtonViewModel": {
+            "buttonViewModel": {
+              "iconName": "VISIBILITY",
+              "title": "Show",
+              "onTap": {
+                "innertubeCommand": {
+                  "clickTrackingParams": "CAMQ1M8OIhMIh6q857zNkgMVYcsWCR2EgTZ2ygEE-pYvqQ==",
+                  "changeCreatorEndscreenVisibilityCommand": {
+                    "hide": false
+                  }
+                }
+              },
+              "accessibilityText": "Show endscreen cards",
+              "style": "BUTTON_VIEW_MODEL_STYLE_OVERLAY",
+              "trackingParams": "CAMQ1M8OIhMIh6q857zNkgMVYcsWCR2EgTZ2",
+              "type": "BUTTON_VIEW_MODEL_TYPE_FILLED",
+              "buttonSize": "BUTTON_VIEW_MODEL_SIZE_XSMALL"
+            }
+          },
+          "rendererContext": {
+            "loggingContext": {
+              "loggingDirectives": {
+                "trackingParams": "CAIQ_O4OIhMIh6q857zNkgMVYcsWCR2EgTZ2",
+                "visibility": {
+                  "types": "12"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "adBreakHeartbeatParams": "Q0FBJTNE",
+  "frameworkUpdates": {
+    "entityBatchUpdate": {
+      "mutations": [
+        {
+          "entityKey": "Eg0KC1NnbGM0YmNoUVRzIPYBKAE%3D",
+          "type": "ENTITY_MUTATION_TYPE_REPLACE",
+          "payload": {
+            "offlineabilityEntity": {
+              "key": "Eg0KC1NnbGM0YmNoUVRzIPYBKAE%3D",
+              "addToOfflineButtonState": "ADD_TO_OFFLINE_BUTTON_STATE_UNKNOWN"
+            }
+          }
+        }
+      ],
+      "timestamp": {
+        "seconds": "1770676720",
+        "nanos": 503261905
+      }
+    }
+  }
+}
