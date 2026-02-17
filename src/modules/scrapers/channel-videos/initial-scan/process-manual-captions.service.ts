@@ -9,7 +9,7 @@ type ProcessManualCaptionsError =
   | { type: "CAPTIONS_TOO_SHORT"; }
   | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"; };
 
-const MIN_TOTAL_WORDS = 20;
+const MIN_CAPTION_SEGMENTS = 10;
 
 @injectable()
 export class ProcessManualCaptionsService {
@@ -25,13 +25,14 @@ export class ProcessManualCaptionsService {
       });
     }
 
-    let resultCaptions: Caption[] = [];
+    let resultCaptions: Caption[] = captions;
 
     // Normalize individual captions (remove noise, but keep all captions)
     resultCaptions = resultCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
 
+    // TODO: temporary disabled due to need of bigger captions database
     // Merge short segments into longer ones (15 words, 5 seconds)
-    resultCaptions = this.captionCleanUpService.mergeShortCaptions(resultCaptions);
+    // resultCaptions = this.captionCleanUpService.mergeShortCaptions(resultCaptions);
 
     // Filter out empty/meaningless captions after merging
     resultCaptions = resultCaptions.filter(caption => this.captionCleanUpService.shouldKeepCaption(caption));
@@ -42,7 +43,7 @@ export class ProcessManualCaptionsService {
       });
     }
 
-    if (resultCaptions.length < MIN_TOTAL_WORDS) {
+    if (resultCaptions.length < MIN_CAPTION_SEGMENTS) {
       return Failure({
         type: "CAPTIONS_TOO_SHORT",
       });

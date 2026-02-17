@@ -33,3 +33,5 @@ https://www.youtube.com/watch?v=_XoyAD2tFhM
 
 
 finalize switch to hasManualCaptions hasAutoCaptions or something like this
+filter out music channels, either during sync with elastic or even during initial scrapping
+get rid of "x2", "x3", "xN" in video for calculating similariy, but probably keep it in the final captions stored in db

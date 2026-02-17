@@ -20,9 +20,9 @@ export class ProcessAutoCaptionsService {
   ) { }
 
   async process(captions: Caption[]): Promise<Result<Caption[], ProcessAutoCaptionsError>> {
-    let resultCaptions: Caption[] = [];
+    let resultCaptions: Caption[] = captions;
     // Normalize caption timings (fix overlapping captions)
-    resultCaptions = this.fixOverlappingTimestamps(captions);
+    resultCaptions = this.fixOverlappingTimestamps(resultCaptions);
 
     // Normalize individual captions (remove noise, but keep all captions)
     resultCaptions = resultCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
