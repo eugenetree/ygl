@@ -5,7 +5,8 @@ export type Channel = {
   name: string;
   description: string | null;
   avatar: string;
-  keywords: string[];
+  // TODO: maybe bring this later
+  // keywords: string[];
   subscriberCount: number;
   viewCount: number;
   videoCount: number;
@@ -28,15 +29,15 @@ type VideoBase = {
 
 export type Video =
   | (VideoBase & {
-      languageCode: LanguageCode;
-      autoCaptions: Caption[] | null;
-      manualCaptions: Caption[] | null;
-    })
+    languageCode: LanguageCode;
+    autoCaptions: Caption[] | null;
+    manualCaptions: Caption[] | null;
+  })
   | (VideoBase & {
-      languageCode: null;
-      autoCaptions: null;
-      manualCaptions: null;
-    });
+    languageCode: null;
+    autoCaptions: null;
+    manualCaptions: null;
+  });
 
 export type Caption = {
   startTime: number;

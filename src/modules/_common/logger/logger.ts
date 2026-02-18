@@ -8,9 +8,9 @@ type Config = {
 
 @injectable()
 export class Logger {
-  private context: string;
+  private context: string; // service-specific marker
   private logsDir = "logs";
-  private category: string;
+  private category: string; // overall category, like "videos-scraper"
 
   constructor({ context = "default", category = "default" }: Config) {
     this.context = this.toKebabCase(context);
@@ -45,7 +45,7 @@ export class Logger {
     const errorMessage = message ?? (error instanceof Error ? error.message : undefined);
 
     let log = `${timestamp} [error]\n[${this.context}]\n${errorMessage}`;
-    
+
     if (error instanceof Error) {
       log += `\nstack: ${error.stack}`;
       log += `\ncause: ${error.cause}`;
@@ -68,7 +68,7 @@ export class Logger {
     const log = `${this.getTimestamp()} [warn]\n[${this.context}]\n${message}\n`;
 
     console.warn(log);
-    fs.appendFileSync(this.category, log + "\n");
+    fs.appendFileSync(this.getLogsFilePath(), log + "\n");
   }
 
   private getTimestamp(): string {

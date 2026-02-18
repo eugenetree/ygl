@@ -48,4 +48,4 @@ export function bootstrap() {
   spawnWorker({ name: "default" });
 }
 
-bootstrap();
+// bootstrap();

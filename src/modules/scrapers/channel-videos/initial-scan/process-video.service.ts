@@ -12,6 +12,7 @@ import { VideoDtoWithAtLeastOneCaption } from "./channel-initial-scan.service.ty
 import { VideoProcessError } from "./process-video.service.types.js";
 import { VideoCaptionsAnalyzer } from "./video-captions-analyzer.js";
 import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
+import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
 
 @injectable()
 export class ProcessVideoService {
@@ -21,6 +22,7 @@ export class ProcessVideoService {
     private readonly videoService: VideoService,
     private readonly videoCaptionsAnalyzer: VideoCaptionsAnalyzer,
     private readonly processManualCaptionsService: ProcessManualCaptionsService,
+    private readonly processAutoCaptionsService: ProcessAutoCaptionsService,
   ) { }
 
   async process(

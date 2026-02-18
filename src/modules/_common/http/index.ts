@@ -23,7 +23,10 @@ type Config = {
   };
 };
 
-const globalState = {
+const globalState: {
+  lastRequestEndTime: number;
+  queue: Promise<unknown>;
+} = {
   lastRequestEndTime: 0,
   queue: Promise.resolve(),
 };
@@ -48,7 +51,6 @@ export class HttpClient {
       ...config,
     };
 
-    this.logger.setContext(HttpClient.name);
     this.client = axios.create({
       proxy: this.config.proxy,
     });
@@ -68,7 +70,7 @@ export class HttpClient {
           ? 0
           : this.config.requestCooldown - timeSinceLastRequest;
 
-      console.log(
+      this.logger.info(
         `lastRequestEndTime: ${globalState.lastRequestEndTime}, remainingCooldown: ${remainingCooldown}`,
       );
 
@@ -80,6 +82,8 @@ export class HttpClient {
       globalState.lastRequestEndTime = Date.now();
       return result;
     });
+
+    globalState.queue = requestPromise;
 
     return requestPromise;
   }

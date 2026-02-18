@@ -68,4 +68,4 @@ export async function bootstrap() {
   spawnWorker({ name: "default" });
 }
 
-bootstrap();
+// bootstrap();

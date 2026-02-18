@@ -2,6 +2,7 @@ export type Channel = {
   id: string;
   name: string;
   description: string | null;
+  avatar: string | null;
   subscriberCount: number | null;
   viewCount: number;
   videoCount: number;

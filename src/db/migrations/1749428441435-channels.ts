@@ -13,6 +13,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", "varchar(24)", (col) => col.primaryKey())
     .addColumn("name", "varchar", (col) => col.notNull())
     .addColumn("description", "text")
+    .addColumn("avatar", "varchar")
     .addColumn("subscriberCount", "integer")
     .addColumn("viewCount", "bigint")
     .addColumn("videoCount", "integer")
