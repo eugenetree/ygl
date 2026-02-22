@@ -13,11 +13,10 @@ export class CaptionCleanUpService {
     text = text.replace(/^>>\s*/g, '');
     text = text.replace(/\s*>>\s*/g, ' ');
 
-    // TODO: temporary disabled due to need of bigger captions database
     // Remove speaker labels at start, after spaces, or after punctuation
     // Matches patterns like "Sapnap:", "George:", etc.
     // Only matches at word boundaries to avoid false positives like "3:30" or "http://"
-    // text = text.replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1');
+    text = text.replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1');
 
     // Remove sound effects and descriptions in brackets
     // Examples: [laughter], [music] etc

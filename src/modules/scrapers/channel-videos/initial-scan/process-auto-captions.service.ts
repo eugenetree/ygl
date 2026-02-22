@@ -4,7 +4,7 @@ import { Caption } from "../../../youtube-api/youtube-api.types.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { injectable } from "inversify";
 
-type ProcessAutoCaptionsError = {
+export type ProcessAutoCaptionsError = {
   type: "CAPTIONS_EMPTY"
 } | {
   type: "CAPTIONS_TOO_SHORT";

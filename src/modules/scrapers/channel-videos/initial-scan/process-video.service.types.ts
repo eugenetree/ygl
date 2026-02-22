@@ -1,4 +1,6 @@
 import { Caption } from "../../../youtube-api/youtube-api.types.js";
+import { ProcessAutoCaptionsError } from "./process-auto-captions.service.js";
+import { ProcessManualCaptionsError } from "./process-manual-captions.service.js";
 
 export type VideoProcessError =
   | {
@@ -6,10 +8,16 @@ export type VideoProcessError =
     videoId: string;
   }
   | {
-    type: "NO_VALID_CAPTIONS";
+    type: "NO_AUTO_CAPTIONS_WHEN_MANUAL_PRESENT";
     videoId: string;
-    captions: {
-      manualCaptions: Caption[] | null;
-      autoCaptions: Caption[] | null;
-    };
+  }
+  | {
+    type: "INVALID_CAPTIONS_AUTO";
+    videoId: string;
+    cause: ProcessAutoCaptionsError;
+  }
+  | {
+    type: "INVALID_CAPTIONS_MANUAL";
+    videoId: string;
+    cause: ProcessManualCaptionsError;
   };

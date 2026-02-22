@@ -98,6 +98,7 @@ export class ChannelVideoDetailsExtractor {
       channelId: inputVideoDetails.channelId,
       viewCount: parseInt(inputVideoDetails.viewCount),
       thumbnail: inputVideoDetails.thumbnail.thumbnails[0].url,
+
       captionTracksUrls: outputCaptionTracksUrls,
     };
 

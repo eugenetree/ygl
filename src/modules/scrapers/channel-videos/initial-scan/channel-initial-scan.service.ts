@@ -149,7 +149,7 @@ export class ChannelInitialProcessor {
       });
     }
 
-    const { video, captions } = processVideoResult.value;
+    const { video, autoCaptions: captions } = processVideoResult.value;
 
     const createVideoResult = await this.videoRepository.createWithCaptions(
       video,

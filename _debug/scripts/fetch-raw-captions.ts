@@ -6,7 +6,7 @@ import { CaptionCleanUpService } from "../../src/modules/scrapers/channel-videos
 import { ProcessManualCaptionsService } from "../../src/modules/scrapers/channel-videos/initial-scan/process-manual-captions.service.js";
 
 const main = async () => {
-  const result = await youtubeApiGetVideo.getVideo("xrkPe-9rM1Q");
+  const result = await youtubeApiGetVideo.getVideo("zILgK7OKIdg");
   if (!result.ok) {
     console.error("Failed to fetch video:", result.error);
     return;

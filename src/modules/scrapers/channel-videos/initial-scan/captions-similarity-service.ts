@@ -9,37 +9,17 @@ type TokenOccurrence = {
   endTime: number;
 };
 
-type SimilarityDiagnostics = {
-  similarityScore: number;
-  scoreAtZeroShift: number;
-  scoreAtBestShift: number;
-  shiftGain: number;
-  bestShiftMs: number;
-  isShiftedInTime: boolean;
-  manualTokenCount: number;
-  autoTokenCount: number;
-  stats: {
-    zeroShift: MatchStats;
-    bestShift: MatchStats;
-    topUnmatchedTokensAtZeroShift: Array<{ token: string; count: number }>;
-    topTimingMissTokensAtZeroShift: Array<{ token: string; count: number }>;
-  };
+type SimilarityResult = {
+  score: number;
+  shiftMs: number;
 };
 
-type MatchStats = {
-  totalTokens: number;
-  matchedTokens: number;
-  missingTokenInAutoCount: number;
-  timingMissCount: number;
-  matchRate: number;
-};
+
 
 const SHIFT_SCAN_MIN_MS = -5000;
 const SHIFT_SCAN_MAX_MS = 5000;
 const SHIFT_SCAN_STEP_MS = 500;
 const TIME_TOLERANCE_MS = 1000;
-const MAX_ALLOWED_SHIFT_MS = 1_200;
-const MIN_SHIFT_GAIN_TO_FLAG = 0.08;
 
 // High-frequency words add noise in matching because they appear everywhere.
 const STOP_TOKENS = new Set([
@@ -99,132 +79,48 @@ export class CaptionsSimilarityService {
   }: {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
-  }): Promise<SimilarityDiagnostics> {
+  }): Promise<SimilarityResult> {
     const manualTokenOccurrences = this.toTokenOccurrences(manualCaptions);
     const autoTokenOccurrences = this.toTokenOccurrences(autoCaptions);
 
     if (manualTokenOccurrences.length === 0 || autoTokenOccurrences.length === 0) {
-      return {
-        similarityScore: 0,
-        scoreAtZeroShift: 0,
-        scoreAtBestShift: 0,
-        shiftGain: 0,
-        bestShiftMs: 0,
-        isShiftedInTime: false,
-        manualTokenCount: manualTokenOccurrences.length,
-        autoTokenCount: autoTokenOccurrences.length,
-        stats: {
-          zeroShift: {
-            totalTokens: manualTokenOccurrences.length,
-            matchedTokens: 0,
-            missingTokenInAutoCount: 0,
-            timingMissCount: 0,
-            matchRate: 0,
-          },
-          bestShift: {
-            totalTokens: manualTokenOccurrences.length,
-            matchedTokens: 0,
-            missingTokenInAutoCount: 0,
-            timingMissCount: 0,
-            matchRate: 0,
-          },
-          topUnmatchedTokensAtZeroShift: [],
-          topTimingMissTokensAtZeroShift: [],
-        },
-      };
+      return { score: 0, shiftMs: 0 };
     }
 
     const autoTokenTimeIndex = this.buildTokenTimeIndex(autoTokenOccurrences);
-    const zeroShiftDetails = this.calculateTokenMatchDetails({
-      manualTokenOccurrences,
-      autoTokenTimeIndex,
-      shiftMs: 0,
-    });
-    writeFileSync("debug-manual-token-occurrences.json", JSON.stringify(manualTokenOccurrences));
-    writeFileSync("debug-auto-token-occurrences.json", JSON.stringify(autoTokenOccurrences));
-    const scoreAtZeroShift = zeroShiftDetails.matchRate;
+
     const bestShiftResult = this.findBestShift({
       manualTokenOccurrences,
       autoTokenTimeIndex,
     });
+
     const bestShiftDetails = this.calculateTokenMatchDetails({
       manualTokenOccurrences,
       autoTokenTimeIndex,
       shiftMs: bestShiftResult.shiftMs,
     });
 
-    const shiftGain = bestShiftDetails.matchRate - scoreAtZeroShift;
-    const isShiftedInTime =
-      Math.abs(bestShiftResult.shiftMs) > MAX_ALLOWED_SHIFT_MS &&
-      shiftGain >= MIN_SHIFT_GAIN_TO_FLAG;
-    const similarityScore = isShiftedInTime ? Math.max(0, scoreAtZeroShift - 0.25) : scoreAtZeroShift;
-
-    if (isShiftedInTime) {
+    if (Math.abs(bestShiftResult.shiftMs) > 1_200) {
       this.logger.warn(
-        "Manual captions seem shifted in time compared to auto captions. " +
-        "bestShiftMs=" + bestShiftResult.shiftMs +
-        ", scoreAtZeroShift=" + scoreAtZeroShift.toFixed(3) +
-        "bestShiftMs=" + bestShiftResult.shiftMs +
-        ", scoreAtZeroShift=" + scoreAtZeroShift.toFixed(3) +
-        ", scoreAtBestShift=" + bestShiftResult.score.toFixed(3),
+        "Manual captions appear time-shifted relative to auto captions." +
+        " shiftMs=" + bestShiftResult.shiftMs +
+        ", score=" + bestShiftResult.score.toFixed(3),
       );
     }
 
-    // Log detailed misses for best shift
-    console.log("=== Matching Details (Best Shift) ===");
-    console.log(`Matched: ${bestShiftDetails.matchedTokens}/${bestShiftDetails.totalTokens} (${(bestShiftDetails.matchRate * 100).toFixed(1)}%)`);
-
-    if (bestShiftDetails.unmatchedOccurrences.length > 0) {
-      console.log("\n--- Top 10 Completely Missing Tokens (Not in Auto at all) ---");
-      const counts = this.getTopTokenCounts(bestShiftDetails.unmatchedTokens, 10);
-      for (const item of counts) {
-        // Find first occurrence to get example time
-        const example = bestShiftDetails.unmatchedOccurrences.find(t => t.token === item.token);
-        console.log(`"${item.token}": ${item.count} occurrences. Example time: ${example ? (example.startTime / 1000).toFixed(2) : '?'}s`);
-      }
-    }
-
-    if (bestShiftDetails.timingMissOccurrences.length > 0) {
-      console.log("\n--- Top 10 Timing Mismatches (Exist in Auto but at wrong time) ---");
-      const counts = this.getTopTokenCounts(bestShiftDetails.timingMissTokens, 10);
-      for (const item of counts) {
-        const example = bestShiftDetails.timingMissOccurrences.find(t => t.token === item.token);
-        console.log(`"${item.token}": ${item.count} occurrences. Example time: ${example ? (example.startTime / 1000).toFixed(2) : '?'}s`);
-      }
-    }
-    console.log("=====================================");
+    const topMissing = this.getTopTokenCounts(bestShiftDetails.unmatchedTokens, 5).map((t) => t.token).join(", ");
+    const topTimingMiss = this.getTopTokenCounts(bestShiftDetails.timingMissTokens, 5).map((t) => t.token).join(", ");
+    this.logger.info(
+      `Similarity: ${(bestShiftDetails.matchRate * 100).toFixed(1)}% matched` +
+      ` (${bestShiftDetails.matchedTokens}/${bestShiftDetails.totalTokens})` +
+      `, shiftMs=${bestShiftResult.shiftMs}` +
+      (topMissing ? `, missing=[${topMissing}]` : "") +
+      (topTimingMiss ? `, timingMiss=[${topTimingMiss}]` : ""),
+    );
 
     return {
-      similarityScore,
-      scoreAtZeroShift,
-      scoreAtBestShift: bestShiftDetails.matchRate,
-      shiftGain,
-      bestShiftMs: bestShiftResult.shiftMs,
-      isShiftedInTime,
-      manualTokenCount: manualTokenOccurrences.length,
-      autoTokenCount: autoTokenOccurrences.length,
-      stats: {
-        zeroShift: {
-          totalTokens: zeroShiftDetails.totalTokens,
-          matchedTokens: zeroShiftDetails.matchedTokens,
-          missingTokenInAutoCount: zeroShiftDetails.missingTokenInAutoCount,
-          timingMissCount: zeroShiftDetails.timingMissCount,
-          matchRate: zeroShiftDetails.matchRate,
-        },
-        bestShift: {
-          totalTokens: bestShiftDetails.totalTokens,
-          matchedTokens: bestShiftDetails.matchedTokens,
-          missingTokenInAutoCount: bestShiftDetails.missingTokenInAutoCount,
-          timingMissCount: bestShiftDetails.timingMissCount,
-          matchRate: bestShiftDetails.matchRate,
-        },
-        topUnmatchedTokensAtZeroShift: this.getTopTokenCounts(
-          zeroShiftDetails.unmatchedTokens,
-        ),
-        topTimingMissTokensAtZeroShift: this.getTopTokenCounts(
-          zeroShiftDetails.timingMissTokens,
-        ),
-      },
+      score: bestShiftDetails.matchRate,
+      shiftMs: bestShiftResult.shiftMs,
     };
   }
 
@@ -269,7 +165,12 @@ export class CaptionsSimilarityService {
     manualTokenOccurrences: TokenOccurrence[];
     autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
     shiftMs: number;
-  }): MatchStats & {
+  }): {
+    totalTokens: number;
+    matchedTokens: number;
+    missingTokenInAutoCount: number;
+    timingMissCount: number;
+    matchRate: number;
     unmatchedTokens: string[];
     timingMissTokens: string[];
     unmatchedOccurrences: TokenOccurrence[];

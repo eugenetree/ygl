@@ -122,9 +122,10 @@ export class ChannelProcessingContext {
         this.currentContext.videosNoCaptionsValid++;
       }
 
-      if (params.error.type === "NO_VALID_CAPTIONS") {
-        this.currentContext.videosSkippedAlreadyProcessed++;
-      }
+      // TODO: implement
+      // if (params.error.type === "NO_VALID_CAPTIONS") {
+      //   this.currentContext.videosSkippedAlreadyProcessed++;
+      // }
 
       this.currentContext.videosFailed++;
       this.currentContext.videosProcessed++;

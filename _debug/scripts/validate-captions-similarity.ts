@@ -2,8 +2,8 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { CaptionsSimilarityService } from "../src/modules/scrapers/channel-videos/initial-scan/captions-similarity-service.js";
-import { Caption } from "../src/modules/youtube-api/youtube-api.types.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/channel-videos/initial-scan/captions-similarity-service.js";
+import { Caption } from "../../src/modules/youtube-api/youtube-api.types.js";
 
 // Mock Logger
 const mockLogger = {
@@ -17,8 +17,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function main() {
-    const manualCaptionsPath = "_debug/captions/lTVDEKB5XnA-processed-manual.json";
-    const autoCaptionsPath = "_debug/captions/lTVDEKB5XnA-processed-auto.json";
+    const videoId = "zILgK7OKIdg";
+
+    const manualCaptionsPath = `_debug/captions/${videoId}-processed-manual.json`;
+    const autoCaptionsPath = `_debug/captions/${videoId}-processed-auto.json`;
 
     console.log(`Reading manual captions from: ${manualCaptionsPath}`);
     console.log(`Reading auto captions from: ${autoCaptionsPath}`);
