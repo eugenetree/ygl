@@ -9,6 +9,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("endTime", "integer", (col) => col.notNull())
     .addColumn("duration", "integer", (col) => col.notNull())
     .addColumn("text", "text", (col) => col.notNull())
+    .addColumn("type", "varchar(6)", (col) => col.notNull())
     .addColumn("videoId", "varchar(11)", (col) =>
       col.notNull().references("videos.id"),
     )

@@ -3,7 +3,7 @@ import { bootstrap as bootstrapChannelVideos } from "./channel-videos/runtime/bo
 
 export function bootstrap() {
   bootstrapChannels();
-  bootstrapChannelVideos();
+  // bootstrapChannelVideos();
 }
 
 bootstrap();

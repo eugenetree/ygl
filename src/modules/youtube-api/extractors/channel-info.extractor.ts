@@ -83,8 +83,6 @@ export class ChannelInfoExtractor {
         ?.contents?.[0]?.itemSectionRenderer?.contents?.[0]
         ?.aboutChannelRenderer?.metadata?.aboutChannelViewModel;
 
-    console.log("debug: thumbnails", JSON.stringify(metadataRenderer?.avatar?.thumbnails));
-
     const rawChannelInfo = {
       id: metadataRenderer?.externalId,
       name: metadataRenderer?.title,

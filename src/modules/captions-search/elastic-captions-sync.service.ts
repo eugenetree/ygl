@@ -49,6 +49,7 @@ export class ElasticSyncService {
         properties: {
           id: { type: "keyword" },
           video_id: { type: "keyword" },
+          type: { type: "keyword" },
           start_time: { type: "long" },
           end_time: { type: "long" },
           duration: { type: "long" },

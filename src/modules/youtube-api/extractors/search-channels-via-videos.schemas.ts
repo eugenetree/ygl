@@ -80,7 +80,7 @@ const itemSectionRenderer = z.object({
 
 const itemSectionRendererWithNoResultsOption = z.object({
   itemSectionRenderer: z.object({
-    contents: z.union([videoRenderer, messageRenderer]).array(),
+    contents: z.union([videoRenderer, messageRenderer, z.unknown()]).array(),
   }),
 });
 

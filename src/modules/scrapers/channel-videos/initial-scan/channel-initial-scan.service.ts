@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { Channel } from "../../../domain/channel.js";
+import { Video } from "../../../domain/video.js";
 import { Video as VideoDto } from "../../../youtube-api/youtube-api.types.js";
 import { youtubeApiGetChannelVideos } from "../../../youtube-api/yt-api-get-channel-videos.js";
 import { ChannelInitialProcessError } from "./channel-initial-scan.service.types.js";
@@ -115,8 +116,10 @@ export class ChannelInitialProcessor {
         }
 
         this.processingContext.trackVideo({
-          type: "VIDEO_VALID",
+          type: "VIDEO_PROCESSED",
           videoId: videoResponse.video.id,
+          autoCaptionsStatus: processVideoResult.value.autoCaptionsStatus,
+          manualCaptionsStatus: processVideoResult.value.manualCaptionsStatus,
         });
       }
 
@@ -139,7 +142,7 @@ export class ChannelInitialProcessor {
 
   private async processVideo(
     videoDto: VideoDto,
-  ): Promise<Result<void, ProcessVideoError>> {
+  ): Promise<Result<Video, ProcessVideoError>> {
     const processVideoResult = await this.videoProcessor.process(videoDto);
 
     if (!processVideoResult.ok) {
@@ -149,7 +152,8 @@ export class ChannelInitialProcessor {
       });
     }
 
-    const { video, autoCaptions: captions } = processVideoResult.value;
+    const { video, autoCaptions, manualCaptions } = processVideoResult.value;
+    const captions = [...(autoCaptions ?? []), ...(manualCaptions ?? [])];
 
     const createVideoResult = await this.videoRepository.createWithCaptions(
       video,
@@ -169,9 +173,9 @@ export class ChannelInitialProcessor {
     }
 
     this.logger.info(
-      `Video ${video.id} created with ${captions.length} captions.`,
+      `Video ${video.id} persisted. autoCaptions=${autoCaptions?.length ?? 0}, manualCaptions=${manualCaptions?.length ?? 0}.`,
     );
 
-    return Success(undefined);
+    return Success(video);
   }
 }

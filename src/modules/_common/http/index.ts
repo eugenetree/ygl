@@ -172,6 +172,6 @@ export const httpClient = new HttpClient(
     context: "http-client",
   }),
   {
-    requestCooldown: 15000,
+    requestCooldown: 12500,
   },
 );

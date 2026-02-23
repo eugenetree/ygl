@@ -3,6 +3,7 @@ import { VideoProcessError } from "./process-video.service.types.js";
 import { FetchError } from "../../../_common/http/errors.js";
 import { ParsingError, ValidationError } from "../../../_common/validation/errors.js";
 import { DatabaseError } from "../../../../db/types.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../../domain/video.js";
 
 export type ProcessingContext = {
   firstVideoId: string | null;
@@ -19,6 +20,25 @@ export type ProcessingContext = {
   videosProcessed: number;
 
   videosFailedInRow: number;
+  videoHistory: TrackVideoParams[];
+}
+
+export type TrackVideoParams = {
+  type: "VIDEO_PERSISTING_FAILED",
+  videoId: string;
+  error: DatabaseError;
+} | {
+  type: "VIDEO_PROCESSED",
+  videoId: string;
+  autoCaptionsStatus: AutoCaptionsStatus;
+  manualCaptionsStatus: ManualCaptionsStatus;
+} | {
+  type: "VIDEO_FAILED_BEFORE_PROCESSING",
+  error: FetchError | ParsingError | ValidationError;
+} | {
+  type: "VIDEO_PROCESSING_FAILED",
+  videoId: string;
+  error: VideoProcessError,
 }
 
 type ShouldContinueProcessingResult = {
@@ -28,23 +48,6 @@ type ShouldContinueProcessingResult = {
   shouldContinue: false;
   reason: "TOO_MANY_CONSECUTIVE_FAILED_VIDEOS" | "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS";
   context: ProcessingContext;
-}
-
-
-type TrackVideoParams = {
-  type: "VIDEO_PERSISTING_FAILED",
-  videoId: string;
-  error: DatabaseError;
-} | {
-  type: "VIDEO_VALID",
-  videoId: string;
-} | {
-  type: "VIDEO_FAILED_BEFORE_PROCESSING",
-  error: FetchError | ParsingError | ValidationError;
-} | {
-  type: "VIDEO_PROCESSING_FAILED",
-  videoId: string;
-  error: VideoProcessError,
 }
 
 @injectable()
@@ -63,23 +66,28 @@ export class ChannelProcessingContext {
     videosFailed: 0,
     videosProcessed: 0,
     videosFailedInRow: 0,
+    videoHistory: [],
   };
 
   public shouldContinueProcessing(): ShouldContinueProcessingResult {
     const { videosFailedInRow } = this.currentContext;
 
     // If channel has a lot of videos, we should make sure
-    // that it has at least 10% of videos with valid captions
-    if (
-      this.currentContext.videosProcessed > 50 &&
-      this.currentContext.videosBothCaptionsValid /
-      this.currentContext.videosProcessed <
-      0.1
-    ) {
-      return {
-        shouldContinue: false,
-        reason: "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS",
-        context: this.currentContext,
+    // that it has at least 10% of videos with valid captions in the last 100
+    if (this.currentContext.videoHistory.length >= 100) {
+      const validInLast100 = this.currentContext.videoHistory.filter(
+        (v) =>
+          v.type === "VIDEO_PROCESSED" &&
+          v.autoCaptionsStatus === "CAPTIONS_VALID" &&
+          v.manualCaptionsStatus === "CAPTIONS_VALID",
+      ).length;
+
+      if (validInLast100 < 10) {
+        return {
+          shouldContinue: false,
+          reason: "LOW_PERCENTAGE_OF_VIDEOS_WITH_VALID_CAPTIONS",
+          context: this.currentContext,
+        };
       }
     }
 
@@ -98,6 +106,11 @@ export class ChannelProcessingContext {
   }
 
   public trackVideo(params: TrackVideoParams) {
+    this.currentContext.videoHistory.push(params);
+    if (this.currentContext.videoHistory.length > 100) {
+      this.currentContext.videoHistory.shift();
+    }
+
     if ("videoId" in params) {
       if (!this.currentContext.firstVideoId) {
         this.currentContext.firstVideoId = params.videoId;
@@ -108,30 +121,30 @@ export class ChannelProcessingContext {
 
     this.currentContext.videosAll++;
 
-    if (params.type === "VIDEO_VALID") {
-      this.currentContext.videosBothCaptionsValid++;
-      this.currentContext.videosProcessed++;
-      this.currentContext.videosFailedInRow = 0;
-      this.previousVideoStatus = params.type;
+    if (params.type === "VIDEO_PROCESSED") {
+      const autoValid = params.autoCaptionsStatus === "CAPTIONS_VALID";
+      const manualValid = params.manualCaptionsStatus === "CAPTIONS_VALID";
 
-      return;
-    }
-
-    if (params.type === "VIDEO_PROCESSING_FAILED") {
-      if (params.error.type === "NO_CAPTIONS") {
+      if (autoValid && manualValid) {
+        this.currentContext.videosBothCaptionsValid++;
+      } else if (autoValid && !manualValid) {
+        this.currentContext.videosOnlyAutoCaptionsValid++;
+      } else if (!autoValid && manualValid) {
+        this.currentContext.videosOnlyManualCaptionsValid++;
+      } else {
         this.currentContext.videosNoCaptionsValid++;
       }
 
-      // TODO: implement
-      // if (params.error.type === "NO_VALID_CAPTIONS") {
-      //   this.currentContext.videosSkippedAlreadyProcessed++;
-      // }
-
-      this.currentContext.videosFailed++;
       this.currentContext.videosProcessed++;
-      this.currentContext.videosFailedInRow++;
-      this.previousVideoStatus = params.type;
 
+      if (autoValid || manualValid) {
+        this.currentContext.videosFailedInRow = 0;
+      } else {
+        this.currentContext.videosFailed++;
+        this.currentContext.videosFailedInRow++;
+      }
+
+      this.previousVideoStatus = params.type;
       return;
     }
 

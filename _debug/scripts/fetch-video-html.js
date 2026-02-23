@@ -1,6 +1,6 @@
 import { writeFileSync } from "fs";
 
-const VIDEO_ID = "7ZdPKEf-LXA";
+const VIDEO_ID = "dXE4qZmKRW0";
 
 const main = async () => {
     const url = `https://www.youtube.com/youtubei/v1/player`;

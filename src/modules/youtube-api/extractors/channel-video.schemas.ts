@@ -13,6 +13,12 @@ const captionTrack = z.object({
   baseUrl: z.string(),
   languageCode: z.string(),
   kind: z.literal("asr").optional(),
+  trackName: z.string().optional(),
+  name: z
+    .object({
+      runs: z.array(z.object({ text: z.string() })),
+    })
+    .optional(),
 });
 
 const playerResponse = z.object({

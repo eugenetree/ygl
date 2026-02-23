@@ -94,8 +94,6 @@ export class SearchChannelViaVideosQueriesSeeder {
           }),
         );
       }
-
-      this.logger.info(`Inserted chunk ${Math.floor(i / chunkSize) + 1} of ${Math.ceil(words.length / chunkSize)}`);
     }
 
     return Success(undefined);

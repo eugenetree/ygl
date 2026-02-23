@@ -9,10 +9,13 @@ import { validator } from "../../_common/validation/validator.js";
 import { isValidLanguageCode } from "../../i18n/index.js";
 import { inputSchemas, outputSchemas } from "./channel-video.schemas.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
+import { Logger } from "../../_common/logger/logger.js";
 
 export type OutputVideo = z.infer<typeof outputSchemas.video>;
 
 export class ChannelVideoDetailsExtractor {
+  private readonly logger = new Logger({ context: ChannelVideoDetailsExtractor.name });
+
   extractInnerTubeApiKey(
     html: unknown,
   ): Result<string, ValidationError | ParsingError> {
@@ -86,7 +89,21 @@ export class ChannelVideoDetailsExtractor {
       if (captionTrack.kind === "asr") {
         outputCaptionTracksUrls[languageCode].auto = captionTrack.baseUrl;
       } else {
-        outputCaptionTracksUrls[languageCode].manual = captionTrack.baseUrl;
+        // TODO: this is clearly not API-related, but business logic
+        // so this flow should be refactored to return simple captionTrackUrls
+        // and consumer of the yt-api-get-video should handle this logic
+        // of fetching full captions based on captionTrackUrls
+        const isLiveBroadcastCaption =
+          captionTrack.trackName === "CC1" ||
+          captionTrack.trackName === "DTVCC1" ||
+          captionTrack.name?.runs?.[0]?.text?.includes("CC1") ||
+          captionTrack.name?.runs?.[0]?.text?.includes("DTVCC1");
+
+        if (!isLiveBroadcastCaption) {
+          outputCaptionTracksUrls[languageCode].manual = captionTrack.baseUrl;
+        } else {
+          this.logger.warn(`Live broadcast caption found: ${captionTrack}`);
+        }
       }
     }
 
@@ -98,7 +115,6 @@ export class ChannelVideoDetailsExtractor {
       channelId: inputVideoDetails.channelId,
       viewCount: parseInt(inputVideoDetails.viewCount),
       thumbnail: inputVideoDetails.thumbnail.thumbnails[0].url,
-
       captionTracksUrls: outputCaptionTracksUrls,
     };
 
@@ -177,7 +193,21 @@ export class ChannelVideoDetailsExtractor {
       if (captionTrack.kind === "asr") {
         outputCaptionTracksUrls[languageCode].auto = captionTrack.baseUrl;
       } else {
-        outputCaptionTracksUrls[languageCode].manual = captionTrack.baseUrl;
+        // TODO: this is clearly not API-related, but business logic
+        // so this flow should be refactored to return simple captionTrackUrls
+        // and consumer of the yt-api-get-video should handle this logic
+        // of fetching full captions based on captionTrackUrls
+        const isLiveBroadcastCaption =
+          captionTrack.trackName === "CC1" ||
+          captionTrack.trackName === "DTVCC1" ||
+          captionTrack.name?.runs?.[0]?.text?.includes("CC1") ||
+          captionTrack.name?.runs?.[0]?.text?.includes("DTVCC1");
+
+        if (!isLiveBroadcastCaption) {
+          outputCaptionTracksUrls[languageCode].manual = captionTrack.baseUrl;
+        } else {
+          this.logger.warn(`Live broadcast caption found: ${captionTrack}`);
+        }
       }
     }
 

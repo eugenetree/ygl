@@ -8,6 +8,22 @@ export type ProcessingStatus =
   | "SUCCESS"
   | "FAIL";
 
+export type AutoCaptionsStatus =
+  | "CAPTIONS_ABSENT"
+  | "CAPTIONS_VALID"
+  | "CAPTIONS_EMPTY"
+  | "CAPTIONS_TOO_SHORT";
+
+export type ManualCaptionsStatus =
+  | "CAPTIONS_ABSENT"
+  | "CAPTIONS_VALID"
+  | "CAPTIONS_PENDING_VALIDATION"
+  | "CAPTIONS_EMPTY"
+  | "CAPTIONS_TOO_SHORT"
+  | "CAPTIONS_MOSTLY_UPPERCASE"
+  | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
+  | "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
+
 export type ChannelVideosScrapeProcessingStatus =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -73,9 +89,9 @@ export interface VideosTable {
   channelId: string;
   viewCount: number;
   thumbnail: string;
-  languageCode: LanguageCode;
-  hasAutoCaptions: boolean;
-  hasManualCaptions: boolean;
+  languageCode: LanguageCode | null;
+  autoCaptionsStatus: AutoCaptionsStatus;
+  manualCaptionsStatus: ManualCaptionsStatus;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -86,6 +102,7 @@ export interface CaptionsTable {
   endTime: number;
   duration: number;
   text: string;
+  type: "manual" | "auto";
   videoId: string;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;

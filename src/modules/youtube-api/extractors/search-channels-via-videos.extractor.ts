@@ -116,7 +116,11 @@ class SearchChannelsViaVideosExtractor {
 
       if (isItemSectionRenderer) {
         for (const nestedRenderer of renderer.itemSectionRenderer.contents) {
-          if ("messageRenderer" in nestedRenderer) {
+          if (
+            typeof nestedRenderer === "object" &&
+            nestedRenderer !== null &&
+            "messageRenderer" in nestedRenderer
+          ) {
             return Success({ channels: [] });
           }
 

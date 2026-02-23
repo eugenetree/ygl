@@ -29,14 +29,28 @@ type VideoBase = {
 
 export type Video =
   | (VideoBase & {
-    languageCode: LanguageCode;
-    autoCaptions: Caption[] | null;
-    manualCaptions: Caption[] | null;
-  })
-  | (VideoBase & {
+    captionStatus: "NONE";
     languageCode: null;
     autoCaptions: null;
     manualCaptions: null;
+  })
+  | (VideoBase & {
+    captionStatus: "MANUAL_ONLY";
+    languageCode: null;
+    autoCaptions: null;
+    manualCaptions: null;
+  })
+  | (VideoBase & {
+    captionStatus: "AUTO_ONLY";
+    languageCode: LanguageCode;
+    autoCaptions: Caption[];
+    manualCaptions: null;
+  })
+  | (VideoBase & {
+    captionStatus: "BOTH";
+    languageCode: LanguageCode;
+    autoCaptions: Caption[];
+    manualCaptions: Caption[];
   });
 
 export type Caption = {

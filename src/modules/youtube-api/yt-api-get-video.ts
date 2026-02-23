@@ -63,78 +63,80 @@ class YoutubeApiGetVideo {
     }
 
     const videoDetails = videoDetailsResult.value;
+    const tracks = videoDetails.captionTracksUrls;
+    const videoBase = omit(videoDetails, ["captionTracksUrls"]);
 
-    if (this.hasOnlyManualCaptionTracks(videoDetails.captionTracksUrls)) {
-      this.logger.error({
-        message: "TO BE INVESTIGATED: Video has only manual captions and no ASR tracks",
-        context: {
-          videoId: videoDetails.id,
-          captionTracksUrls: videoDetails.captionTracksUrls,
-        },
-      });
-    }
+    const language = this.detectLanguage(tracks);
 
-    const videoLanguage = this.getVideoLanguageBasedOnCaptionTracks(
-      videoDetails.captionTracksUrls,
-    );
-
-    if (!videoLanguage) {
+    if (!language) {
+      const hasManual = Object.values(tracks).some((t) => Boolean(t.manual));
+      if (hasManual) this.logger.info(`Video ${videoDetails.id} has only manual captions.`);
       return Success({
-        ...omit(videoDetails, ["captionTracksUrls"]),
+        ...videoBase,
+        captionStatus: hasManual ? "MANUAL_ONLY" : "NONE",
         languageCode: null,
         autoCaptions: null,
         manualCaptions: null,
       });
     }
 
-    const autoCaptionsTrackUrl =
-      videoDetails.captionTracksUrls[videoLanguage]?.auto;
-
-    if (!autoCaptionsTrackUrl) {
+    const autoUrl = tracks[language]?.auto;
+    if (!autoUrl) {
       return Failure({
         type: "PARSING_ERROR",
         message: "No auto captions track URL found",
-        context: { videoLanguage, videoDetails },
+        context: { language, tracks },
       });
     }
 
-    const autoCaptionsResult = await this.getCaptions({
-      baseUrl: autoCaptionsTrackUrl,
-    });
-
+    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl });
     if (!autoCaptionsResult.ok) {
       return Failure(autoCaptionsResult.error);
     }
 
-    const manualCaptionTrackUrl =
-      videoDetails.captionTracksUrls[videoLanguage]?.manual;
+    let manualUrl = tracks[language]?.manual;
 
-    if (!manualCaptionTrackUrl) {
+    if (!manualUrl) {
+      // Manual captions might be uploaded with a specific dialect (e.g., 'en-us')
+      // while auto captions are grouped under the base language ('en').
+      // If an exact language match isn't found, fallback to checking if any manual
+      // track shares the same base language.
+      const baseLang = language.split("-")[0];
+      const fallbackLangContent = Object.entries(tracks).find(
+        ([langCode, track]) => langCode.split("-")[0] === baseLang && track.manual
+      );
+
+      if (fallbackLangContent) {
+        this.logger.info(`Manual captions not found for lang ${language}, using fallback lang ${fallbackLangContent[0]}`);
+        manualUrl = fallbackLangContent[1]?.manual;
+      }
+    }
+
+    if (!manualUrl) {
       return Success({
-        ...omit(videoDetails, ["captionTracksUrls"]),
-        languageCode: videoLanguage,
+        ...videoBase,
+        captionStatus: "AUTO_ONLY",
+        languageCode: language,
         autoCaptions: autoCaptionsResult.value.captions,
         manualCaptions: null,
       });
     }
 
-    const manualCaptionsResult = await this.getCaptions({
-      baseUrl: manualCaptionTrackUrl,
-    });
-
+    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl });
     if (!manualCaptionsResult.ok) {
       return Failure(manualCaptionsResult.error);
     }
 
     return Success({
-      ...omit(videoDetails, ["captionTracksUrls"]),
-      languageCode: videoLanguage,
-      manualCaptions: manualCaptionsResult.value.captions,
+      ...videoBase,
+      captionStatus: "BOTH",
+      languageCode: language,
       autoCaptions: autoCaptionsResult.value.captions,
+      manualCaptions: manualCaptionsResult.value.captions,
     });
   }
 
-  private getVideoLanguageBasedOnCaptionTracks(
+  private detectLanguage(
     captionTracksUrls: OutputVideo["captionTracksUrls"],
   ): LanguageCode | null {
     const languagesWithAutoCaptions = Object.keys(captionTracksUrls).filter(
@@ -147,7 +149,6 @@ class YoutubeApiGetVideo {
 
     if (languagesWithAutoCaptions.length > 1) {
       this.logger.warn(
-        "TO BE INVESTIGATED:" +
         "More than one language with auto captions, choosing the first one. " +
         "captionTracksUrls: " + JSON.stringify(captionTracksUrls),
       );
@@ -164,22 +165,6 @@ class YoutubeApiGetVideo {
     return languageCode;
   }
 
-  private hasOnlyManualCaptionTracks(
-    captionTracksUrls: OutputVideo["captionTracksUrls"],
-  ): boolean {
-    const captionTracks = Object.values(captionTracksUrls);
-
-    if (captionTracks.length === 0) {
-      return false;
-    }
-
-    const hasAnyAutoTrack = captionTracks.some((tracks) => Boolean(tracks.auto));
-    const hasAnyManualTrack = captionTracks.some((tracks) =>
-      Boolean(tracks.manual),
-    );
-
-    return hasAnyManualTrack && !hasAnyAutoTrack;
-  }
 
   private async getCaptions({
     baseUrl,
