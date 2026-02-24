@@ -3,16 +3,9 @@ import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import { LanguageCode } from "../modules/i18n/index.js";
 
 export type ProcessingStatus =
-  | "NOT_STARTED"
-  | "IN_PROGRESS"
-  | "SUCCESS"
-  | "FAIL";
-
-export type ChannelEntryStatus =
   | "PENDING"
   | "PROCESSING"
-  | "ACCEPTED"
-  | "REJECTED"
+  | "SUCCEEDED"
   | "FAILED";
 
 export type AutoCaptionsStatus =
@@ -49,6 +42,7 @@ export interface Database {
   captions: CaptionsTable;
   elasticCaptionsSync: ElasticCaptionsSyncTable;
   searchChannelEntries: SearchChannelEntriesTable;
+  videoEntries: VideoEntriesTable;
 }
 
 export interface SearchChannelDirectQueriesTable {
@@ -72,8 +66,9 @@ export interface SearchChannelViaVideosQueriesTable {
 export interface SearchChannelEntriesTable {
   id: string;
   queryId: string;
-  processingStatus: ChannelEntryStatus;
+  processingStatus: ProcessingStatus;
   createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
 }
 
 export interface ChannelsTable {
@@ -89,6 +84,8 @@ export interface ChannelsTable {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
+  videosDiscoveryStatus: Generated<ProcessingStatus>;
+  videosDiscoveryStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -104,6 +101,8 @@ export interface VideosTable {
   languageCode: LanguageCode | null;
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
+  captionsProcessingStatus: Generated<ProcessingStatus>;
+  captionsProcessingStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -160,6 +159,14 @@ export interface ElasticCaptionsSyncTable {
   updatedAt: Generated<Date>;
 }
 
+export interface VideoEntriesTable {
+  id: string;
+  channelId: string;
+  processingStatus: ProcessingStatus;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
+}
+
 export type Channel = Selectable<ChannelsTable>;
 export type InsertableChannel = Insertable<ChannelsTable>;
 export type UpdateableChannel = Updateable<ChannelsTable>;
@@ -194,6 +201,10 @@ export type UpdateableSearchChannelEntryDb = Updateable<SearchChannelEntriesTabl
 export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
 export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;
 export type UpdateableElasticCaptionsSync = Updateable<ElasticCaptionsSyncTable>;
+
+export type VideoEntryDb = Selectable<VideoEntriesTable>;
+export type InsertableVideoEntryDb = Insertable<VideoEntriesTable>;
+export type UpdateableVideoEntryDb = Updateable<VideoEntriesTable>;
 
 export type DatabaseError = {
   type: "DATABASE";

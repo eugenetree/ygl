@@ -56,7 +56,7 @@ export class ChannelFetcherQueueOrchestrator {
         dbClient
           .updateTable("searchChannelEntries")
           .set({
-            processingStatus: "ACCEPTED",
+            processingStatus: "SUCCEEDED",
           })
           .where("id", "=", entryId)
           .execute()

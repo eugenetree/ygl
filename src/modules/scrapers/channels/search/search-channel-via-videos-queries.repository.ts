@@ -23,7 +23,7 @@ export class SearchChannelViaVideosQueriesRepository {
       dbClient
         .selectFrom("searchChannelViaVideosQueries")
         .selectAll()
-        .where("processingStatus", "=", "NOT_STARTED")
+        .where("processingStatus", "=", "PENDING")
         .orderBy("processingStatusUpdatedAt", "asc")
         .limit(1)
         .executeTakeFirst(),
@@ -50,7 +50,7 @@ export class SearchChannelViaVideosQueriesRepository {
       dbClient
         .updateTable("searchChannelViaVideosQueries")
         .set({
-          processingStatus: "FAIL",
+          processingStatus: "FAILED",
           processingStatusUpdatedAt: new Date(),
         })
         .where("query", "=", query.query)
@@ -72,7 +72,7 @@ export class SearchChannelViaVideosQueriesRepository {
       dbClient
         .updateTable("searchChannelViaVideosQueries")
         .set({
-          processingStatus: "SUCCESS",
+          processingStatus: "SUCCEEDED",
           processingStatusUpdatedAt: new Date(),
         })
         .where("query", "=", query.query)

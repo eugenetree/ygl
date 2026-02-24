@@ -23,7 +23,7 @@ export class SearchChannelDirectQueriesRepository {
       dbClient
         .selectFrom("searchChannelDirectQueries")
         .selectAll()
-        .where("processingStatus", "=", "NOT_STARTED")
+        .where("processingStatus", "=", "PENDING")
         .orderBy("processingStatusUpdatedAt", "asc")
         .limit(1)
         .executeTakeFirst(),
@@ -50,7 +50,7 @@ export class SearchChannelDirectQueriesRepository {
       dbClient
         .updateTable("searchChannelDirectQueries")
         .set({
-          processingStatus: "FAIL",
+          processingStatus: "FAILED",
           processingStatusUpdatedAt: new Date(),
         })
         .where("query", "=", query.query)
@@ -72,7 +72,7 @@ export class SearchChannelDirectQueriesRepository {
       dbClient
         .updateTable("searchChannelDirectQueries")
         .set({
-          processingStatus: "SUCCESS",
+          processingStatus: "SUCCEEDED",
           processingStatusUpdatedAt: new Date(),
         })
         .where("query", "=", query.query)

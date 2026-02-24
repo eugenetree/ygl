@@ -11,6 +11,8 @@ export type Channel = {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
+  videosDiscoveryStatus: "PENDING" | "PROCESSING" | "SUCCEEDED" | "FAILED";
+  videosDiscoveryStatusUpdatedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };

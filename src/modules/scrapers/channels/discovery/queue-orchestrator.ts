@@ -18,8 +18,7 @@ export class QueueOrchestrator {
 				dbClient
 					.updateTable("searchChannelViaVideosQueries")
 					.set({
-						processingStatus: "IN_PROGRESS",
-						processingStatusUpdatedAt: new Date(),
+						processingStatus: "PROCESSING",
 					})
 					.where(
 						"id",
@@ -27,7 +26,7 @@ export class QueueOrchestrator {
 						(eb) =>
 							eb.selectFrom("searchChannelViaVideosQueries")
 								.select("id")
-								.where("processingStatus", "=", "NOT_STARTED")
+								.where("processingStatus", "=", "PENDING")
 								.limit(1)
 								.forUpdate()
 								.skipLocked()
@@ -57,7 +56,7 @@ export class QueueOrchestrator {
 				dbClient
 					.updateTable("searchChannelViaVideosQueries")
 					.set({
-						processingStatus: "SUCCESS",
+						processingStatus: "SUCCEEDED",
 						processingStatusUpdatedAt: new Date(),
 					})
 					.where("id", "=", queryId)
@@ -80,7 +79,7 @@ export class QueueOrchestrator {
 				dbClient
 					.updateTable("searchChannelViaVideosQueries")
 					.set({
-						processingStatus: "FAIL",
+						processingStatus: "FAILED",
 						processingStatusUpdatedAt: new Date(),
 					})
 					.where("id", "=", queryId)

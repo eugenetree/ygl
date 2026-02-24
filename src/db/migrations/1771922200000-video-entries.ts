@@ -3,21 +3,18 @@ import { Kysely, sql } from "kysely";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createTable("searchChannelDirectQueries")
-    .addColumn("id", "uuid", (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .createTable("videoEntries")
+    .addColumn("id", "varchar(24)", (col) => col.primaryKey())
+    .addColumn("channelId", "varchar(24)", (col) => col.references("channels.id").notNull())
 
-    .addColumn("query", "varchar", (col) => col.unique().notNull())
     .addColumn("processingStatus", sql`processing_status`, (col) => col.notNull())
-    .addColumn("processingStatusUpdatedAt", "timestamp")
 
     .addColumn("createdAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
-    .addColumn("updatedAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
     .execute();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable("searchChannelDirectQueries").execute();
+  await db.schema.dropTable("videoEntries").execute();
+  // processing_status dropped elsewhere
 }

@@ -9,6 +9,7 @@ export class SearchChannelEntryService {
       queryId: data.queryId,
       processingStatus: "PENDING",
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
   }
 }

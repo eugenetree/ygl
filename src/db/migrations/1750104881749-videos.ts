@@ -5,26 +5,21 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("videos")
     .addColumn("id", "varchar(11)", (col) => col.primaryKey())
+    .addColumn("channelId", "varchar(24)", (col) => col.notNull().references("channels.id"))
+
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("duration", "integer", (col) => col.notNull())
-    .addColumn("keywords", sql`varchar[]`, (col) =>
-      col.notNull().defaultTo(sql`'{}'`),
-    )
+    .addColumn("keywords", sql`varchar[]`, (col) => col.notNull().defaultTo(sql`'{}'`))
     .addColumn("viewCount", "integer", (col) => col.notNull())
     .addColumn("thumbnail", "varchar", (col) => col.notNull())
     .addColumn("languageCode", "varchar")
     .addColumn("autoCaptionsStatus", "varchar", (col) => col.notNull())
     .addColumn("manualCaptionsStatus", "varchar", (col) => col.notNull())
-    .addColumn("channelId", "varchar(24)", (col) =>
-      col.notNull().references("channels.id"),
-    )
+    .addColumn("captionsProcessingStatus", sql`processing_status`, (col) => col.notNull())
+    .addColumn("captionsProcessingStatusUpdatedAt", "timestamp")
 
-    .addColumn("createdAt", "timestamp", (col) =>
-      col.notNull().defaultTo(sql`now()`),
-    )
-    .addColumn("updatedAt", "timestamp", (col) =>
-      col.notNull().defaultTo(sql`now()`),
-    )
+    .addColumn("createdAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn("updatedAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
     .execute();
 }
 
