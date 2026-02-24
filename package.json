@@ -21,6 +21,7 @@
     "run:channels-via-videos": "npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap-via-videos.js",
     "run:channels-discovery": "npx tsc && node dist/src/modules/scrapers/channels/discovery/bootstrap.js",
     "run:channel-fetcher": "npx tsc && node dist/src/modules/scrapers/channels/channel-fetcher/bootstrap.js",
+    "run:video-fetcher": "npx tsc && node dist/src/modules/scrapers/videos/video-fetcher/bootstrap.js",
     "run:channel-videos": "npx tsc && node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
     "run:channel-videos-discovery": "npx tsc && node dist/src/modules/scrapers/channel-videos/discovery/bootstrap.js",
     "run:captions-search": "npx tsc && node dist/src/modules/captions-search/bootstrap.js",

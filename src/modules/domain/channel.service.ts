@@ -15,7 +15,7 @@ export class ChannelService {
   ): Channel {
     return {
       id: crypto.randomUUID(),
-      videosDiscoveryStatus: "NOT_STARTED",
+      videosDiscoveryStatus: "PENDING",
       videosDiscoveryStatusUpdatedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),

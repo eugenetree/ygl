@@ -5,7 +5,7 @@ export class SearchChannelViaVideosQueryService {
     return {
       id: crypto.randomUUID(),
       query,
-      processingStatus: "NOT_STARTED",
+      processingStatus: "PENDING",
       processingStatusUpdatedAt: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
