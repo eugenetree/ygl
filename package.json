@@ -19,6 +19,8 @@
     "t": "npx tsc && node dist/test2.js",
     "run:channels-direct": "npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap-direct.js",
     "run:channels-via-videos": "npx tsc && node dist/src/modules/scrapers/channels/runtime/bootstrap-via-videos.js",
+    "run:channels-discovery": "npx tsc && node dist/src/modules/scrapers/channels/discovery/bootstrap.js",
+    "run:channel-fetcher": "npx tsc && node dist/src/modules/scrapers/channels/channel-fetcher/bootstrap.js",
     "run:channel-videos": "npx tsc && node dist/src/modules/scrapers/channel-videos/runtime/bootstrap.js",
     "run:captions-search": "npx tsc && node dist/src/modules/captions-search/bootstrap.js",
     "find-captions": "npx tsc && node dist/src/modules/captions-search/find-captions-bootstrap.js",

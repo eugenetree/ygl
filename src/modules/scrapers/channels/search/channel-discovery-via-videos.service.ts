@@ -115,10 +115,7 @@ export class ChannelDiscoveryViaVideosService {
 
     const createChannelResult =
       await this.channelRepository.create(
-        this.channelService.create({
-          ...fullChannelInfo,
-          discoveryStrategy: "via-videos"
-        })
+        this.channelService.create(fullChannelInfo)
       );
 
     if (!createChannelResult.ok) {

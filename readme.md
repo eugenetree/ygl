@@ -12,3 +12,5 @@ understand why manual captions now fetched for https://www.youtube.com/watch?v=6
 
 !!
 Optimization Tip: Almost 75% of your bandwidth (~600 MB) is spent just downloading the full watch?v={id} HTML page simply to extract the INNERTUBE_API_KEY. The INNERTUBE_API_KEY is completely static for the YouTube API (it almost never changes and is universally shared across clients). If you simply hardcode this known string, or fetch it just once at the start of the script and reuse it for all 1000 inner tube requests, you can cut your data usage from ~800 MB down to just ~150-200 MB!
+
+24 feb - the reason why approach with scraping & storing video entries separatly is beneficial as we can easily rescrape same queries over time as results may change, and we don't have to make additiona request-per-channel

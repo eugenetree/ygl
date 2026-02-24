@@ -136,10 +136,7 @@ export class ChannelDiscoveryDirectService {
 
     const createChannelResult =
       await this.channelRepository.create(
-        this.channelService.create({
-          ...fullChannelInfo,
-          discoveryStrategy: "direct"
-        })
+        this.channelService.create(fullChannelInfo)
       );
 
     if (!createChannelResult.ok) {

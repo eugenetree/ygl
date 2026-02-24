@@ -20,7 +20,6 @@ export class ChannelRepository {
         const channelRecord = await trx
           .selectFrom("channels")
           .selectAll("channels")
-          .where("channels.discoveryStrategy", "=", "via-videos")
           .where((eb) =>
             eb.not(
               eb.exists(

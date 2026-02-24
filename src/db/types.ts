@@ -8,6 +8,13 @@ export type ProcessingStatus =
   | "SUCCESS"
   | "FAIL";
 
+export type ChannelEntryStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "FAILED";
+
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
   | "CAPTIONS_VALID"
@@ -41,6 +48,7 @@ export interface Database {
   channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
   captions: CaptionsTable;
   elasticCaptionsSync: ElasticCaptionsSyncTable;
+  searchChannelEntries: SearchChannelEntriesTable;
 }
 
 export interface SearchChannelDirectQueriesTable {
@@ -61,7 +69,12 @@ export interface SearchChannelViaVideosQueriesTable {
   updatedAt: Generated<Date>;
 }
 
-export type ChannelDiscoveryStrategy = "direct" | "via-videos";
+export interface SearchChannelEntriesTable {
+  id: string;
+  queryId: string;
+  processingStatus: ChannelEntryStatus;
+  createdAt: Generated<Date>;
+}
 
 export interface ChannelsTable {
   id: string;
@@ -76,7 +89,6 @@ export interface ChannelsTable {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
-  discoveryStrategy: ChannelDiscoveryStrategy;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -174,6 +186,10 @@ export type UpdateableSearchChannelDirectQuery = Updateable<SearchChannelDirectQ
 export type SearchChannelViaVideosQuery = Selectable<SearchChannelViaVideosQueriesTable>;
 export type InsertableSearchChannelViaVideosQuery = Insertable<SearchChannelViaVideosQueriesTable>;
 export type UpdateableSearchChannelViaVideosQuery = Updateable<SearchChannelViaVideosQueriesTable>;
+
+export type SearchChannelEntryDb = Selectable<SearchChannelEntriesTable>;
+export type InsertableSearchChannelEntryDb = Insertable<SearchChannelEntriesTable>;
+export type UpdateableSearchChannelEntryDb = Updateable<SearchChannelEntriesTable>;
 
 export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
 export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;
