@@ -1,8 +1,8 @@
 import { youtubeApiGetVideo } from "../src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessAutoCaptionsService } from "../src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
+import { ProcessAutoCaptionsService } from "../src/modules/scrapers/_legacy/process-auto-captions.service.js";
 import { Logger } from "../src/modules/_common/logger/logger.js";
-import { writeFileSync } from "fs";
-import { CaptionCleanUpService } from "../src/modules/scrapers/channel-videos/initial-scan/caption-clean-up.service.js";
+import { readFileSync, writeFileSync } from "fs";
+import { CaptionCleanUpService } from "../src/modules/scrapers/_legacy/caption-clean-up.service.js";
 
 const main = async () => {
   const videoIdDefault = "51KUocErpj0";
@@ -47,7 +47,7 @@ const main = async () => {
 
   // Show sample of processed captions
   console.log(`\n=== Sample Processed Captions (first 5) ===\n`);
-  processedCaptions.value.slice(0, 5).forEach((caption, index) => {
+  processedCaptions.value.slice(0, 5).forEach((caption: any, index: number) => {
     const start = (caption.startTime / 1000).toFixed(1);
     const end = (caption.endTime / 1000).toFixed(1);
     console.log(`${index + 1}. [${start}s - ${end}s] "${caption.text}"`);

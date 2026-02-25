@@ -33,6 +33,7 @@ export class ElasticCaptionsSyncRepository {
       const result = await tryCatch(
         dbClient.selectFrom("captions")
           .selectAll()
+          .where("type", "=", "manual")
           .orderBy("createdAt", "asc")
           .execute(),
       );
@@ -73,6 +74,7 @@ export class ElasticCaptionsSyncRepository {
       dbClient.selectFrom("captions")
         .selectAll()
         .where("createdAt", ">", lastCaption.createdAt)
+        .where("type", "=", "manual")
         .orderBy("createdAt", "asc")
         .execute(),
     );

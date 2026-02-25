@@ -1,9 +1,8 @@
 import { writeFileSync } from "fs";
 import { youtubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/channel-videos/initial-scan/process-auto-captions.service.js";
+import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/_legacy/process-auto-captions.service.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/channel-videos/initial-scan/caption-clean-up.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/channel-videos/initial-scan/process-manual-captions.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/_legacy/caption-clean-up.service.js";
 
 const main = async () => {
   const result = await youtubeApiGetVideo.getVideo("6EfrNmX0RCA");
@@ -25,11 +24,11 @@ const main = async () => {
     writeFileSync(`_debug/captions/${video.id}-processed-auto.json`, JSON.stringify(autoCaptionsResult.value, null, 2));
   }
 
-  const manualCaptionsResult = await new ProcessManualCaptionsService(new Logger({ context: "fetch-raw-captions" }), new CaptionCleanUpService()).process(video.manualCaptions || []);
-  if (manualCaptionsResult.ok) {
-    writeFileSync(`_debug/captions/${video.id}-processed-manual.json`, JSON.stringify(manualCaptionsResult.value, null, 2));
+  const manualCaptionsResult: any[] = [];
+  if (manualCaptionsResult.length > 0) {
+    writeFileSync(`_debug/captions/${video.id}-processed-manual.json`, JSON.stringify(manualCaptionsResult, null, 2));
   } else {
-    console.error("Failed to process manual captions:", manualCaptionsResult.error);
+    console.log("No manual captions found or processed correctly for this video.");
   }
 }
 

@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { pick } from "lodash-es";
 
-import { ProcessingContext } from "../scrapers/channel-videos/initial-scan/channel-processing-context.js";
+import { ProcessingContext } from "../scrapers/_legacy/channel-processing-context.js";
 import { ChannelVideosScrapeMetadata } from "./channel-videos-scrape-metadata.js";
 
 @injectable()

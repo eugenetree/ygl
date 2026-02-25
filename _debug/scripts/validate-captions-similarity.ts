@@ -2,7 +2,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/channel-videos/initial-scan/captions-similarity-service.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/_legacy/captions-similarity-service.js";
 import { Caption } from "../../src/modules/youtube-api/youtube-api.types.js";
 
 // Mock Logger
