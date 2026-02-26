@@ -41,6 +41,7 @@ export class ChannelDiscoveryWorker {
       }
 
       this.logger.info(`Processing query ${query.id}`);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       const processResult = await this.queueProcessor.process(query);
 
       if (!processResult.ok) {

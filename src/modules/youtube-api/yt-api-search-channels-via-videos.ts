@@ -1,17 +1,30 @@
 import { injectable } from "inversify";
 import { Failure, Result, Success } from "../../types/index.js";
-import { FetchError } from "../_common/http/errors.js";
-import { HttpClient } from "../_common/http/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { ParsingError } from "../_common/validation/errors.js";
 import { ValidationError } from "../_common/validation/errors.js";
+import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
+
+// Keep old extractor import for reference/compatibility per request
 import { searchChannelsViaVideosExtractor } from "./extractors/search-channels-via-videos.extractor.js";
+import { z } from "zod";
+import { validator, Validator } from "../_common/validation/validator.js";
 
 export type SearchChannelEntry = {
   id: string;
-  name: string;
-  subscriberCount?: number;
 };
+
+const inputSchemas = {
+  video: z.object({
+    channel_id: z.string().nullable(),
+  })
+}
+
+const outputSchemas = {
+  channelEntry: z.object({
+    id: z.string(),
+  })
+}
 
 type SearchChannelsResultSuccess =
   | {
@@ -28,7 +41,7 @@ type SearchChannelsResultSuccess =
 export class YoutubeApiSearchChannelsViaVideos {
   constructor(
     private readonly logger: Logger,
-    private readonly httpClient: HttpClient,
+    private readonly ytDlpClient: YtDlpClient,
   ) {
     this.logger.setContext(YoutubeApiSearchChannelsViaVideos.name);
   }
@@ -40,149 +53,85 @@ export class YoutubeApiSearchChannelsViaVideos {
   }): AsyncGenerator<
     Result<
       SearchChannelsResultSuccess,
-      FetchError | ParsingError | ValidationError
+      YtDlpError | ParsingError | ValidationError
     >,
     void,
     undefined
   > {
-    this.logger.info(`Searching for channels via videos: ${query}`);
+    this.logger.info(`Searching for channels via CC videos: ${query}`);
 
-    const initialResult = await this.searchChannelsInitial(query);
-    if (!initialResult.ok) {
-      this.logger.error({
-        message: "Error searching for channels",
-        error: initialResult.error,
-        context: { query },
-      });
+    const ccFilter = "EgIoAQ%253D%253D";
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=${ccFilter}`;
 
-      yield Failure(initialResult.error);
+    const args = [
+      url,
+      "--dump-json",
+      "--flat-playlist",
+      "--no-warnings",
+      "--lazy-playlist",
+      "--sleep-requests", "5",
+    ];
 
-      return;
-    }
+    const stream = this.ytDlpClient.execJsonStream<unknown>(args);
+    const channelsMap = new Map<string, SearchChannelEntry>();
+    let foundAny = false;
 
-    const channels = initialResult.value.channels;
-    if (!channels.length) {
-      this.logger.info(
-        `No channels found for query: ${query} from initial search`,
-      );
-
-      yield Success({
-        status: "done",
-        query,
-      });
-
-      return;
-    }
-
-    let token = initialResult.value.token;
-
-    this.logger.info(
-      `Found ${channels.length} channels for query: ${query} from initial search`,
-    );
-
-    yield Success({
-      status: "found",
-      query,
-      chunk: channels,
-    });
-
-    while (token) {
-      this.logger.info(`Searching for more channels for query: ${query}.`);
-
-      const continuationResult = await this.searchChannelsContinuation(token);
-      if (!continuationResult.ok) {
-        yield Failure(continuationResult.error);
-        return;
-      }
-
-      const channels = continuationResult.value.channels;
-      if (!channels.length) {
-        this.logger.info(
-          `No channels found for query: ${query} from continuation search`,
-        );
-
-        yield Success({
-          status: "done",
-          query,
+    for await (const result of stream) {
+      if (!result.ok) {
+        this.logger.error({
+          message: "Error searching for channels via yt-dlp",
+          error: result.error,
+          context: { query },
         });
 
+        yield Failure(result.error);
         return;
       }
 
-      this.logger.info(
-        `Found ${channels.length} channels for query: ${query} from continuation`,
+      const videoResult = validator.validate(
+        inputSchemas.video,
+        result.value
       );
 
-      yield Success({
-        status: "found",
-        query,
-        chunk: channels,
-      });
+      if (!videoResult.ok) {
+        this.logger.error({
+          message: "Error validating video",
+          error: videoResult.error,
+          context: { v: result.value },
+        });
 
-      token = continuationResult.value.token;
+        yield Failure(videoResult.error);
+        return;
+      }
+
+      const video = videoResult.value;
+
+      if (video.channel_id) {
+        if (!channelsMap.has(video.channel_id)) {
+          const channel: SearchChannelEntry = {
+            id: video.channel_id,
+          };
+          channelsMap.set(video.channel_id, channel);
+          foundAny = true;
+
+          yield Success({
+            status: "found",
+            query,
+            chunk: [channel],
+          });
+        }
+      }
     }
-  }
 
-  private async searchChannelsInitial(query: string) {
-    const url = encodeURI(
-      `https://www.youtube.com/results?search_query=${query}&sp=EgQQASgB`
-    );
-
-    const responseResult = await this.httpClient.get(url);
-    if (!responseResult.ok) {
-      return Failure(responseResult.error);
+    if (!foundAny) {
+      this.logger.info(`No channels found for query: ${query}.`);
+    } else {
+      this.logger.info(`Finished discovery for query: ${query}. Found ${channelsMap.size} unique channels.`);
     }
 
-    const channelsResult = searchChannelsViaVideosExtractor.extractFromHtml(
-      responseResult.value,
-    );
-
-    if (!channelsResult.ok) {
-      return Failure(channelsResult.error);
-    }
-
-    return Success(channelsResult.value);
-  }
-
-  private async searchChannelsContinuation(token: string) {
-    const url = "https://www.youtube.com/youtubei/v1/search?prettyPrint=false";
-
-    const responseResult = await this.httpClient.post(url, {
-      body: {
-        context: {
-          client: {
-            clientName: "WEB",
-            clientVersion: "2.20240906.01.00",
-          },
-        },
-        continuation: token,
-      },
+    yield Success({
+      status: "done",
+      query,
     });
-
-    if (!responseResult.ok) {
-      this.logger.error({
-        message: "Error searching for more channels",
-        error: responseResult.error,
-        context: { token },
-      });
-
-      return Failure(responseResult.error);
-    }
-
-    const jsonResult = searchChannelsViaVideosExtractor.extractFromJson(
-      responseResult.value,
-    );
-
-    if (!jsonResult.ok) {
-      this.logger.error({
-        message: "Error searching for more channels",
-        error: jsonResult.error,
-        context: { token },
-      });
-
-      return Failure(jsonResult.error);
-    }
-
-    return Success(jsonResult.value);
   }
 }
