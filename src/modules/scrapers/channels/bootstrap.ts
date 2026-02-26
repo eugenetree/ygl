@@ -2,8 +2,8 @@ import "reflect-metadata";
 
 import { Container } from "inversify";
 
-import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { YtDlpClient } from "../../youtube-api/yt-dlp-client.js";
 import { ChannelVideosDiscoveryWorker } from "./worker.js";
 
 const spawnWorker = ({
@@ -20,7 +20,7 @@ const spawnWorker = ({
     });
   });
 
-  container.bind(HttpClient).toConstantValue(httpClient);
+  container.bind(YtDlpClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelVideosDiscoveryWorker);
   worker.start();
