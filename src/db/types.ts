@@ -34,8 +34,7 @@ export type ChannelVideosScrapeProcessingStatus =
 export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
 
 export interface Database {
-  searchChannelDirectQueries: SearchChannelDirectQueriesTable;
-  searchChannelViaVideosQueries: SearchChannelViaVideosQueriesTable;
+  searchChannelQueries: SearchChannelQueriesTable;
   channels: ChannelsTable;
   videos: VideosTable;
   channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
@@ -45,16 +44,8 @@ export interface Database {
   videoEntries: VideoEntriesTable;
 }
 
-export interface SearchChannelDirectQueriesTable {
-  id: string;
-  query: string;
-  processingStatus: ProcessingStatus;
-  processingStatusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-  updatedAt: Generated<Date>;
-}
 
-export interface SearchChannelViaVideosQueriesTable {
+export interface SearchChannelQueriesTable {
   id: string;
   query: string;
   processingStatus: ProcessingStatus;
@@ -186,13 +177,9 @@ export type Caption = Selectable<CaptionsTable>;
 export type InsertableCaption = Insertable<CaptionsTable>;
 export type UpdateableCaption = Updateable<CaptionsTable>;
 
-export type SearchChannelDirectQuery = Selectable<SearchChannelDirectQueriesTable>;
-export type InsertableSearchChannelDirectQuery = Insertable<SearchChannelDirectQueriesTable>;
-export type UpdateableSearchChannelDirectQuery = Updateable<SearchChannelDirectQueriesTable>;
-
-export type SearchChannelViaVideosQuery = Selectable<SearchChannelViaVideosQueriesTable>;
-export type InsertableSearchChannelViaVideosQuery = Insertable<SearchChannelViaVideosQueriesTable>;
-export type UpdateableSearchChannelViaVideosQuery = Updateable<SearchChannelViaVideosQueriesTable>;
+export type SearchChannelQueryDb = Selectable<SearchChannelQueriesTable>;
+export type InsertableSearchChannelQuery = Insertable<SearchChannelQueriesTable>;
+export type UpdateableSearchChannelQuery = Updateable<SearchChannelQueriesTable>;
 
 export type SearchChannelEntryDb = Selectable<SearchChannelEntriesTable>;
 export type InsertableSearchChannelEntryDb = Insertable<SearchChannelEntriesTable>;

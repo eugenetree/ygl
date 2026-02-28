@@ -16,6 +16,10 @@ db-connect:
 db-rollback:
 	npm run db:migration:rollback
 
+db-export:
+	mkdir -p db/dump
+	docker exec -t saythis-db pg_dump -U admin -d saythis > db/dump/dump-$$(date +%Y%m%d%H%M%S).sql
+
 # make db-create-migration name="table_name"
 db-create-migration:
 	npm run db:migration:create-new -- $(name)

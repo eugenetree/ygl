@@ -8,15 +8,15 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { injectable } from "inversify";
 
 @injectable()
-export class SearchChannelDirectQueriesSeeder {
+export class SearchChannelQueriesSeeder {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(SearchChannelDirectQueriesSeeder.name);
+    this.logger.setContext(SearchChannelQueriesSeeder.name);
   }
 
   async seedIfNeeded() {
     const anyQueryResult = await tryCatch(
       dbClient
-        .selectFrom("searchChannelDirectQueries")
+        .selectFrom("searchChannelQueries")
         .selectAll()
         .executeTakeFirst(),
     );
@@ -29,11 +29,11 @@ export class SearchChannelDirectQueriesSeeder {
 
     const anyQuery = anyQueryResult.value;
     if (anyQuery) {
-      this.logger.info("'searchChannelDirectQueries' table already seeded");
+      this.logger.info("'searchChannelQueries' table already seeded");
       return Success(undefined);
     }
 
-    this.logger.info("Seeding 'searchChannelDirectQueries' table");
+    this.logger.info("Seeding 'searchChannelQueries' table");
     const seedResult = await this.seedQueriesIntoStorage();
 
     if (!seedResult.ok) {
@@ -41,7 +41,7 @@ export class SearchChannelDirectQueriesSeeder {
       return Failure(seedResult.error);
     }
 
-    this.logger.info("'searchChannelDirectQueries' table seeded");
+    this.logger.info("'searchChannelQueries' table seeded");
     return Success(undefined);
   }
 
@@ -76,12 +76,12 @@ export class SearchChannelDirectQueriesSeeder {
 
       const dbResult = await tryCatch(
         dbClient
-          .insertInto("searchChannelDirectQueries")
+          .insertInto("searchChannelQueries")
           .values(
             chunk.map((word: string) => ({
               id: crypto.randomUUID(),
               query: word,
-              processingStatus: "PENDING",
+              processingStatus: "PENDING" as const,
             })),
           )
           .execute(),
@@ -94,8 +94,6 @@ export class SearchChannelDirectQueriesSeeder {
           }),
         );
       }
-
-      this.logger.info(`Inserted chunk ${Math.floor(i / chunkSize) + 1} of ${Math.ceil(words.length / chunkSize)}`);
     }
 
     return Success(undefined);

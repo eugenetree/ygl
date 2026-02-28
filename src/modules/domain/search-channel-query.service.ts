@@ -1,7 +1,7 @@
-import { SearchChannelViaVideosQuery } from "./search-channel-via-videos-query.js";
+import { SearchChannelQuery } from "./search-channel-query.js";
 
-export class SearchChannelViaVideosQueryService {
-  create({ query }: { query: string }): SearchChannelViaVideosQuery {
+export class SearchChannelQueryService {
+  create({ query }: { query: string }): SearchChannelQuery {
     return {
       id: crypto.randomUUID(),
       query,

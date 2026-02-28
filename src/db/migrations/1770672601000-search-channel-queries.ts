@@ -3,7 +3,7 @@ import { Kysely, sql } from "kysely";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createTable("searchChannelViaVideosQueries")
+    .createTable("searchChannelQueries")
     .addColumn("id", "uuid", (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
 
     .addColumn("query", "varchar", (col) => col.unique().notNull())
@@ -17,5 +17,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable("searchChannelViaVideosQueries").execute();
+  await db.schema.dropTable("searchChannelQueries").execute();
 }

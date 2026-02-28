@@ -1,7 +1,8 @@
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { DatabaseError, SearchChannelViaVideosQuery } from "../../../db/types.js";
+import { DatabaseError } from "../../../db/types.js";
+import { SearchChannelQuery } from "../../domain/search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
@@ -10,13 +11,13 @@ export class Queue {
 	constructor(private readonly logger: Logger) { }
 
 	public async getNextQuery(): Promise<Result<
-		SearchChannelViaVideosQuery | null,
+		SearchChannelQuery | null,
 		DatabaseError
 	>> {
 		const result =
 			await tryCatch(
 				dbClient
-					.updateTable("searchChannelViaVideosQueries")
+					.updateTable("searchChannelQueries")
 					.set({
 						processingStatus: "PROCESSING",
 					})
@@ -24,7 +25,7 @@ export class Queue {
 						"id",
 						"in",
 						(eb) =>
-							eb.selectFrom("searchChannelViaVideosQueries")
+							eb.selectFrom("searchChannelQueries")
 								.select("id")
 								.where("processingStatus", "=", "PENDING")
 								.limit(1)
@@ -54,7 +55,7 @@ export class Queue {
 		const result =
 			await tryCatch(
 				dbClient
-					.updateTable("searchChannelViaVideosQueries")
+					.updateTable("searchChannelQueries")
 					.set({
 						processingStatus: "SUCCEEDED",
 						processingStatusUpdatedAt: new Date(),
@@ -77,7 +78,7 @@ export class Queue {
 		const result =
 			await tryCatch(
 				dbClient
-					.updateTable("searchChannelViaVideosQueries")
+					.updateTable("searchChannelQueries")
 					.set({
 						processingStatus: "FAILED",
 						processingStatusUpdatedAt: new Date(),

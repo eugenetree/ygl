@@ -4,7 +4,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("searchChannelEntries")
     .addColumn("id", "varchar(24)", (col) => col.primaryKey())
-    .addColumn("queryId", "uuid", (col) => col.references("searchChannelViaVideosQueries.id").notNull())
+    .addColumn("queryId", "uuid", (col) => col.references("searchChannelQueries.id").notNull())
 
     .addColumn("processingStatus", sql`processing_status`, (col) => col.notNull())
 

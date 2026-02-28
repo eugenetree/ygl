@@ -4,19 +4,19 @@ import { dbClient } from "../../../db/client.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { SearchChannelViaVideosQuery } from "../../domain/search-channel-via-videos-query.js";
+import { SearchChannelQuery } from "../../domain/search-channel-query.js";
 import { DatabaseError } from "../../../db/types.js";
 
 @injectable()
-export class SearchChannelViaVideosQueriesRepository {
+export class SearchChannelQueriesRepository {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(SearchChannelViaVideosQueriesRepository.name);
+    this.logger.setContext(SearchChannelQueriesRepository.name);
   }
 
-  async getNextQueryToProcess(): Promise<Result<SearchChannelViaVideosQuery | null, DatabaseError>> {
+  async getNextQueryToProcess(): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .selectFrom("searchChannelViaVideosQueries")
+        .selectFrom("searchChannelQueries")
         .selectAll()
         .where("processingStatus", "=", "PENDING")
         .orderBy("processingStatusUpdatedAt", "asc")
@@ -40,10 +40,10 @@ export class SearchChannelViaVideosQueriesRepository {
     return Success(row);
   }
 
-  async markAsFailed(query: SearchChannelViaVideosQuery): Promise<Result<void, DatabaseError>> {
+  async markAsFailed(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("searchChannelViaVideosQueries")
+        .updateTable("searchChannelQueries")
         .set({
           processingStatus: "FAILED",
           processingStatusUpdatedAt: new Date(),
@@ -62,10 +62,10 @@ export class SearchChannelViaVideosQueriesRepository {
     return Success(undefined);
   }
 
-  async markAsSuccess(query: SearchChannelViaVideosQuery): Promise<Result<void, DatabaseError>> {
+  async markAsSuccess(query: SearchChannelQuery): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("searchChannelViaVideosQueries")
+        .updateTable("searchChannelQueries")
         .set({
           processingStatus: "SUCCEEDED",
           processingStatusUpdatedAt: new Date(),

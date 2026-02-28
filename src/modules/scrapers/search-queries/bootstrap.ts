@@ -5,8 +5,7 @@ import { Container } from "inversify";
 import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { SearchQueriesWorker } from "./worker.js";
-import { SearchChannelViaVideosQueriesSeeder } from "./search-channel-via-videos-queries.seeder.js";
-import { SearchChannelDirectQueriesSeeder } from "./search-channel-direct-queries.seeder.js";
+import { SearchChannelQueriesSeeder } from "./search-channel-queries.seeder.js";
 
 const spawnWorker = ({
   name,
@@ -34,7 +33,7 @@ export async function bootstrap() {
     category: "worker-channels-discovery",
   })
 
-  const seeder = new SearchChannelViaVideosQueriesSeeder(logger);
+  const seeder = new SearchChannelQueriesSeeder(logger);
   const result = await seeder.seedIfNeeded();
 
   if (!result.ok) {

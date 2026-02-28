@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { DatabaseError, SearchChannelViaVideosQuery } from "../../../db/types.js";
+import { DatabaseError } from "../../../db/types.js";
+import { SearchChannelQuery } from "../../domain/search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { Queue } from "./queue.js";
 import { BaseError } from "../../_common/errors.js";
@@ -19,7 +20,7 @@ export class QueryProcessor {
 		this.logger.setContext(QueryProcessor.name);
 	}
 
-	public async process(queryRecord: SearchChannelViaVideosQuery) {
+	public async process(queryRecord: SearchChannelQuery) {
 		const searchGenerator = this.youtubeApiSearchChannels.searchChannels({
 			query: queryRecord.query,
 		});
