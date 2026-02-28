@@ -1,4 +1,4 @@
-import { youtubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
+
 import { channelVideoDetailsExtractor } from "../../src/modules/youtube-api/extractors/channel-video.exctractor.js";
 import { httpClient } from "../../src/modules/_common/http/index.js";
 

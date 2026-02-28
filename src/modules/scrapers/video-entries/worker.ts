@@ -40,6 +40,8 @@ export class VideoFetcherWorker {
         continue;
       }
 
+      this.logger.info("Waiting 5 seconds");
+      await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
       this.logger.info(`Processing video entry ${entry.id}`);
       const processResult = await this.entryProcessor.process(entry);
 

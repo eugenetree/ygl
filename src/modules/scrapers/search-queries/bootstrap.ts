@@ -4,7 +4,7 @@ import { Container } from "inversify";
 
 import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { ChannelDiscoveryWorker } from "./worker.js";
+import { SearchQueriesWorker } from "./worker.js";
 import { SearchChannelViaVideosQueriesSeeder } from "./search-channel-via-videos-queries.seeder.js";
 import { SearchChannelDirectQueriesSeeder } from "./search-channel-direct-queries.seeder.js";
 
@@ -17,14 +17,14 @@ const spawnWorker = ({
 
   container.bind(Logger).toDynamicValue(() => {
     return new Logger({
-      context: `${ChannelDiscoveryWorker.name}-${name}`,
+      context: `${SearchQueriesWorker.name}-${name}`,
       category: `worker-channels-discovery`,
     });
   });
 
   container.bind(HttpClient).toConstantValue(httpClient);
 
-  const worker = container.get(ChannelDiscoveryWorker);
+  const worker = container.get(SearchQueriesWorker);
   worker.start();
 };
 

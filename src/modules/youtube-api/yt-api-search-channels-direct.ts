@@ -24,6 +24,11 @@ type SearchChannelsResultSuccess =
     query: string;
   };
 
+/**
+ * This is no longer a superior method for searching channels.
+ * Search via CC videos is preferred.
+ * Service is not used anymore, but even if it will be used, it will be refactored to yt-dlp.
+ */
 @injectable()
 export class YoutubeApiSearchChannelsDirect {
   constructor(

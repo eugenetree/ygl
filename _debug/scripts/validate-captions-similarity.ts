@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function main() {
-    const videoId = "zILgK7OKIdg";
+    const videoId = "aUpCBA13Zpo";
 
     const manualCaptionsPath = `_debug/captions/${videoId}-processed-manual.json`;
     const autoCaptionsPath = `_debug/captions/${videoId}-processed-auto.json`;

@@ -10,6 +10,9 @@ import { validator } from "../../_common/validation/validator.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
 import { inputSchemas, outputSchemas } from "./search-channels-via-videos.schemas.js";
 
+/**
+ * This is not used anymore after migration to yt-dlp.
+ */
 class SearchChannelsViaVideosExtractor {
   private logger = new Logger({ context: SearchChannelsViaVideosExtractor.name });
 

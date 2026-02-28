@@ -94,8 +94,8 @@ export class ChannelVideoDetailsExtractor {
         // and consumer of the yt-api-get-video should handle this logic
         // of fetching full captions based on captionTrackUrls
         const isLiveBroadcastCaption =
-          captionTrack.trackName === "CC1" ||
-          captionTrack.trackName === "DTVCC1" ||
+          captionTrack.name?.runs?.[0]?.text === "CC1" ||
+          captionTrack.name?.runs?.[0]?.text === "DTVCC1" ||
           captionTrack.name?.runs?.[0]?.text?.includes("CC1") ||
           captionTrack.name?.runs?.[0]?.text?.includes("DTVCC1");
 
@@ -198,13 +198,13 @@ export class ChannelVideoDetailsExtractor {
         // and consumer of the yt-api-get-video should handle this logic
         // of fetching full captions based on captionTrackUrls
         const isLiveBroadcastCaption =
-          captionTrack.trackName === "CC1" ||
-          captionTrack.trackName === "DTVCC1" ||
+          captionTrack.name?.runs?.[0]?.text === "CC1" ||
+          captionTrack.name?.runs?.[0]?.text === "DTVCC1" ||
           captionTrack.name?.runs?.[0]?.text?.includes("CC1") ||
           captionTrack.name?.runs?.[0]?.text?.includes("DTVCC1");
 
         if (!isLiveBroadcastCaption) {
-          outputCaptionTracksUrls[languageCode].manual = captionTrack.baseUrl;
+          outputCaptionTracksUrls[languageCode].manual = (captionTrack as any).baseUrl;
         } else {
           this.logger.warn(`Live broadcast caption found: ${captionTrack}`);
         }

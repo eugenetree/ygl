@@ -1,7 +1,12 @@
 import { writeFileSync } from "fs";
-import { youtubeApiGetVideo } from "../src/modules/youtube-api/yt-api-get-video.js";
+import { YoutubeApiGetVideo } from "../src/modules/youtube-api/yt-api-get-video.js";
+import { YtDlpClient } from "../src/modules/youtube-api/yt-dlp-client.js";
+import { Logger } from "../src/modules/_common/logger/logger.js";
+import { Caption } from "../src/modules/youtube-api/youtube-api.types.js";
 
-const VIDEO_ID = "fStLnjrZF_c";
+const logger = new Logger({ context: "debug", category: "debug" });
+const ytDlpClient = new YtDlpClient(logger);
+const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient); const VIDEO_ID = "fStLnjrZF_c";
 
 async function fetchVideoCaptions() {
   console.log(`Fetching video data for: ${VIDEO_ID}`);
@@ -63,8 +68,8 @@ async function fetchVideoCaptions() {
       languageCode: video.languageCode,
       autoCaptionsCount: video.autoCaptions.length,
       manualCaptionsCount: video.manualCaptions.length,
-      autoCaptionsText: video.autoCaptions.map((c) => c.text).join(" "),
-      manualCaptionsText: video.manualCaptions.map((c) => c.text).join(" "),
+      autoCaptionsText: video.autoCaptions.map((c: Caption) => c.text).join(" "),
+      manualCaptionsText: video.manualCaptions.map((c: Caption) => c.text).join(" "),
     };
 
     const comparisonPath = `_debug/video-${VIDEO_ID}-comparison.json`;

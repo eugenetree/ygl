@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { z } from "zod";
 
 import { Failure, Result, Success } from "../../../types/index.js";
@@ -23,6 +22,9 @@ type ChannelVideo = {
 
 type Token = string | undefined;
 
+/**
+ * This is not used anymore after the migration to yt-dlp.
+ */
 export class ChannelVideosExtractor {
   private logger = new Logger({ context: ChannelVideosExtractor.name });
 

@@ -27,6 +27,7 @@ export class Queue {
             eb.selectFrom("channels")
               .select("id")
               .where("videosDiscoveryStatus", "=", "PENDING")
+              .where("videoCount", "<", 10000)
               .orderBy("subscriberCount", "desc")
               .orderBy("createdAt", "asc")
               .limit(1)

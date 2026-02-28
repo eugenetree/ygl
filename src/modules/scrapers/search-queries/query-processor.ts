@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { DatabaseError, SearchChannelViaVideosQuery } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
-import { Queue } from "./search-queries.queue.js";
+import { Queue } from "./queue.js";
 import { BaseError } from "../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entries/repositories/channel-entry.repository.js";

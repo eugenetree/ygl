@@ -5,10 +5,8 @@ import { ParsingError } from "../_common/validation/errors.js";
 import { ValidationError } from "../_common/validation/errors.js";
 import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
-// Keep old extractor import for reference/compatibility per request
-import { searchChannelsViaVideosExtractor } from "./extractors/search-channels-via-videos.extractor.js";
 import { z } from "zod";
-import { validator, Validator } from "../_common/validation/validator.js";
+import { validator } from "../_common/validation/validator.js";
 
 export type SearchChannelEntry = {
   id: string;

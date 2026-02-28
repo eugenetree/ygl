@@ -3,7 +3,7 @@ import { Logger } from "../../_common/logger/logger.js";
 import { VideoEntryDb } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
-import { youtubeApiGetVideo } from "../../youtube-api/yt-api-get-video.js";
+import { YoutubeApiGetVideo } from "../../youtube-api/yt-api-get-video.js";
 import { ProcessVideoService } from "./process-video.service.js";
 import { VideoRepository } from "./repositories/video-repository.js";
 
@@ -12,7 +12,8 @@ export class VideoFetcherEntryProcessor {
   constructor(
     private readonly logger: Logger,
     private readonly videoProcessor: ProcessVideoService,
-    private readonly videoRepository: VideoRepository
+    private readonly videoRepository: VideoRepository,
+    private readonly youtubeApiGetVideo: YoutubeApiGetVideo
   ) {
     this.logger.setContext(VideoFetcherEntryProcessor.name);
   }
@@ -22,7 +23,7 @@ export class VideoFetcherEntryProcessor {
   ): Promise<Result<void, BaseError | any>> {
     this.logger.info(`Fetching video ${entry.id} via Youtube API.`);
 
-    const videoDtoResult = await youtubeApiGetVideo.getVideo(entry.id);
+    const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entry.id);
 
     if (!videoDtoResult.ok) {
       this.logger.error({

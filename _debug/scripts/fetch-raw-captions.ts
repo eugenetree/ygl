@@ -1,11 +1,13 @@
-import { writeFileSync } from "fs";
-import { youtubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
+import { writeFileSync, mkdirSync } from "fs";
+import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/_legacy/process-auto-captions.service.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/_legacy/caption-clean-up.service.js";
+import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 
 const main = async () => {
-  const result = await youtubeApiGetVideo.getVideo("6EfrNmX0RCA");
+  const videoId = process.argv[2] || "aUpCBA13Zpo";
+  const result = await new YoutubeApiGetVideo(new Logger({ context: "fetch-raw-captions", category: "debug" }), new YtDlpClient(new Logger({ context: "fetch-raw-captions", category: "debug" }))).getVideo(videoId);
   if (!result.ok) {
     console.error("Failed to fetch video:", result.error);
     return;
@@ -16,6 +18,7 @@ const main = async () => {
   console.log("debug: manualCaptions", video.manualCaptions?.length);
   console.log("debug: autoCaptions", video.autoCaptions?.length);
 
+  mkdirSync(`_debug/captions`, { recursive: true });
   writeFileSync(`_debug/captions/${video.id}-raw-manual.json`, JSON.stringify(video.manualCaptions, null, 2));
   writeFileSync(`_debug/captions/${video.id}-raw-auto.json`, JSON.stringify(video.autoCaptions, null, 2));
 

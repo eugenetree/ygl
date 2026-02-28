@@ -21,15 +21,17 @@ export class VideoRepository {
           })
           .execute();
 
-        await trx
-          .insertInto("captions")
-          .values(
-            captions.map((caption) => ({
-              ...caption,
-              videoId: video.id,
-            })),
-          )
-          .execute();
+        if (captions.length > 0) {
+          await trx
+            .insertInto("captions")
+            .values(
+              captions.map((caption) => ({
+                ...caption,
+                videoId: video.id,
+              })),
+            )
+            .execute();
+        }
       }),
     );
 

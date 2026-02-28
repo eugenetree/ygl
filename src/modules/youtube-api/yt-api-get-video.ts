@@ -1,76 +1,74 @@
-import { omit } from "lodash-es";
-
+import { inject, injectable } from "inversify";
+import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
+import { Logger } from "../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../types/index.js";
+import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { FetchError } from "../_common/http/errors.js";
 import { httpClient } from "../_common/http/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { LanguageCode, isValidLanguageCode } from "../i18n/index.js";
+import { validator } from "../_common/validation/validator.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
-import {
-  OutputVideo,
-  channelVideoDetailsExtractor,
-} from "./extractors/channel-video.exctractor.js";
 import { Caption, Video } from "./youtube-api.types.js";
+import { inputSchemas } from "./yt-api-get-video.schemas.js";
 
-class YoutubeApiGetVideo {
-  private logger = new Logger({ context: YoutubeApiGetVideo.name });
+type GetCaptionsParams = {
+  baseUrl: string;
+};
+
+@injectable()
+export class YoutubeApiGetVideo {
+  constructor(
+    private readonly logger: Logger,
+    private readonly ytDlpClient: YtDlpClient
+  ) {
+    this.logger.setContext(YoutubeApiGetVideo.name);
+  }
 
   public async getVideo(
-    videoId: string,
-  ): Promise<Result<Video, FetchError | ParsingError | ValidationError>> {
+    videoId: string
+  ): Promise<Result<Video, YtDlpError | FetchError | ParsingError | ValidationError>> {
+    this.logger.info(`Fetching video ${videoId} via yt-dlp...`);
+
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
-    const watchPageResponseResult = await httpClient.get(url);
+    const args = ["--dump-json", "--no-download", "--skip-download", "--no-warnings"];
 
-    if (!watchPageResponseResult.ok) {
-      return Failure(watchPageResponseResult.error);
+    const execResult = await this.ytDlpClient.execJson<unknown>([url, ...args]);
+
+    if (!execResult.ok) {
+      return execResult;
     }
 
-    const innerTubeApiKeyResult =
-      channelVideoDetailsExtractor.extractInnerTubeApiKey(
-        watchPageResponseResult.value,
-      );
-
-    if (!innerTubeApiKeyResult.ok) {
-      return Failure(innerTubeApiKeyResult.error);
+    if (execResult.value.length === 0) {
+      return Failure({
+        type: "YT_DLP_ERROR",
+        message: "yt-dlp returned no output",
+      });
     }
 
-    const innerTubeApiKey = innerTubeApiKeyResult.value;
+    const jsonResponse = execResult.value[0];
+    const validationResult = validator.validate(inputSchemas.ytDlpJson, jsonResponse);
 
-    const innerTubeResult = await httpClient.post(
-      `https://www.youtube.com/youtubei/v1/player?key=${innerTubeApiKey}`,
-      {
-        body: {
-          context: {
-            client: { clientName: "ANDROID", clientVersion: "20.10.38" },
-          },
-          videoId: videoId,
-        },
-      },
-    );
-
-    if (!innerTubeResult.ok) {
-      return Failure(innerTubeResult.error);
+    if (!validationResult.ok) {
+      return Failure(validationResult.error);
     }
 
-    const videoDetailsResult =
-      channelVideoDetailsExtractor.extractFromInnerTubeJson(
-        innerTubeResult.value,
-      );
+    const ytData = validationResult.value;
 
-    if (!videoDetailsResult.ok) {
-      return Failure(videoDetailsResult.error);
-    }
+    const videoBase = {
+      id: ytData.id,
+      title: ytData.title,
+      duration: ytData.duration, // yt-dlp provides seconds, same as old extractor
+      keywords: ytData.tags ?? [],
+      channelId: ytData.channel_id,
+      viewCount: ytData.view_count ?? 0,
+      thumbnail: ytData.thumbnail,
+    };
 
-    const videoDetails = videoDetailsResult.value;
-    const tracks = videoDetails.captionTracksUrls;
-    const videoBase = omit(videoDetails, ["captionTracksUrls"]);
-
-    const language = this.detectLanguage(tracks);
+    const language = this.detectLanguage(ytData.language, ytData.automatic_captions);
 
     if (!language) {
-      const hasManual = Object.values(tracks).some((t) => Boolean(t.manual));
-      if (hasManual) this.logger.info(`Video ${videoDetails.id} has only manual captions.`);
+      const hasManual = ytData.subtitles && Object.keys(ytData.subtitles).length > 0;
+      if (hasManual) this.logger.info(`Video ${videoId} has only manual captions (no detected lang).`);
       return Success({
         ...videoBase,
         captionStatus: hasManual ? "MANUAL_ONLY" : "NONE",
@@ -80,12 +78,15 @@ class YoutubeApiGetVideo {
       });
     }
 
-    const autoUrl = tracks[language]?.auto;
+    const autoUrl = Object.entries(ytData.automatic_captions || {})
+      .find(([lang]) => lang.startsWith(language))?.[1]
+      ?.find(track => track.ext === "json3")?.url;
+
     if (!autoUrl) {
       return Failure({
         type: "PARSING_ERROR",
-        message: "No auto captions track URL found",
-        context: { language, tracks },
+        message: "No auto captions json3 URL found",
+        context: { language, availableAuto: Object.keys(ytData.automatic_captions || {}) },
       });
     }
 
@@ -94,21 +95,20 @@ class YoutubeApiGetVideo {
       return Failure(autoCaptionsResult.error);
     }
 
-    let manualUrl = tracks[language]?.manual;
+    let manualUrl = ytData.subtitles?.[language]?.find(track => track.ext === "json3")?.url;
 
     if (!manualUrl) {
-      // Manual captions might be uploaded with a specific dialect (e.g., 'en-us')
-      // while auto captions are grouped under the base language ('en').
-      // If an exact language match isn't found, fallback to checking if any manual
-      // track shares the same base language.
+      // Fallback: check if any manual track shares the same base language
       const baseLang = language.split("-")[0];
-      const fallbackLangContent = Object.entries(tracks).find(
-        ([langCode, track]) => langCode.split("-")[0] === baseLang && track.manual
+      const fallbackEntry = Object.entries(ytData.subtitles || {}).find(
+        ([langCode]) => langCode.split("-")[0] === baseLang
       );
 
-      if (fallbackLangContent) {
-        this.logger.info(`Manual captions not found for lang ${language}, using fallback lang ${fallbackLangContent[0]}`);
-        manualUrl = fallbackLangContent[1]?.manual;
+      if (fallbackEntry) {
+        manualUrl = fallbackEntry[1].find(track => track.ext === "json3")?.url;
+        if (manualUrl) {
+          this.logger.info(`Manual captions not found for exact lang ${language}, using fallback lang ${fallbackEntry[0]}`);
+        }
       }
     }
 
@@ -137,45 +137,40 @@ class YoutubeApiGetVideo {
   }
 
   private detectLanguage(
-    captionTracksUrls: OutputVideo["captionTracksUrls"],
+    detectLangInfo: string | null | undefined,
+    automaticCaptions: Record<string, any[]> | undefined
   ): LanguageCode | null {
-    const languagesWithAutoCaptions = Object.keys(captionTracksUrls).filter(
-      (language) => captionTracksUrls[language as LanguageCode]?.auto,
-    );
+    // yt-dlp usually provides the primary language in `language`
+    if (detectLangInfo && isValidLanguageCode(detectLangInfo.toLowerCase())) {
+      return detectLangInfo.toLowerCase() as LanguageCode;
+    }
+
+    // fallback: if we have automatic captions, pick the first valid primary language
+    const languagesWithAutoCaptions = Object.keys(automaticCaptions || {});
 
     if (languagesWithAutoCaptions.length === 0) {
       return null;
     }
 
-    if (languagesWithAutoCaptions.length > 1) {
-      this.logger.warn(
-        "More than one language with auto captions, choosing the first one. " +
-        "captionTracksUrls: " + JSON.stringify(captionTracksUrls),
-      );
-
+    // Try to find common languages first (en, es, fr, etc...)
+    // Usually YouTube auto-generates tracking for English first if spoken.
+    // If not, we just take the first one that is a standard language code.
+    const firstValid = languagesWithAutoCaptions.find(l => isValidLanguageCode(l.toLowerCase()));
+    if (!firstValid) {
       return null;
     }
 
-    const languageCode = languagesWithAutoCaptions[0];
-
-    if (!isValidLanguageCode(languageCode)) {
-      return null;
-    }
-
-    return languageCode;
+    return firstValid.toLowerCase() as LanguageCode;
   }
-
 
   private async getCaptions({
     baseUrl,
-  }: {
-    baseUrl: string;
-  }): Promise<
-    Result<{ captions: Caption[] }, ParsingError | FetchError | ValidationError>
-  > {
-    const captionsResponseResult = await httpClient.get(
-      baseUrl.replace("fmt=srv3", "fmt=json3"),
-    );
+  }: GetCaptionsParams): Promise<Result<{ captions: Caption[] }, ParsingError | FetchError | ValidationError>> {
+    // yt-dlp urls are already in json3 format based on our filtering,
+    // but just to be absolutely safe:
+    const finalUrl = baseUrl.replace("fmt=srv1", "fmt=json3").replace("fmt=srv2", "fmt=json3").replace("fmt=srv3", "fmt=json3");
+
+    const captionsResponseResult = await httpClient.get(finalUrl);
 
     if (!captionsResponseResult.ok) {
       return Failure(captionsResponseResult.error);
@@ -200,5 +195,3 @@ class YoutubeApiGetVideo {
     });
   }
 }
-
-export const youtubeApiGetVideo = new YoutubeApiGetVideo();
