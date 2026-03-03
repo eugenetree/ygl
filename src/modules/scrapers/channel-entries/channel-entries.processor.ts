@@ -8,14 +8,14 @@ import { ChannelService } from "../../domain/channel.service.js";
 import { ChannelRepository } from "../channels/channel.repository.js";
 
 @injectable()
-export class ChannelFetcherEntryProcessor {
+export class ChannelEntriesProcessor {
   constructor(
     private readonly logger: Logger,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
     private readonly channelService: ChannelService,
   ) {
-    this.logger.setContext(ChannelFetcherEntryProcessor.name);
+    this.logger.setContext(ChannelEntriesProcessor.name);
   }
 
   public async process(entry: SearchChannelEntryDb): Promise<Result<void, BaseError | any>> {

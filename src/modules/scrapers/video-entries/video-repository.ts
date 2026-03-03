@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import { dbClient } from "../../../../db/client.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { Logger } from "../../../_common/logger/logger.js";
-import { tryCatch } from "../../../_common/try-catch.js";
-import { Caption } from "../../../domain/caption.js";
-import { Video } from "../../../domain/video.js";
-import { DatabaseError } from "../../../../db/types.js";
+import { dbClient } from "../../../db/client.js";
+import { Failure, Result, Success } from "../../../types/index.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { tryCatch } from "../../_common/try-catch.js";
+import { Caption } from "../../domain/caption.js";
+import { Video } from "../../domain/video.js";
+import { DatabaseError } from "../../../db/types.js";
 
 @injectable()
 export class VideoRepository {

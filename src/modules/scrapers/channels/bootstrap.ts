@@ -4,7 +4,7 @@ import { Container } from "inversify";
 
 import { Logger } from "../../_common/logger/logger.js";
 import { YtDlpClient } from "../../youtube-api/yt-dlp-client.js";
-import { ChannelVideosDiscoveryWorker } from "./worker.js";
+import { ChannelsWorker } from "./channels.worker.js";
 
 const spawnWorker = ({
   name,
@@ -15,14 +15,14 @@ const spawnWorker = ({
 
   container.bind(Logger).toDynamicValue(() => {
     return new Logger({
-      context: `${ChannelVideosDiscoveryWorker.name}-${name}`,
+      context: `${ChannelsWorker.name}-${name}`,
       category: `worker-channel-videos-discovery`,
     });
   });
 
   container.bind(YtDlpClient).toSelf().inSingletonScope();
 
-  const worker = container.get(ChannelVideosDiscoveryWorker);
+  const worker = container.get(ChannelsWorker);
   worker.start();
 };
 

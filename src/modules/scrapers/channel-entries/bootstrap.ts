@@ -4,7 +4,7 @@ import { Container } from "inversify";
 
 import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { ChannelFetcherWorker } from "./worker.js";
+import { ChannelEntriesWorker } from "./channel-entries.worker.js";
 
 const spawnWorker = ({
   name,
@@ -15,14 +15,14 @@ const spawnWorker = ({
 
   container.bind(Logger).toDynamicValue(() => {
     return new Logger({
-      context: `${ChannelFetcherWorker.name}-${name}`,
+      context: `${ChannelEntriesWorker.name}-${name}`,
       category: `worker-channel-fetcher`,
     });
   });
 
   container.bind(HttpClient).toConstantValue(httpClient);
 
-  const worker = container.get(ChannelFetcherWorker);
+  const worker = container.get(ChannelEntriesWorker);
   worker.start();
 };
 

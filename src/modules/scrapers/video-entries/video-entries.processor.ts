@@ -5,17 +5,17 @@ import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { YoutubeApiGetVideo } from "../../youtube-api/yt-api-get-video.js";
 import { ProcessVideoService } from "./process-video.service.js";
-import { VideoRepository } from "./repositories/video-repository.js";
+import { VideoRepository } from "./video-repository.js";
 
 @injectable()
-export class VideoFetcherEntryProcessor {
+export class VideoEntriesProcessor {
   constructor(
     private readonly logger: Logger,
     private readonly videoProcessor: ProcessVideoService,
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo
   ) {
-    this.logger.setContext(VideoFetcherEntryProcessor.name);
+    this.logger.setContext(VideoEntriesProcessor.name);
   }
 
   public async process(

@@ -1,16 +1,16 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { Queue } from "./channels.queue.js";
-import { QueryProcessor } from "./query-processor.js";
+import { ChannelsQueue } from "./channels.queue.js";
+import { ChannelsProcessor } from "./channels.processor.js";
 
 @injectable()
-export class ChannelVideosDiscoveryWorker {
+export class ChannelsWorker {
   private isRunning: boolean = false;
 
   constructor(
     private readonly logger: Logger,
-    private readonly queueOrchestrator: Queue,
-    private readonly queueProcessor: QueryProcessor,
+    private readonly channelsQueue: ChannelsQueue,
+    private readonly channelsProcessor: ChannelsProcessor,
   ) { }
 
   public async start() {
@@ -21,7 +21,7 @@ export class ChannelVideosDiscoveryWorker {
     this.isRunning = true;
 
     while (this.isRunning) {
-      const channelResult = await this.queueOrchestrator.getNextChannel();
+      const channelResult = await this.channelsQueue.getNextChannel();
 
       if (!channelResult.ok) {
         this.logger.error({
@@ -42,7 +42,7 @@ export class ChannelVideosDiscoveryWorker {
       }
 
       this.logger.info(`Discovering videos for channel ${channel.id}`);
-      const processResult = await this.queueProcessor.process(channel);
+      const processResult = await this.channelsProcessor.process(channel);
 
       if (!processResult.ok) {
         this.logger.error({
@@ -51,12 +51,12 @@ export class ChannelVideosDiscoveryWorker {
           context: { channelId: channel.id },
         });
 
-        await this.queueOrchestrator.markAsFailed(channel.id);
+        await this.channelsQueue.markAsFailed(channel.id);
         this.isRunning = false;
         return;
       }
 
-      const markAsSuccessResult = await this.queueOrchestrator.markAsSuccess(channel.id);
+      const markAsSuccessResult = await this.channelsQueue.markAsSuccess(channel.id);
 
       if (!markAsSuccessResult.ok) {
         this.logger.error({
@@ -65,7 +65,7 @@ export class ChannelVideosDiscoveryWorker {
           context: { channelId: channel.id },
         });
 
-        await this.queueOrchestrator.markAsFailed(channel.id);
+        await this.channelsQueue.markAsFailed(channel.id);
         this.isRunning = false;
         return;
       }

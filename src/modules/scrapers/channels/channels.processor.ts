@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { YoutubeApiGetChannelVideoEntries } from "../../youtube-api/yt-api-get-channel-video-entries.js";
-import { VideoEntryRepository } from "../video-entries/repositories/video-entry.repository.js";
+import { VideoEntryRepository } from "../video-entries/video-entry.repository.js";
 import { VideoEntryService } from "../../domain/video-entry.service.js";
 import { Channel } from "../../domain/channel.js";
 import { BaseError } from "../../_common/errors.js";
@@ -10,14 +10,14 @@ import { BaseError } from "../../_common/errors.js";
 type ProcessError = BaseError;
 
 @injectable()
-export class QueryProcessor {
+export class ChannelsProcessor {
   constructor(
     private readonly logger: Logger,
     private readonly videoEntryRepository: VideoEntryRepository,
     private readonly videoEntryService: VideoEntryService,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
   ) {
-    this.logger.setContext(QueryProcessor.name);
+    this.logger.setContext(ChannelsProcessor.name);
   }
 
   public async process(channel: Channel): Promise<Result<void, ProcessError>> {

@@ -6,7 +6,7 @@ import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
 @injectable()
-export class VideoFetcherQueue {
+export class VideoEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
   public async getNextEntry(): Promise<

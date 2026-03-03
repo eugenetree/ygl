@@ -7,9 +7,9 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
 
 @injectable()
-export class Queue {
+export class ChannelsQueue {
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(Queue.name);
+    this.logger.setContext(ChannelsQueue.name);
   }
 
   public async getNextChannel(): Promise<Result<Channel | null, DatabaseError>> {

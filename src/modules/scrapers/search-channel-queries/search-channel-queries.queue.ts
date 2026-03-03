@@ -7,7 +7,7 @@ import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
 @injectable()
-export class Queue {
+export class SearchChannelQueriesQueue {
 	constructor(private readonly logger: Logger) { }
 
 	public async getNextQuery(): Promise<Result<

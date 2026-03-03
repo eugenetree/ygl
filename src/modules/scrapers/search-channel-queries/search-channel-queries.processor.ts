@@ -3,21 +3,20 @@ import { Logger } from "../../_common/logger/logger.js";
 import { DatabaseError } from "../../../db/types.js";
 import { SearchChannelQuery } from "../../domain/search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
-import { Queue } from "./queue.js";
 import { BaseError } from "../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entries/repositories/channel-entry.repository.js";
 import { SearchChannelEntryService } from "../../domain/search-channel-entry.service.js";
 
 @injectable()
-export class QueryProcessor {
+export class SearchChannelQueriesProcessor {
 	constructor(
 		private readonly logger: Logger,
 		private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
 		private readonly channelEntryRepository: ChannelEntryRepository,
 		private readonly searchChannelEntryService: SearchChannelEntryService,
 	) {
-		this.logger.setContext(QueryProcessor.name);
+		this.logger.setContext(SearchChannelQueriesProcessor.name);
 	}
 
 	public async process(queryRecord: SearchChannelQuery) {
