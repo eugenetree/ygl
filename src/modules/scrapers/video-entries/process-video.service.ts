@@ -116,8 +116,8 @@ export class ProcessVideoService {
         manualCaptions: processManualResult.value,
       });
 
-      // if score is below 70% matched tokens, we consider them invalid
-      if (similarityResult.score < 0.7) {
+      // if score is below 95% matched tokens, we consider them invalid
+      if (similarityResult.score < 0.95) {
         manualCaptionsStatus = "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
         manualCaptions = null;
       }

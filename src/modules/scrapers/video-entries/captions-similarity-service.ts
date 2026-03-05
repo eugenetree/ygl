@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 import { Caption } from "../../youtube-api/youtube-api.types.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { writeFileSync } from "fs";
 
 type TokenOccurrence = {
   token: string;
@@ -12,18 +11,18 @@ type TokenOccurrence = {
 type SimilarityResult = {
   score: number;
   shiftMs: number;
-  missingAutoTokens: string[];
-  extraManualTokens: string[];
-  autoTokenCount: number;
+  missingTokens: TokenOccurrence[];   // in manual but absent from auto entirely
+  timingMissTokens: TokenOccurrence[]; // in manual, exists in auto but wrong time
   manualTokenCount: number;
+  autoTokenCount: number;
 };
 
-
-
-const SHIFT_SCAN_MIN_MS = -5000;
-const SHIFT_SCAN_MAX_MS = 5000;
+const SHIFT_SCAN_MIN_MS = -3000;
+const SHIFT_SCAN_MAX_MS = 3000;
 const SHIFT_SCAN_STEP_MS = 500;
 const TIME_TOLERANCE_MS = 1000;
+const FUZZY_WINDOW_MS = 3000;  // ±3s window for fuzzy candidate lookup
+const FUZZY_THRESHOLD = 70;   // Levenshtein ratio (0-100) to count as a match
 
 // High-frequency words add noise in matching because they appear everywhere.
 const STOP_TOKENS = new Set([
@@ -59,6 +58,26 @@ const STOP_TOKENS = new Set([
   "you",
 ]);
 
+function levenshteinRatio(a: string, b: string): number {
+  const n = a.length;
+  const m = b.length;
+  if (n === 0 && m === 0) return 100;
+  if (n === 0 || m === 0) return 0;
+  if (Math.abs(n - m) > Math.max(n, m) * 0.5) return 0;
+
+  const dp = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let j = 1; j <= m; j++) {
+    let prev = dp[0];
+    dp[0] = j;
+    for (let i = 1; i <= n; i++) {
+      const tmp = dp[i];
+      dp[i] = a[i - 1] === b[j - 1] ? prev : 1 + Math.min(prev, dp[i], dp[i - 1]);
+      prev = tmp;
+    }
+  }
+  return Math.round((1 - dp[n] / Math.max(n, m)) * 100);
+}
+
 const TEXT_REPLACEMENTS: Array<{ from: RegExp; to: string }> = [
   { from: /\bwe're\b/g, to: "we are" },
   { from: /\bi'm\b/g, to: "i am" },
@@ -84,206 +103,216 @@ export class CaptionsSimilarityService {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
   }): Promise<SimilarityResult> {
-    const manualTokenOccurrences = this.toTokenOccurrences(manualCaptions);
-    const autoTokenOccurrences = this.toTokenOccurrences(autoCaptions);
+    const manualOccurrences = this.toTokenOccurrences(manualCaptions);
+    const autoOccurrences = this.toTokenOccurrences(autoCaptions);
 
-    if (manualTokenOccurrences.length === 0 || autoTokenOccurrences.length === 0) {
+    console.log("debug: manualTokenOccurrences", manualOccurrences);
+    console.log("debug: autoTokenOccurrences", autoOccurrences);
+
+    if (manualOccurrences.length === 0 || autoOccurrences.length === 0) {
       return {
         score: 0,
         shiftMs: 0,
-        missingAutoTokens: [],
-        extraManualTokens: [],
-        autoTokenCount: autoTokenOccurrences.length,
-        manualTokenCount: manualTokenOccurrences.length
+        missingTokens: [],
+        timingMissTokens: [],
+        manualTokenCount: manualOccurrences.length,
+        autoTokenCount: autoOccurrences.length,
       };
     }
 
-    const manualTokenTimeIndex = this.buildTokenTimeIndex(manualTokenOccurrences);
-    const autoTokenTimeIndex = this.buildTokenTimeIndex(autoTokenOccurrences);
+    const autoTokenTimeIndex = this.buildTokenTimeIndex(autoOccurrences);
+    const autoSorted = [...autoOccurrences].sort((a, b) => a.startTime - b.startTime);
 
-    const bestShiftResult = this.findBestShift({
-      autoTokenOccurrences,
-      manualTokenTimeIndex,
-    });
+    console.log("debug: autoTokenTimeIndex", autoTokenTimeIndex);
 
-    const bestShiftDetails = this.calculateTokenMatchDetails({
-      autoTokenOccurrences,
-      manualTokenTimeIndex,
-      shiftMs: bestShiftResult.shiftMs,
-    });
-
-    const extraManualTokens = this.calculateExtraManualTokens({
-      manualTokenOccurrences,
+    // Find the global time shift that maximises manual→auto recall
+    const bestShift = this.findBestShift({
+      manualOccurrences,
       autoTokenTimeIndex,
-      shiftMs: bestShiftResult.shiftMs,
     });
 
-    if (Math.abs(bestShiftResult.shiftMs) > 1_200) {
+    console.log("debug: bestShift", bestShift);
+
+    // Score manual→auto with the best shift
+    const details = this.calculateMatchDetails({
+      manualOccurrences,
+      autoTokenTimeIndex,
+      autoSorted,
+      shiftMs: bestShift.shiftMs,
+      useFuzzy: true,
+    });
+
+    if (Math.abs(bestShift.shiftMs) > 1_200) {
       this.logger.warn(
         "Manual captions appear time-shifted relative to auto captions." +
-        " shiftMs=" + bestShiftResult.shiftMs +
-        ", score=" + bestShiftResult.score.toFixed(3),
+        " shiftMs=" + bestShift.shiftMs +
+        ", score=" + details.matchRate.toFixed(3),
       );
     }
 
-    const topMissing = this.getTopTokenCounts(bestShiftDetails.unmatchedTokens, 5).map((t) => t.token).join(", ");
-    const topTimingMiss = this.getTopTokenCounts(bestShiftDetails.timingMissTokens, 5).map((t) => t.token).join(", ");
-    const topExtra = this.getTopTokenCounts(extraManualTokens, 5).map((t) => t.token).join(", ");
+    const topMissing = this.getTopTokenCounts(details.missingOccurrences.map(t => t.token), 5)
+      .map(t => t.token).join(", ");
+    const topTimingMiss = this.getTopTokenCounts(details.timingMissOccurrences.map(t => t.token), 5)
+      .map(t => t.token).join(", ");
 
     this.logger.info(
-      `Similarity: ${(bestShiftDetails.matchRate * 100).toFixed(1)}% matched` +
-      ` (${bestShiftDetails.matchedTokens}/${bestShiftDetails.totalTokens})` +
-      `, shiftMs=${bestShiftResult.shiftMs}` +
-      `, autoTokens=${autoTokenOccurrences.length}, manualTokens=${manualTokenOccurrences.length}` +
-      (topMissing ? `, missingFromManual=[${topMissing}]` : "") +
-      (topExtra ? `, extraManual=[${topExtra}]` : "") +
+      `Similarity: ${(details.matchRate * 100).toFixed(1)}%` +
+      `, shiftMs=${bestShift.shiftMs}` +
+      `, manualTokens=${manualOccurrences.length}, autoTokens=${autoOccurrences.length}` +
+      (topMissing ? `, missingInAuto=[${topMissing}]` : "") +
       (topTimingMiss ? `, timingMiss=[${topTimingMiss}]` : ""),
     );
 
     return {
-      score: bestShiftDetails.matchRate,
-      shiftMs: bestShiftResult.shiftMs,
-      missingAutoTokens: bestShiftDetails.unmatchedTokens,
-      extraManualTokens,
-      autoTokenCount: autoTokenOccurrences.length,
-      manualTokenCount: manualTokenOccurrences.length,
+      score: details.matchRate,
+      shiftMs: bestShift.shiftMs,
+      missingTokens: details.missingOccurrences,
+      timingMissTokens: details.timingMissOccurrences,
+      manualTokenCount: manualOccurrences.length,
+      autoTokenCount: autoOccurrences.length,
     };
   }
 
-  private calculateExtraManualTokens({
-    manualTokenOccurrences,
-    autoTokenTimeIndex,
-    shiftMs,
-  }: {
-    manualTokenOccurrences: TokenOccurrence[];
-    autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
-    shiftMs: number;
-  }): string[] {
-    const extraTokens: string[] = [];
-
-    for (const manualOccurrence of manualTokenOccurrences) {
-      const autoRanges = autoTokenTimeIndex.get(manualOccurrence.token);
-
-      if (!autoRanges || autoRanges.length === 0) {
-        extraTokens.push(manualOccurrence.token);
-        continue;
-      }
-
-      const targetStart = manualOccurrence.startTime - shiftMs - TIME_TOLERANCE_MS;
-      const targetEnd = manualOccurrence.endTime - shiftMs + TIME_TOLERANCE_MS;
-
-      const hasMatch = autoRanges.some(
-        (autoRange) =>
-          autoRange.endTime >= targetStart && autoRange.startTime <= targetEnd,
-      );
-
-      if (!hasMatch) {
-        extraTokens.push(manualOccurrence.token);
-      }
-    }
-
-    return extraTokens;
-  }
-
   private findBestShift({
-    autoTokenOccurrences,
-    manualTokenTimeIndex,
+    manualOccurrences,
+    autoTokenTimeIndex,
   }: {
-    autoTokenOccurrences: TokenOccurrence[];
-    manualTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
+    manualOccurrences: TokenOccurrence[];
+    autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
   }): { shiftMs: number; score: number } {
     let bestShiftMs = 0;
     let bestScore = -1;
+
+    const scores = [];
 
     for (
       let shiftMs = SHIFT_SCAN_MIN_MS;
       shiftMs <= SHIFT_SCAN_MAX_MS;
       shiftMs += SHIFT_SCAN_STEP_MS
     ) {
-      const score = this.calculateTokenMatchDetails({
-        autoTokenOccurrences,
-        manualTokenTimeIndex,
+      // Shift scan uses exact matches only (fast path, no fuzzy needed)
+      const score = this.calculateMatchDetails({
+        manualOccurrences,
+        autoTokenTimeIndex,
+        autoSorted: [],
         shiftMs,
+        useFuzzy: false,
       }).matchRate;
+
+      scores.push({ shiftMs, score });
 
       if (score > bestScore) {
         bestScore = score;
         bestShiftMs = shiftMs;
+      } else if (score === bestScore && Math.abs(shiftMs) < Math.abs(bestShiftMs)) {
+        bestShiftMs = shiftMs;
       }
     }
 
-    return {
-      shiftMs: bestShiftMs,
-      score: bestScore,
-    };
+    console.log("debug: scores", scores);
+
+    return { shiftMs: bestShiftMs, score: bestScore };
   }
 
-  private calculateTokenMatchDetails({
-    autoTokenOccurrences,
-    manualTokenTimeIndex,
+  private calculateMatchDetails({
+    manualOccurrences,
+    autoTokenTimeIndex,
+    autoSorted,
     shiftMs,
+    useFuzzy,
   }: {
-    autoTokenOccurrences: TokenOccurrence[];
-    manualTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
+    manualOccurrences: TokenOccurrence[];
+    autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
+    autoSorted: TokenOccurrence[];
     shiftMs: number;
+    useFuzzy: boolean;
   }): {
-    totalTokens: number;
-    matchedTokens: number;
-    missingTokenInManualCount: number;
-    timingMissCount: number;
+    matchedCount: number;
     matchRate: number;
-    unmatchedTokens: string[];
-    timingMissTokens: string[];
-    unmatchedOccurrences: TokenOccurrence[];
+    missingOccurrences: TokenOccurrence[];
     timingMissOccurrences: TokenOccurrence[];
   } {
-    let matchedTokens = 0;
-    let missingTokenInManualCount = 0;
-    let timingMissCount = 0;
-    const unmatchedTokens: string[] = [];
-    const timingMissTokens: string[] = [];
-    const unmatchedOccurrences: TokenOccurrence[] = [];
+    let matchedCount = 0;
+    const missingOccurrences: TokenOccurrence[] = [];
     const timingMissOccurrences: TokenOccurrence[] = [];
 
-    for (const autoOccurrence of autoTokenOccurrences) {
-      const manualRanges = manualTokenTimeIndex.get(autoOccurrence.token);
+    for (const manual of manualOccurrences) {
+      const targetStart = manual.startTime + shiftMs - TIME_TOLERANCE_MS;
+      const targetEnd = manual.endTime + shiftMs + TIME_TOLERANCE_MS;
 
-      if (!manualRanges || manualRanges.length === 0) {
-        missingTokenInManualCount++;
-        unmatchedTokens.push(autoOccurrence.token);
-        unmatchedOccurrences.push(autoOccurrence);
+      // 1. Exact token match via index (fast path)
+      const autoRanges = autoTokenTimeIndex.get(manual.token);
+
+      if (autoRanges && autoRanges.length > 0) {
+        const hasTimeMatch = autoRanges.some(
+          r => r.endTime >= targetStart && r.startTime <= targetEnd,
+        );
+
+        if (hasTimeMatch) {
+          matchedCount++;
+          continue;
+        }
+
+        // Token exists in auto but only at wrong time — timing miss, skip fuzzy
+        timingMissOccurrences.push(manual);
         continue;
       }
 
-      const targetStart = autoOccurrence.startTime + shiftMs - TIME_TOLERANCE_MS;
-      const targetEnd = autoOccurrence.endTime + shiftMs + TIME_TOLERANCE_MS;
+      // 2. Token absent from auto entirely — try fuzzy within ±FUZZY_WINDOW_MS
+      if (useFuzzy) {
+        const fuzzyStart = manual.startTime + shiftMs - FUZZY_WINDOW_MS;
+        const fuzzyEnd = manual.endTime + shiftMs + FUZZY_WINDOW_MS;
 
-      const hasMatch = manualRanges.some(
-        (manualRange) =>
-          manualRange.endTime >= targetStart && manualRange.startTime <= targetEnd,
-      );
+        const candidates = this.getOccurrencesInRange(autoSorted, fuzzyStart, fuzzyEnd);
+        const fuzzyMatched = candidates.some(
+          cand => {
+            const ratio = levenshteinRatio(manual.token, cand.token);
+            if (ratio > .5) {
+              console.log(manual.token, cand.token, ratio);
+            }
+            return ratio >= FUZZY_THRESHOLD;
+          },
+        );
 
-      if (hasMatch) {
-        matchedTokens++;
-      } else {
-        timingMissCount++;
-        timingMissTokens.push(autoOccurrence.token);
-        timingMissOccurrences.push(autoOccurrence);
+        if (fuzzyMatched) {
+          matchedCount++;
+          continue;
+        }
       }
+
+      missingOccurrences.push(manual);
     }
 
-    const totalTokens = autoTokenOccurrences.length;
     return {
-      totalTokens,
-      matchedTokens,
-      missingTokenInManualCount,
-      timingMissCount,
-      matchRate: matchedTokens / totalTokens,
-      unmatchedTokens,
-      timingMissTokens,
-      unmatchedOccurrences,
+      matchedCount,
+      matchRate: matchedCount / manualOccurrences.length,
+      missingOccurrences,
       timingMissOccurrences,
     };
+  }
+
+  /**
+   * Returns all occurrences from a startTime-sorted array whose startTime falls
+   * within [windowStart, windowEnd]. Uses binary search to find the left bound.
+   */
+  private getOccurrencesInRange(
+    sorted: TokenOccurrence[],
+    windowStart: number,
+    windowEnd: number,
+  ): TokenOccurrence[] {
+    let lo = 0;
+    let hi = sorted.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (sorted[mid].startTime < windowStart) lo = mid + 1;
+      else hi = mid;
+    }
+
+    const result: TokenOccurrence[] = [];
+    for (let i = lo; i < sorted.length && sorted[i].startTime <= windowEnd; i++) {
+      result.push(sorted[i]);
+    }
+    return result;
   }
 
   private getTopTokenCounts(
@@ -291,11 +320,9 @@ export class CaptionsSimilarityService {
     limit: number = 10,
   ): Array<{ token: string; count: number }> {
     const counts = new Map<string, number>();
-
     for (const token of tokens) {
       counts.set(token, (counts.get(token) ?? 0) + 1);
     }
-
     return Array.from(counts.entries())
       .map(([token, count]) => ({ token, count }))
       .sort((a, b) => b.count - a.count)
@@ -306,34 +333,26 @@ export class CaptionsSimilarityService {
     tokenOccurrences: TokenOccurrence[],
   ): Map<string, Array<{ startTime: number; endTime: number }>> {
     const index = new Map<string, Array<{ startTime: number; endTime: number }>>();
-
-    for (const occurrence of tokenOccurrences) {
-      const ranges = index.get(occurrence.token);
-      const range = {
-        startTime: occurrence.startTime,
-        endTime: occurrence.endTime,
-      };
-
+    for (const occ of tokenOccurrences) {
+      const ranges = index.get(occ.token);
+      const range = { startTime: occ.startTime, endTime: occ.endTime };
       if (!ranges) {
-        index.set(occurrence.token, [range]);
-        continue;
+        index.set(occ.token, [range]);
+      } else {
+        ranges.push(range);
       }
-
-      ranges.push(range);
     }
-
     return index;
   }
 
   private toTokenOccurrences(captions: Caption[]): TokenOccurrence[] {
     const tokenOccurrences: TokenOccurrence[] = [];
-
     for (const caption of captions) {
       const normalizedText = this.normalizeText(caption.text);
       const tokens = normalizedText
         .split(" ")
-        .map((token) => token.trim())
-        .filter((token) => token.length >= 2 && !STOP_TOKENS.has(token));
+        .map(token => token.trim())
+        .filter(token => token.length >= 2 && !STOP_TOKENS.has(token));
 
       for (const token of tokens) {
         tokenOccurrences.push({
@@ -343,22 +362,17 @@ export class CaptionsSimilarityService {
         });
       }
     }
-
     return tokenOccurrences;
   }
 
   private normalizeText(text: string): string {
     let normalizedText = text.toLowerCase();
-
     for (const replacement of TEXT_REPLACEMENTS) {
       normalizedText = normalizedText.replace(replacement.from, replacement.to);
     }
-
-    normalizedText = normalizedText
+    return normalizedText
       .replace(/[^a-z0-9\s]/g, " ")
       .replace(/\s+/g, " ")
       .trim();
-
-    return normalizedText;
   }
 }

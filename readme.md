@@ -32,3 +32,5 @@ Auto Token Count: 705
 Manual Token Count: 681
 Similarity Score: 77.45%
 Extra Manual Tokens Count: 151
+
+take random videos from youglish and check similarity score, try to understand what is the best threshold

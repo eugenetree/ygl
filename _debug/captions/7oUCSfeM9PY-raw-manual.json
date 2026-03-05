@@ -1,0 +1,1628 @@
+[
+  {
+    "startTime": 12820,
+    "endTime": 17780,
+    "duration": 4960,
+    "text": "Economists have been exploring\npeople's behavior for hundreds of years:"
+  },
+  {
+    "startTime": 18700,
+    "endTime": 20276,
+    "duration": 1576,
+    "text": "how we make decisions,"
+  },
+  {
+    "startTime": 20300,
+    "endTime": 23356,
+    "duration": 3056,
+    "text": "how we act individually and in groups,"
+  },
+  {
+    "startTime": 23380,
+    "endTime": 25100,
+    "duration": 1720,
+    "text": "how we exchange value."
+  },
+  {
+    "startTime": 26580,
+    "endTime": 30036,
+    "duration": 3456,
+    "text": "They've studied the institutions\nthat facilitate our trade,"
+  },
+  {
+    "startTime": 30060,
+    "endTime": 31476,
+    "duration": 1416,
+    "text": "like legal systems,"
+  },
+  {
+    "startTime": 31500,
+    "endTime": 32740,
+    "duration": 1240,
+    "text": "corporations,"
+  },
+  {
+    "startTime": 33340,
+    "endTime": 34540,
+    "duration": 1200,
+    "text": "marketplaces."
+  },
+  {
+    "startTime": 35420,
+    "endTime": 38876,
+    "duration": 3456,
+    "text": "But there is a new,\ntechnological institution"
+  },
+  {
+    "startTime": 38900,
+    "endTime": 42916,
+    "duration": 4016,
+    "text": "that will fundamentally change\nhow we exchange value,"
+  },
+  {
+    "startTime": 42940,
+    "endTime": 44420,
+    "duration": 1480,
+    "text": "and it's called the blockchain."
+  },
+  {
+    "startTime": 45860,
+    "endTime": 48516,
+    "duration": 2656,
+    "text": "Now, that's a pretty bold statement,"
+  },
+  {
+    "startTime": 48540,
+    "endTime": 51676,
+    "duration": 3136,
+    "text": "but if you take nothing else\naway from this talk,"
+  },
+  {
+    "startTime": 51700,
+    "endTime": 53436,
+    "duration": 1736,
+    "text": "I actually want you to remember"
+  },
+  {
+    "startTime": 53460,
+    "endTime": 57396,
+    "duration": 3936,
+    "text": "that while blockchain technology\nis relatively new,"
+  },
+  {
+    "startTime": 57420,
+    "endTime": 61796,
+    "duration": 4376,
+    "text": "it's also a continuation\nof a very human story,"
+  },
+  {
+    "startTime": 61820,
+    "endTime": 63340,
+    "duration": 1520,
+    "text": "and the story is this."
+  },
+  {
+    "startTime": 63900,
+    "endTime": 65916,
+    "duration": 2016,
+    "text": "As humans, we find ways"
+  },
+  {
+    "startTime": 65940,
+    "endTime": 68756,
+    "duration": 2816,
+    "text": "to lower uncertainty about one another"
+  },
+  {
+    "startTime": 68780,
+    "endTime": 70580,
+    "duration": 1800,
+    "text": "so that we can exchange value."
+  },
+  {
+    "startTime": 72900,
+    "endTime": 76395,
+    "duration": 3495,
+    "text": "Now, one of the first people\nto really explore the idea"
+  },
+  {
+    "startTime": 76419,
+    "endTime": 79596,
+    "duration": 3177,
+    "text": "of institutions as a tool in economics"
+  },
+  {
+    "startTime": 79620,
+    "endTime": 82076,
+    "duration": 2456,
+    "text": "to lower our uncertainties\nabout one another"
+  },
+  {
+    "startTime": 82100,
+    "endTime": 83996,
+    "duration": 1896,
+    "text": "and be able to do trade"
+  },
+  {
+    "startTime": 84020,
+    "endTime": 86660,
+    "duration": 2640,
+    "text": "was the Nobel economist Douglass North."
+  },
+  {
+    "startTime": 87500,
+    "endTime": 89636,
+    "duration": 2136,
+    "text": "He passed away at the end of 2015,"
+  },
+  {
+    "startTime": 89660,
+    "endTime": 94380,
+    "duration": 4720,
+    "text": "but North pioneered what's called\n\"new institutional economics.\""
+  },
+  {
+    "startTime": 94940,
+    "endTime": 99116,
+    "duration": 4176,
+    "text": "And what he meant by institutions\nwere really just formal rules"
+  },
+  {
+    "startTime": 99140,
+    "endTime": 101116,
+    "duration": 1976,
+    "text": "like a constitution,"
+  },
+  {
+    "startTime": 101140,
+    "endTime": 104060,
+    "duration": 2920,
+    "text": "and informal constraints, like bribery."
+  },
+  {
+    "startTime": 105100,
+    "endTime": 107996,
+    "duration": 2896,
+    "text": "These institutions are really the grease"
+  },
+  {
+    "startTime": 108020,
+    "endTime": 110956,
+    "duration": 2936,
+    "text": "that allow our economic\nwheels to function,"
+  },
+  {
+    "startTime": 110980,
+    "endTime": 114100,
+    "duration": 3120,
+    "text": "and we can see this play out\nover the course of human history."
+  },
+  {
+    "startTime": 114940,
+    "endTime": 118396,
+    "duration": 3456,
+    "text": "If we think back to when we were\nhunter-gatherer economies,"
+  },
+  {
+    "startTime": 118420,
+    "endTime": 121356,
+    "duration": 2936,
+    "text": "we really just traded\nwithin our village structure."
+  },
+  {
+    "startTime": 121380,
+    "endTime": 123796,
+    "duration": 2416,
+    "text": "We had some informal constraints in place,"
+  },
+  {
+    "startTime": 123820,
+    "endTime": 127356,
+    "duration": 3536,
+    "text": "but we enforced\nall of our trade with violence"
+  },
+  {
+    "startTime": 127380,
+    "endTime": 129260,
+    "duration": 1880,
+    "text": "or social repercussions."
+  },
+  {
+    "startTime": 129780,
+    "endTime": 132116,
+    "duration": 2336,
+    "text": "As our societies grew more complex"
+  },
+  {
+    "startTime": 132140,
+    "endTime": 135356,
+    "duration": 3216,
+    "text": "and our trade routes grew more distant,"
+  },
+  {
+    "startTime": 135380,
+    "endTime": 138396,
+    "duration": 3016,
+    "text": "we built up more formal institutions,"
+  },
+  {
+    "startTime": 138420,
+    "endTime": 141756,
+    "duration": 3336,
+    "text": "institutions like banks for currency,"
+  },
+  {
+    "startTime": 141780,
+    "endTime": 144476,
+    "duration": 2696,
+    "text": "governments, corporations."
+  },
+  {
+    "startTime": 144500,
+    "endTime": 147036,
+    "duration": 2536,
+    "text": "These institutions\nhelped us manage our trade"
+  },
+  {
+    "startTime": 147060,
+    "endTime": 150076,
+    "duration": 3016,
+    "text": "as the uncertainty\nand the complexity grew,"
+  },
+  {
+    "startTime": 150100,
+    "endTime": 152700,
+    "duration": 2600,
+    "text": "and our personal control was much lower."
+  },
+  {
+    "startTime": 153380,
+    "endTime": 157660,
+    "duration": 4280,
+    "text": "Eventually with the internet,\nwe put these same institutions online."
+  },
+  {
+    "startTime": 158420,
+    "endTime": 162796,
+    "duration": 4376,
+    "text": "We built platform marketplaces\nlike Amazon, eBay, Alibaba,"
+  },
+  {
+    "startTime": 162820,
+    "endTime": 166356,
+    "duration": 3536,
+    "text": "just faster institutions\nthat act as middlemen"
+  },
+  {
+    "startTime": 166380,
+    "endTime": 169300,
+    "duration": 2920,
+    "text": "to facilitate human economic activity."
+  },
+  {
+    "startTime": 171660,
+    "endTime": 173796,
+    "duration": 2136,
+    "text": "As Douglass North saw it,"
+  },
+  {
+    "startTime": 173820,
+    "endTime": 177476,
+    "duration": 3656,
+    "text": "institutions are a tool\nto lower uncertainty"
+  },
+  {
+    "startTime": 177500,
+    "endTime": 181820,
+    "duration": 4320,
+    "text": "so that we can connect and exchange\nall kinds of value in society."
+  },
+  {
+    "startTime": 182660,
+    "endTime": 184996,
+    "duration": 2336,
+    "text": "And I believe we are now entering"
+  },
+  {
+    "startTime": 185020,
+    "endTime": 187996,
+    "duration": 2976,
+    "text": "a further and radical evolution"
+  },
+  {
+    "startTime": 188020,
+    "endTime": 190476,
+    "duration": 2456,
+    "text": "of how we interact and trade,"
+  },
+  {
+    "startTime": 190500,
+    "endTime": 194076,
+    "duration": 3576,
+    "text": "because for the first time,\nwe can lower uncertainty"
+  },
+  {
+    "startTime": 194100,
+    "endTime": 197676,
+    "duration": 3576,
+    "text": "not just with political\nand economic institutions,"
+  },
+  {
+    "startTime": 197700,
+    "endTime": 201436,
+    "duration": 3736,
+    "text": "like our banks, our corporations,\nour governments,"
+  },
+  {
+    "startTime": 201460,
+    "endTime": 203820,
+    "duration": 2360,
+    "text": "but we can do it with technology alone."
+  },
+  {
+    "startTime": 205740,
+    "endTime": 207756,
+    "duration": 2016,
+    "text": "So what is the blockchain?"
+  },
+  {
+    "startTime": 207780,
+    "endTime": 211836,
+    "duration": 4056,
+    "text": "Blockchain technology\nis a decentralized database"
+  },
+  {
+    "startTime": 211860,
+    "endTime": 215396,
+    "duration": 3536,
+    "text": "that stores a registry\nof assets and transactions"
+  },
+  {
+    "startTime": 215420,
+    "endTime": 217220,
+    "duration": 1800,
+    "text": "across a peer-to-peer network."
+  },
+  {
+    "startTime": 217980,
+    "endTime": 220116,
+    "duration": 2136,
+    "text": "It's basically a public registry"
+  },
+  {
+    "startTime": 220140,
+    "endTime": 222980,
+    "duration": 2840,
+    "text": "of who owns what and who transacts what."
+  },
+  {
+    "startTime": 223740,
+    "endTime": 226716,
+    "duration": 2976,
+    "text": "The transactions are secured\nthrough cryptography,"
+  },
+  {
+    "startTime": 226740,
+    "endTime": 232516,
+    "duration": 5776,
+    "text": "and over time, that transaction history\ngets locked in blocks of data"
+  },
+  {
+    "startTime": 232540,
+    "endTime": 236020,
+    "duration": 3480,
+    "text": "that are then cryptographically\nlinked together and secured."
+  },
+  {
+    "startTime": 237180,
+    "endTime": 241356,
+    "duration": 4176,
+    "text": "This creates and immutable,\nunforgeable record"
+  },
+  {
+    "startTime": 241380,
+    "endTime": 245196,
+    "duration": 3816,
+    "text": "of all of the transactions\nacross this network."
+  },
+  {
+    "startTime": 245220,
+    "endTime": 249620,
+    "duration": 4400,
+    "text": "This record is replicated\non every computer that uses the network."
+  },
+  {
+    "startTime": 251060,
+    "endTime": 252300,
+    "duration": 1240,
+    "text": "It's not an app."
+  },
+  {
+    "startTime": 252900,
+    "endTime": 254140,
+    "duration": 1240,
+    "text": "It's not a company."
+  },
+  {
+    "startTime": 254940,
+    "endTime": 258700,
+    "duration": 3760,
+    "text": "I think it's closest in description\nto something like Wikipedia."
+  },
+  {
+    "startTime": 259620,
+    "endTime": 261676,
+    "duration": 2056,
+    "text": "We can see everything on Wikipedia."
+  },
+  {
+    "startTime": 261700,
+    "endTime": 265740,
+    "duration": 4040,
+    "text": "It's a composite view that's constantly\nchanging and being updated."
+  },
+  {
+    "startTime": 267700,
+    "endTime": 271356,
+    "duration": 3656,
+    "text": "We can also track those changes\nover time on Wikipedia,"
+  },
+  {
+    "startTime": 271380,
+    "endTime": 273676,
+    "duration": 2296,
+    "text": "and we can create our own wikis,"
+  },
+  {
+    "startTime": 273700,
+    "endTime": 276540,
+    "duration": 2840,
+    "text": "because at their core,\nthey're just a data infrastructure."
+  },
+  {
+    "startTime": 278420,
+    "endTime": 283916,
+    "duration": 5496,
+    "text": "On Wikipedia, it's an open platform\nthat stores words and images"
+  },
+  {
+    "startTime": 283940,
+    "endTime": 286420,
+    "duration": 2480,
+    "text": "and the changes to that data over time."
+  },
+  {
+    "startTime": 287340,
+    "endTime": 288796,
+    "duration": 1456,
+    "text": "On the blockchain,"
+  },
+  {
+    "startTime": 288820,
+    "endTime": 291756,
+    "duration": 2936,
+    "text": "you can think of it\nas an open infrastructure"
+  },
+  {
+    "startTime": 291780,
+    "endTime": 294460,
+    "duration": 2680,
+    "text": "that stores many kinds of assets."
+  },
+  {
+    "startTime": 295580,
+    "endTime": 298316,
+    "duration": 2736,
+    "text": "It stores the history of custodianship,"
+  },
+  {
+    "startTime": 298340,
+    "endTime": 300556,
+    "duration": 2216,
+    "text": "ownership and location"
+  },
+  {
+    "startTime": 300580,
+    "endTime": 304236,
+    "duration": 3656,
+    "text": "for assets like\nthe digital currency Bitcoin,"
+  },
+  {
+    "startTime": 304260,
+    "endTime": 305836,
+    "duration": 1576,
+    "text": "other digital assets"
+  },
+  {
+    "startTime": 305860,
+    "endTime": 309180,
+    "duration": 3320,
+    "text": "like a title of ownership of IP."
+  },
+  {
+    "startTime": 310300,
+    "endTime": 313436,
+    "duration": 3136,
+    "text": "It could be a certificate, a contract,"
+  },
+  {
+    "startTime": 313460,
+    "endTime": 314716,
+    "duration": 1256,
+    "text": "real world objects,"
+  },
+  {
+    "startTime": 314740,
+    "endTime": 317540,
+    "duration": 2800,
+    "text": "even personal identifiable information."
+  },
+  {
+    "startTime": 318900,
+    "endTime": 322756,
+    "duration": 3856,
+    "text": "There are of course other\ntechnical details to the blockchain,"
+  },
+  {
+    "startTime": 322780,
+    "endTime": 324796,
+    "duration": 2016,
+    "text": "but at its core, that's how it works."
+  },
+  {
+    "startTime": 324820,
+    "endTime": 329156,
+    "duration": 4336,
+    "text": "It's this public registry\nthat stores transactions in a network"
+  },
+  {
+    "startTime": 329180,
+    "endTime": 333380,
+    "duration": 4200,
+    "text": "and is replicated so that it's very secure\nand hard to tamper with."
+  },
+  {
+    "startTime": 334940,
+    "endTime": 337076,
+    "duration": 2136,
+    "text": "Which brings me to my point"
+  },
+  {
+    "startTime": 337100,
+    "endTime": 340156,
+    "duration": 3056,
+    "text": "of how blockchains lower uncertainty"
+  },
+  {
+    "startTime": 340180,
+    "endTime": 344316,
+    "duration": 4136,
+    "text": "and how they therefore promise\nto transform our economic systems"
+  },
+  {
+    "startTime": 344340,
+    "endTime": 345540,
+    "duration": 1200,
+    "text": "in radical ways."
+  },
+  {
+    "startTime": 347700,
+    "endTime": 350036,
+    "duration": 2336,
+    "text": "So uncertainty is kind of a big term"
+  },
+  {
+    "startTime": 350060,
+    "endTime": 351436,
+    "duration": 1376,
+    "text": "in economics,"
+  },
+  {
+    "startTime": 351460,
+    "endTime": 353516,
+    "duration": 2056,
+    "text": "but I want to go through three forms of it"
+  },
+  {
+    "startTime": 353540,
+    "endTime": 356916,
+    "duration": 3376,
+    "text": "that we face in almost all\nof our everyday transactions,"
+  },
+  {
+    "startTime": 356940,
+    "endTime": 359036,
+    "duration": 2096,
+    "text": "where blockchains can play a role."
+  },
+  {
+    "startTime": 359060,
+    "endTime": 362436,
+    "duration": 3376,
+    "text": "We face uncertainties\nlike not knowing who we're dealing with,"
+  },
+  {
+    "startTime": 362460,
+    "endTime": 365276,
+    "duration": 2816,
+    "text": "not having visibility into a transaction"
+  },
+  {
+    "startTime": 365300,
+    "endTime": 368220,
+    "duration": 2920,
+    "text": "and not having recourse\nif things go wrong."
+  },
+  {
+    "startTime": 369340,
+    "endTime": 372700,
+    "duration": 3360,
+    "text": "So let's take the first example,\nnot knowing who we're dealing with."
+  },
+  {
+    "startTime": 373540,
+    "endTime": 376900,
+    "duration": 3360,
+    "text": "Say I want to buy\na used smartphone on eBay."
+  },
+  {
+    "startTime": 377580,
+    "endTime": 380900,
+    "duration": 3320,
+    "text": "The first thing I'm going to do\nis look up who I'm buying from."
+  },
+  {
+    "startTime": 381420,
+    "endTime": 383156,
+    "duration": 1736,
+    "text": "Are they a power user?"
+  },
+  {
+    "startTime": 383180,
+    "endTime": 387300,
+    "duration": 4120,
+    "text": "Do they have great reviews and ratings,\nor do they have no profile at all?"
+  },
+  {
+    "startTime": 388780,
+    "endTime": 391556,
+    "duration": 2776,
+    "text": "Reviews, ratings, checkmarks:"
+  },
+  {
+    "startTime": 391580,
+    "endTime": 395196,
+    "duration": 3616,
+    "text": "these are the attestations\nabout our identities"
+  },
+  {
+    "startTime": 395220,
+    "endTime": 396836,
+    "duration": 1616,
+    "text": "that we cobble together today"
+  },
+  {
+    "startTime": 396860,
+    "endTime": 400300,
+    "duration": 3440,
+    "text": "and use to lower uncertainty\nabout who we're dealing with."
+  },
+  {
+    "startTime": 401660,
+    "endTime": 404676,
+    "duration": 3016,
+    "text": "But the problem is\nthey're very fragmented."
+  },
+  {
+    "startTime": 404700,
+    "endTime": 407020,
+    "duration": 2320,
+    "text": "Think about how many profiles you have."
+  },
+  {
+    "startTime": 408340,
+    "endTime": 413836,
+    "duration": 5496,
+    "text": "Blockchains allow for us\nto create an open, global platform"
+  },
+  {
+    "startTime": 413860,
+    "endTime": 418236,
+    "duration": 4376,
+    "text": "on which to store any attestation\nabout any individual"
+  },
+  {
+    "startTime": 418260,
+    "endTime": 419660,
+    "duration": 1400,
+    "text": "from any source."
+  },
+  {
+    "startTime": 420300,
+    "endTime": 423596,
+    "duration": 3296,
+    "text": "This allows us to create a user-controlled"
+  },
+  {
+    "startTime": 423620,
+    "endTime": 424980,
+    "duration": 1360,
+    "text": "portable identity."
+  },
+  {
+    "startTime": 427620,
+    "endTime": 429516,
+    "duration": 1896,
+    "text": "More than a profile,"
+  },
+  {
+    "startTime": 429540,
+    "endTime": 432836,
+    "duration": 3296,
+    "text": "it means you can selectively reveal"
+  },
+  {
+    "startTime": 432860,
+    "endTime": 434796,
+    "duration": 1936,
+    "text": "the different attributes about you"
+  },
+  {
+    "startTime": 434820,
+    "endTime": 438116,
+    "duration": 3296,
+    "text": "that help facilitate trade or interaction,"
+  },
+  {
+    "startTime": 438140,
+    "endTime": 440996,
+    "duration": 2856,
+    "text": "for instance that a government\nissued you an ID,"
+  },
+  {
+    "startTime": 441020,
+    "endTime": 443276,
+    "duration": 2256,
+    "text": "or that you're over 21,"
+  },
+  {
+    "startTime": 443300,
+    "endTime": 445916,
+    "duration": 2616,
+    "text": "by revealing the cryptographic proof"
+  },
+  {
+    "startTime": 445940,
+    "endTime": 448820,
+    "duration": 2880,
+    "text": "that these details exist\nand are signed off on."
+  },
+  {
+    "startTime": 450780,
+    "endTime": 452836,
+    "duration": 2056,
+    "text": "Having this kind of portable identity"
+  },
+  {
+    "startTime": 452860,
+    "endTime": 455876,
+    "duration": 3016,
+    "text": "around the physical world\nand the digital world"
+  },
+  {
+    "startTime": 455900,
+    "endTime": 459196,
+    "duration": 3296,
+    "text": "means we can do all kinds of human trade"
+  },
+  {
+    "startTime": 459220,
+    "endTime": 460620,
+    "duration": 1400,
+    "text": "in a totally new way."
+  },
+  {
+    "startTime": 462420,
+    "endTime": 465316,
+    "duration": 2896,
+    "text": "So I've talked about how blockchains\ncould lower uncertainty"
+  },
+  {
+    "startTime": 465340,
+    "endTime": 466876,
+    "duration": 1536,
+    "text": "in who we're dealing with."
+  },
+  {
+    "startTime": 466900,
+    "endTime": 469476,
+    "duration": 2576,
+    "text": "The second uncertainty that we often face"
+  },
+  {
+    "startTime": 469500,
+    "endTime": 472700,
+    "duration": 3200,
+    "text": "is just not having transparency\ninto our interactions."
+  },
+  {
+    "startTime": 473420,
+    "endTime": 476156,
+    "duration": 2736,
+    "text": "Say you're going to send me\nthat smartphone by mail."
+  },
+  {
+    "startTime": 476180,
+    "endTime": 477876,
+    "duration": 1696,
+    "text": "I want some degree of transparency."
+  },
+  {
+    "startTime": 477900,
+    "endTime": 482196,
+    "duration": 4296,
+    "text": "I want to know that the product I bought\nis the same one that arrives in the mail"
+  },
+  {
+    "startTime": 482220,
+    "endTime": 484596,
+    "duration": 2376,
+    "text": "and that there's some record\nfor how it got to me."
+  },
+  {
+    "startTime": 484620,
+    "endTime": 487236,
+    "duration": 2616,
+    "text": "This is true not just\nfor electronics like smartphones,"
+  },
+  {
+    "startTime": 487260,
+    "endTime": 490436,
+    "duration": 3176,
+    "text": "but for many kinds of goods and data,"
+  },
+  {
+    "startTime": 490460,
+    "endTime": 493100,
+    "duration": 2640,
+    "text": "things like medicine, luxury goods,"
+  },
+  {
+    "startTime": 493820,
+    "endTime": 497340,
+    "duration": 3520,
+    "text": "any kind of data or product\nthat we don't want tampered with."
+  },
+  {
+    "startTime": 498700,
+    "endTime": 500916,
+    "duration": 2216,
+    "text": "The problem in many companies,"
+  },
+  {
+    "startTime": 500940,
+    "endTime": 504276,
+    "duration": 3336,
+    "text": "especially those that produce\nsomething complicated like a smartphone,"
+  },
+  {
+    "startTime": 504300,
+    "endTime": 506796,
+    "duration": 2496,
+    "text": "is they're managing\nall of these different vendors"
+  },
+  {
+    "startTime": 506820,
+    "endTime": 508700,
+    "duration": 1880,
+    "text": "across a horizontal supply chain."
+  },
+  {
+    "startTime": 510060,
+    "endTime": 512636,
+    "duration": 2576,
+    "text": "All of these people\nthat go into making a product,"
+  },
+  {
+    "startTime": 512660,
+    "endTime": 514316,
+    "duration": 1656,
+    "text": "they don't have the same database."
+  },
+  {
+    "startTime": 514340,
+    "endTime": 516356,
+    "duration": 2016,
+    "text": "They don't use the same infrastructure,"
+  },
+  {
+    "startTime": 516380,
+    "endTime": 521500,
+    "duration": 5120,
+    "text": "and so it becomes really hard to see\ntransparently a product evolve over time."
+  },
+  {
+    "startTime": 523660,
+    "endTime": 525595,
+    "duration": 1935,
+    "text": "Using the blockchain, we can create"
+  },
+  {
+    "startTime": 525619,
+    "endTime": 529379,
+    "duration": 3760,
+    "text": "a shared reality\nacross nontrusting entities."
+  },
+  {
+    "startTime": 530460,
+    "endTime": 531676,
+    "duration": 1216,
+    "text": "By this I mean"
+  },
+  {
+    "startTime": 531700,
+    "endTime": 535076,
+    "duration": 3376,
+    "text": "all of these nodes in the network\ndo not need to know each other"
+  },
+  {
+    "startTime": 535100,
+    "endTime": 536516,
+    "duration": 1416,
+    "text": "or trust each other,"
+  },
+  {
+    "startTime": 536540,
+    "endTime": 538676,
+    "duration": 2136,
+    "text": "because they each have the ability"
+  },
+  {
+    "startTime": 538700,
+    "endTime": 541780,
+    "duration": 3080,
+    "text": "to monitor and validate\nthe chain for themselves."
+  },
+  {
+    "startTime": 542860,
+    "endTime": 544596,
+    "duration": 1736,
+    "text": "Think back to Wikipedia."
+  },
+  {
+    "startTime": 544620,
+    "endTime": 546796,
+    "duration": 2176,
+    "text": "It's a shared database,"
+  },
+  {
+    "startTime": 546820,
+    "endTime": 549636,
+    "duration": 2816,
+    "text": "and even though it has multiple readers"
+  },
+  {
+    "startTime": 549660,
+    "endTime": 551756,
+    "duration": 2096,
+    "text": "and multiple writers at the same time,"
+  },
+  {
+    "startTime": 551780,
+    "endTime": 553500,
+    "duration": 1720,
+    "text": "it has one single truth."
+  },
+  {
+    "startTime": 554540,
+    "endTime": 556636,
+    "duration": 2096,
+    "text": "So we can create that using blockchains."
+  },
+  {
+    "startTime": 556660,
+    "endTime": 562636,
+    "duration": 5976,
+    "text": "We can create a decentralized database\nthat has the same efficiency of a monopoly"
+  },
+  {
+    "startTime": 562660,
+    "endTime": 565340,
+    "duration": 2680,
+    "text": "without actually creating\nthat central authority."
+  },
+  {
+    "startTime": 566020,
+    "endTime": 568436,
+    "duration": 2416,
+    "text": "So all of these vendors,\nall sorts of companies,"
+  },
+  {
+    "startTime": 568460,
+    "endTime": 572420,
+    "duration": 3960,
+    "text": "can interact using the same database\nwithout trusting one another."
+  },
+  {
+    "startTime": 574020,
+    "endTime": 577556,
+    "duration": 3536,
+    "text": "It means for consumers,\nwe can have a lot more transparency."
+  },
+  {
+    "startTime": 577580,
+    "endTime": 579716,
+    "duration": 2136,
+    "text": "As a real-world object travels along,"
+  },
+  {
+    "startTime": 579740,
+    "endTime": 584916,
+    "duration": 5176,
+    "text": "we can see its digital certificate\nor token move on the blockchain,"
+  },
+  {
+    "startTime": 584940,
+    "endTime": 586660,
+    "duration": 1720,
+    "text": "adding value as it goes."
+  },
+  {
+    "startTime": 588180,
+    "endTime": 592020,
+    "duration": 3840,
+    "text": "This is a whole new world\nin terms of our visibility."
+  },
+  {
+    "startTime": 593540,
+    "endTime": 598140,
+    "duration": 4600,
+    "text": "So I've talked about how blockchains\ncan lower our uncertainties about identity"
+  },
+  {
+    "startTime": 599060,
+    "endTime": 602276,
+    "duration": 3216,
+    "text": "and how they change\nwhat we mean about transparency"
+  },
+  {
+    "startTime": 602300,
+    "endTime": 606060,
+    "duration": 3760,
+    "text": "in long distances and complex trades,\nlike in a supply chain."
+  },
+  {
+    "startTime": 607340,
+    "endTime": 609436,
+    "duration": 2096,
+    "text": "The last uncertainty that we often face"
+  },
+  {
+    "startTime": 609460,
+    "endTime": 612100,
+    "duration": 2640,
+    "text": "is one of the most open-ended,\nand it's reneging."
+  },
+  {
+    "startTime": 612740,
+    "endTime": 615236,
+    "duration": 2496,
+    "text": "What if you don't send me the smartphone?"
+  },
+  {
+    "startTime": 615260,
+    "endTime": 616820,
+    "duration": 1560,
+    "text": "Can I get my money back?"
+  },
+  {
+    "startTime": 617620,
+    "endTime": 621316,
+    "duration": 3696,
+    "text": "Blockchains allow us to write code,"
+  },
+  {
+    "startTime": 621340,
+    "endTime": 623036,
+    "duration": 1696,
+    "text": "binding contracts,"
+  },
+  {
+    "startTime": 623060,
+    "endTime": 624716,
+    "duration": 1656,
+    "text": "between individuals"
+  },
+  {
+    "startTime": 624740,
+    "endTime": 628396,
+    "duration": 3656,
+    "text": "and then guarantee\nthat those contracts will bear out"
+  },
+  {
+    "startTime": 628420,
+    "endTime": 630380,
+    "duration": 1960,
+    "text": "without a third party enforcer."
+  },
+  {
+    "startTime": 631540,
+    "endTime": 635436,
+    "duration": 3896,
+    "text": "So if we look at the smartphone example,\nyou could think about escrow."
+  },
+  {
+    "startTime": 635460,
+    "endTime": 637556,
+    "duration": 2096,
+    "text": "You are financing that phone,"
+  },
+  {
+    "startTime": 637580,
+    "endTime": 640116,
+    "duration": 2536,
+    "text": "but you don't need to release the funds"
+  },
+  {
+    "startTime": 640140,
+    "endTime": 642956,
+    "duration": 2816,
+    "text": "until you can verify\nthat all the conditions have been met."
+  },
+  {
+    "startTime": 642980,
+    "endTime": 644180,
+    "duration": 1200,
+    "text": "You got the phone."
+  },
+  {
+    "startTime": 646060,
+    "endTime": 648476,
+    "duration": 2416,
+    "text": "I think this is one\nof the most exciting ways"
+  },
+  {
+    "startTime": 648500,
+    "endTime": 650940,
+    "duration": 2440,
+    "text": "that blockchains lower our uncertainties,"
+  },
+  {
+    "startTime": 651660,
+    "endTime": 653236,
+    "duration": 1576,
+    "text": "because it means to some degree"
+  },
+  {
+    "startTime": 653260,
+    "endTime": 656860,
+    "duration": 3600,
+    "text": "we can collapse institutions\nand their enforcement."
+  },
+  {
+    "startTime": 659540,
+    "endTime": 662236,
+    "duration": 2696,
+    "text": "It means a lot of human economic activity"
+  },
+  {
+    "startTime": 662260,
+    "endTime": 667276,
+    "duration": 5016,
+    "text": "can get collateralized and automated,"
+  },
+  {
+    "startTime": 667300,
+    "endTime": 670356,
+    "duration": 3056,
+    "text": "and push a lot of human\nintervention to the edges,"
+  },
+  {
+    "startTime": 670380,
+    "endTime": 674340,
+    "duration": 3960,
+    "text": "the places where information moves\nfrom the real world to the blockchain."
+  },
+  {
+    "startTime": 676700,
+    "endTime": 679156,
+    "duration": 2456,
+    "text": "I think what would probably\nfloor Douglass North"
+  },
+  {
+    "startTime": 679180,
+    "endTime": 681556,
+    "duration": 2376,
+    "text": "about this use of technology"
+  },
+  {
+    "startTime": 681580,
+    "endTime": 684596,
+    "duration": 3016,
+    "text": "is the fact that the very thing\nthat makes it work,"
+  },
+  {
+    "startTime": 684620,
+    "endTime": 689156,
+    "duration": 4536,
+    "text": "the very thing that keeps the blockchain\nsecure and verified,"
+  },
+  {
+    "startTime": 689180,
+    "endTime": 691140,
+    "duration": 1960,
+    "text": "is our mutual distrust."
+  },
+  {
+    "startTime": 693420,
+    "endTime": 696516,
+    "duration": 3096,
+    "text": "So rather than all of our uncertainties"
+  },
+  {
+    "startTime": 696540,
+    "endTime": 698156,
+    "duration": 1616,
+    "text": "slowing us down"
+  },
+  {
+    "startTime": 698180,
+    "endTime": 700676,
+    "duration": 2496,
+    "text": "and requiring institutions"
+  },
+  {
+    "startTime": 700700,
+    "endTime": 703780,
+    "duration": 3080,
+    "text": "like banks, our governments,\nour corporations,"
+  },
+  {
+    "startTime": 705180,
+    "endTime": 709556,
+    "duration": 4376,
+    "text": "we can actually harness\nall of that collective uncertainty"
+  },
+  {
+    "startTime": 709580,
+    "endTime": 715180,
+    "duration": 5600,
+    "text": "and use it to collaborate and exchange\nmore and faster and more open."
+  },
+  {
+    "startTime": 716620,
+    "endTime": 718676,
+    "duration": 2056,
+    "text": "Now, I don't want you\nto get the impression"
+  },
+  {
+    "startTime": 718700,
+    "endTime": 721076,
+    "duration": 2376,
+    "text": "that the blockchain\nis the solution to everything,"
+  },
+  {
+    "startTime": 721100,
+    "endTime": 726020,
+    "duration": 4920,
+    "text": "even though the media has said\nthat it's going to end world poverty,"
+  },
+  {
+    "startTime": 727660,
+    "endTime": 730396,
+    "duration": 2736,
+    "text": "it's also going to solve\nthe counterfeit drug problem"
+  },
+  {
+    "startTime": 730420,
+    "endTime": 732620,
+    "duration": 2200,
+    "text": "and potentially save the rainforest."
+  },
+  {
+    "startTime": 734140,
+    "endTime": 738116,
+    "duration": 3976,
+    "text": "The truth is, this technology\nis in its infancy,"
+  },
+  {
+    "startTime": 738140,
+    "endTime": 741356,
+    "duration": 3216,
+    "text": "and we're going to need to see\na lot of experiments take place"
+  },
+  {
+    "startTime": 741380,
+    "endTime": 742796,
+    "duration": 1416,
+    "text": "and probably fail"
+  },
+  {
+    "startTime": 742820,
+    "endTime": 746356,
+    "duration": 3536,
+    "text": "before we truly understand\nall of the use cases"
+  },
+  {
+    "startTime": 746380,
+    "endTime": 747580,
+    "duration": 1200,
+    "text": "for our economy."
+  },
+  {
+    "startTime": 749060,
+    "endTime": 751236,
+    "duration": 2176,
+    "text": "But there are tons of people\nworking on this,"
+  },
+  {
+    "startTime": 751260,
+    "endTime": 752956,
+    "duration": 1696,
+    "text": "from financial institutions"
+  },
+  {
+    "startTime": 752980,
+    "endTime": 756140,
+    "duration": 3160,
+    "text": "to technology companies,\nstart-ups and universities."
+  },
+  {
+    "startTime": 756940,
+    "endTime": 761876,
+    "duration": 4936,
+    "text": "And one of the reasons is\nthat it's not just an economic evolution."
+  },
+  {
+    "startTime": 761900,
+    "endTime": 765620,
+    "duration": 3720,
+    "text": "It's also an innovation\nin computer science."
+  },
+  {
+    "startTime": 769180,
+    "endTime": 772636,
+    "duration": 3456,
+    "text": "Blockchains give us\nthe technological capability"
+  },
+  {
+    "startTime": 772660,
+    "endTime": 776236,
+    "duration": 3576,
+    "text": "of creating a record of human exchange,"
+  },
+  {
+    "startTime": 776260,
+    "endTime": 777820,
+    "duration": 1560,
+    "text": "of exchange of currency,"
+  },
+  {
+    "startTime": 778540,
+    "endTime": 782236,
+    "duration": 3696,
+    "text": "of all kinds of digital\nand physical assets,"
+  },
+  {
+    "startTime": 782260,
+    "endTime": 784836,
+    "duration": 2576,
+    "text": "even of our own personal attributes,"
+  },
+  {
+    "startTime": 784860,
+    "endTime": 786180,
+    "duration": 1320,
+    "text": "in a totally new way."
+  },
+  {
+    "startTime": 787540,
+    "endTime": 788876,
+    "duration": 1336,
+    "text": "So in some ways,"
+  },
+  {
+    "startTime": 788900,
+    "endTime": 791876,
+    "duration": 2976,
+    "text": "they become a technological institution"
+  },
+  {
+    "startTime": 791900,
+    "endTime": 793676,
+    "duration": 1776,
+    "text": "that has a lot of the benefits"
+  },
+  {
+    "startTime": 793700,
+    "endTime": 796900,
+    "duration": 3200,
+    "text": "of the traditional institutions\nwe're used to using in society,"
+  },
+  {
+    "startTime": 798020,
+    "endTime": 800940,
+    "duration": 2920,
+    "text": "but it does this in a decentralized way."
+  },
+  {
+    "startTime": 802180,
+    "endTime": 805716,
+    "duration": 3536,
+    "text": "It does this by converting\na lot of our uncertainties"
+  },
+  {
+    "startTime": 805740,
+    "endTime": 806940,
+    "duration": 1200,
+    "text": "into certainties."
+  },
+  {
+    "startTime": 808180,
+    "endTime": 811716,
+    "duration": 3536,
+    "text": "So I think we need to start\npreparing ourselves,"
+  },
+  {
+    "startTime": 811740,
+    "endTime": 814276,
+    "duration": 2536,
+    "text": "because we are about to face a world"
+  },
+  {
+    "startTime": 814300,
+    "endTime": 817436,
+    "duration": 3136,
+    "text": "where distributed, autonomous institutions"
+  },
+  {
+    "startTime": 817460,
+    "endTime": 819460,
+    "duration": 2000,
+    "text": "have quite a significant role."
+  },
+  {
+    "startTime": 820420,
+    "endTime": 821636,
+    "duration": 1216,
+    "text": "Thank you."
+  },
+  {
+    "startTime": 821660,
+    "endTime": 824020,
+    "duration": 2360,
+    "text": "(Applause)"
+  },
+  {
+    "startTime": 830220,
+    "endTime": 831887,
+    "duration": 1667,
+    "text": "Bruno Giussani: Thank you, Bettina."
+  },
+  {
+    "startTime": 832700,
+    "endTime": 836396,
+    "duration": 3696,
+    "text": "I think I understood that it's coming,"
+  },
+  {
+    "startTime": 836420,
+    "endTime": 838316,
+    "duration": 1896,
+    "text": "it offers a lot of potential,"
+  },
+  {
+    "startTime": 838340,
+    "endTime": 840516,
+    "duration": 2176,
+    "text": "and it's complex."
+  },
+  {
+    "startTime": 840540,
+    "endTime": 845620,
+    "duration": 5080,
+    "text": "What is your estimate\nfor the rate of adoption?"
+  },
+  {
+    "startTime": 846940,
+    "endTime": 849556,
+    "duration": 2616,
+    "text": "Bettina Warburg: I think\nthat's a really good question."
+  },
+  {
+    "startTime": 849580,
+    "endTime": 850996,
+    "duration": 1416,
+    "text": "My lab is pretty much focused"
+  },
+  {
+    "startTime": 851020,
+    "endTime": 854476,
+    "duration": 3456,
+    "text": "on going the enterprise\nand government route first,"
+  },
+  {
+    "startTime": 854500,
+    "endTime": 858036,
+    "duration": 3536,
+    "text": "because in reality,\nblockchain is a complex technology."
+  },
+  {
+    "startTime": 858060,
+    "endTime": 860836,
+    "duration": 2776,
+    "text": "How many of you actually understand\nhow the internet works?"
+  },
+  {
+    "startTime": 860860,
+    "endTime": 862516,
+    "duration": 1656,
+    "text": "But you use it every day,"
+  },
+  {
+    "startTime": 862540,
+    "endTime": 866316,
+    "duration": 3776,
+    "text": "so I think we're sort of facing\nthe same John Sculley idea"
+  },
+  {
+    "startTime": 866340,
+    "endTime": 869996,
+    "duration": 3656,
+    "text": "of technology should either be\ninvisible or beautiful,"
+  },
+  {
+    "startTime": 870020,
+    "endTime": 873876,
+    "duration": 3856,
+    "text": "and blockchain is kind of\nneither of those things right now,"
+  },
+  {
+    "startTime": 873900,
+    "endTime": 877876,
+    "duration": 3976,
+    "text": "so it's better suited\nfor either really early adopters"
+  },
+  {
+    "startTime": 877900,
+    "endTime": 880116,
+    "duration": 2216,
+    "text": "who kind of get it and can tinker around"
+  },
+  {
+    "startTime": 880140,
+    "endTime": 883116,
+    "duration": 2976,
+    "text": "or for finding those best use cases"
+  },
+  {
+    "startTime": 883140,
+    "endTime": 886316,
+    "duration": 3176,
+    "text": "like identity or asset tracking\nor smart contracts"
+  },
+  {
+    "startTime": 886340,
+    "endTime": 890356,
+    "duration": 4016,
+    "text": "that can be used at that level\nof an enterprise or government."
+  },
+  {
+    "startTime": 890380,
+    "endTime": 892285,
+    "duration": 1905,
+    "text": "BG: Thank you. Thanks for coming to TED."
+  },
+  {
+    "startTime": 892309,
+    "endTime": 893516,
+    "duration": 1207,
+    "text": "BW: Thanks."
+  },
+  {
+    "startTime": 893540,
+    "endTime": 895940,
+    "duration": 2400,
+    "text": "(Applause)"
+  }
+]

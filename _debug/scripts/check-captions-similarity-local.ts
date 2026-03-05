@@ -1,69 +1,50 @@
-import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
+import { readFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { CaptionsSimilarityService } from "../../src/modules/scrapers/video-entries/captions-similarity-service.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/video-entries/caption-clean-up.service.js";
 import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video-entries/process-auto-captions.service.js";
 import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video-entries/process-manual-captions.service.js";
-import { writeFileSync, mkdirSync } from "fs";
 
 const main = async () => {
   const videoId = process.argv[2];
 
   if (!videoId) {
     console.error("Please provide a video ID as the first argument.");
-    console.log("Usage: npx tsx _debug/scripts/check-captions-similarity.ts <VIDEO_ID>");
+    console.log("Usage: npx tsx _debug/scripts/check-captions-similarity-local.ts <VIDEO_ID>");
     process.exit(1);
   }
 
-  const logger = new Logger({ context: "check-similarity", category: "debug" });
-  const ytDlpClient = new YtDlpClient(logger);
-  const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient);
+  const logger = new Logger({ context: "check-similarity-local", category: "debug" });
   const similarityService = new CaptionsSimilarityService(logger);
   const captionCleanUpService = new CaptionCleanUpService();
   const processAutoCaptionsService = new ProcessAutoCaptionsService(logger, captionCleanUpService);
   const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
 
-  console.log(`Fetching captions for video: ${videoId}`);
-  const result = await youtubeApiGetVideo.getVideo(videoId);
+  console.log(`Reading local captions for video: ${videoId}`);
+  let rawAuto, rawManual;
 
-  if (!result.ok) {
-    console.error("Failed to fetch video:", result.error);
+  try {
+    rawAuto = JSON.parse(readFileSync(`_debug/captions/${videoId}-raw-auto.json`, "utf8"));
+    rawManual = JSON.parse(readFileSync(`_debug/captions/${videoId}-raw-manual.json`, "utf8"));
+  } catch (error: any) {
+    console.error(`Failed to read local caption files for ${videoId}:`, error.message);
     return;
   }
 
-  const video = result.value;
+  console.log(`Auto Captions: ${rawAuto.length} segments`);
+  console.log(`Manual Captions: ${rawManual.length} segments`);
 
-  const hasAuto = video.autoCaptions && video.autoCaptions.length > 0;
-  const hasManual = video.manualCaptions && video.manualCaptions.length > 0;
-
-  console.log(`Auto Captions: ${hasAuto ? video.autoCaptions!.length + " segments" : "None"}`);
-  console.log(`Manual Captions: ${hasManual ? video.manualCaptions!.length + " segments" : "None"}`);
-
-  if (!hasAuto || !hasManual) {
-    console.log("Cannot compare. Video must have both auto and manual captions to check similarity.");
-    return;
-  }
-
-  mkdirSync("_debug/captions", { recursive: true });
-
-  writeFileSync(`_debug/captions/${videoId}-raw-auto.json`, JSON.stringify(video.autoCaptions, null, 2));
-  writeFileSync(`_debug/captions/${videoId}-raw-manual.json`, JSON.stringify(video.manualCaptions, null, 2));
-
-  const autoResult = await processAutoCaptionsService.process(video.autoCaptions!);
+  const autoResult = await processAutoCaptionsService.process(rawAuto);
   if (!autoResult.ok) {
     console.log(`Auto captions processing failed: ${autoResult.error.type}`);
     return;
   }
 
-  const manualResult = await processManualCaptionsService.process(video.manualCaptions!);
+  const manualResult = await processManualCaptionsService.process(rawManual);
   if (!manualResult.ok) {
     console.log(`Manual captions processing failed: ${manualResult.error.type}`);
     return;
   }
-
-  writeFileSync(`_debug/captions/${videoId}-processed-auto.json`, JSON.stringify(autoResult.value, null, 2));
-  writeFileSync(`_debug/captions/${videoId}-processed-manual.json`, JSON.stringify(manualResult.value, null, 2));
 
   const similarityResult = await similarityService.calculateSimilarity({
     autoCaptions: autoResult.value,
@@ -81,7 +62,7 @@ const main = async () => {
   console.log(`Manual Word Count: ${manualWordCount}`);
   console.log(`Auto Token Count: ${similarityResult.autoTokenCount}`);
   console.log(`Manual Token Count: ${similarityResult.manualTokenCount}`);
-  console.log(`Similarity Score: ${(similarityResult.score * 100).toFixed(2)}%`);
+  console.log(`Similarity Score: ${similarityResult.score} | ${(similarityResult.score * 100).toFixed(2)}%`);
 
   const formatToken = (t: any) => {
     const date = new Date(t.startTime);

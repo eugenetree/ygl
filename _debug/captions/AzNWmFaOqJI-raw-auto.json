@@ -1,0 +1,7988 @@
+[
+  {
+    "startTime": 9800,
+    "endTime": 13960,
+    "duration": 4160,
+    "text": "um welcome to authors at Google and"
+  },
+  {
+    "startTime": 11759,
+    "endTime": 15639,
+    "duration": 3880,
+    "text": "welcome to Alex Bellos uh I don't know"
+  },
+  {
+    "startTime": 13960,
+    "endTime": 17840,
+    "duration": 3880,
+    "text": "if any of you saw his earlier talk"
+  },
+  {
+    "startTime": 15639,
+    "endTime": 19520,
+    "duration": 3881,
+    "text": "couple of years ago uh around his uh"
+  },
+  {
+    "startTime": 17840,
+    "endTime": 22199,
+    "duration": 4359,
+    "text": "first book adventures in numberland"
+  },
+  {
+    "startTime": 19520,
+    "endTime": 23800,
+    "duration": 4280,
+    "text": "which was a huge uh hit and on a"
+  },
+  {
+    "startTime": 22199,
+    "endTime": 27119,
+    "duration": 4920,
+    "text": "personal basis it was it was a huge hit"
+  },
+  {
+    "startTime": 23800,
+    "endTime": 28439,
+    "duration": 4639,
+    "text": "for me because um I my 10-year-old son"
+  },
+  {
+    "startTime": 27119,
+    "endTime": 30519,
+    "duration": 3400,
+    "text": "at the time I couldn't get him to read"
+  },
+  {
+    "startTime": 28439,
+    "endTime": 32160,
+    "duration": 3721,
+    "text": "any books at all and in desperation we"
+  },
+  {
+    "startTime": 30519,
+    "endTime": 33960,
+    "duration": 3441,
+    "text": "were on holiday and I kind of handed him"
+  },
+  {
+    "startTime": 32160,
+    "endTime": 35879,
+    "duration": 3719,
+    "text": "adventures in numberland and said have a"
+  },
+  {
+    "startTime": 33960,
+    "endTime": 37239,
+    "duration": 3279,
+    "text": "look at this and he quickly became"
+  },
+  {
+    "startTime": 35879,
+    "endTime": 39399,
+    "duration": 3520,
+    "text": "extremely hooked on it and spent the"
+  },
+  {
+    "startTime": 37239,
+    "endTime": 42239,
+    "duration": 5000,
+    "text": "entire holiday going"
+  },
+  {
+    "startTime": 39399,
+    "endTime": 44399,
+    "duration": 5000,
+    "text": "yanan tea which I'm sure you'll know is"
+  },
+  {
+    "startTime": 42239,
+    "endTime": 47039,
+    "duration": 4800,
+    "text": "the ancient English way of counting"
+  },
+  {
+    "startTime": 44399,
+    "endTime": 48840,
+    "duration": 4441,
+    "text": "sheep and when you get to 15 it's bum"
+  },
+  {
+    "startTime": 47039,
+    "endTime": 51120,
+    "duration": 4081,
+    "text": "fit I think I'm right in saying and he"
+  },
+  {
+    "startTime": 48840,
+    "endTime": 54399,
+    "duration": 5559,
+    "text": "spent the entire holiday talking about"
+  },
+  {
+    "startTime": 51120,
+    "endTime": 55800,
+    "duration": 4680,
+    "text": "bum fit uh so it sort of both hooked him"
+  },
+  {
+    "startTime": 54399,
+    "endTime": 57640,
+    "duration": 3241,
+    "text": "an interest in maths and give him a"
+  },
+  {
+    "startTime": 55800,
+    "endTime": 60760,
+    "duration": 4960,
+    "text": "license to use bad language so was kind"
+  },
+  {
+    "startTime": 57640,
+    "endTime": 62879,
+    "duration": 5239,
+    "text": "of perfect so um the new book is Alex"
+  },
+  {
+    "startTime": 60760,
+    "endTime": 64680,
+    "duration": 3920,
+    "text": "Through the Looking Glass um Alex is"
+  },
+  {
+    "startTime": 62879,
+    "endTime": 66880,
+    "duration": 4001,
+    "text": "going to talk for what half an hour or"
+  },
+  {
+    "startTime": 64680,
+    "endTime": 68200,
+    "duration": 3520,
+    "text": "so and then take some questions probably"
+  },
+  {
+    "startTime": 66880,
+    "endTime": 69600,
+    "duration": 2720,
+    "text": "a little bit more than that but because"
+  },
+  {
+    "startTime": 68200,
+    "endTime": 70640,
+    "duration": 2440,
+    "text": "I want to be very informal so if there's"
+  },
+  {
+    "startTime": 69600,
+    "endTime": 72320,
+    "duration": 2720,
+    "text": "anything you don't understand or you"
+  },
+  {
+    "startTime": 70640,
+    "endTime": 74560,
+    "duration": 3920,
+    "text": "want more just shout out put your hand"
+  },
+  {
+    "startTime": 72320,
+    "endTime": 76520,
+    "duration": 4200,
+    "text": "up so let's kind of have the kind of Q&A"
+  },
+  {
+    "startTime": 74560,
+    "endTime": 78759,
+    "duration": 4199,
+    "text": "as we go I think because because we're a"
+  },
+  {
+    "startTime": 76520,
+    "endTime": 82320,
+    "duration": 5800,
+    "text": "little bit delayed perfect I'm gonna"
+  },
+  {
+    "startTime": 78759,
+    "endTime": 84600,
+    "duration": 5841,
+    "text": "have to you well I'll hand over St you"
+  },
+  {
+    "startTime": 82320,
+    "endTime": 87119,
+    "duration": 4799,
+    "text": "go cheers I've tried to kind of because"
+  },
+  {
+    "startTime": 84600,
+    "endTime": 89960,
+    "duration": 5360,
+    "text": "this is obviously usually I I'm used to"
+  },
+  {
+    "startTime": 87119,
+    "endTime": 92320,
+    "duration": 5201,
+    "text": "giving talks to um book festivals where"
+  },
+  {
+    "startTime": 89960,
+    "endTime": 94040,
+    "duration": 4080,
+    "text": "the kind of mathematical numeracy is"
+  },
+  {
+    "startTime": 92320,
+    "endTime": 96240,
+    "duration": 3920,
+    "text": "going to be a lot lower than you guys"
+  },
+  {
+    "startTime": 94040,
+    "endTime": 99280,
+    "duration": 5240,
+    "text": "are here so I might whip through it but"
+  },
+  {
+    "startTime": 96240,
+    "endTime": 101600,
+    "duration": 5360,
+    "text": "you might have slightly more um you know"
+  },
+  {
+    "startTime": 99280,
+    "endTime": 106320,
+    "duration": 7040,
+    "text": "hbr questions so thank you very much"
+  },
+  {
+    "startTime": 101600,
+    "endTime": 107640,
+    "duration": 6040,
+    "text": "Peter I Alex Bellos this is me um oh my"
+  },
+  {
+    "startTime": 106320,
+    "endTime": 109520,
+    "duration": 3200,
+    "text": "God I just pressed something and it"
+  },
+  {
+    "startTime": 107640,
+    "endTime": 112880,
+    "duration": 5240,
+    "text": "didn't work okay"
+  },
+  {
+    "startTime": 109520,
+    "endTime": 115719,
+    "duration": 6199,
+    "text": "that's yeah that's me with a weird stain"
+  },
+  {
+    "startTime": 112880,
+    "endTime": 118280,
+    "duration": 5400,
+    "text": "on my red jumper I don't know why I was"
+  },
+  {
+    "startTime": 115719,
+    "endTime": 120079,
+    "duration": 4360,
+    "text": "given that and this is my new book Alex"
+  },
+  {
+    "startTime": 118280,
+    "endTime": 121840,
+    "duration": 3560,
+    "text": "Through the Looking Glass which sounds"
+  },
+  {
+    "startTime": 120079,
+    "endTime": 124680,
+    "duration": 4601,
+    "text": "very much like it's a sequel to Alex's"
+  },
+  {
+    "startTime": 121840,
+    "endTime": 127880,
+    "duration": 6040,
+    "text": "adventures in numberland but it isn't"
+  },
+  {
+    "startTime": 124680,
+    "endTime": 128840,
+    "duration": 4160,
+    "text": "really both can be read um separately"
+  },
+  {
+    "startTime": 127880,
+    "endTime": 130720,
+    "duration": 2840,
+    "text": "you don't need to have read the first"
+  },
+  {
+    "startTime": 128840,
+    "endTime": 132920,
+    "duration": 4080,
+    "text": "one to read this if there is a"
+  },
+  {
+    "startTime": 130720,
+    "endTime": 134760,
+    "duration": 4040,
+    "text": "difference the first one was just an"
+  },
+  {
+    "startTime": 132920,
+    "endTime": 136640,
+    "duration": 3720,
+    "text": "exploration about abstraction and a"
+  },
+  {
+    "startTime": 134760,
+    "endTime": 138640,
+    "duration": 3880,
+    "text": "mathematical mathematical abstraction"
+  },
+  {
+    "startTime": 136640,
+    "endTime": 141000,
+    "duration": 4360,
+    "text": "and what we get when we use it this is a"
+  },
+  {
+    "startTime": 138640,
+    "endTime": 142480,
+    "duration": 3840,
+    "text": "little bit more kind of Applied it's"
+  },
+  {
+    "startTime": 141000,
+    "endTime": 145040,
+    "duration": 4040,
+    "text": "about using"
+  },
+  {
+    "startTime": 142480,
+    "endTime": 146480,
+    "duration": 4000,
+    "text": "abstraction um to learn about the world"
+  },
+  {
+    "startTime": 145040,
+    "endTime": 148640,
+    "duration": 3600,
+    "text": "mathematics being the language that we"
+  },
+  {
+    "startTime": 146480,
+    "endTime": 149920,
+    "duration": 3440,
+    "text": "used to talk about the world and also"
+  },
+  {
+    "startTime": 148640,
+    "endTime": 151560,
+    "duration": 2920,
+    "text": "you know how life reflects numbers"
+  },
+  {
+    "startTime": 149920,
+    "endTime": 153720,
+    "duration": 3800,
+    "text": "numbers reflect life I also wanted to"
+  },
+  {
+    "startTime": 151560,
+    "endTime": 155760,
+    "duration": 4200,
+    "text": "get into kind of psychology of numbers"
+  },
+  {
+    "startTime": 153720,
+    "endTime": 157959,
+    "duration": 4239,
+    "text": "and and interesting psychological"
+  },
+  {
+    "startTime": 155760,
+    "endTime": 161280,
+    "duration": 5520,
+    "text": "responses that we have to numbers which"
+  },
+  {
+    "startTime": 157959,
+    "endTime": 165480,
+    "duration": 7521,
+    "text": "are quite surprising I think and"
+  },
+  {
+    "startTime": 161280,
+    "endTime": 168159,
+    "duration": 6879,
+    "text": "definitely under researched now how do"
+  },
+  {
+    "startTime": 165480,
+    "endTime": 169959,
+    "duration": 4479,
+    "text": "you write a book on maths and numbers"
+  },
+  {
+    "startTime": 168159,
+    "endTime": 172800,
+    "duration": 4641,
+    "text": "and make it interesting it's quite"
+  },
+  {
+    "startTime": 169959,
+    "endTime": 176239,
+    "duration": 6280,
+    "text": "difficult um because the nature of the"
+  },
+  {
+    "startTime": 172800,
+    "endTime": 179920,
+    "duration": 7120,
+    "text": "subject is dry and sometimes you know"
+  },
+  {
+    "startTime": 176239,
+    "endTime": 182480,
+    "duration": 6241,
+    "text": "it's conceptually challenging so I I've"
+  },
+  {
+    "startTime": 179920,
+    "endTime": 184200,
+    "duration": 4280,
+    "text": "got a degree in math math and philosophy"
+  },
+  {
+    "startTime": 182480,
+    "endTime": 185599,
+    "duration": 3119,
+    "text": "and then I became a journalist so my"
+  },
+  {
+    "startTime": 184200,
+    "endTime": 187280,
+    "duration": 3080,
+    "text": "Approach is always to kind of tell"
+  },
+  {
+    "startTime": 185599,
+    "endTime": 188959,
+    "duration": 3360,
+    "text": "stories and I think that by telling"
+  },
+  {
+    "startTime": 187280,
+    "endTime": 192040,
+    "duration": 4760,
+    "text": "stories if you can interest someone in"
+  },
+  {
+    "startTime": 188959,
+    "endTime": 193840,
+    "duration": 4881,
+    "text": "the story then you can then you don't"
+  },
+  {
+    "startTime": 192040,
+    "endTime": 195280,
+    "duration": 3240,
+    "text": "need to say oh by the way I got to teach"
+  },
+  {
+    "startTime": 193840,
+    "endTime": 199599,
+    "duration": 5759,
+    "text": "you some math you just like learn the"
+  },
+  {
+    "startTime": 195280,
+    "endTime": 202120,
+    "duration": 6840,
+    "text": "maths on on the way and how do you you"
+  },
+  {
+    "startTime": 199599,
+    "endTime": 203799,
+    "duration": 4200,
+    "text": "know where do you look for stories well"
+  },
+  {
+    "startTime": 202120,
+    "endTime": 206680,
+    "duration": 4560,
+    "text": "the kind of classic place to look for"
+  },
+  {
+    "startTime": 203799,
+    "endTime": 210080,
+    "duration": 6281,
+    "text": "story is in of in oneself and so"
+  },
+  {
+    "startTime": 206680,
+    "endTime": 212599,
+    "duration": 5919,
+    "text": "actually my story um as a popular of"
+  },
+  {
+    "startTime": 210080,
+    "endTime": 215560,
+    "duration": 5480,
+    "text": "mathematics is really where this book"
+  },
+  {
+    "startTime": 212599,
+    "endTime": 217120,
+    "duration": 4521,
+    "text": "begins and I have to say I don't think"
+  },
+  {
+    "startTime": 215560,
+    "endTime": 219439,
+    "duration": 3879,
+    "text": "it happened at my talk at Google last"
+  },
+  {
+    "startTime": 217120,
+    "endTime": 221599,
+    "duration": 4479,
+    "text": "time but pretty much every talk that I"
+  },
+  {
+    "startTime": 219439,
+    "endTime": 222640,
+    "duration": 3201,
+    "text": "did when the book first book came out I"
+  },
+  {
+    "startTime": 221599,
+    "endTime": 224200,
+    "duration": 2601,
+    "text": "would give what I thought was you know"
+  },
+  {
+    "startTime": 222640,
+    "endTime": 226360,
+    "duration": 3720,
+    "text": "kind of fantastically fascinating talk"
+  },
+  {
+    "startTime": 224200,
+    "endTime": 227840,
+    "duration": 3640,
+    "text": "about math numbers and someone would put"
+  },
+  {
+    "startTime": 226360,
+    "endTime": 230640,
+    "duration": 4280,
+    "text": "their hand up at the end of it and I'd"
+  },
+  {
+    "startTime": 227840,
+    "endTime": 231840,
+    "duration": 4000,
+    "text": "say yes sir and they just say so what's"
+  },
+  {
+    "startTime": 230640,
+    "endTime": 233959,
+    "duration": 3319,
+    "text": "your favorite"
+  },
+  {
+    "startTime": 231840,
+    "endTime": 235959,
+    "duration": 4119,
+    "text": "number and I can just remember just"
+  },
+  {
+    "startTime": 233959,
+    "endTime": 237439,
+    "duration": 3480,
+    "text": "thinking have you learned nothing what"
+  },
+  {
+    "startTime": 235959,
+    "endTime": 239360,
+    "duration": 3401,
+    "text": "who has a favorite number you know I'm a"
+  },
+  {
+    "startTime": 237439,
+    "endTime": 240799,
+    "duration": 3360,
+    "text": "grown-up you're a grown-up and we just"
+  },
+  {
+    "startTime": 239360,
+    "endTime": 243560,
+    "duration": 4200,
+    "text": "think they kind of teasing me it was a"
+  },
+  {
+    "startTime": 240799,
+    "endTime": 245319,
+    "duration": 4520,
+    "text": "way of belittling the subject on myself"
+  },
+  {
+    "startTime": 243560,
+    "endTime": 247200,
+    "duration": 3640,
+    "text": "until I kept on being asked this"
+  },
+  {
+    "startTime": 245319,
+    "endTime": 249560,
+    "duration": 4241,
+    "text": "question by you know I would give talks"
+  },
+  {
+    "startTime": 247200,
+    "endTime": 251799,
+    "duration": 4599,
+    "text": "at universities um you know secondary"
+  },
+  {
+    "startTime": 249560,
+    "endTime": 254480,
+    "duration": 4920,
+    "text": "schools at books festivals people would"
+  },
+  {
+    "startTime": 251799,
+    "endTime": 256320,
+    "duration": 4521,
+    "text": "always asking it so once I just said oh"
+  },
+  {
+    "startTime": 254480,
+    "endTime": 259199,
+    "duration": 4719,
+    "text": "I don't know what's your favorite number"
+  },
+  {
+    "startTime": 256320,
+    "endTime": 262520,
+    "duration": 6200,
+    "text": "but rather than"
+  },
+  {
+    "startTime": 259199,
+    "endTime": 264600,
+    "duration": 5401,
+    "text": "saying they went 12 you know gave me a"
+  },
+  {
+    "startTime": 262520,
+    "endTime": 266360,
+    "duration": 3840,
+    "text": "considered response and I just was like"
+  },
+  {
+    "startTime": 264600,
+    "endTime": 267880,
+    "duration": 3280,
+    "text": "what and then the person next to them"
+  },
+  {
+    "startTime": 266360,
+    "endTime": 270000,
+    "duration": 3640,
+    "text": "said oh no my favorite number is you"
+  },
+  {
+    "startTime": 267880,
+    "endTime": 272680,
+    "duration": 4800,
+    "text": "know 13 I said well who he has got"
+  },
+  {
+    "startTime": 270000,
+    "endTime": 275759,
+    "duration": 5759,
+    "text": "favorite numbers and at least half the"
+  },
+  {
+    "startTime": 272680,
+    "endTime": 277680,
+    "duration": 5000,
+    "text": "audience of grown-ups put their hands up"
+  },
+  {
+    "startTime": 275759,
+    "endTime": 279360,
+    "duration": 3601,
+    "text": "and this happened a few more times so I"
+  },
+  {
+    "startTime": 277680,
+    "endTime": 280600,
+    "duration": 2920,
+    "text": "thought well this is interesting from"
+  },
+  {
+    "startTime": 279360,
+    "endTime": 284240,
+    "duration": 4880,
+    "text": "being something that I thought was"
+  },
+  {
+    "startTime": 280600,
+    "endTime": 286919,
+    "duration": 6319,
+    "text": "completely idiotic I thought well if"
+  },
+  {
+    "startTime": 284240,
+    "endTime": 290479,
+    "duration": 6239,
+    "text": "grownup people who are literate and"
+  },
+  {
+    "startTime": 286919,
+    "endTime": 292199,
+    "duration": 5280,
+    "text": "enumerate have serious well thought out"
+  },
+  {
+    "startTime": 290479,
+    "endTime": 293759,
+    "duration": 3280,
+    "text": "emotional reactions to numbers this is"
+  },
+  {
+    "startTime": 292199,
+    "endTime": 297880,
+    "duration": 5681,
+    "text": "interesting and why don't I try and"
+  },
+  {
+    "startTime": 293759,
+    "endTime": 300880,
+    "duration": 7121,
+    "text": "research it and so what I did is I um"
+  },
+  {
+    "startTime": 297880,
+    "endTime": 303880,
+    "duration": 6000,
+    "text": "thought I would"
+  },
+  {
+    "startTime": 300880,
+    "endTime": 305240,
+    "duration": 4360,
+    "text": "undergo um a survey to try and find the"
+  },
+  {
+    "startTime": 303880,
+    "endTime": 306960,
+    "duration": 3080,
+    "text": "world's favorite number but essentially"
+  },
+  {
+    "startTime": 305240,
+    "endTime": 309960,
+    "duration": 4720,
+    "text": "it was to try and quantify emotional"
+  },
+  {
+    "startTime": 306960,
+    "endTime": 313039,
+    "duration": 6079,
+    "text": "responses to numbers so I set up this"
+  },
+  {
+    "startTime": 309960,
+    "endTime": 314720,
+    "duration": 4760,
+    "text": "website here favorit number.net I"
+  },
+  {
+    "startTime": 313039,
+    "endTime": 317560,
+    "duration": 4521,
+    "text": "realized it was going to have to be"
+  },
+  {
+    "startTime": 314720,
+    "endTime": 320039,
+    "duration": 5319,
+    "text": "International so I also bought this one"
+  },
+  {
+    "startTime": 317560,
+    "endTime": 323280,
+    "duration": 5720,
+    "text": "favorite number.net just so no one was"
+  },
+  {
+    "startTime": 320039,
+    "endTime": 324680,
+    "duration": 4641,
+    "text": "excluded and within a few weeks you at"
+  },
+  {
+    "startTime": 323280,
+    "endTime": 326479,
+    "duration": 3199,
+    "text": "that time four years ago I maybe had"
+  },
+  {
+    "startTime": 324680,
+    "endTime": 328160,
+    "duration": 3480,
+    "text": "only a few thousand followers on Twitter"
+  },
+  {
+    "startTime": 326479,
+    "endTime": 330240,
+    "duration": 3761,
+    "text": "I just put it on Twitter you know what's"
+  },
+  {
+    "startTime": 328160,
+    "endTime": 333520,
+    "duration": 5360,
+    "text": "your favorite number join my ser"
+  },
+  {
+    "startTime": 330240,
+    "endTime": 335880,
+    "duration": 5640,
+    "text": "within a few weeks um had more than"
+  },
+  {
+    "startTime": 333520,
+    "endTime": 337800,
+    "duration": 4280,
+    "text": "30,000 people from around the world had"
+  },
+  {
+    "startTime": 335880,
+    "endTime": 339240,
+    "duration": 3360,
+    "text": "replied and so this was already"
+  },
+  {
+    "startTime": 337800,
+    "endTime": 341319,
+    "duration": 3519,
+    "text": "vindicating this idea this is something"
+  },
+  {
+    "startTime": 339240,
+    "endTime": 344280,
+    "duration": 5040,
+    "text": "that serious people feel passionately"
+  },
+  {
+    "startTime": 341319,
+    "endTime": 345960,
+    "duration": 4641,
+    "text": "about now what were the results the"
+  },
+  {
+    "startTime": 344280,
+    "endTime": 348680,
+    "duration": 4400,
+    "text": "results"
+  },
+  {
+    "startTime": 345960,
+    "endTime": 354319,
+    "duration": 8359,
+    "text": "were this"
+  },
+  {
+    "startTime": 348680,
+    "endTime": 357560,
+    "duration": 8880,
+    "text": "73845 13962 11 which Metro said was the"
+  },
+  {
+    "startTime": 354319,
+    "endTime": 360039,
+    "duration": 5720,
+    "text": "most confusing top 10 list ever written"
+  },
+  {
+    "startTime": 357560,
+    "endTime": 361680,
+    "duration": 4120,
+    "text": "which it is now if you go back to favor"
+  },
+  {
+    "startTime": 360039,
+    "endTime": 363440,
+    "duration": 3401,
+    "text": "number.net I have all the results up"
+  },
+  {
+    "startTime": 361680,
+    "endTime": 365199,
+    "duration": 3519,
+    "text": "there there's a big Excel file of all"
+  },
+  {
+    "startTime": 363440,
+    "endTime": 366800,
+    "duration": 3360,
+    "text": "there's more than a thousand individual"
+  },
+  {
+    "startTime": 365199,
+    "endTime": 369240,
+    "duration": 4041,
+    "text": "numbers and all their frequencies and"
+  },
+  {
+    "startTime": 366800,
+    "endTime": 371520,
+    "duration": 4720,
+    "text": "you can get them there um if you are"
+  },
+  {
+    "startTime": 369240,
+    "endTime": 373120,
+    "duration": 3880,
+    "text": "interested to do sort of an analysis on"
+  },
+  {
+    "startTime": 371520,
+    "endTime": 374720,
+    "duration": 3200,
+    "text": "them if you you know have a statistical"
+  },
+  {
+    "startTime": 373120,
+    "endTime": 378880,
+    "duration": 5760,
+    "text": "mind but what was interesting is that"
+  },
+  {
+    "startTime": 374720,
+    "endTime": 382080,
+    "duration": 7360,
+    "text": "when I launched my um you know the"
+  },
+  {
+    "startTime": 378880,
+    "endTime": 383360,
+    "duration": 4480,
+    "text": "results it was an actual news story um"
+  },
+  {
+    "startTime": 382080,
+    "endTime": 386080,
+    "duration": 4000,
+    "text": "again showing that people are interested"
+  },
+  {
+    "startTime": 383360,
+    "endTime": 389800,
+    "duration": 6440,
+    "text": "in this stuff um the times it was a new"
+  },
+  {
+    "startTime": 386080,
+    "endTime": 392240,
+    "duration": 6160,
+    "text": "story in the times it was um a new in"
+  },
+  {
+    "startTime": 389800,
+    "endTime": 394280,
+    "duration": 4480,
+    "text": "the Daily Mail of all places but it also"
+  },
+  {
+    "startTime": 392240,
+    "endTime": 398479,
+    "duration": 6239,
+    "text": "started going around the world this is"
+  },
+  {
+    "startTime": 394280,
+    "endTime": 399960,
+    "duration": 5680,
+    "text": "um Glamour magazine in Paris and I don't"
+  },
+  {
+    "startTime": 398479,
+    "endTime": 401759,
+    "duration": 3280,
+    "text": "think I found one country that didn't"
+  },
+  {
+    "startTime": 399960,
+    "endTime": 404520,
+    "duration": 4560,
+    "text": "report it in some way just going to"
+  },
+  {
+    "startTime": 401759,
+    "endTime": 406280,
+    "duration": 4521,
+    "text": "mention a few of them Hungary Hungary"
+  },
+  {
+    "startTime": 404520,
+    "endTime": 408720,
+    "duration": 4200,
+    "text": "has a huge uh brilliant sort of"
+  },
+  {
+    "startTime": 406280,
+    "endTime": 410360,
+    "duration": 4080,
+    "text": "mathematical um tradition and per capita"
+  },
+  {
+    "startTime": 408720,
+    "endTime": 412720,
+    "duration": 4000,
+    "text": "I think there more hungarians enter this"
+  },
+  {
+    "startTime": 410360,
+    "endTime": 414360,
+    "duration": 4000,
+    "text": "story uh enter the survey than than any"
+  },
+  {
+    "startTime": 412720,
+    "endTime": 416639,
+    "duration": 3919,
+    "text": "other Nation so they were really"
+  },
+  {
+    "startTime": 414360,
+    "endTime": 419120,
+    "duration": 4760,
+    "text": "fascinated by it um obviously it was"
+  },
+  {
+    "startTime": 416639,
+    "endTime": 422599,
+    "duration": 5960,
+    "text": "nice Greek you know Greece being the"
+  },
+  {
+    "startTime": 419120,
+    "endTime": 424160,
+    "duration": 5040,
+    "text": "beginning of of Western thought um by"
+  },
+  {
+    "startTime": 422599,
+    "endTime": 426440,
+    "duration": 3841,
+    "text": "the time I got to India I was now a"
+  },
+  {
+    "startTime": 424160,
+    "endTime": 429479,
+    "duration": 5319,
+    "text": "Brazilian"
+  },
+  {
+    "startTime": 426440,
+    "endTime": 431039,
+    "duration": 4599,
+    "text": "mathematician um but India where there's"
+  },
+  {
+    "startTime": 429479,
+    "endTime": 432840,
+    "duration": 3361,
+    "text": "certain countries where mathematics and"
+  },
+  {
+    "startTime": 431039,
+    "endTime": 434599,
+    "duration": 3560,
+    "text": "the idea of doing arithmetic is really"
+  },
+  {
+    "startTime": 432840,
+    "endTime": 436280,
+    "duration": 3440,
+    "text": "an important part of national identity"
+  },
+  {
+    "startTime": 434599,
+    "endTime": 439599,
+    "duration": 5000,
+    "text": "and so India it was all over India all"
+  },
+  {
+    "startTime": 436280,
+    "endTime": 440560,
+    "duration": 4280,
+    "text": "the regional press in India um Vietnam"
+  },
+  {
+    "startTime": 439599,
+    "endTime": 442280,
+    "duration": 2681,
+    "text": "and now obviously I can't read"
+  },
+  {
+    "startTime": 440560,
+    "endTime": 443800,
+    "duration": 3240,
+    "text": "Vietnamese and it just became quite"
+  },
+  {
+    "startTime": 442280,
+    "endTime": 445240,
+    "duration": 2960,
+    "text": "interesting that what happens in the"
+  },
+  {
+    "startTime": 443800,
+    "endTime": 447319,
+    "duration": 3519,
+    "text": "different photo Archives of different"
+  },
+  {
+    "startTime": 445240,
+    "endTime": 449319,
+    "duration": 4079,
+    "text": "countries when you put in seven this is"
+  },
+  {
+    "startTime": 447319,
+    "endTime": 451080,
+    "duration": 3761,
+    "text": "what you get when you're in Vietnam and"
+  },
+  {
+    "startTime": 449319,
+    "endTime": 453960,
+    "duration": 4641,
+    "text": "when when you're in China this is what"
+  },
+  {
+    "startTime": 451080,
+    "endTime": 456720,
+    "duration": 5640,
+    "text": "you get"
+  },
+  {
+    "startTime": 453960,
+    "endTime": 459560,
+    "duration": 5600,
+    "text": "now so it was a new story but really"
+  },
+  {
+    "startTime": 456720,
+    "endTime": 461960,
+    "duration": 5240,
+    "text": "what is the you know the the moment that"
+  },
+  {
+    "startTime": 459560,
+    "endTime": 464120,
+    "duration": 4560,
+    "text": "you really know that it has touched the"
+  },
+  {
+    "startTime": 461960,
+    "endTime": 466120,
+    "duration": 4160,
+    "text": "public Consciousness it's become a real"
+  },
+  {
+    "startTime": 464120,
+    "endTime": 468919,
+    "duration": 4799,
+    "text": "new story it's"
+  },
+  {
+    "startTime": 466120,
+    "endTime": 471039,
+    "duration": 4919,
+    "text": "when your"
+  },
+  {
+    "startTime": 468919,
+    "endTime": 473759,
+    "duration": 4840,
+    "text": "question volume"
+  },
+  {
+    "startTime": 471039,
+    "endTime": 475960,
+    "duration": 4921,
+    "text": "please I must three days afterwards they"
+  },
+  {
+    "startTime": 473759,
+    "endTime": 478639,
+    "duration": 4880,
+    "text": "done a survey it was on news for you"
+  },
+  {
+    "startTime": 475960,
+    "endTime": 481599,
+    "duration": 5639,
+    "text": "favorite number favorite number yes Alex"
+  },
+  {
+    "startTime": 478639,
+    "endTime": 483440,
+    "duration": 4801,
+    "text": "BOS asked 44,000 people to submit their"
+  },
+  {
+    "startTime": 481599,
+    "endTime": 485479,
+    "duration": 3880,
+    "text": "favorite number there were 44,000 people"
+  },
+  {
+    "startTime": 483440,
+    "endTime": 487120,
+    "duration": 3680,
+    "text": "in the end but I only did the cleaning"
+  },
+  {
+    "startTime": 485479,
+    "endTime": 489000,
+    "duration": 3521,
+    "text": "of the data for"
+  },
+  {
+    "startTime": 487120,
+    "endTime": 492240,
+    "duration": 5120,
+    "text": "33,000"
+  },
+  {
+    "startTime": 489000,
+    "endTime": 495159,
+    "duration": 6159,
+    "text": " oh you miss the Nigel farage of"
+  },
+  {
+    "startTime": 492240,
+    "endTime": 497280,
+    "duration": 5040,
+    "text": "numbers go through the top 10 world's"
+  },
+  {
+    "startTime": 495159,
+    "endTime": 500960,
+    "duration": 5801,
+    "text": "favorite numbers"
+  },
+  {
+    "startTime": 497280,
+    "endTime": 503479,
+    "duration": 6199,
+    "text": "yeah the reason why this is"
+  },
+  {
+    "startTime": 500960,
+    "endTime": 505400,
+    "duration": 4440,
+    "text": "funny so number 10 what do you think"
+  },
+  {
+    "startTime": 503479,
+    "endTime": 508599,
+    "duration": 5120,
+    "text": "it's because"
+  },
+  {
+    "startTime": 505400,
+    "endTime": 509639,
+    "duration": 4239,
+    "text": "10 we actually do have feeling you know"
+  },
+  {
+    "startTime": 508599,
+    "endTime": 513399,
+    "duration": 4800,
+    "text": "things are only fun if there's an"
+  },
+  {
+    "startTime": 509639,
+    "endTime": 515440,
+    "duration": 5801,
+    "text": "element of um something serious about it"
+  },
+  {
+    "startTime": 513399,
+    "endTime": 518440,
+    "duration": 5041,
+    "text": "let just no at number 10 the 10th most"
+  },
+  {
+    "startTime": 515440,
+    "endTime": 521080,
+    "duration": 5640,
+    "text": "popular number is in fact"
+  },
+  {
+    "startTime": 518440,
+    "endTime": 526160,
+    "duration": 7720,
+    "text": "11 at nine that's like a mathematical"
+  },
+  {
+    "startTime": 521080,
+    "endTime": 528000,
+    "duration": 6920,
+    "text": "joke no 40 no 21 no at number nine is"
+  },
+  {
+    "startTime": 526160,
+    "endTime": 530600,
+    "duration": 4440,
+    "text": "the number two"
+  },
+  {
+    "startTime": 528000,
+    "endTime": 532160,
+    "duration": 4160,
+    "text": "two most popular number in eighth"
+  },
+  {
+    "startTime": 530600,
+    "endTime": 534680,
+    "duration": 4080,
+    "text": "position is"
+  },
+  {
+    "startTime": 532160,
+    "endTime": 536399,
+    "duration": 4239,
+    "text": "six at seven the seventh most popular"
+  },
+  {
+    "startTime": 534680,
+    "endTime": 539440,
+    "duration": 4760,
+    "text": "number is nine and the sixth most"
+  },
+  {
+    "startTime": 536399,
+    "endTime": 540700,
+    "duration": 4301,
+    "text": "popular number is 13 okay here's the top"
+  },
+  {
+    "startTime": 539440,
+    "endTime": 543440,
+    "duration": 4000,
+    "text": "top"
+  },
+  {
+    "startTime": 540700,
+    "endTime": 545800,
+    "duration": 5100,
+    "text": "[Music]"
+  },
+  {
+    "startTime": 543440,
+    "endTime": 547760,
+    "duration": 4320,
+    "text": "five this is going to be on channel four"
+  },
+  {
+    "startTime": 545800,
+    "endTime": 550040,
+    "duration": 4240,
+    "text": "for a whole"
+  },
+  {
+    "startTime": 547760,
+    "endTime": 551560,
+    "duration": 3800,
+    "text": "evening there'll be some Talking Heads"
+  },
+  {
+    "startTime": 550040,
+    "endTime": 553920,
+    "duration": 3880,
+    "text": "in a minute what do you think of six"
+  },
+  {
+    "startTime": 551560,
+    "endTime": 555560,
+    "duration": 4000,
+    "text": "yeah love it this was actually my idea"
+  },
+  {
+    "startTime": 553920,
+    "endTime": 556440,
+    "duration": 2520,
+    "text": "I've always like five cuz it's a working"
+  },
+  {
+    "startTime": 555560,
+    "endTime": 559240,
+    "duration": 3680,
+    "text": "class"
+  },
+  {
+    "startTime": 556440,
+    "endTime": 562000,
+    "duration": 5560,
+    "text": "number that's what I like about"
+  },
+  {
+    "startTime": 559240,
+    "endTime": 563160,
+    "duration": 3920,
+    "text": "five I think that three F me I mean when"
+  },
+  {
+    "startTime": 562000,
+    "endTime": 565240,
+    "duration": 3240,
+    "text": "I was first growing up I thought three"
+  },
+  {
+    "startTime": 563160,
+    "endTime": 568360,
+    "duration": 5200,
+    "text": "was a"
+  },
+  {
+    "startTime": 565240,
+    "endTime": 571320,
+    "duration": 6080,
+    "text": "magnificent I've started auditioning"
+  },
+  {
+    "startTime": 568360,
+    "endTime": 573399,
+    "duration": 5039,
+    "text": "sorry where am I but let's firstly"
+  },
+  {
+    "startTime": 571320,
+    "endTime": 578200,
+    "duration": 6880,
+    "text": "complete the top five number five is"
+  },
+  {
+    "startTime": 573399,
+    "endTime": 581440,
+    "duration": 8041,
+    "text": "five number four is four yes at number"
+  },
+  {
+    "startTime": 578200,
+    "endTime": 585399,
+    "duration": 7199,
+    "text": "three is eight oh at number"
+  },
+  {
+    "startTime": 581440,
+    "endTime": 587440,
+    "duration": 6000,
+    "text": "two one is three three the magic number"
+  },
+  {
+    "startTime": 585399,
+    "endTime": 589320,
+    "duration": 3921,
+    "text": "of course seven is the top one number"
+  },
+  {
+    "startTime": 587440,
+    "endTime": 591480,
+    "duration": 4040,
+    "text": "one okay it's interesting that everyone"
+  },
+  {
+    "startTime": 589320,
+    "endTime": 593959,
+    "duration": 4639,
+    "text": "laughed at five being five and four"
+  },
+  {
+    "startTime": 591480,
+    "endTime": 595200,
+    "duration": 3720,
+    "text": "being four because essentially we like"
+  },
+  {
+    "startTime": 593959,
+    "endTime": 596800,
+    "duration": 2841,
+    "text": "small numbers and the biggest numbers"
+  },
+  {
+    "startTime": 595200,
+    "endTime": 599720,
+    "duration": 4520,
+    "text": "get we like them least this is what the"
+  },
+  {
+    "startTime": 596800,
+    "endTime": 601839,
+    "duration": 5039,
+    "text": "survey says so a number should if there"
+  },
+  {
+    "startTime": 599720,
+    "endTime": 604120,
+    "duration": 4400,
+    "text": "are no other considerations punch more"
+  },
+  {
+    "startTime": 601839,
+    "endTime": 605800,
+    "duration": 3961,
+    "text": "or less exactly their numerical value so"
+  },
+  {
+    "startTime": 604120,
+    "endTime": 608640,
+    "duration": 4520,
+    "text": "those are almost the ones that are the"
+  },
+  {
+    "startTime": 605800,
+    "endTime": 610240,
+    "duration": 4440,
+    "text": "least funny or the least interesting um"
+  },
+  {
+    "startTime": 608640,
+    "endTime": 612200,
+    "duration": 3560,
+    "text": "and what happens and what you see is the"
+  },
+  {
+    "startTime": 610240,
+    "endTime": 616519,
+    "duration": 6279,
+    "text": "odd numbers and especially prime numbers"
+  },
+  {
+    "startTime": 612200,
+    "endTime": 619040,
+    "duration": 6840,
+    "text": "are way up the rankings and um round"
+  },
+  {
+    "startTime": 616519,
+    "endTime": 620480,
+    "duration": 3961,
+    "text": "numbers really really way back down the"
+  },
+  {
+    "startTime": 619040,
+    "endTime": 622560,
+    "duration": 3520,
+    "text": "rankings we do not really like round"
+  },
+  {
+    "startTime": 620480,
+    "endTime": 625079,
+    "duration": 4599,
+    "text": "numbers but we really like prime numbers"
+  },
+  {
+    "startTime": 622560,
+    "endTime": 627240,
+    "duration": 4680,
+    "text": "and that is something which um even"
+  },
+  {
+    "startTime": 625079,
+    "endTime": 628720,
+    "duration": 3641,
+    "text": "though the quantitative research you can"
+  },
+  {
+    "startTime": 627240,
+    "endTime": 630120,
+    "duration": 2880,
+    "text": "dismiss and say oh it's silly because"
+  },
+  {
+    "startTime": 628720,
+    "endTime": 631480,
+    "duration": 2760,
+    "text": "okay it's 44 ,000 people but it was"
+  },
+  {
+    "startTime": 630120,
+    "endTime": 633120,
+    "duration": 3000,
+    "text": "44,000 people who already feel"
+  },
+  {
+    "startTime": 631480,
+    "endTime": 636000,
+    "duration": 4520,
+    "text": "passionately about it who selected"
+  },
+  {
+    "startTime": 633120,
+    "endTime": 638639,
+    "duration": 5519,
+    "text": "themselves to join the survey um even"
+  },
+  {
+    "startTime": 636000,
+    "endTime": 642720,
+    "duration": 6720,
+    "text": "amongst them there are very coherent"
+  },
+  {
+    "startTime": 638639,
+    "endTime": 644920,
+    "duration": 6281,
+    "text": "patterns of this emotional responses so"
+  },
+  {
+    "startTime": 642720,
+    "endTime": 648360,
+    "duration": 5640,
+    "text": "on the survey I just said what's your"
+  },
+  {
+    "startTime": 644920,
+    "endTime": 649760,
+    "duration": 4840,
+    "text": "favorite number but I also said why um I"
+  },
+  {
+    "startTime": 648360,
+    "endTime": 652440,
+    "duration": 4080,
+    "text": "just left it blank there's a little"
+  },
+  {
+    "startTime": 649760,
+    "endTime": 654240,
+    "duration": 4480,
+    "text": "space you could write it in there and to"
+  },
+  {
+    "startTime": 652440,
+    "endTime": 655720,
+    "duration": 3280,
+    "text": "me it was the qualitative results of the"
+  },
+  {
+    "startTime": 654240,
+    "endTime": 659560,
+    "duration": 5320,
+    "text": "survey that were actually a bit more"
+  },
+  {
+    "startTime": 655720,
+    "endTime": 661760,
+    "duration": 6040,
+    "text": "interesting um and a bit more surprising"
+  },
+  {
+    "startTime": 659560,
+    "endTime": 664160,
+    "duration": 4600,
+    "text": "that felt a bit like proper sort of new"
+  },
+  {
+    "startTime": 661760,
+    "endTime": 666480,
+    "duration": 4720,
+    "text": "research so I'm going to just take you"
+  },
+  {
+    "startTime": 664160,
+    "endTime": 669200,
+    "duration": 5040,
+    "text": "through some of the entries with some of"
+  },
+  {
+    "startTime": 666480,
+    "endTime": 670519,
+    "duration": 4039,
+    "text": "the reasons and you know we start to"
+  },
+  {
+    "startTime": 669200,
+    "endTime": 673040,
+    "duration": 3840,
+    "text": "understand what it is about numbers that"
+  },
+  {
+    "startTime": 670519,
+    "endTime": 677880,
+    "duration": 7361,
+    "text": "make people excited by them"
+  },
+  {
+    "startTime": 673040,
+    "endTime": 679200,
+    "duration": 6160,
+    "text": "so this number was selected 10 over tk2"
+  },
+  {
+    "startTime": 677880,
+    "endTime": 681560,
+    "duration": 3680,
+    "text": "now in this audience does anyone know"
+  },
+  {
+    "startTime": 679200,
+    "endTime": 685000,
+    "duration": 5800,
+    "text": "what 10 over tk2 is in"
+  },
+  {
+    "startTime": 681560,
+    "endTime": 687839,
+    "duration": 6279,
+    "text": "decimals okay it's 10 * 1/ < tk2 which"
+  },
+  {
+    "startTime": 685000,
+    "endTime": 691600,
+    "duration": 6600,
+    "text": "if you work out is actually sare root of"
+  },
+  {
+    "startTime": 687839,
+    "endTime": 694200,
+    "duration": 6361,
+    "text": "50 7 7 707 which in America is called"
+  },
+  {
+    "startTime": 691600,
+    "endTime": 696760,
+    "duration": 5160,
+    "text": "the Boeing number obviously because 707"
+  },
+  {
+    "startTime": 694200,
+    "endTime": 698360,
+    "duration": 4160,
+    "text": "and I had originally thought that Boeing"
+  },
+  {
+    "startTime": 696760,
+    "endTime": 699800,
+    "duration": 3040,
+    "text": "was called 707 just because this looks a"
+  },
+  {
+    "startTime": 698360,
+    "endTime": 701720,
+    "duration": 3360,
+    "text": "little bit like a plane it's like two"
+  },
+  {
+    "startTime": 699800,
+    "endTime": 704160,
+    "duration": 4360,
+    "text": "Wings in the fuselage apparently that's"
+  },
+  {
+    "startTime": 701720,
+    "endTime": 707519,
+    "duration": 5799,
+    "text": "not the reason why but you'll find that"
+  },
+  {
+    "startTime": 704160,
+    "endTime": 710040,
+    "duration": 5880,
+    "text": "certain numbers work in Brands really"
+  },
+  {
+    "startTime": 707519,
+    "endTime": 711760,
+    "duration": 4241,
+    "text": "well based on just kind of how they look"
+  },
+  {
+    "startTime": 710040,
+    "endTime": 714200,
+    "duration": 4160,
+    "text": "how they sound because even though"
+  },
+  {
+    "startTime": 711760,
+    "endTime": 717720,
+    "duration": 5960,
+    "text": "numbers are supposedly these abstract"
+  },
+  {
+    "startTime": 714200,
+    "endTime": 720200,
+    "duration": 6000,
+    "text": "entities just representing quantity and"
+  },
+  {
+    "startTime": 717720,
+    "endTime": 721880,
+    "duration": 4160,
+    "text": "Order how do we get them we you know"
+  },
+  {
+    "startTime": 720200,
+    "endTime": 723160,
+    "duration": 2960,
+    "text": "they exist within culture within"
+  },
+  {
+    "startTime": 721880,
+    "endTime": 724920,
+    "duration": 3040,
+    "text": "language they have to look like"
+  },
+  {
+    "startTime": 723160,
+    "endTime": 727600,
+    "duration": 4440,
+    "text": "something as a symbol and all these"
+  },
+  {
+    "startTime": 724920,
+    "endTime": 730160,
+    "duration": 5240,
+    "text": "things actually influence how we"
+  },
+  {
+    "startTime": 727600,
+    "endTime": 730920,
+    "duration": 3320,
+    "text": "understand even the numerical properties"
+  },
+  {
+    "startTime": 730160,
+    "endTime": 734040,
+    "duration": 3880,
+    "text": "of"
+  },
+  {
+    "startTime": 730920,
+    "endTime": 735839,
+    "duration": 4919,
+    "text": "numbers I'm going to read you the um"
+  },
+  {
+    "startTime": 734040,
+    "endTime": 739680,
+    "duration": 5640,
+    "text": "reason why the person shows 707 it"
+  },
+  {
+    "startTime": 735839,
+    "endTime": 742720,
+    "duration": 6881,
+    "text": "wasn't because they were um an aviation"
+  },
+  {
+    "startTime": 739680,
+    "endTime": 745440,
+    "duration": 5760,
+    "text": "Enthusiast people wrote down their um"
+  },
+  {
+    "startTime": 742720,
+    "endTime": 748079,
+    "duration": 5359,
+    "text": "nationalities their genders their level"
+  },
+  {
+    "startTime": 745440,
+    "endTime": 751199,
+    "duration": 5759,
+    "text": "of University of mathematical ability"
+  },
+  {
+    "startTime": 748079,
+    "endTime": 754279,
+    "duration": 6200,
+    "text": "and their age and this was from a woman"
+  },
+  {
+    "startTime": 751199,
+    "endTime": 757480,
+    "duration": 6281,
+    "text": "in Canada age 34 with University level"
+  },
+  {
+    "startTime": 754279,
+    "endTime": 759600,
+    "duration": 5321,
+    "text": "maths she said this number is 10 root"
+  },
+  {
+    "startTime": 757480,
+    "endTime": 761519,
+    "duration": 4039,
+    "text": "two I'd been doing a lot of trig"
+  },
+  {
+    "startTime": 759600,
+    "endTime": 763360,
+    "duration": 3760,
+    "text": "homework for a Calculus class I was"
+  },
+  {
+    "startTime": 761519,
+    "endTime": 765920,
+    "duration": 4401,
+    "text": "taking in undergrad and this number"
+  },
+  {
+    "startTime": 763360,
+    "endTime": 767680,
+    "duration": 4320,
+    "text": "appears a lot at the time I was sort of"
+  },
+  {
+    "startTime": 765920,
+    "endTime": 770680,
+    "duration": 4760,
+    "text": "weirded out by the fact that I kept"
+  },
+  {
+    "startTime": 767680,
+    "endTime": 774279,
+    "duration": 6599,
+    "text": "waking up at 7:07 in the morning instead"
+  },
+  {
+    "startTime": 770680,
+    "endTime": 775800,
+    "duration": 5120,
+    "text": "of 7:30 when my alarm was set for anyway"
+  },
+  {
+    "startTime": 774279,
+    "endTime": 777000,
+    "duration": 2721,
+    "text": "one Saturday I went to my local art"
+  },
+  {
+    "startTime": 775800,
+    "endTime": 780959,
+    "duration": 5159,
+    "text": "supply store and bought some paint"
+  },
+  {
+    "startTime": 777000,
+    "endTime": 783480,
+    "duration": 6480,
+    "text": "brushes to my surprise the total came to"
+  },
+  {
+    "startTime": 780959,
+    "endTime": 785600,
+    "duration": 4641,
+    "text": "$77 and I sort of blurted out oh that's"
+  },
+  {
+    "startTime": 783480,
+    "endTime": 787279,
+    "duration": 3799,
+    "text": "10 of a rout two all over again to the"
+  },
+  {
+    "startTime": 785600,
+    "endTime": 789079,
+    "duration": 3479,
+    "text": "very cute cashier for whom I had a"
+  },
+  {
+    "startTime": 787279,
+    "endTime": 790760,
+    "duration": 3481,
+    "text": "rather pathetic crush and who I was"
+  },
+  {
+    "startTime": 789079,
+    "endTime": 793639,
+    "duration": 4560,
+    "text": "constantly embarrassing myself in front"
+  },
+  {
+    "startTime": 790760,
+    "endTime": 795560,
+    "duration": 4800,
+    "text": "of after explaining myself he was duly"
+  },
+  {
+    "startTime": 793639,
+    "endTime": 797519,
+    "duration": 3880,
+    "text": "impressed and began embarrassing himself"
+  },
+  {
+    "startTime": 795560,
+    "endTime": 800440,
+    "duration": 4880,
+    "text": "in front of me whenever I came to the"
+  },
+  {
+    "startTime": 797519,
+    "endTime": 802160,
+    "duration": 4641,
+    "text": "store and from that point on I realized"
+  },
+  {
+    "startTime": 800440,
+    "endTime": 804240,
+    "duration": 3800,
+    "text": "there's a brand of Arty guys that like"
+  },
+  {
+    "startTime": 802160,
+    "endTime": 807120,
+    "duration": 4960,
+    "text": "nerdy girls and this still makes me"
+  },
+  {
+    "startTime": 804240,
+    "endTime": 809560,
+    "duration": 5320,
+    "text": "happy some 15 years later okay this is"
+  },
+  {
+    "startTime": 807120,
+    "endTime": 812440,
+    "duration": 5320,
+    "text": "written in a tiny little white space on"
+  },
+  {
+    "startTime": 809560,
+    "endTime": 814839,
+    "duration": 5279,
+    "text": "a website just the story The Passion you"
+  },
+  {
+    "startTime": 812440,
+    "endTime": 815959,
+    "duration": 3519,
+    "text": "know there's so much stuff that you you"
+  },
+  {
+    "startTime": 814839,
+    "endTime": 817720,
+    "duration": 2881,
+    "text": "could analyze that also the fact that"
+  },
+  {
+    "startTime": 815959,
+    "endTime": 818720,
+    "duration": 2761,
+    "text": "when you start to think emotionally"
+  },
+  {
+    "startTime": 817720,
+    "endTime": 821519,
+    "duration": 3799,
+    "text": "about a number you just see it"
+  },
+  {
+    "startTime": 818720,
+    "endTime": 823320,
+    "duration": 4600,
+    "text": "absolutely everywhere even though I"
+  },
+  {
+    "startTime": 821519,
+    "endTime": 827120,
+    "duration": 5601,
+    "text": "numbers you know don't really"
+  },
+  {
+    "startTime": 823320,
+    "endTime": 830440,
+    "duration": 7120,
+    "text": "predominate one over the other in such a"
+  },
+  {
+    "startTime": 827120,
+    "endTime": 830440,
+    "duration": 3320,
+    "text": "strong way"
+  },
+  {
+    "startTime": 830560,
+    "endTime": 837120,
+    "duration": 6560,
+    "text": "um a billion and seven why was this"
+  },
+  {
+    "startTime": 833920,
+    "endTime": 839399,
+    "duration": 5479,
+    "text": "chosen this was chosen by a 21y old male"
+  },
+  {
+    "startTime": 837120,
+    "endTime": 842639,
+    "duration": 5519,
+    "text": "Russian because"
+  },
+  {
+    "startTime": 839399,
+    "endTime": 845800,
+    "duration": 6401,
+    "text": "it's the largest prime number I can"
+  },
+  {
+    "startTime": 842639,
+    "endTime": 847639,
+    "duration": 5000,
+    "text": "remember so the fact that people take to"
+  },
+  {
+    "startTime": 845800,
+    "endTime": 849040,
+    "duration": 3240,
+    "text": "remembering large prime number there"
+  },
+  {
+    "startTime": 847639,
+    "endTime": 850600,
+    "duration": 2961,
+    "text": "also a prime number I'm sure you know"
+  },
+  {
+    "startTime": 849040,
+    "endTime": 852839,
+    "duration": 3799,
+    "text": "prime number is a number that you cannot"
+  },
+  {
+    "startTime": 850600,
+    "endTime": 856000,
+    "duration": 5400,
+    "text": "that only divides by itself in one so"
+  },
+  {
+    "startTime": 852839,
+    "endTime": 859560,
+    "duration": 6721,
+    "text": "they start well two is even uh the only"
+  },
+  {
+    "startTime": 856000,
+    "endTime": 865240,
+    "duration": 9240,
+    "text": "even prime number then goes 3 5 7 11"
+  },
+  {
+    "startTime": 859560,
+    "endTime": 867440,
+    "duration": 7880,
+    "text": "13 17 19 Etc now a billion and"
+  },
+  {
+    "startTime": 865240,
+    "endTime": 869680,
+    "duration": 4440,
+    "text": "seven is"
+  },
+  {
+    "startTime": 867440,
+    "endTime": 872360,
+    "duration": 4920,
+    "text": "interesting because"
+  },
+  {
+    "startTime": 869680,
+    "endTime": 873519,
+    "duration": 3839,
+    "text": "a billion and N is also a prime number"
+  },
+  {
+    "startTime": 872360,
+    "endTime": 874839,
+    "duration": 2479,
+    "text": "in fact you get these thing called twin"
+  },
+  {
+    "startTime": 873519,
+    "endTime": 878120,
+    "duration": 4601,
+    "text": "primes which were prime numbers that are"
+  },
+  {
+    "startTime": 874839,
+    "endTime": 880959,
+    "duration": 6120,
+    "text": "two apart and um they're it's conject"
+  },
+  {
+    "startTime": 878120,
+    "endTime": 883959,
+    "duration": 5839,
+    "text": "that there are an infinite number of"
+  },
+  {
+    "startTime": 880959,
+    "endTime": 885959,
+    "duration": 5000,
+    "text": "them but the largest one that's known of"
+  },
+  {
+    "startTime": 883959,
+    "endTime": 887199,
+    "duration": 3240,
+    "text": "the form one loads of Zer is then seven"
+  },
+  {
+    "startTime": 885959,
+    "endTime": 889160,
+    "duration": 3201,
+    "text": "one loads of Zer is then nine is a"
+  },
+  {
+    "startTime": 887199,
+    "endTime": 890480,
+    "duration": 3281,
+    "text": "billion and seven and a billion and N so"
+  },
+  {
+    "startTime": 889160,
+    "endTime": 893199,
+    "duration": 4039,
+    "text": "kind of think you're really clever to"
+  },
+  {
+    "startTime": 890480,
+    "endTime": 894920,
+    "duration": 4440,
+    "text": "remember 107 is the highest prime number"
+  },
+  {
+    "startTime": 893199,
+    "endTime": 896399,
+    "duration": 3200,
+    "text": "you know it would be clever if it was"
+  },
+  {
+    "startTime": 894920,
+    "endTime": 899399,
+    "duration": 4479,
+    "text": "the um the second highest prime number I"
+  },
+  {
+    "startTime": 896399,
+    "endTime": 902639,
+    "duration": 6240,
+    "text": "can remember"
+  },
+  {
+    "startTime": 899399,
+    "endTime": 904120,
+    "duration": 4721,
+    "text": "219 now this was chosen by a um"
+  },
+  {
+    "startTime": 902639,
+    "endTime": 908120,
+    "duration": 5481,
+    "text": "18-year-old"
+  },
+  {
+    "startTime": 904120,
+    "endTime": 909839,
+    "duration": 5719,
+    "text": "Irishman because it's the lowest number"
+  },
+  {
+    "startTime": 908120,
+    "endTime": 911959,
+    "duration": 3839,
+    "text": "the lowest whole"
+  },
+  {
+    "startTime": 909839,
+    "endTime": 915680,
+    "duration": 5841,
+    "text": "number that does not have its own"
+  },
+  {
+    "startTime": 911959,
+    "endTime": 918880,
+    "duration": 6921,
+    "text": "Wikipedia entry so it's too boring it's"
+  },
+  {
+    "startTime": 915680,
+    "endTime": 921000,
+    "duration": 5320,
+    "text": "the lowest boring number basically um"
+  },
+  {
+    "startTime": 918880,
+    "endTime": 922759,
+    "duration": 3879,
+    "text": "every number from 1 to 28 has its own"
+  },
+  {
+    "startTime": 921000,
+    "endTime": 924199,
+    "duration": 3199,
+    "text": "Wikipedia entry and actually this was a"
+  },
+  {
+    "startTime": 922759,
+    "endTime": 925759,
+    "duration": 3000,
+    "text": "couple years ago now so I've looked"
+  },
+  {
+    "startTime": 924199,
+    "endTime": 928319,
+    "duration": 4120,
+    "text": "there is an inflation in lowest boring"
+  },
+  {
+    "startTime": 925759,
+    "endTime": 930959,
+    "duration": 5200,
+    "text": "numbers and now the lowest boring number"
+  },
+  {
+    "startTime": 928319,
+    "endTime": 930959,
+    "duration": 2640,
+    "text": "is"
+  },
+  {
+    "startTime": 931000,
+    "endTime": 935240,
+    "duration": 4240,
+    "text": "224 okay"
+  },
+  {
+    "startTime": 933399,
+    "endTime": 936759,
+    "duration": 3360,
+    "text": "um but you might not think that"
+  },
+  {
+    "startTime": 935240,
+    "endTime": 938560,
+    "duration": 3320,
+    "text": "Wikipedia is a very good judge of what"
+  },
+  {
+    "startTime": 936759,
+    "endTime": 940600,
+    "duration": 3841,
+    "text": "makes the number interesting or not and"
+  },
+  {
+    "startTime": 938560,
+    "endTime": 942480,
+    "duration": 3920,
+    "text": "so I thought I would look in the online"
+  },
+  {
+    "startTime": 940600,
+    "endTime": 944199,
+    "duration": 3599,
+    "text": "encyclopedia of integer sequences which"
+  },
+  {
+    "startTime": 942480,
+    "endTime": 947040,
+    "duration": 4560,
+    "text": "is a kind of Bible of mathematics and"
+  },
+  {
+    "startTime": 944199,
+    "endTime": 948959,
+    "duration": 4760,
+    "text": "really of all science it contains about"
+  },
+  {
+    "startTime": 947040,
+    "endTime": 951120,
+    "duration": 4080,
+    "text": "a quarter of a million separate"
+  },
+  {
+    "startTime": 948959,
+    "endTime": 952720,
+    "duration": 3761,
+    "text": "sequences and a sequence is just a list"
+  },
+  {
+    "startTime": 951120,
+    "endTime": 954880,
+    "duration": 3760,
+    "text": "of numbers they can be infinite they can"
+  },
+  {
+    "startTime": 952720,
+    "endTime": 958040,
+    "duration": 5320,
+    "text": "be finite so the prime numbers that's a"
+  },
+  {
+    "startTime": 954880,
+    "endTime": 962880,
+    "duration": 8000,
+    "text": "sequence um the square numbers you know"
+  },
+  {
+    "startTime": 958040,
+    "endTime": 964720,
+    "duration": 6680,
+    "text": "uh one 4 9 16 35 that's that's a"
+  },
+  {
+    "startTime": 962880,
+    "endTime": 966480,
+    "duration": 3600,
+    "text": "sequence would it be interesting to find"
+  },
+  {
+    "startTime": 964720,
+    "endTime": 968600,
+    "duration": 3880,
+    "text": "out what is the lowest number that has"
+  },
+  {
+    "startTime": 966480,
+    "endTime": 970319,
+    "duration": 3839,
+    "text": "never appeared in the online"
+  },
+  {
+    "startTime": 968600,
+    "endTime": 972399,
+    "duration": 3799,
+    "text": "encyclopedia of add sequences which you"
+  },
+  {
+    "startTime": 970319,
+    "endTime": 974440,
+    "duration": 4121,
+    "text": "could probably say is the only number"
+  },
+  {
+    "startTime": 972399,
+    "endTime": 977079,
+    "duration": 4680,
+    "text": "well probably the lowest number never to"
+  },
+  {
+    "startTime": 974440,
+    "endTime": 980519,
+    "duration": 6079,
+    "text": "have appeared in any mathematical piece"
+  },
+  {
+    "startTime": 977079,
+    "endTime": 982000,
+    "duration": 4921,
+    "text": "of research in the last you know 3,000"
+  },
+  {
+    "startTime": 980519,
+    "endTime": 984759,
+    "duration": 4240,
+    "text": "years since really there's been"
+  },
+  {
+    "startTime": 982000,
+    "endTime": 988759,
+    "duration": 6759,
+    "text": "mathematics and that number"
+  },
+  {
+    "startTime": 984759,
+    "endTime": 988759,
+    "duration": 4000,
+    "text": "is 14,220"
+  },
+  {
+    "startTime": 989120,
+    "endTime": 993120,
+    "duration": 4000,
+    "text": "which I thought was quite low personally"
+  },
+  {
+    "startTime": 991440,
+    "endTime": 994519,
+    "duration": 3079,
+    "text": "I thought that would have but it's also"
+  },
+  {
+    "startTime": 993120,
+    "endTime": 998519,
+    "duration": 5399,
+    "text": "interesting you"
+  },
+  {
+    "startTime": 994519,
+    "endTime": 1002680,
+    "duration": 8161,
+    "text": "know it's very very divisible isn't it"
+  },
+  {
+    "startTime": 998519,
+    "endTime": 1003880,
+    "duration": 5361,
+    "text": "um divided by two obviously um this idea"
+  },
+  {
+    "startTime": 1002680,
+    "endTime": 1005839,
+    "duration": 3159,
+    "text": "that the numbers that are really"
+  },
+  {
+    "startTime": 1003880,
+    "endTime": 1009480,
+    "duration": 5600,
+    "text": "interesting are the kind of the prime"
+  },
+  {
+    "startTime": 1005839,
+    "endTime": 1012120,
+    "duration": 6281,
+    "text": "numbers the odd numbers finally this"
+  },
+  {
+    "startTime": 1009480,
+    "endTime": 1013360,
+    "duration": 3880,
+    "text": "number 11 which is also a cheap plug"
+  },
+  {
+    "startTime": 1012120,
+    "endTime": 1015360,
+    "duration": 3240,
+    "text": "because I also used to live in Brazil"
+  },
+  {
+    "startTime": 1013360,
+    "endTime": 1017279,
+    "duration": 3919,
+    "text": "and wrote a book on Brazilian football"
+  },
+  {
+    "startTime": 1015360,
+    "endTime": 1018959,
+    "duration": 3599,
+    "text": "um which has also been updated um for"
+  },
+  {
+    "startTime": 1017279,
+    "endTime": 1020440,
+    "duration": 3161,
+    "text": "the World Cup so if you're if you want"
+  },
+  {
+    "startTime": 1018959,
+    "endTime": 1023399,
+    "duration": 4440,
+    "text": "interested in funny about Brazil in the"
+  },
+  {
+    "startTime": 1020440,
+    "endTime": 1025039,
+    "duration": 4599,
+    "text": "World Cup um by my book about it and"
+  },
+  {
+    "startTime": 1023399,
+    "endTime": 1026240,
+    "duration": 2841,
+    "text": "that's Neymar who is the captain of the"
+  },
+  {
+    "startTime": 1025039,
+    "endTime": 1028120,
+    "duration": 3081,
+    "text": "Brazil well he's not the captain"
+  },
+  {
+    "startTime": 1026240,
+    "endTime": 1030559,
+    "duration": 4319,
+    "text": "actually at the moment but he's the"
+  },
+  {
+    "startTime": 1028120,
+    "endTime": 1033520,
+    "duration": 5400,
+    "text": "Talisman of the Brazilian national teen"
+  },
+  {
+    "startTime": 1030559,
+    "endTime": 1036000,
+    "duration": 5441,
+    "text": "and the reason why 11 was chosen was"
+  },
+  {
+    "startTime": 1033520,
+    "endTime": 1038079,
+    "duration": 4559,
+    "text": "from an American 36 years old and I like"
+  },
+  {
+    "startTime": 1036000,
+    "endTime": 1039880,
+    "duration": 3880,
+    "text": "to think that he was from the Deep South"
+  },
+  {
+    "startTime": 1038079,
+    "endTime": 1041520,
+    "duration": 3441,
+    "text": "because if he doesn't if he wasn't it"
+  },
+  {
+    "startTime": 1039880,
+    "endTime": 1046160,
+    "duration": 6280,
+    "text": "doesn't really make much sense he said I"
+  },
+  {
+    "startTime": 1041520,
+    "endTime": 1046160,
+    "duration": 4640,
+    "text": "like 11 because sounds like"
+  },
+  {
+    "startTime": 1046799,
+    "endTime": 1051480,
+    "duration": 4681,
+    "text": "loving so why what are the Reasons Why"
+  },
+  {
+    "startTime": 1049480,
+    "endTime": 1052799,
+    "duration": 3319,
+    "text": "seven was the world's favorite number I"
+  },
+  {
+    "startTime": 1051480,
+    "endTime": 1055799,
+    "duration": 4319,
+    "text": "made a little animation hopefully the"
+  },
+  {
+    "startTime": 1052799,
+    "endTime": 1058320,
+    "duration": 5521,
+    "text": "sound is okay we've been obsessed by the"
+  },
+  {
+    "startTime": 1055799,
+    "endTime": 1060039,
+    "duration": 4240,
+    "text": "number seven for as long as we know and"
+  },
+  {
+    "startTime": 1058320,
+    "endTime": 1062480,
+    "duration": 4160,
+    "text": "go back to the earliest writing that"
+  },
+  {
+    "startTime": 1060039,
+    "endTime": 1065080,
+    "duration": 5041,
+    "text": "there is on Babylonian clay tablets and"
+  },
+  {
+    "startTime": 1062480,
+    "endTime": 1067640,
+    "duration": 5160,
+    "text": "they're just full of sevens and you have"
+  },
+  {
+    "startTime": 1065080,
+    "endTime": 1070880,
+    "duration": 5800,
+    "text": "seven dwarfs seven sins seven seas Seven"
+  },
+  {
+    "startTime": 1067640,
+    "endTime": 1073960,
+    "duration": 6320,
+    "text": "Sisters the list just goes on and on so"
+  },
+  {
+    "startTime": 1070880,
+    "endTime": 1075760,
+    "duration": 4880,
+    "text": "why is seven so special one argument is"
+  },
+  {
+    "startTime": 1073960,
+    "endTime": 1078400,
+    "duration": 4440,
+    "text": "that there are seven planets in the sky"
+  },
+  {
+    "startTime": 1075760,
+    "endTime": 1080200,
+    "duration": 4440,
+    "text": "visible to the naked eye to me that's"
+  },
+  {
+    "startTime": 1078400,
+    "endTime": 1083320,
+    "duration": 4920,
+    "text": "just coin incidence there's a much more"
+  },
+  {
+    "startTime": 1080200,
+    "endTime": 1085000,
+    "duration": 4800,
+    "text": "compelling reason seven is the only"
+  },
+  {
+    "startTime": 1083320,
+    "endTime": 1087919,
+    "duration": 4599,
+    "text": "number among those that we can count in"
+  },
+  {
+    "startTime": 1085000,
+    "endTime": 1090240,
+    "duration": 5240,
+    "text": "our hands that those from 1 to 10 that"
+  },
+  {
+    "startTime": 1087919,
+    "endTime": 1093080,
+    "duration": 5161,
+    "text": "cannot be divided or multiplied within"
+  },
+  {
+    "startTime": 1090240,
+    "endTime": 1096600,
+    "duration": 6360,
+    "text": "the group so 1 2 3 4 and five you can"
+  },
+  {
+    "startTime": 1093080,
+    "endTime": 1099039,
+    "duration": 5959,
+    "text": "double them 6 8 and 10 you can half them"
+  },
+  {
+    "startTime": 1096600,
+    "endTime": 1101799,
+    "duration": 5199,
+    "text": "and nine you can divide by three seven"
+  },
+  {
+    "startTime": 1099039,
+    "endTime": 1104679,
+    "duration": 5640,
+    "text": "is the only one that remains it's Unique"
+  },
+  {
+    "startTime": 1101799,
+    "endTime": 1106880,
+    "duration": 5081,
+    "text": "it's a loner The Outsider and humans"
+  },
+  {
+    "startTime": 1104679,
+    "endTime": 1109440,
+    "duration": 4761,
+    "text": "interpret this arithmetical property in"
+  },
+  {
+    "startTime": 1106880,
+    "endTime": 1111360,
+    "duration": 4480,
+    "text": "cultural Ways by associ seven with a"
+  },
+  {
+    "startTime": 1109440,
+    "endTime": 1114080,
+    "duration": 4640,
+    "text": "group of things you kind of make them"
+  },
+  {
+    "startTime": 1111360,
+    "endTime": 1115760,
+    "duration": 4400,
+    "text": "special too the point here is that we're"
+  },
+  {
+    "startTime": 1114080,
+    "endTime": 1117480,
+    "duration": 3400,
+    "text": "always sensitive to arithmetical"
+  },
+  {
+    "startTime": 1115760,
+    "endTime": 1119400,
+    "duration": 3640,
+    "text": "patterns and this influences our"
+  },
+  {
+    "startTime": 1117480,
+    "endTime": 1122110,
+    "duration": 4630,
+    "text": "Behavior even if we're not conscious of"
+  },
+  {
+    "startTime": 1119400,
+    "endTime": 1123440,
+    "duration": 4040,
+    "text": "it and irrespective of our ability at"
+  },
+  {
+    "startTime": 1122110,
+    "endTime": 1125520,
+    "duration": 3410,
+    "text": "[Music]"
+  },
+  {
+    "startTime": 1123440,
+    "endTime": 1127720,
+    "duration": 4280,
+    "text": "math there's another thing which is"
+  },
+  {
+    "startTime": 1125520,
+    "endTime": 1130039,
+    "duration": 4519,
+    "text": "which kind of ties into this if you were"
+  },
+  {
+    "startTime": 1127720,
+    "endTime": 1131799,
+    "duration": 4079,
+    "text": "to ask someone and this is a psychology"
+  },
+  {
+    "startTime": 1130039,
+    "endTime": 1133320,
+    "duration": 3281,
+    "text": "experiment that's been repeated many"
+  },
+  {
+    "startTime": 1131799,
+    "endTime": 1136159,
+    "duration": 4360,
+    "text": "times just think of a number at the top"
+  },
+  {
+    "startTime": 1133320,
+    "endTime": 1137200,
+    "duration": 3880,
+    "text": "of your head between 1 and 10 most"
+  },
+  {
+    "startTime": 1136159,
+    "endTime": 1139400,
+    "duration": 3241,
+    "text": "people say"
+  },
+  {
+    "startTime": 1137200,
+    "endTime": 1141320,
+    "duration": 4120,
+    "text": "seven um and why they say seven"
+  },
+  {
+    "startTime": 1139400,
+    "endTime": 1143240,
+    "duration": 3840,
+    "text": "essentially again you're doing"
+  },
+  {
+    "startTime": 1141320,
+    "endTime": 1145960,
+    "duration": 4640,
+    "text": "mathematics without realizing you think"
+  },
+  {
+    "startTime": 1143240,
+    "endTime": 1146960,
+    "duration": 3720,
+    "text": "well I W going to say one CU you know"
+  },
+  {
+    "startTime": 1145960,
+    "endTime": 1148520,
+    "duration": 2560,
+    "text": "that's not the top of my head that's"
+  },
+  {
+    "startTime": 1146960,
+    "endTime": 1150000,
+    "duration": 3040,
+    "text": "just too obvious it's not sort of"
+  },
+  {
+    "startTime": 1148520,
+    "endTime": 1151559,
+    "duration": 3039,
+    "text": "arbitrary enough I'm not going to say 10"
+  },
+  {
+    "startTime": 1150000,
+    "endTime": 1153720,
+    "duration": 3720,
+    "text": "well I'm not going to say five we've"
+  },
+  {
+    "startTime": 1151559,
+    "endTime": 1155440,
+    "duration": 3881,
+    "text": "just done the um two times table and"
+  },
+  {
+    "startTime": 1153720,
+    "endTime": 1157080,
+    "duration": 3360,
+    "text": "then you sort of say well two that's"
+  },
+  {
+    "startTime": 1155440,
+    "endTime": 1159360,
+    "duration": 3920,
+    "text": "also I wouldn't choose two then you"
+  },
+  {
+    "startTime": 1157080,
+    "endTime": 1160919,
+    "duration": 3839,
+    "text": "eliminate 2 4 68 you do exactly what was"
+  },
+  {
+    "startTime": 1159360,
+    "endTime": 1163120,
+    "duration": 3760,
+    "text": "doing in there and you're left with"
+  },
+  {
+    "startTime": 1160919,
+    "endTime": 1164559,
+    "duration": 3640,
+    "text": "seven seven it Fe it's the most"
+  },
+  {
+    "startTime": 1163120,
+    "endTime": 1166320,
+    "duration": 3200,
+    "text": "difficult it's the most one that you"
+  },
+  {
+    "startTime": 1164559,
+    "endTime": 1167320,
+    "duration": 2761,
+    "text": "feel you need to stretch where it feels"
+  },
+  {
+    "startTime": 1166320,
+    "endTime": 1169960,
+    "duration": 3640,
+    "text": "the most"
+  },
+  {
+    "startTime": 1167320,
+    "endTime": 1172440,
+    "duration": 5120,
+    "text": "random now we go back to the qualitative"
+  },
+  {
+    "startTime": 1169960,
+    "endTime": 1173799,
+    "duration": 3839,
+    "text": "results of the favorite number survey I"
+  },
+  {
+    "startTime": 1172440,
+    "endTime": 1177559,
+    "duration": 5119,
+    "text": "was trying to work out is there any way"
+  },
+  {
+    "startTime": 1173799,
+    "endTime": 1180200,
+    "duration": 6401,
+    "text": "that I could sort of grasp or explain"
+  },
+  {
+    "startTime": 1177559,
+    "endTime": 1182280,
+    "duration": 4721,
+    "text": "the kind of collective views about"
+  },
+  {
+    "startTime": 1180200,
+    "endTime": 1183720,
+    "duration": 3520,
+    "text": "numbers and I was thinking well how can"
+  },
+  {
+    "startTime": 1182280,
+    "endTime": 1185919,
+    "duration": 3639,
+    "text": "I do this and I was reading all this you"
+  },
+  {
+    "startTime": 1183720,
+    "endTime": 1188240,
+    "duration": 4520,
+    "text": "know more than 30,000 reasons why people"
+  },
+  {
+    "startTime": 1185919,
+    "endTime": 1191400,
+    "duration": 5481,
+    "text": "like numbers and I noticed that the"
+  },
+  {
+    "startTime": 1188240,
+    "endTime": 1194760,
+    "duration": 6520,
+    "text": "language used to describe each number"
+  },
+  {
+    "startTime": 1191400,
+    "endTime": 1196840,
+    "duration": 5440,
+    "text": "was different so I'm going to I pluck"
+  },
+  {
+    "startTime": 1194760,
+    "endTime": 1199039,
+    "duration": 4279,
+    "text": "the adjectives that we used to describe"
+  },
+  {
+    "startTime": 1196840,
+    "endTime": 1201080,
+    "duration": 4240,
+    "text": "the different numbers number one was"
+  },
+  {
+    "startTime": 1199039,
+    "endTime": 1204559,
+    "duration": 5520,
+    "text": "described this is each word in a"
+  },
+  {
+    "startTime": 1201080,
+    "endTime": 1208200,
+    "duration": 7120,
+    "text": "different um reason as independent"
+  },
+  {
+    "startTime": 1204559,
+    "endTime": 1212120,
+    "duration": 7561,
+    "text": "strong honest Brave straightforward"
+  },
+  {
+    "startTime": 1208200,
+    "endTime": 1215280,
+    "duration": 7080,
+    "text": "pioneering competitive dramatic egoistic"
+  },
+  {
+    "startTime": 1212120,
+    "endTime": 1217159,
+    "duration": 5039,
+    "text": "hot-headed and lonely so imagine we were"
+  },
+  {
+    "startTime": 1215280,
+    "endTime": 1220000,
+    "duration": 4720,
+    "text": "a uh kind of creative writing class and"
+  },
+  {
+    "startTime": 1217159,
+    "endTime": 1222080,
+    "duration": 4921,
+    "text": "I said this is this is like the the main"
+  },
+  {
+    "startTime": 1220000,
+    "endTime": 1223919,
+    "duration": 3919,
+    "text": "protagonist of of our story that's"
+  },
+  {
+    "startTime": 1222080,
+    "endTime": 1227440,
+    "duration": 5360,
+    "text": "really quite coherent um personality"
+  },
+  {
+    "startTime": 1223919,
+    "endTime": 1230520,
+    "duration": 6601,
+    "text": "traits there two these are words used to"
+  },
+  {
+    "startTime": 1227440,
+    "endTime": 1232159,
+    "duration": 4719,
+    "text": "describe the number two in fact so that"
+  },
+  {
+    "startTime": 1230520,
+    "endTime": 1233799,
+    "duration": 3279,
+    "text": "was number one two so look at number two"
+  },
+  {
+    "startTime": 1232159,
+    "endTime": 1237640,
+    "duration": 5481,
+    "text": "and see if you"
+  },
+  {
+    "startTime": 1233799,
+    "endTime": 1242039,
+    "duration": 8240,
+    "text": "um you visualize these traits simple"
+  },
+  {
+    "startTime": 1237640,
+    "endTime": 1246240,
+    "duration": 8600,
+    "text": "elegant cautious wise observant pretty"
+  },
+  {
+    "startTime": 1242039,
+    "endTime": 1249559,
+    "duration": 7520,
+    "text": "fragile open sympathetic comfortable"
+  },
+  {
+    "startTime": 1246240,
+    "endTime": 1250559,
+    "duration": 4319,
+    "text": "flexible subtle inconspicuous so this is"
+  },
+  {
+    "startTime": 1249559,
+    "endTime": 1251600,
+    "duration": 2041,
+    "text": "from lots of different people they've"
+  },
+  {
+    "startTime": 1250559,
+    "endTime": 1253480,
+    "duration": 2921,
+    "text": "got lots of different reasons but"
+  },
+  {
+    "startTime": 1251600,
+    "endTime": 1255559,
+    "duration": 3959,
+    "text": "together again there is a kind of"
+  },
+  {
+    "startTime": 1253480,
+    "endTime": 1259240,
+    "duration": 5760,
+    "text": "coherence there and what struck me most"
+  },
+  {
+    "startTime": 1255559,
+    "endTime": 1260520,
+    "duration": 4961,
+    "text": "of all was that if this was"
+  },
+  {
+    "startTime": 1259240,
+    "endTime": 1262600,
+    "duration": 3360,
+    "text": "creative writing class and we were"
+  },
+  {
+    "startTime": 1260520,
+    "endTime": 1265000,
+    "duration": 4480,
+    "text": "having to imagine characters for the"
+  },
+  {
+    "startTime": 1262600,
+    "endTime": 1266600,
+    "duration": 4000,
+    "text": "numbers one and two one it's really male"
+  },
+  {
+    "startTime": 1265000,
+    "endTime": 1268760,
+    "duration": 3760,
+    "text": "characteristics or traditionally male"
+  },
+  {
+    "startTime": 1266600,
+    "endTime": 1271080,
+    "duration": 4480,
+    "text": "characteristics and two traditionally"
+  },
+  {
+    "startTime": 1268760,
+    "endTime": 1271960,
+    "duration": 3200,
+    "text": "female characteristics so the cartoonist"
+  },
+  {
+    "startTime": 1271080,
+    "endTime": 1274360,
+    "duration": 3280,
+    "text": "of the"
+  },
+  {
+    "startTime": 1271960,
+    "endTime": 1276720,
+    "duration": 4760,
+    "text": "book did exactly that and this is how"
+  },
+  {
+    "startTime": 1274360,
+    "endTime": 1279520,
+    "duration": 5160,
+    "text": "she interpreted it it would be you know"
+  },
+  {
+    "startTime": 1276720,
+    "endTime": 1283120,
+    "duration": 6400,
+    "text": "we could do a fantastic kind of romcom"
+  },
+  {
+    "startTime": 1279520,
+    "endTime": 1286799,
+    "duration": 7279,
+    "text": "or romantic story with one as the man as"
+  },
+  {
+    "startTime": 1283120,
+    "endTime": 1288559,
+    "duration": 5439,
+    "text": "to as the woman now I saw this and I I"
+  },
+  {
+    "startTime": 1286799,
+    "endTime": 1291279,
+    "duration": 4480,
+    "text": "thought well this is really quite"
+  },
+  {
+    "startTime": 1288559,
+    "endTime": 1293000,
+    "duration": 4441,
+    "text": "striking but the more that I read and I"
+  },
+  {
+    "startTime": 1291279,
+    "endTime": 1294640,
+    "duration": 3361,
+    "text": "was read you know quite a lot of s the"
+  },
+  {
+    "startTime": 1293000,
+    "endTime": 1297679,
+    "duration": 4679,
+    "text": "history of math and you know the growth"
+  },
+  {
+    "startTime": 1294640,
+    "endTime": 1300799,
+    "duration": 6159,
+    "text": "of intellectual ideas and also about"
+  },
+  {
+    "startTime": 1297679,
+    "endTime": 1303279,
+    "duration": 5600,
+    "text": "psychology it's it's really quite common"
+  },
+  {
+    "startTime": 1300799,
+    "endTime": 1305679,
+    "duration": 4880,
+    "text": "this idea so numbers were invented about"
+  },
+  {
+    "startTime": 1303279,
+    "endTime": 1308720,
+    "duration": 5441,
+    "text": "8,000 years ago say in Sumeria which is"
+  },
+  {
+    "startTime": 1305679,
+    "endTime": 1311400,
+    "duration": 5721,
+    "text": "present day Iraq the very first words"
+  },
+  {
+    "startTime": 1308720,
+    "endTime": 1314480,
+    "duration": 5760,
+    "text": "that we know that were used by humans"
+  },
+  {
+    "startTime": 1311400,
+    "endTime": 1315880,
+    "duration": 4480,
+    "text": "for the number one and the number two"
+  },
+  {
+    "startTime": 1314480,
+    "endTime": 1319559,
+    "duration": 5079,
+    "text": "the word for the number one was the same"
+  },
+  {
+    "startTime": 1315880,
+    "endTime": 1322400,
+    "duration": 6520,
+    "text": "word as the word for phath and the word"
+  },
+  {
+    "startTime": 1319559,
+    "endTime": 1324400,
+    "duration": 4841,
+    "text": "two was same word word for woman so"
+  },
+  {
+    "startTime": 1322400,
+    "endTime": 1326159,
+    "duration": 3759,
+    "text": "right from the beginning there for what"
+  },
+  {
+    "startTime": 1324400,
+    "endTime": 1330520,
+    "duration": 6120,
+    "text": "we whatever reasons we don't know we can"
+  },
+  {
+    "startTime": 1326159,
+    "endTime": 1332159,
+    "duration": 6000,
+    "text": "imagine suppose one is male and two is"
+  },
+  {
+    "startTime": 1330520,
+    "endTime": 1335440,
+    "duration": 4920,
+    "text": "female and actually a friend of mine"
+  },
+  {
+    "startTime": 1332159,
+    "endTime": 1337600,
+    "duration": 5441,
+    "text": "who's um quite well known"
+  },
+  {
+    "startTime": 1335440,
+    "endTime": 1339600,
+    "duration": 4160,
+    "text": "novelist um she said well Alex you know"
+  },
+  {
+    "startTime": 1337600,
+    "endTime": 1342559,
+    "duration": 4959,
+    "text": "I was reading reading you know your your"
+  },
+  {
+    "startTime": 1339600,
+    "endTime": 1343919,
+    "duration": 4319,
+    "text": "stuff about masculine feminine and I"
+  },
+  {
+    "startTime": 1342559,
+    "endTime": 1345360,
+    "duration": 2801,
+    "text": "just thought that everyone thought that"
+  },
+  {
+    "startTime": 1343919,
+    "endTime": 1348480,
+    "duration": 4561,
+    "text": "you know I've always thought you one of"
+  },
+  {
+    "startTime": 1345360,
+    "endTime": 1350039,
+    "duration": 4679,
+    "text": "the smartest people that I know and um"
+  },
+  {
+    "startTime": 1348480,
+    "endTime": 1351600,
+    "duration": 3120,
+    "text": "she was saying yeah because it's obvious"
+  },
+  {
+    "startTime": 1350039,
+    "endTime": 1353320,
+    "duration": 3281,
+    "text": "that one and odd numbers are masculine"
+  },
+  {
+    "startTime": 1351600,
+    "endTime": 1354440,
+    "duration": 2840,
+    "text": "two and even numbers of feminine they"
+  },
+  {
+    "startTime": 1353320,
+    "endTime": 1355880,
+    "duration": 2560,
+    "text": "obviously are because two you can kind"
+  },
+  {
+    "startTime": 1354440,
+    "endTime": 1358720,
+    "duration": 4280,
+    "text": "of split apart they can become two new"
+  },
+  {
+    "startTime": 1355880,
+    "endTime": 1360120,
+    "duration": 4240,
+    "text": "things it's like they kind of give birth"
+  },
+  {
+    "startTime": 1358720,
+    "endTime": 1362039,
+    "duration": 3319,
+    "text": "and obviously I never thought that at"
+  },
+  {
+    "startTime": 1360120,
+    "endTime": 1363880,
+    "duration": 3760,
+    "text": "all but the fact that someone you know"
+  },
+  {
+    "startTime": 1362039,
+    "endTime": 1366919,
+    "duration": 4880,
+    "text": "there are people who are smart who think"
+  },
+  {
+    "startTime": 1363880,
+    "endTime": 1370480,
+    "duration": 6600,
+    "text": "these things that we are we do relate to"
+  },
+  {
+    "startTime": 1366919,
+    "endTime": 1373400,
+    "duration": 6481,
+    "text": "um numbers in emotional ways uh"
+  },
+  {
+    "startTime": 1370480,
+    "endTime": 1375600,
+    "duration": 5120,
+    "text": "Pythagoras who is the beginning of Greek"
+  },
+  {
+    "startTime": 1373400,
+    "endTime": 1377080,
+    "duration": 3680,
+    "text": "mathematics had this kind of the"
+  },
+  {
+    "startTime": 1375600,
+    "endTime": 1378799,
+    "duration": 3199,
+    "text": "Pythagorean Brotherhood and they believe"
+  },
+  {
+    "startTime": 1377080,
+    "endTime": 1380440,
+    "duration": 3360,
+    "text": "the odd numbers were either um odd"
+  },
+  {
+    "startTime": 1378799,
+    "endTime": 1382640,
+    "duration": 3841,
+    "text": "numbers of masculine even numbers were"
+  },
+  {
+    "startTime": 1380440,
+    "endTime": 1385480,
+    "duration": 5040,
+    "text": "feminine and I discovered some research"
+  },
+  {
+    "startTime": 1382640,
+    "endTime": 1387880,
+    "duration": 5240,
+    "text": "that been done quite recently in"
+  },
+  {
+    "startTime": 1385480,
+    "endTime": 1390159,
+    "duration": 4679,
+    "text": "which respondents or participants were"
+  },
+  {
+    "startTime": 1387880,
+    "endTime": 1392320,
+    "duration": 4440,
+    "text": "asked to look at babies who are six week"
+  },
+  {
+    "startTime": 1390159,
+    "endTime": 1394640,
+    "duration": 4481,
+    "text": "old six weeks old of indeterminate"
+  },
+  {
+    "startTime": 1392320,
+    "endTime": 1397440,
+    "duration": 5120,
+    "text": "gender and all you need to do is just"
+  },
+  {
+    "startTime": 1394640,
+    "endTime": 1399480,
+    "duration": 4840,
+    "text": "say is this a boy or is this a girl"
+  },
+  {
+    "startTime": 1397440,
+    "endTime": 1400640,
+    "duration": 3200,
+    "text": "sometime well always they had numbers at"
+  },
+  {
+    "startTime": 1399480,
+    "endTime": 1401640,
+    "duration": 2160,
+    "text": "the bottom of them but the people were"
+  },
+  {
+    "startTime": 1400640,
+    "endTime": 1402760,
+    "duration": 2120,
+    "text": "told don't look at the numbers they're"
+  },
+  {
+    "startTime": 1401640,
+    "endTime": 1404799,
+    "duration": 3159,
+    "text": "going to be a number there but just"
+  },
+  {
+    "startTime": 1402760,
+    "endTime": 1407559,
+    "duration": 4799,
+    "text": "don't look at it just look at the"
+  },
+  {
+    "startTime": 1404799,
+    "endTime": 1409360,
+    "duration": 4561,
+    "text": "child and what the experiment were doing"
+  },
+  {
+    "startTime": 1407559,
+    "endTime": 1412039,
+    "duration": 4480,
+    "text": "is that sometimes it was all three even"
+  },
+  {
+    "startTime": 1409360,
+    "endTime": 1413919,
+    "duration": 4559,
+    "text": "numbers sometimes all three odd numbers"
+  },
+  {
+    "startTime": 1412039,
+    "endTime": 1417720,
+    "duration": 5681,
+    "text": "um all kind of randomized you know Al"
+  },
+  {
+    "startTime": 1413919,
+    "endTime": 1420039,
+    "duration": 6120,
+    "text": "sort of proper science and that and it"
+  },
+  {
+    "startTime": 1417720,
+    "endTime": 1422679,
+    "duration": 4959,
+    "text": "turns out that with odd numbers you're"
+  },
+  {
+    "startTime": 1420039,
+    "endTime": 1425240,
+    "duration": 5201,
+    "text": "10% more likely to think that um a baby"
+  },
+  {
+    "startTime": 1422679,
+    "endTime": 1427440,
+    "duration": 4761,
+    "text": "of a determinate gender is male and with"
+  },
+  {
+    "startTime": 1425240,
+    "endTime": 1431240,
+    "duration": 6000,
+    "text": "even numbers 10% more likely that the"
+  },
+  {
+    "startTime": 1427440,
+    "endTime": 1432919,
+    "duration": 5479,
+    "text": "baby is female so that there is still"
+  },
+  {
+    "startTime": 1431240,
+    "endTime": 1435320,
+    "duration": 4080,
+    "text": "this kind of subconscious association"
+  },
+  {
+    "startTime": 1432919,
+    "endTime": 1437159,
+    "duration": 4240,
+    "text": "with odd numbers with masculinity and"
+  },
+  {
+    "startTime": 1435320,
+    "endTime": 1439640,
+    "duration": 4320,
+    "text": "even numbers with"
+  },
+  {
+    "startTime": 1437159,
+    "endTime": 1441039,
+    "duration": 3880,
+    "text": "femininity um"
+  },
+  {
+    "startTime": 1439640,
+    "endTime": 1443240,
+    "duration": 3600,
+    "text": "also when I was sort of started to get"
+  },
+  {
+    "startTime": 1441039,
+    "endTime": 1446159,
+    "duration": 5120,
+    "text": "interested in this idea that numbers"
+  },
+  {
+    "startTime": 1443240,
+    "endTime": 1448120,
+    "duration": 4880,
+    "text": "have personalities and even"
+  },
+  {
+    "startTime": 1446159,
+    "endTime": 1449320,
+    "duration": 3161,
+    "text": "though you know if I'd been talking to"
+  },
+  {
+    "startTime": 1448120,
+    "endTime": 1450880,
+    "duration": 2760,
+    "text": "myself a few years ago I would have"
+  },
+  {
+    "startTime": 1449320,
+    "endTime": 1452159,
+    "duration": 2839,
+    "text": "thought absolutely ridiculous when I"
+  },
+  {
+    "startTime": 1450880,
+    "endTime": 1454799,
+    "duration": 3919,
+    "text": "started to think about it I thought yeah"
+  },
+  {
+    "startTime": 1452159,
+    "endTime": 1456279,
+    "duration": 4120,
+    "text": "when you know I use numbers all the time"
+  },
+  {
+    "startTime": 1454799,
+    "endTime": 1457880,
+    "duration": 3081,
+    "text": "yeah certain numbers do kind of feel a"
+  },
+  {
+    "startTime": 1456279,
+    "endTime": 1461440,
+    "duration": 5161,
+    "text": "bit different to others and then you"
+  },
+  {
+    "startTime": 1457880,
+    "endTime": 1465200,
+    "duration": 7320,
+    "text": "start looking at it um even Shakespeare"
+  },
+  {
+    "startTime": 1461440,
+    "endTime": 1466840,
+    "duration": 5400,
+    "text": "noticed this this is from Mary wives of"
+  },
+  {
+    "startTime": 1465200,
+    "endTime": 1468799,
+    "duration": 3599,
+    "text": "Windsor full staff they say there is"
+  },
+  {
+    "startTime": 1466840,
+    "endTime": 1472000,
+    "duration": 5160,
+    "text": "Divinity in odd numbers either in"
+  },
+  {
+    "startTime": 1468799,
+    "endTime": 1475399,
+    "duration": 6600,
+    "text": "Nativity chance or death and it's true"
+  },
+  {
+    "startTime": 1472000,
+    "endTime": 1477880,
+    "duration": 5880,
+    "text": "all our most mystical religious symbolic"
+  },
+  {
+    "startTime": 1475399,
+    "endTime": 1481919,
+    "duration": 6520,
+    "text": "numbers are odd numbers in the western"
+  },
+  {
+    "startTime": 1477880,
+    "endTime": 1484919,
+    "duration": 7039,
+    "text": "tradition so three um you know Christian"
+  },
+  {
+    "startTime": 1481919,
+    "endTime": 1486159,
+    "duration": 4240,
+    "text": "Christianity seven 13 you know five a"
+  },
+  {
+    "startTime": 1484919,
+    "endTime": 1489760,
+    "duration": 4841,
+    "text": "little bit they're all actually they're"
+  },
+  {
+    "startTime": 1486159,
+    "endTime": 1493640,
+    "duration": 7481,
+    "text": "all low primes and this is interesting"
+  },
+  {
+    "startTime": 1489760,
+    "endTime": 1495159,
+    "duration": 5399,
+    "text": "and there is psychological research"
+  },
+  {
+    "startTime": 1493640,
+    "endTime": 1498080,
+    "duration": 4440,
+    "text": "proper psychological research not just"
+  },
+  {
+    "startTime": 1495159,
+    "endTime": 1499760,
+    "duration": 4601,
+    "text": "my online survey that starts to give us"
+  },
+  {
+    "startTime": 1498080,
+    "endTime": 1502000,
+    "duration": 3920,
+    "text": "a bit of in about why this might be the"
+  },
+  {
+    "startTime": 1499760,
+    "endTime": 1503960,
+    "duration": 4200,
+    "text": "case so one of the experiments was"
+  },
+  {
+    "startTime": 1502000,
+    "endTime": 1506760,
+    "duration": 4760,
+    "text": "you're just shown two digits either"
+  },
+  {
+    "startTime": 1503960,
+    "endTime": 1509240,
+    "duration": 5280,
+    "text": "they're both odd they're both even or"
+  },
+  {
+    "startTime": 1506760,
+    "endTime": 1510760,
+    "duration": 4000,
+    "text": "one is even and one is odd okay all you"
+  },
+  {
+    "startTime": 1509240,
+    "endTime": 1512200,
+    "duration": 2960,
+    "text": "need to do is just press a button when"
+  },
+  {
+    "startTime": 1510760,
+    "endTime": 1513480,
+    "duration": 2720,
+    "text": "they're both the same so either when"
+  },
+  {
+    "startTime": 1512200,
+    "endTime": 1517200,
+    "duration": 5000,
+    "text": "they're both even or when they're both"
+  },
+  {
+    "startTime": 1513480,
+    "endTime": 1518440,
+    "duration": 4960,
+    "text": "odd turns out you're much slower"
+  },
+  {
+    "startTime": 1517200,
+    "endTime": 1521279,
+    "duration": 4079,
+    "text": "pressing the button when they're both"
+  },
+  {
+    "startTime": 1518440,
+    "endTime": 1523039,
+    "duration": 4599,
+    "text": "odd and you make more mistakes in other"
+  },
+  {
+    "startTime": 1521279,
+    "endTime": 1524799,
+    "duration": 3520,
+    "text": "words it kind of takes us longer just to"
+  },
+  {
+    "startTime": 1523039,
+    "endTime": 1526559,
+    "duration": 3520,
+    "text": "process the just to think about them not"
+  },
+  {
+    "startTime": 1524799,
+    "endTime": 1528559,
+    "duration": 3760,
+    "text": "to do any math with them just to think"
+  },
+  {
+    "startTime": 1526559,
+    "endTime": 1530440,
+    "duration": 3881,
+    "text": "about odd numbers than it does with even"
+  },
+  {
+    "startTime": 1528559,
+    "endTime": 1532360,
+    "duration": 3801,
+    "text": "numbers and this sort of gives this idea"
+  },
+  {
+    "startTime": 1530440,
+    "endTime": 1534640,
+    "duration": 4200,
+    "text": "that there somehow there's sort of more"
+  },
+  {
+    "startTime": 1532360,
+    "endTime": 1537640,
+    "duration": 5280,
+    "text": "room there's more space to have a kind"
+  },
+  {
+    "startTime": 1534640,
+    "endTime": 1540720,
+    "duration": 6080,
+    "text": "of emotional interaction with"
+  },
+  {
+    "startTime": 1537640,
+    "endTime": 1541919,
+    "duration": 4279,
+    "text": "them the final um experiment I want to"
+  },
+  {
+    "startTime": 1540720,
+    "endTime": 1543320,
+    "duration": 2600,
+    "text": "talk about in terms of these"
+  },
+  {
+    "startTime": 1541919,
+    "endTime": 1546200,
+    "duration": 4281,
+    "text": "psychological emotional responses to"
+  },
+  {
+    "startTime": 1543320,
+    "endTime": 1547799,
+    "duration": 4479,
+    "text": "numbers is all about branding and I'm"
+  },
+  {
+    "startTime": 1546200,
+    "endTime": 1549640,
+    "duration": 3440,
+    "text": "sure we're going to be seeing a lot more"
+  },
+  {
+    "startTime": 1547799,
+    "endTime": 1553840,
+    "duration": 6041,
+    "text": "of this because this is quite recent"
+  },
+  {
+    "startTime": 1549640,
+    "endTime": 1558679,
+    "duration": 9039,
+    "text": "work um"
+  },
+  {
+    "startTime": 1553840,
+    "endTime": 1560679,
+    "duration": 6839,
+    "text": "the um the scientists the academics"
+  },
+  {
+    "startTime": 1558679,
+    "endTime": 1562399,
+    "duration": 3720,
+    "text": "wanted to know if we are more likely to"
+  },
+  {
+    "startTime": 1560679,
+    "endTime": 1565399,
+    "duration": 4720,
+    "text": "be attracted to want to buy and pay more"
+  },
+  {
+    "startTime": 1562399,
+    "endTime": 1568960,
+    "duration": 6561,
+    "text": "money for Brands if they have different"
+  },
+  {
+    "startTime": 1565399,
+    "endTime": 1572880,
+    "duration": 7481,
+    "text": "types of numbers on them so you"
+  },
+  {
+    "startTime": 1568960,
+    "endTime": 1575440,
+    "duration": 6480,
+    "text": "know uh WD40 it's very sensible brand"
+  },
+  {
+    "startTime": 1572880,
+    "endTime": 1577919,
+    "duration": 5039,
+    "text": "popular band that's an even number right"
+  },
+  {
+    "startTime": 1575440,
+    "endTime": 1579919,
+    "duration": 4479,
+    "text": "oxy 10 that's an even number it's kind"
+  },
+  {
+    "startTime": 1577919,
+    "endTime": 1582720,
+    "duration": 4801,
+    "text": "of something sensible safe about even"
+  },
+  {
+    "startTime": 1579919,
+    "endTime": 1584520,
+    "duration": 4601,
+    "text": "numbers and it turns out that for"
+  },
+  {
+    "startTime": 1582720,
+    "endTime": 1587080,
+    "duration": 4360,
+    "text": "household products things that you want"
+  },
+  {
+    "startTime": 1584520,
+    "endTime": 1589000,
+    "duration": 4480,
+    "text": "to work and be reliable people are much"
+  },
+  {
+    "startTime": 1587080,
+    "endTime": 1590640,
+    "duration": 3560,
+    "text": "more likely will pay more money for if"
+  },
+  {
+    "startTime": 1589000,
+    "endTime": 1592799,
+    "duration": 3799,
+    "text": "they have an even number on them so the"
+  },
+  {
+    "startTime": 1590640,
+    "endTime": 1596640,
+    "duration": 6000,
+    "text": "experiment here"
+  },
+  {
+    "startTime": 1592799,
+    "endTime": 1598559,
+    "duration": 5760,
+    "text": "was contact two um packs of contact lens"
+  },
+  {
+    "startTime": 1596640,
+    "endTime": 1600240,
+    "duration": 3600,
+    "text": "one is the brand called Solus 36 one is"
+  },
+  {
+    "startTime": 1598559,
+    "endTime": 1602120,
+    "duration": 3561,
+    "text": "Solus 37 they're absolutely exactly the"
+  },
+  {
+    "startTime": 1600240,
+    "endTime": 1604559,
+    "duration": 4319,
+    "text": "same you do all these tests about with"
+  },
+  {
+    "startTime": 1602120,
+    "endTime": 1605919,
+    "duration": 3799,
+    "text": "how to evalue the brand Solus 36 is much"
+  },
+  {
+    "startTime": 1604559,
+    "endTime": 1608440,
+    "duration": 3881,
+    "text": "more popular people pay more money for"
+  },
+  {
+    "startTime": 1605919,
+    "endTime": 1610679,
+    "duration": 4760,
+    "text": "it they want it they like it better okay"
+  },
+  {
+    "startTime": 1608440,
+    "endTime": 1614360,
+    "duration": 5920,
+    "text": "so this is the first of the argument of"
+  },
+  {
+    "startTime": 1610679,
+    "endTime": 1618279,
+    "duration": 7600,
+    "text": "the experiment then they"
+  },
+  {
+    "startTime": 1614360,
+    "endTime": 1620919,
+    "duration": 6559,
+    "text": "added this tagline six colors six fits"
+  },
+  {
+    "startTime": 1618279,
+    "endTime": 1623080,
+    "duration": 4801,
+    "text": "just to see if this affected how much"
+  },
+  {
+    "startTime": 1620919,
+    "endTime": 1624440,
+    "duration": 3521,
+    "text": "you wanted the brand how much you liked"
+  },
+  {
+    "startTime": 1623080,
+    "endTime": 1626760,
+    "duration": 3680,
+    "text": "it how much money you were prepared to"
+  },
+  {
+    "startTime": 1624440,
+    "endTime": 1630080,
+    "duration": 5640,
+    "text": "pay for it and what happened is that"
+  },
+  {
+    "startTime": 1626760,
+    "endTime": 1632200,
+    "duration": 5440,
+    "text": "Solus 36 becomes even more liked and"
+  },
+  {
+    "startTime": 1630080,
+    "endTime": 1635279,
+    "duration": 5199,
+    "text": "Solus 37 which wasn't liked very much in"
+  },
+  {
+    "startTime": 1632200,
+    "endTime": 1638279,
+    "duration": 6079,
+    "text": "the first place becomes even less liked"
+  },
+  {
+    "startTime": 1635279,
+    "endTime": 1640760,
+    "duration": 5481,
+    "text": "and the argument that the put forward"
+  },
+  {
+    "startTime": 1638279,
+    "endTime": 1645080,
+    "duration": 6801,
+    "text": "the hypothesis by these scientists is"
+  },
+  {
+    "startTime": 1640760,
+    "endTime": 1648640,
+    "duration": 7880,
+    "text": "that the reason why we like s"
+  },
+  {
+    "startTime": 1645080,
+    "endTime": 1649960,
+    "duration": 4880,
+    "text": "36 is that we"
+  },
+  {
+    "startTime": 1648640,
+    "endTime": 1652240,
+    "duration": 3600,
+    "text": "how do we learn numbers we learn numbers"
+  },
+  {
+    "startTime": 1649960,
+    "endTime": 1656039,
+    "duration": 6079,
+    "text": "by learning time tables by Road when"
+  },
+  {
+    "startTime": 1652240,
+    "endTime": 1658880,
+    "duration": 6640,
+    "text": "we're children so we much more familiar"
+  },
+  {
+    "startTime": 1656039,
+    "endTime": 1660440,
+    "duration": 4401,
+    "text": "with numbers that are in times tables so"
+  },
+  {
+    "startTime": 1658880,
+    "endTime": 1662840,
+    "duration": 3960,
+    "text": "six"
+  },
+  {
+    "startTime": 1660440,
+    "endTime": 1664320,
+    "duration": 3880,
+    "text": "36 we use you know whenever do the six"
+  },
+  {
+    "startTime": 1662840,
+    "endTime": 1666600,
+    "duration": 3760,
+    "text": "times tables we do we do the 12 times"
+  },
+  {
+    "startTime": 1664320,
+    "endTime": 1668039,
+    "duration": 3719,
+    "text": "tables we get to it and what happens we"
+  },
+  {
+    "startTime": 1666600,
+    "endTime": 1669880,
+    "duration": 3280,
+    "text": "never get to 37 because it's a prime"
+  },
+  {
+    "startTime": 1668039,
+    "endTime": 1672840,
+    "duration": 4801,
+    "text": "number it's not in any times table it"
+  },
+  {
+    "startTime": 1669880,
+    "endTime": 1674399,
+    "duration": 4519,
+    "text": "will be the answer to very few um"
+  },
+  {
+    "startTime": 1672840,
+    "endTime": 1676840,
+    "duration": 4000,
+    "text": "basically as a child you'll virtually"
+  },
+  {
+    "startTime": 1674399,
+    "endTime": 1678760,
+    "duration": 4361,
+    "text": "never utter or think about the word 37"
+  },
+  {
+    "startTime": 1676840,
+    "endTime": 1680600,
+    "duration": 3760,
+    "text": "but you'll use 36 all the time so it's"
+  },
+  {
+    "startTime": 1678760,
+    "endTime": 1682600,
+    "duration": 3840,
+    "text": "this idea that what you're familiar with"
+  },
+  {
+    "startTime": 1680600,
+    "endTime": 1684440,
+    "duration": 3840,
+    "text": "is a fluency of processing and you"
+  },
+  {
+    "startTime": 1682600,
+    "endTime": 1686320,
+    "duration": 3720,
+    "text": "misattribute this fluency of processing"
+  },
+  {
+    "startTime": 1684440,
+    "endTime": 1687600,
+    "duration": 3160,
+    "text": "for liking of the product you can feels"
+  },
+  {
+    "startTime": 1686320,
+    "endTime": 1690799,
+    "duration": 4479,
+    "text": "good oh I like that oh it's like a"
+  },
+  {
+    "startTime": 1687600,
+    "endTime": 1693720,
+    "duration": 6120,
+    "text": "friend oh friendly product and this is"
+  },
+  {
+    "startTime": 1690799,
+    "endTime": 1695679,
+    "duration": 4880,
+    "text": "EXA which is what exacerbated by the um"
+  },
+  {
+    "startTime": 1693720,
+    "endTime": 1698480,
+    "duration": 4760,
+    "text": "tagline because subconsciously we're"
+  },
+  {
+    "startTime": 1695679,
+    "endTime": 1700039,
+    "duration": 4360,
+    "text": "seeing 6636 like oh yeah it's like a"
+  },
+  {
+    "startTime": 1698480,
+    "endTime": 1702159,
+    "duration": 3679,
+    "text": "nursery D from school I remember that I"
+  },
+  {
+    "startTime": 1700039,
+    "endTime": 1704720,
+    "duration": 4681,
+    "text": "like that I really like this contact"
+  },
+  {
+    "startTime": 1702159,
+    "endTime": 1707200,
+    "duration": 5041,
+    "text": "lenses and with 6637 there's a kind of"
+  },
+  {
+    "startTime": 1704720,
+    "endTime": 1711120,
+    "duration": 6400,
+    "text": "coph there a mathematical cacophony we"
+  },
+  {
+    "startTime": 1707200,
+    "endTime": 1713279,
+    "duration": 6079,
+    "text": "don't like it so so that brand is really"
+  },
+  {
+    "startTime": 1711120,
+    "endTime": 1714760,
+    "duration": 3640,
+    "text": "unattractive and they did a lot more"
+  },
+  {
+    "startTime": 1713279,
+    "endTime": 1716840,
+    "duration": 3561,
+    "text": "experiments and it's interesting that"
+  },
+  {
+    "startTime": 1714760,
+    "endTime": 1719360,
+    "duration": 4600,
+    "text": "when you have an ad for something and if"
+  },
+  {
+    "startTime": 1716840,
+    "endTime": 1721559,
+    "duration": 4719,
+    "text": "you subtly put numbers in it that relate"
+  },
+  {
+    "startTime": 1719360,
+    "endTime": 1723320,
+    "duration": 3960,
+    "text": "arithmetically together you can increase"
+  },
+  {
+    "startTime": 1721559,
+    "endTime": 1726039,
+    "duration": 4480,
+    "text": "quite drastically the liking for that"
+  },
+  {
+    "startTime": 1723320,
+    "endTime": 1727799,
+    "duration": 4479,
+    "text": "brand so in the future I'm sure there"
+  },
+  {
+    "startTime": 1726039,
+    "endTime": 1731919,
+    "duration": 5880,
+    "text": "will be lots of numbers subtly"
+  },
+  {
+    "startTime": 1727799,
+    "endTime": 1733519,
+    "duration": 5720,
+    "text": "positioned within um ads which is you"
+  },
+  {
+    "startTime": 1731919,
+    "endTime": 1735240,
+    "duration": 3321,
+    "text": "know you tend to think oh God I hated"
+  },
+  {
+    "startTime": 1733519,
+    "endTime": 1737440,
+    "duration": 3921,
+    "text": "learning maths by root I hated learning"
+  },
+  {
+    "startTime": 1735240,
+    "endTime": 1739679,
+    "duration": 4439,
+    "text": "my time tables but actually now they can"
+  },
+  {
+    "startTime": 1737440,
+    "endTime": 1742279,
+    "duration": 4839,
+    "text": "be kind of Le vered to make you feel"
+  },
+  {
+    "startTime": 1739679,
+    "endTime": 1745799,
+    "duration": 6120,
+    "text": "good about a product is ironic to say"
+  },
+  {
+    "startTime": 1742279,
+    "endTime": 1748039,
+    "duration": 5760,
+    "text": "the least now that is"
+  },
+  {
+    "startTime": 1745799,
+    "endTime": 1749240,
+    "duration": 3441,
+    "text": "the essentially what is the beginning of"
+  },
+  {
+    "startTime": 1748039,
+    "endTime": 1750120,
+    "duration": 2081,
+    "text": "my book the story about me and the"
+  },
+  {
+    "startTime": 1749240,
+    "endTime": 1753760,
+    "duration": 4520,
+    "text": "favorite numbers and emotional"
+  },
+  {
+    "startTime": 1750120,
+    "endTime": 1755720,
+    "duration": 5600,
+    "text": "connection numbers which is how um life"
+  },
+  {
+    "startTime": 1753760,
+    "endTime": 1757480,
+    "duration": 3720,
+    "text": "reflects numbers the rest of the book so"
+  },
+  {
+    "startTime": 1755720,
+    "endTime": 1761519,
+    "duration": 5799,
+    "text": "the majority of it is kind of proper"
+  },
+  {
+    "startTime": 1757480,
+    "endTime": 1764600,
+    "duration": 7120,
+    "text": "more serious maths um and I'm going to"
+  },
+  {
+    "startTime": 1761519,
+    "endTime": 1766360,
+    "duration": 4841,
+    "text": "just talk to you about one part of it"
+  },
+  {
+    "startTime": 1764600,
+    "endTime": 1767840,
+    "duration": 3240,
+    "text": "now that begins with you know we're"
+  },
+  {
+    "startTime": 1766360,
+    "endTime": 1770679,
+    "duration": 4319,
+    "text": "talking about prime numbers so let's"
+  },
+  {
+    "startTime": 1767840,
+    "endTime": 1771840,
+    "duration": 4000,
+    "text": "just repeat prime numbers the these are"
+  },
+  {
+    "startTime": 1770679,
+    "endTime": 1773799,
+    "duration": 3120,
+    "text": "the prime numbers the numbers that"
+  },
+  {
+    "startTime": 1771840,
+    "endTime": 1776720,
+    "duration": 4880,
+    "text": "divide by themselves only divide by"
+  },
+  {
+    "startTime": 1773799,
+    "endTime": 1782720,
+    "duration": 8921,
+    "text": "themselves in one those are the first um"
+  },
+  {
+    "startTime": 1776720,
+    "endTime": 1784799,
+    "duration": 8079,
+    "text": "seven I think yeah of them 2 3 5 7 11 13"
+  },
+  {
+    "startTime": 1782720,
+    "endTime": 1787440,
+    "duration": 4720,
+    "text": "17"
+  },
+  {
+    "startTime": 1784799,
+    "endTime": 1789720,
+    "duration": 4921,
+    "text": "um we live in the age of algorithms as"
+  },
+  {
+    "startTime": 1787440,
+    "endTime": 1791640,
+    "duration": 4200,
+    "text": "we're told every day what was probably"
+  },
+  {
+    "startTime": 1789720,
+    "endTime": 1794600,
+    "duration": 4880,
+    "text": "the very first"
+  },
+  {
+    "startTime": 1791640,
+    "endTime": 1796480,
+    "duration": 4840,
+    "text": "algorithm um in mathematics therefore in"
+  },
+  {
+    "startTime": 1794600,
+    "endTime": 1798600,
+    "duration": 4000,
+    "text": "Civilization it was probably What's"
+  },
+  {
+    "startTime": 1796480,
+    "endTime": 1801519,
+    "duration": 5039,
+    "text": "called the Civ aristes which was the"
+  },
+  {
+    "startTime": 1798600,
+    "endTime": 1804600,
+    "duration": 6000,
+    "text": "algorithm to try and find all the prime"
+  },
+  {
+    "startTime": 1801519,
+    "endTime": 1806360,
+    "duration": 4841,
+    "text": "numbers under a certain number so this"
+  },
+  {
+    "startTime": 1804600,
+    "endTime": 1808840,
+    "duration": 4240,
+    "text": "is a grid of the numbers from one to 100"
+  },
+  {
+    "startTime": 1806360,
+    "endTime": 1810799,
+    "duration": 4439,
+    "text": "I've done them in six rows we're going"
+  },
+  {
+    "startTime": 1808840,
+    "endTime": 1814279,
+    "duration": 5439,
+    "text": "to use the Civ of aristois to try and"
+  },
+  {
+    "startTime": 1810799,
+    "endTime": 1816240,
+    "duration": 5441,
+    "text": "find all the prime numbers okay the Civ"
+  },
+  {
+    "startTime": 1814279,
+    "endTime": 1818360,
+    "duration": 4081,
+    "text": "what you do you start at the bottom you"
+  },
+  {
+    "startTime": 1816240,
+    "endTime": 1820799,
+    "duration": 4559,
+    "text": "get to a number if the number is not"
+  },
+  {
+    "startTime": 1818360,
+    "endTime": 1823000,
+    "duration": 4640,
+    "text": "being eliminated it's a prime number and"
+  },
+  {
+    "startTime": 1820799,
+    "endTime": 1825120,
+    "duration": 4321,
+    "text": "then you eliminate all multiples of it"
+  },
+  {
+    "startTime": 1823000,
+    "endTime": 1827200,
+    "duration": 4200,
+    "text": "so let's start with one one's not prime"
+  },
+  {
+    "startTime": 1825120,
+    "endTime": 1828559,
+    "duration": 3439,
+    "text": "number because we start at two get to"
+  },
+  {
+    "startTime": 1827200,
+    "endTime": 1830080,
+    "duration": 2880,
+    "text": "two then we elim"
+  },
+  {
+    "startTime": 1828559,
+    "endTime": 1832640,
+    "duration": 4081,
+    "text": "all multiples of it which is basically"
+  },
+  {
+    "startTime": 1830080,
+    "endTime": 1834600,
+    "duration": 4520,
+    "text": "all odd all even numbers and it's nice"
+  },
+  {
+    "startTime": 1832640,
+    "endTime": 1837880,
+    "duration": 5240,
+    "text": "when you do it in a rows of six because"
+  },
+  {
+    "startTime": 1834600,
+    "endTime": 1839480,
+    "duration": 4880,
+    "text": "like this so next one we get to three"
+  },
+  {
+    "startTime": 1837880,
+    "endTime": 1841799,
+    "duration": 3919,
+    "text": "three is a prime number then we"
+  },
+  {
+    "startTime": 1839480,
+    "endTime": 1844039,
+    "duration": 4559,
+    "text": "eliminate all multiples of three which"
+  },
+  {
+    "startTime": 1841799,
+    "endTime": 1845120,
+    "duration": 3321,
+    "text": "is just one more line because the bot"
+  },
+  {
+    "startTime": 1844039,
+    "endTime": 1847039,
+    "duration": 3000,
+    "text": "line is also multiples of three but"
+  },
+  {
+    "startTime": 1845120,
+    "endTime": 1849399,
+    "duration": 4279,
+    "text": "we've already eliminated that four has"
+  },
+  {
+    "startTime": 1847039,
+    "endTime": 1851120,
+    "duration": 4081,
+    "text": "been eliminated we get to five that's a"
+  },
+  {
+    "startTime": 1849399,
+    "endTime": 1853480,
+    "duration": 4081,
+    "text": "prime number eliminate all multiples of"
+  },
+  {
+    "startTime": 1851120,
+    "endTime": 1856080,
+    "duration": 4960,
+    "text": "that six has been eliminated to get to"
+  },
+  {
+    "startTime": 1853480,
+    "endTime": 1857360,
+    "duration": 3880,
+    "text": "Seven um eliminate all multiples of that"
+  },
+  {
+    "startTime": 1856080,
+    "endTime": 1858600,
+    "duration": 2520,
+    "text": "it's quite nice little Criss-Cross"
+  },
+  {
+    "startTime": 1857360,
+    "endTime": 1864039,
+    "duration": 6679,
+    "text": "pattern"
+  },
+  {
+    "startTime": 1858600,
+    "endTime": 1866799,
+    "duration": 8199,
+    "text": "then up to 11 and you only need"
+  },
+  {
+    "startTime": 1864039,
+    "endTime": 1868039,
+    "duration": 4000,
+    "text": "to when you're doing the Civ go to the"
+  },
+  {
+    "startTime": 1866799,
+    "endTime": 1870799,
+    "duration": 4000,
+    "text": "square root of the number that you're"
+  },
+  {
+    "startTime": 1868039,
+    "endTime": 1872320,
+    "duration": 4281,
+    "text": "sving which is root of 100 which is 10"
+  },
+  {
+    "startTime": 1870799,
+    "endTime": 1875200,
+    "duration": 4401,
+    "text": "so we got to 10 already so therefore we"
+  },
+  {
+    "startTime": 1872320,
+    "endTime": 1877559,
+    "duration": 5239,
+    "text": "can guarantee that all of those numbers"
+  },
+  {
+    "startTime": 1875200,
+    "endTime": 1879120,
+    "duration": 3920,
+    "text": "in there are primes and you know there"
+  },
+  {
+    "startTime": 1877559,
+    "endTime": 1881399,
+    "duration": 3840,
+    "text": "are a few interesting things to say"
+  },
+  {
+    "startTime": 1879120,
+    "endTime": 1884000,
+    "duration": 4880,
+    "text": "first is that all prime numbers are"
+  },
+  {
+    "startTime": 1881399,
+    "endTime": 1886279,
+    "duration": 4880,
+    "text": "either one or one less or one more than"
+  },
+  {
+    "startTime": 1884000,
+    "endTime": 1888399,
+    "duration": 4399,
+    "text": "a multiple of six because that can only"
+  },
+  {
+    "startTime": 1886279,
+    "endTime": 1890080,
+    "duration": 3801,
+    "text": "be in line one or line five five and"
+  },
+  {
+    "startTime": 1888399,
+    "endTime": 1892679,
+    "duration": 4280,
+    "text": "this if went on to Infinity would be the"
+  },
+  {
+    "startTime": 1890080,
+    "endTime": 1894679,
+    "duration": 4599,
+    "text": "same um but also which is why people are"
+  },
+  {
+    "startTime": 1892679,
+    "endTime": 1896480,
+    "duration": 3801,
+    "text": "kind of fascinated by prime numbers is"
+  },
+  {
+    "startTime": 1894679,
+    "endTime": 1897519,
+    "duration": 2840,
+    "text": "that before you get them there's no way"
+  },
+  {
+    "startTime": 1896480,
+    "endTime": 1901799,
+    "duration": 5319,
+    "text": "of knowing if a number is going to be"
+  },
+  {
+    "startTime": 1897519,
+    "endTime": 1904039,
+    "duration": 6520,
+    "text": "prime or not um they appear to be kind"
+  },
+  {
+    "startTime": 1901799,
+    "endTime": 1905679,
+    "duration": 3880,
+    "text": "of randomly sprinkled around the number"
+  },
+  {
+    "startTime": 1904039,
+    "endTime": 1907600,
+    "duration": 3561,
+    "text": "line and that is one of the reasons why"
+  },
+  {
+    "startTime": 1905679,
+    "endTime": 1910000,
+    "duration": 4321,
+    "text": "they are still one of the first things"
+  },
+  {
+    "startTime": 1907600,
+    "endTime": 1912240,
+    "duration": 4640,
+    "text": "to be studied in numbers and there's"
+  },
+  {
+    "startTime": 1910000,
+    "endTime": 1915360,
+    "duration": 5360,
+    "text": "still lots of things about them are just"
+  },
+  {
+    "startTime": 1912240,
+    "endTime": 1919840,
+    "duration": 7600,
+    "text": "not known um lots of books about you"
+  },
+  {
+    "startTime": 1915360,
+    "endTime": 1919840,
+    "duration": 4480,
+    "text": "know prime numbers so"
+  },
+  {
+    "startTime": 1920120,
+    "endTime": 1924880,
+    "duration": 4760,
+    "text": "in"
+  },
+  {
+    "startTime": 1922080,
+    "endTime": 1926639,
+    "duration": 4559,
+    "text": "1963 stanislav ulam who was one of the"
+  },
+  {
+    "startTime": 1924880,
+    "endTime": 1929360,
+    "duration": 4480,
+    "text": "great kind of mathematicians of the 20th"
+  },
+  {
+    "startTime": 1926639,
+    "endTime": 1931399,
+    "duration": 4760,
+    "text": "century was doodling was got bored in a"
+  },
+  {
+    "startTime": 1929360,
+    "endTime": 1933880,
+    "duration": 4520,
+    "text": "math lecture and started to Doodle and"
+  },
+  {
+    "startTime": 1931399,
+    "endTime": 1936120,
+    "duration": 4721,
+    "text": "he did a grid but he put the one in the"
+  },
+  {
+    "startTime": 1933880,
+    "endTime": 1938559,
+    "duration": 4679,
+    "text": "middle and then started to spiral out"
+  },
+  {
+    "startTime": 1936120,
+    "endTime": 1941600,
+    "duration": 5480,
+    "text": "and then started to um cross"
+  },
+  {
+    "startTime": 1938559,
+    "endTime": 1943960,
+    "duration": 5401,
+    "text": "off the prime numbers and he noticed"
+  },
+  {
+    "startTime": 1941600,
+    "endTime": 1947200,
+    "duration": 5600,
+    "text": "something that no one had noticed"
+  },
+  {
+    "startTime": 1943960,
+    "endTime": 1949240,
+    "duration": 5280,
+    "text": "before that prime numbers tend to sit on"
+  },
+  {
+    "startTime": 1947200,
+    "endTime": 1951440,
+    "duration": 4240,
+    "text": "lines together together and so this is"
+  },
+  {
+    "startTime": 1949240,
+    "endTime": 1953240,
+    "duration": 4000,
+    "text": "something after several thousand years"
+  },
+  {
+    "startTime": 1951440,
+    "endTime": 1955639,
+    "duration": 4199,
+    "text": "someone you know no one ever bothered to"
+  },
+  {
+    "startTime": 1953240,
+    "endTime": 1957039,
+    "duration": 3799,
+    "text": "do this and this is up to 100 which is"
+  },
+  {
+    "startTime": 1955639,
+    "endTime": 1959440,
+    "duration": 3801,
+    "text": "the numbers we saw on the grid before"
+  },
+  {
+    "startTime": 1957039,
+    "endTime": 1961799,
+    "duration": 4760,
+    "text": "but if we do up to 20,000 you see it a"
+  },
+  {
+    "startTime": 1959440,
+    "endTime": 1964880,
+    "duration": 5440,
+    "text": "bit more that there are these lines that"
+  },
+  {
+    "startTime": 1961799,
+    "endTime": 1968120,
+    "duration": 6321,
+    "text": "the prime numbers seem to sit on and"
+  },
+  {
+    "startTime": 1964880,
+    "endTime": 1971000,
+    "duration": 6120,
+    "text": "it's called an ulam spiral and"
+  },
+  {
+    "startTime": 1968120,
+    "endTime": 1973399,
+    "duration": 5279,
+    "text": "really you know in math you kind of have"
+  },
+  {
+    "startTime": 1971000,
+    "endTime": 1976159,
+    "duration": 5159,
+    "text": "total order that's a bit boring you have"
+  },
+  {
+    "startTime": 1973399,
+    "endTime": 1979080,
+    "duration": 5681,
+    "text": "total chaos that's a bit complicated"
+  },
+  {
+    "startTime": 1976159,
+    "endTime": 1980639,
+    "duration": 4480,
+    "text": "when you have this sort of in the bit"
+  },
+  {
+    "startTime": 1979080,
+    "endTime": 1982159,
+    "duration": 3079,
+    "text": "between Order and Chaos which we have"
+  },
+  {
+    "startTime": 1980639,
+    "endTime": 1983799,
+    "duration": 3160,
+    "text": "you here which is where things start to"
+  },
+  {
+    "startTime": 1982159,
+    "endTime": 1985799,
+    "duration": 3640,
+    "text": "get really interesting so this is a"
+  },
+  {
+    "startTime": 1983799,
+    "endTime": 1988399,
+    "duration": 4600,
+    "text": "really kind of simple yet incredibly"
+  },
+  {
+    "startTime": 1985799,
+    "endTime": 1991000,
+    "duration": 5201,
+    "text": "deep image of you know where are all"
+  },
+  {
+    "startTime": 1988399,
+    "endTime": 1992480,
+    "duration": 4081,
+    "text": "these primes and what relation they have"
+  },
+  {
+    "startTime": 1991000,
+    "endTime": 1994880,
+    "duration": 3880,
+    "text": "to each"
+  },
+  {
+    "startTime": 1992480,
+    "endTime": 1998720,
+    "duration": 6240,
+    "text": "other this is ulam right here on the"
+  },
+  {
+    "startTime": 1994880,
+    "endTime": 2001320,
+    "duration": 6440,
+    "text": "right and he's sitting this is um just"
+  },
+  {
+    "startTime": 1998720,
+    "endTime": 2005760,
+    "duration": 7040,
+    "text": "after the second world war um near Los"
+  },
+  {
+    "startTime": 2001320,
+    "endTime": 2008399,
+    "duration": 7079,
+    "text": "Alamos with John Van nyman on the left"
+  },
+  {
+    "startTime": 2005760,
+    "endTime": 2010200,
+    "duration": 4440,
+    "text": "who um"
+  },
+  {
+    "startTime": 2008399,
+    "endTime": 2011320,
+    "duration": 2921,
+    "text": "I I hope that Google has a shrine to"
+  },
+  {
+    "startTime": 2010200,
+    "endTime": 2013360,
+    "duration": 3160,
+    "text": "John Van neyman somewhere because"
+  },
+  {
+    "startTime": 2011320,
+    "endTime": 2016480,
+    "duration": 5160,
+    "text": "basically invented the computer or a lot"
+  },
+  {
+    "startTime": 2013360,
+    "endTime": 2018760,
+    "duration": 5400,
+    "text": "of the um without insuring of course but"
+  },
+  {
+    "startTime": 2016480,
+    "endTime": 2020559,
+    "duration": 4079,
+    "text": "a lot of the kind of inter conceptual"
+  },
+  {
+    "startTime": 2018760,
+    "endTime": 2022559,
+    "duration": 3799,
+    "text": "framework of computing was basically"
+  },
+  {
+    "startTime": 2020559,
+    "endTime": 2025320,
+    "duration": 4761,
+    "text": "invented by John Van nyman in the middle"
+  },
+  {
+    "startTime": 2022559,
+    "endTime": 2026519,
+    "duration": 3960,
+    "text": "is Richard fman the famous American"
+  },
+  {
+    "startTime": 2025320,
+    "endTime": 2028080,
+    "duration": 2760,
+    "text": "physicist this is like an amazing"
+  },
+  {
+    "startTime": 2026519,
+    "endTime": 2030760,
+    "duration": 4241,
+    "text": "picture because you could quite easily"
+  },
+  {
+    "startTime": 2028080,
+    "endTime": 2033919,
+    "duration": 5839,
+    "text": "argue that these three men sort of"
+  },
+  {
+    "startTime": 2030760,
+    "endTime": 2035480,
+    "duration": 4720,
+    "text": "changed the 20th century sort of more"
+  },
+  {
+    "startTime": 2033919,
+    "endTime": 2037440,
+    "duration": 3521,
+    "text": "than anyone else because they were"
+  },
+  {
+    "startTime": 2035480,
+    "endTime": 2038720,
+    "duration": 3240,
+    "text": "instrumental in creating um nuclear"
+  },
+  {
+    "startTime": 2037440,
+    "endTime": 2042399,
+    "duration": 4959,
+    "text": "weapons"
+  },
+  {
+    "startTime": 2038720,
+    "endTime": 2044559,
+    "duration": 5839,
+    "text": "um the computer uh Von"
+  },
+  {
+    "startTime": 2042399,
+    "endTime": 2048560,
+    "duration": 6161,
+    "text": "nyman possibly the greatest mathematical"
+  },
+  {
+    "startTime": 2044559,
+    "endTime": 2050599,
+    "duration": 6040,
+    "text": "genius of the 20th century in whatever"
+  },
+  {
+    "startTime": 2048560,
+    "endTime": 2054040,
+    "duration": 5480,
+    "text": "he tried to do he invented like a new"
+  },
+  {
+    "startTime": 2050599,
+    "endTime": 2055679,
+    "duration": 5080,
+    "text": "field and it's one of the fields that he"
+  },
+  {
+    "startTime": 2054040,
+    "endTime": 2058399,
+    "duration": 4359,
+    "text": "and ulam invented I'm just going to"
+  },
+  {
+    "startTime": 2055679,
+    "endTime": 2060760,
+    "duration": 5081,
+    "text": "finish off talking about now which um"
+  },
+  {
+    "startTime": 2058399,
+    "endTime": 2062480,
+    "duration": 4081,
+    "text": "hopefully is right up your street"
+  },
+  {
+    "startTime": 2060760,
+    "endTime": 2065359,
+    "duration": 4599,
+    "text": "because it talks about essentially the"
+  },
+  {
+    "startTime": 2062480,
+    "endTime": 2069560,
+    "duration": 7080,
+    "text": "first computer craze that there ever was"
+  },
+  {
+    "startTime": 2065359,
+    "endTime": 2072879,
+    "duration": 7520,
+    "text": "so van nyman was inventing so much stuff"
+  },
+  {
+    "startTime": 2069560,
+    "endTime": 2076079,
+    "duration": 6519,
+    "text": "and it was the uh 1940s early 50s"
+  },
+  {
+    "startTime": 2072879,
+    "endTime": 2079839,
+    "duration": 6960,
+    "text": "started to worry about what he was"
+  },
+  {
+    "startTime": 2076079,
+    "endTime": 2080639,
+    "duration": 4560,
+    "text": "creating um you know computers robots"
+  },
+  {
+    "startTime": 2079839,
+    "endTime": 2083040,
+    "duration": 3201,
+    "text": "you know what's going to happen to"
+  },
+  {
+    "startTime": 2080639,
+    "endTime": 2086280,
+    "duration": 5641,
+    "text": "robots what would it take he asked for a"
+  },
+  {
+    "startTime": 2083040,
+    "endTime": 2088760,
+    "duration": 5720,
+    "text": "robot or a machine to replicate"
+  },
+  {
+    "startTime": 2086280,
+    "endTime": 2090040,
+    "duration": 3760,
+    "text": "itself and this is actually kind of a"
+  },
+  {
+    "startTime": 2088760,
+    "endTime": 2091760,
+    "duration": 3000,
+    "text": "logic it's like a logic problem it's"
+  },
+  {
+    "startTime": 2090040,
+    "endTime": 2093159,
+    "duration": 3119,
+    "text": "like a mathematical problem it's not"
+  },
+  {
+    "startTime": 2091760,
+    "endTime": 2095480,
+    "duration": 3720,
+    "text": "really a biological problem it's a kind"
+  },
+  {
+    "startTime": 2093159,
+    "endTime": 2097280,
+    "duration": 4121,
+    "text": "of conceptual idea because just say"
+  },
+  {
+    "startTime": 2095480,
+    "endTime": 2100280,
+    "duration": 4800,
+    "text": "you've got the machine and you've got"
+  },
+  {
+    "startTime": 2097280,
+    "endTime": 2101920,
+    "duration": 4640,
+    "text": "say the instructions what you know you"
+  },
+  {
+    "startTime": 2100280,
+    "endTime": 2105480,
+    "duration": 5200,
+    "text": "put the instructions in the machine can"
+  },
+  {
+    "startTime": 2101920,
+    "endTime": 2107400,
+    "duration": 5480,
+    "text": "the machine make itself from the"
+  },
+  {
+    "startTime": 2105480,
+    "endTime": 2108640,
+    "duration": 3160,
+    "text": "instructions because the instructions"
+  },
+  {
+    "startTime": 2107400,
+    "endTime": 2111480,
+    "duration": 4080,
+    "text": "obviously are part of the machine you"
+  },
+  {
+    "startTime": 2108640,
+    "endTime": 2115400,
+    "duration": 6760,
+    "text": "cannot replicate"
+  },
+  {
+    "startTime": 2111480,
+    "endTime": 2116640,
+    "duration": 5160,
+    "text": "and basically it can't in a finite world"
+  },
+  {
+    "startTime": 2115400,
+    "endTime": 2118720,
+    "duration": 3320,
+    "text": "because just you got a machine in the"
+  },
+  {
+    "startTime": 2116640,
+    "endTime": 2121079,
+    "duration": 4439,
+    "text": "set of instructions what you want to do"
+  },
+  {
+    "startTime": 2118720,
+    "endTime": 2124119,
+    "duration": 5399,
+    "text": "is create exactly that a machine in the"
+  },
+  {
+    "startTime": 2121079,
+    "endTime": 2127160,
+    "duration": 6081,
+    "text": "set of instructions just say the machine"
+  },
+  {
+    "startTime": 2124119,
+    "endTime": 2129160,
+    "duration": 5041,
+    "text": "reads the instructions and it's got"
+  },
+  {
+    "startTime": 2127160,
+    "endTime": 2131520,
+    "duration": 4360,
+    "text": "instructions how to rebuild a machine"
+  },
+  {
+    "startTime": 2129160,
+    "endTime": 2133280,
+    "duration": 4120,
+    "text": "does that set of instructions have"
+  },
+  {
+    "startTime": 2131520,
+    "endTime": 2135920,
+    "duration": 4400,
+    "text": "instructions on how to build a new set"
+  },
+  {
+    "startTime": 2133280,
+    "endTime": 2137320,
+    "duration": 4040,
+    "text": "of instructions because if it does then"
+  },
+  {
+    "startTime": 2135920,
+    "endTime": 2138440,
+    "duration": 2520,
+    "text": "that set of instructions within"
+  },
+  {
+    "startTime": 2137320,
+    "endTime": 2139680,
+    "duration": 2360,
+    "text": "instructions is got to have some other"
+  },
+  {
+    "startTime": 2138440,
+    "endTime": 2141640,
+    "duration": 3200,
+    "text": "instructions and then you get this"
+  },
+  {
+    "startTime": 2139680,
+    "endTime": 2144720,
+    "duration": 5040,
+    "text": "infinite regress it's a finite system it"
+  },
+  {
+    "startTime": 2141640,
+    "endTime": 2145839,
+    "duration": 4199,
+    "text": "can't happen so he realized that if you"
+  },
+  {
+    "startTime": 2144720,
+    "endTime": 2148280,
+    "duration": 3560,
+    "text": "have a machine with a set of"
+  },
+  {
+    "startTime": 2145839,
+    "endTime": 2151079,
+    "duration": 5240,
+    "text": "instructions to self-replicate you need"
+  },
+  {
+    "startTime": 2148280,
+    "endTime": 2152880,
+    "duration": 4600,
+    "text": "to treat the instructions in two ways"
+  },
+  {
+    "startTime": 2151079,
+    "endTime": 2156160,
+    "duration": 5081,
+    "text": "you need to read"
+  },
+  {
+    "startTime": 2152880,
+    "endTime": 2158440,
+    "duration": 5560,
+    "text": "it um to build the machine and then you"
+  },
+  {
+    "startTime": 2156160,
+    "endTime": 2161280,
+    "duration": 5120,
+    "text": "need to duplicate it and then present it"
+  },
+  {
+    "startTime": 2158440,
+    "endTime": 2163040,
+    "duration": 4600,
+    "text": "to the new machine okay so there are two"
+  },
+  {
+    "startTime": 2161280,
+    "endTime": 2166359,
+    "duration": 5079,
+    "text": "ways basically you need these two"
+  },
+  {
+    "startTime": 2163040,
+    "endTime": 2168920,
+    "duration": 5880,
+    "text": "elements and when a few years"
+  },
+  {
+    "startTime": 2166359,
+    "endTime": 2170520,
+    "duration": 4161,
+    "text": "ago you know Watson and Crick discovered"
+  },
+  {
+    "startTime": 2168920,
+    "endTime": 2172160,
+    "duration": 3240,
+    "text": "DNA they realized that essentially the"
+  },
+  {
+    "startTime": 2170520,
+    "endTime": 2174079,
+    "duration": 3559,
+    "text": "same thing happens in humans more in"
+  },
+  {
+    "startTime": 2172160,
+    "endTime": 2176040,
+    "duration": 3880,
+    "text": "general terms the DNA is the"
+  },
+  {
+    "startTime": 2174079,
+    "endTime": 2178119,
+    "duration": 4040,
+    "text": "instructions it has instructions for the"
+  },
+  {
+    "startTime": 2176040,
+    "endTime": 2180319,
+    "duration": 4279,
+    "text": "cell but DNA does not contain"
+  },
+  {
+    "startTime": 2178119,
+    "endTime": 2181720,
+    "duration": 3601,
+    "text": "instructions for DNA because DNA DNA"
+  },
+  {
+    "startTime": 2180319,
+    "endTime": 2183880,
+    "duration": 3561,
+    "text": "replicates as the double helix and one"
+  },
+  {
+    "startTime": 2181720,
+    "endTime": 2185720,
+    "duration": 4000,
+    "text": "of the helixes splits off and then you"
+  },
+  {
+    "startTime": 2183880,
+    "endTime": 2187359,
+    "duration": 3479,
+    "text": "create another one so this is another"
+  },
+  {
+    "startTime": 2185720,
+    "endTime": 2190040,
+    "duration": 4320,
+    "text": "like fantastic example of something"
+  },
+  {
+    "startTime": 2187359,
+    "endTime": 2192839,
+    "duration": 5480,
+    "text": "which the mathematics was conceptually"
+  },
+  {
+    "startTime": 2190040,
+    "endTime": 2195440,
+    "duration": 5400,
+    "text": "discovered well before well before years"
+  },
+  {
+    "startTime": 2192839,
+    "endTime": 2196640,
+    "duration": 3801,
+    "text": "before it was shown to be that was the"
+  },
+  {
+    "startTime": 2195440,
+    "endTime": 2198160,
+    "duration": 2720,
+    "text": "what you know it's like the higs B on it"
+  },
+  {
+    "startTime": 2196640,
+    "endTime": 2201280,
+    "duration": 4640,
+    "text": "was kind of mathematically proved and"
+  },
+  {
+    "startTime": 2198160,
+    "endTime": 2205200,
+    "duration": 7040,
+    "text": "then decades later they it was"
+  },
+  {
+    "startTime": 2201280,
+    "endTime": 2207119,
+    "duration": 5839,
+    "text": "discovered now when he what John V"
+  },
+  {
+    "startTime": 2205200,
+    "endTime": 2209000,
+    "duration": 3800,
+    "text": "Norman wanted to do he's look like a"
+  },
+  {
+    "startTime": 2207119,
+    "endTime": 2211000,
+    "duration": 3881,
+    "text": "fantastic entertaining character who's"
+  },
+  {
+    "startTime": 2209000,
+    "endTime": 2213079,
+    "duration": 4079,
+    "text": "loved partying and sometimes would hold"
+  },
+  {
+    "startTime": 2211000,
+    "endTime": 2214880,
+    "duration": 3880,
+    "text": "parties just because he liked working to"
+  },
+  {
+    "startTime": 2213079,
+    "endTime": 2216359,
+    "duration": 3280,
+    "text": "the sound of party so he'd be there kind"
+  },
+  {
+    "startTime": 2214880,
+    "endTime": 2218560,
+    "duration": 3680,
+    "text": "of mixing together on then go back to"
+  },
+  {
+    "startTime": 2216359,
+    "endTime": 2221160,
+    "duration": 4801,
+    "text": "his room and do some amazing m"
+  },
+  {
+    "startTime": 2218560,
+    "endTime": 2223079,
+    "duration": 4519,
+    "text": "um he wanted to think about building a"
+  },
+  {
+    "startTime": 2221160,
+    "endTime": 2224599,
+    "duration": 3439,
+    "text": "self-replicating robot this something"
+  },
+  {
+    "startTime": 2223079,
+    "endTime": 2226599,
+    "duration": 3520,
+    "text": "which can use the instructions then"
+  },
+  {
+    "startTime": 2224599,
+    "endTime": 2228160,
+    "duration": 3561,
+    "text": "duplicate them but it was just kind of"
+  },
+  {
+    "startTime": 2226599,
+    "endTime": 2229960,
+    "duration": 3361,
+    "text": "too complicated actually working out how"
+  },
+  {
+    "startTime": 2228160,
+    "endTime": 2232119,
+    "duration": 3959,
+    "text": "to build one in the real world so ulam"
+  },
+  {
+    "startTime": 2229960,
+    "endTime": 2234560,
+    "duration": 4600,
+    "text": "who as we've seen like loves grids and"
+  },
+  {
+    "startTime": 2232119,
+    "endTime": 2237800,
+    "duration": 5681,
+    "text": "things like that and patterns"
+  },
+  {
+    "startTime": 2234560,
+    "endTime": 2239640,
+    "duration": 5080,
+    "text": "said why don't you use let's invent a"
+  },
+  {
+    "startTime": 2237800,
+    "endTime": 2241119,
+    "duration": 3319,
+    "text": "new kind of mathematical abstraction"
+  },
+  {
+    "startTime": 2239640,
+    "endTime": 2243599,
+    "duration": 3959,
+    "text": "which they did called the cellular"
+  },
+  {
+    "startTime": 2241119,
+    "endTime": 2246000,
+    "duration": 4881,
+    "text": "automater and the cellular cellular"
+  },
+  {
+    "startTime": 2243599,
+    "endTime": 2247960,
+    "duration": 4361,
+    "text": "autometer um it's actually it's a grid"
+  },
+  {
+    "startTime": 2246000,
+    "endTime": 2249599,
+    "duration": 3599,
+    "text": "of cells the cells can have has"
+  },
+  {
+    "startTime": 2247960,
+    "endTime": 2253119,
+    "duration": 5159,
+    "text": "different states but the behavior of the"
+  },
+  {
+    "startTime": 2249599,
+    "endTime": 2255560,
+    "duration": 5961,
+    "text": "cells depends only on neighboring cells"
+  },
+  {
+    "startTime": 2253119,
+    "endTime": 2257440,
+    "duration": 4321,
+    "text": "I'm going to explain now a very simple"
+  },
+  {
+    "startTime": 2255560,
+    "endTime": 2259640,
+    "duration": 4080,
+    "text": "cellular autometer called The Game of"
+  },
+  {
+    "startTime": 2257440,
+    "endTime": 2263839,
+    "duration": 6399,
+    "text": "Life"
+  },
+  {
+    "startTime": 2259640,
+    "endTime": 2264880,
+    "duration": 5240,
+    "text": "because um Von nyman invented it to show"
+  },
+  {
+    "startTime": 2263839,
+    "endTime": 2266800,
+    "duration": 2961,
+    "text": "to try and find something that would"
+  },
+  {
+    "startTime": 2264880,
+    "endTime": 2270200,
+    "duration": 5320,
+    "text": "self-replicate and he managed to do that"
+  },
+  {
+    "startTime": 2266800,
+    "endTime": 2272119,
+    "duration": 5319,
+    "text": "conceptually um and then a decade or so"
+  },
+  {
+    "startTime": 2270200,
+    "endTime": 2273599,
+    "duration": 3399,
+    "text": "later the end of the 60s a British"
+  },
+  {
+    "startTime": 2272119,
+    "endTime": 2274839,
+    "duration": 2720,
+    "text": "mathematician called John Conway who's"
+  },
+  {
+    "startTime": 2273599,
+    "endTime": 2277920,
+    "duration": 4321,
+    "text": "still alive is at Princeton at the"
+  },
+  {
+    "startTime": 2274839,
+    "endTime": 2280680,
+    "duration": 5841,
+    "text": "moment invented what is one of the most"
+  },
+  {
+    "startTime": 2277920,
+    "endTime": 2282400,
+    "duration": 4480,
+    "text": "famous kind of examples of what's called"
+  },
+  {
+    "startTime": 2280680,
+    "endTime": 2284480,
+    "duration": 3800,
+    "text": "recreational math but it's so quite"
+  },
+  {
+    "startTime": 2282400,
+    "endTime": 2286119,
+    "duration": 3719,
+    "text": "serious called The Game of Life it's not"
+  },
+  {
+    "startTime": 2284480,
+    "endTime": 2290040,
+    "duration": 5560,
+    "text": "a game it's a cellular"
+  },
+  {
+    "startTime": 2286119,
+    "endTime": 2292920,
+    "duration": 6801,
+    "text": "autometer um life because it emulates um"
+  },
+  {
+    "startTime": 2290040,
+    "endTime": 2297119,
+    "duration": 7079,
+    "text": "evolution of life"
+  },
+  {
+    "startTime": 2292920,
+    "endTime": 2298839,
+    "duration": 5919,
+    "text": "so oops this is a grid The Game of Life"
+  },
+  {
+    "startTime": 2297119,
+    "endTime": 2302119,
+    "duration": 5000,
+    "text": "is it all of I'm going to explain how it"
+  },
+  {
+    "startTime": 2298839,
+    "endTime": 2303720,
+    "duration": 4881,
+    "text": "works all of it um takes place on a"
+  },
+  {
+    "startTime": 2302119,
+    "endTime": 2306319,
+    "duration": 4200,
+    "text": "two-dimensional grid the grid can be"
+  },
+  {
+    "startTime": 2303720,
+    "endTime": 2307960,
+    "duration": 4240,
+    "text": "infinite and it has these um orthogonal"
+  },
+  {
+    "startTime": 2306319,
+    "endTime": 2309560,
+    "duration": 3241,
+    "text": "cells"
+  },
+  {
+    "startTime": 2307960,
+    "endTime": 2313359,
+    "duration": 5399,
+    "text": "the cells can have two states either"
+  },
+  {
+    "startTime": 2309560,
+    "endTime": 2317280,
+    "duration": 7720,
+    "text": "alive or dead this is alive"
+  },
+  {
+    "startTime": 2313359,
+    "endTime": 2318599,
+    "duration": 5240,
+    "text": "cell all around it a dead and it's"
+  },
+  {
+    "startTime": 2317280,
+    "endTime": 2320839,
+    "duration": 3559,
+    "text": "immediate neighbors there are eight of"
+  },
+  {
+    "startTime": 2318599,
+    "endTime": 2322800,
+    "duration": 4201,
+    "text": "them who are these ones here all around"
+  },
+  {
+    "startTime": 2320839,
+    "endTime": 2327040,
+    "duration": 6201,
+    "text": "it so it is going"
+  },
+  {
+    "startTime": 2322800,
+    "endTime": 2328960,
+    "duration": 6160,
+    "text": "to its behavior depends only on those"
+  },
+  {
+    "startTime": 2327040,
+    "endTime": 2331680,
+    "duration": 4640,
+    "text": "egg cells around it and these are the"
+  },
+  {
+    "startTime": 2328960,
+    "endTime": 2334520,
+    "duration": 5560,
+    "text": "rules that it obeys these are the Game"
+  },
+  {
+    "startTime": 2331680,
+    "endTime": 2337480,
+    "duration": 5800,
+    "text": "of Life genetic laws one if you have a"
+  },
+  {
+    "startTime": 2334520,
+    "endTime": 2339800,
+    "duration": 5280,
+    "text": "life cell if it's surrounded by zero one"
+  },
+  {
+    "startTime": 2337480,
+    "endTime": 2341960,
+    "duration": 4480,
+    "text": "life neighbors it dies by"
+  },
+  {
+    "startTime": 2339800,
+    "endTime": 2344560,
+    "duration": 4760,
+    "text": "loneliness if it has two or three life"
+  },
+  {
+    "startTime": 2341960,
+    "endTime": 2344560,
+    "duration": 2600,
+    "text": "neighbors it"
+  },
+  {
+    "startTime": 2344640,
+    "endTime": 2349520,
+    "duration": 4880,
+    "text": "survives four or more life neighbors it"
+  },
+  {
+    "startTime": 2347000,
+    "endTime": 2351240,
+    "duration": 4240,
+    "text": "dies by overcrowding okay really really"
+  },
+  {
+    "startTime": 2349520,
+    "endTime": 2352720,
+    "duration": 3200,
+    "text": "simple basically if a life cell is"
+  },
+  {
+    "startTime": 2351240,
+    "endTime": 2356079,
+    "duration": 4839,
+    "text": "surrounded by two or three it surviv if"
+  },
+  {
+    "startTime": 2352720,
+    "endTime": 2357880,
+    "duration": 5160,
+    "text": "it's not it dies a dead cell if it has"
+  },
+  {
+    "startTime": 2356079,
+    "endTime": 2362079,
+    "duration": 6000,
+    "text": "exactly three life neighbors it becomes"
+  },
+  {
+    "startTime": 2357880,
+    "endTime": 2364319,
+    "duration": 6439,
+    "text": "alive in all other cases it stays dead"
+  },
+  {
+    "startTime": 2362079,
+    "endTime": 2366319,
+    "duration": 4240,
+    "text": "so Conway this was the late"
+  },
+  {
+    "startTime": 2364319,
+    "endTime": 2367800,
+    "duration": 3481,
+    "text": "60s he had one of those grids was"
+  },
+  {
+    "startTime": 2366319,
+    "endTime": 2370160,
+    "duration": 3841,
+    "text": "basically a goboard the no computers"
+  },
+  {
+    "startTime": 2367800,
+    "endTime": 2372119,
+    "duration": 4319,
+    "text": "then and he used go counters just to see"
+  },
+  {
+    "startTime": 2370160,
+    "endTime": 2376119,
+    "duration": 5959,
+    "text": "what would happen and so let's see what"
+  },
+  {
+    "startTime": 2372119,
+    "endTime": 2377960,
+    "duration": 5841,
+    "text": "happens this is a a pattern with three"
+  },
+  {
+    "startTime": 2376119,
+    "endTime": 2380319,
+    "duration": 4200,
+    "text": "shapes"
+  },
+  {
+    "startTime": 2377960,
+    "endTime": 2382720,
+    "duration": 4760,
+    "text": "and what"
+  },
+  {
+    "startTime": 2380319,
+    "endTime": 2384720,
+    "duration": 4401,
+    "text": "is The Game of Life does is what we will"
+  },
+  {
+    "startTime": 2382720,
+    "endTime": 2386040,
+    "duration": 3320,
+    "text": "always do we will start with a pattern"
+  },
+  {
+    "startTime": 2384720,
+    "endTime": 2388280,
+    "duration": 3560,
+    "text": "and the idea is to put an interesting"
+  },
+  {
+    "startTime": 2386040,
+    "endTime": 2390520,
+    "duration": 4480,
+    "text": "pattern on the board and then you don't"
+  },
+  {
+    "startTime": 2388280,
+    "endTime": 2392599,
+    "duration": 4319,
+    "text": "touch it at all it then just evolves and"
+  },
+  {
+    "startTime": 2390520,
+    "endTime": 2395440,
+    "duration": 4920,
+    "text": "it changes so what we want to see is how"
+  },
+  {
+    "startTime": 2392599,
+    "endTime": 2396960,
+    "duration": 4361,
+    "text": "it evolves and Conway chose his rules to"
+  },
+  {
+    "startTime": 2395440,
+    "endTime": 2399000,
+    "duration": 3560,
+    "text": "make the most unpredictable and"
+  },
+  {
+    "startTime": 2396960,
+    "endTime": 2403440,
+    "duration": 6480,
+    "text": "interesting"
+  },
+  {
+    "startTime": 2399000,
+    "endTime": 2405680,
+    "duration": 6680,
+    "text": "um uh way that things evolve so what"
+  },
+  {
+    "startTime": 2403440,
+    "endTime": 2406720,
+    "duration": 3280,
+    "text": "we're going to do here let's look at"
+  },
+  {
+    "startTime": 2405680,
+    "endTime": 2409880,
+    "duration": 4200,
+    "text": "this one"
+  },
+  {
+    "startTime": 2406720,
+    "endTime": 2412640,
+    "duration": 5920,
+    "text": "here surrounded by one life neighbor it"
+  },
+  {
+    "startTime": 2409880,
+    "endTime": 2414440,
+    "duration": 4560,
+    "text": "will die surrounded by two live"
+  },
+  {
+    "startTime": 2412640,
+    "endTime": 2415960,
+    "duration": 3320,
+    "text": "neighbors it will will survive"
+  },
+  {
+    "startTime": 2414440,
+    "endTime": 2418160,
+    "duration": 3720,
+    "text": "surrounded by one life neighbor it will"
+  },
+  {
+    "startTime": 2415960,
+    "endTime": 2420520,
+    "duration": 4560,
+    "text": "die surround it's a dead cell surrounded"
+  },
+  {
+    "startTime": 2418160,
+    "endTime": 2422440,
+    "duration": 4280,
+    "text": "by three it will survive so what happens"
+  },
+  {
+    "startTime": 2420520,
+    "endTime": 2424480,
+    "duration": 3960,
+    "text": "is that you work out how each one is"
+  },
+  {
+    "startTime": 2422440,
+    "endTime": 2426599,
+    "duration": 4159,
+    "text": "going to behave and then you do the"
+  },
+  {
+    "startTime": 2424480,
+    "endTime": 2428119,
+    "duration": 3639,
+    "text": "apply the rules on everything and then"
+  },
+  {
+    "startTime": 2426599,
+    "endTime": 2430480,
+    "duration": 3881,
+    "text": "you get a new generation so what would"
+  },
+  {
+    "startTime": 2428119,
+    "endTime": 2432319,
+    "duration": 4200,
+    "text": "happen here the new generation would be"
+  },
+  {
+    "startTime": 2430480,
+    "endTime": 2434560,
+    "duration": 4080,
+    "text": "that"
+  },
+  {
+    "startTime": 2432319,
+    "endTime": 2435880,
+    "duration": 3561,
+    "text": "okay and then it dies because there are"
+  },
+  {
+    "startTime": 2434560,
+    "endTime": 2438640,
+    "duration": 4080,
+    "text": "only two"
+  },
+  {
+    "startTime": 2435880,
+    "endTime": 2442839,
+    "duration": 6959,
+    "text": "left let's this one"
+  },
+  {
+    "startTime": 2438640,
+    "endTime": 2446280,
+    "duration": 7640,
+    "text": "here that comes that and then it"
+  },
+  {
+    "startTime": 2442839,
+    "endTime": 2449000,
+    "duration": 6161,
+    "text": "dies this one here we're getting with um"
+  },
+  {
+    "startTime": 2446280,
+    "endTime": 2451720,
+    "duration": 5440,
+    "text": "shapes with three live"
+  },
+  {
+    "startTime": 2449000,
+    "endTime": 2453839,
+    "duration": 4839,
+    "text": "cells becomes that and then it just"
+  },
+  {
+    "startTime": 2451720,
+    "endTime": 2455480,
+    "duration": 3760,
+    "text": "stays there it's called a stable form so"
+  },
+  {
+    "startTime": 2453839,
+    "endTime": 2457000,
+    "duration": 3161,
+    "text": "at the beginning they were like"
+  },
+  {
+    "startTime": 2455480,
+    "endTime": 2458400,
+    "duration": 2920,
+    "text": "zoologists they've got this new world"
+  },
+  {
+    "startTime": 2457000,
+    "endTime": 2460280,
+    "duration": 3280,
+    "text": "they were just like trying to work out"
+  },
+  {
+    "startTime": 2458400,
+    "endTime": 2462920,
+    "duration": 4520,
+    "text": "what was there finding the patterns and"
+  },
+  {
+    "startTime": 2460280,
+    "endTime": 2466680,
+    "duration": 6400,
+    "text": "and and what would happen this one here"
+  },
+  {
+    "startTime": 2462920,
+    "endTime": 2470240,
+    "duration": 7320,
+    "text": "another three uh cell"
+  },
+  {
+    "startTime": 2466680,
+    "endTime": 2473079,
+    "duration": 6399,
+    "text": "pattern becomes that then that and then"
+  },
+  {
+    "startTime": 2470240,
+    "endTime": 2475760,
+    "duration": 5520,
+    "text": "that and that's known as the"
+  },
+  {
+    "startTime": 2473079,
+    "endTime": 2479160,
+    "duration": 6081,
+    "text": "blinker okay not not that interesting"
+  },
+  {
+    "startTime": 2475760,
+    "endTime": 2482560,
+    "duration": 6800,
+    "text": "yet but when you start to add certain"
+  },
+  {
+    "startTime": 2479160,
+    "endTime": 2484960,
+    "duration": 5800,
+    "text": "you know more most things end up dying"
+  },
+  {
+    "startTime": 2482560,
+    "endTime": 2489240,
+    "duration": 6680,
+    "text": "but sometimes you get amazing bursts of"
+  },
+  {
+    "startTime": 2484960,
+    "endTime": 2489240,
+    "duration": 4280,
+    "text": "life so this is this four Cale pattern"
+  },
+  {
+    "startTime": 2489440,
+    "endTime": 2494800,
+    "duration": 5360,
+    "text": "becomes this then this then this then"
+  },
+  {
+    "startTime": 2499480,
+    "endTime": 2504520,
+    "duration": 5040,
+    "text": "this that's full blinkers which is"
+  },
+  {
+    "startTime": 2501920,
+    "endTime": 2507400,
+    "duration": 5480,
+    "text": "called traffic lights"
+  },
+  {
+    "startTime": 2504520,
+    "endTime": 2509200,
+    "duration": 4680,
+    "text": "um let's go and look at a five Cale"
+  },
+  {
+    "startTime": 2507400,
+    "endTime": 2510680,
+    "duration": 3280,
+    "text": "pattern so they've done all the four"
+  },
+  {
+    "startTime": 2509200,
+    "endTime": 2512599,
+    "duration": 3399,
+    "text": "Cale patterns so what happened to them"
+  },
+  {
+    "startTime": 2510680,
+    "endTime": 2514640,
+    "duration": 3960,
+    "text": "they were you know cataloging"
+  },
+  {
+    "startTime": 2512599,
+    "endTime": 2516720,
+    "duration": 4121,
+    "text": "them and then they noticed something"
+  },
+  {
+    "startTime": 2514640,
+    "endTime": 2518280,
+    "duration": 3640,
+    "text": "amazing and this is when basically the"
+  },
+  {
+    "startTime": 2516720,
+    "endTime": 2521079,
+    "duration": 4359,
+    "text": "study of life really took off because"
+  },
+  {
+    "startTime": 2518280,
+    "endTime": 2521079,
+    "duration": 2799,
+    "text": "look at this five star"
+  },
+  {
+    "startTime": 2526000,
+    "endTime": 2530720,
+    "duration": 4720,
+    "text": "pattern it"
+  },
+  {
+    "startTime": 2528040,
+    "endTime": 2535640,
+    "duration": 7600,
+    "text": "repeats it's called a glider every four"
+  },
+  {
+    "startTime": 2530720,
+    "endTime": 2538280,
+    "duration": 7560,
+    "text": "generations it's moved one um space down"
+  },
+  {
+    "startTime": 2535640,
+    "endTime": 2540839,
+    "duration": 5199,
+    "text": "and and one cell along on the grid so"
+  },
+  {
+    "startTime": 2538280,
+    "endTime": 2542559,
+    "duration": 4279,
+    "text": "essentially it moves it looks like it's"
+  },
+  {
+    "startTime": 2540839,
+    "endTime": 2545319,
+    "duration": 4480,
+    "text": "moving"
+  },
+  {
+    "startTime": 2542559,
+    "endTime": 2547839,
+    "duration": 5280,
+    "text": "and this was"
+  },
+  {
+    "startTime": 2545319,
+    "endTime": 2550920,
+    "duration": 5601,
+    "text": "the Conway called the"
+  },
+  {
+    "startTime": 2547839,
+    "endTime": 2554520,
+    "duration": 6681,
+    "text": "spaceships any um in the kind of"
+  },
+  {
+    "startTime": 2550920,
+    "endTime": 2557040,
+    "duration": 6120,
+    "text": "atmology of of of the kind of animals or"
+  },
+  {
+    "startTime": 2554520,
+    "endTime": 2559119,
+    "duration": 4599,
+    "text": "the the living things that you get and"
+  },
+  {
+    "startTime": 2557040,
+    "endTime": 2561079,
+    "duration": 4039,
+    "text": "he wondered and he in Scientific"
+  },
+  {
+    "startTime": 2559119,
+    "endTime": 2564319,
+    "duration": 5200,
+    "text": "American he said does anyone know if"
+  },
+  {
+    "startTime": 2561079,
+    "endTime": 2566680,
+    "duration": 5601,
+    "text": "there's any pattern that can"
+  },
+  {
+    "startTime": 2564319,
+    "endTime": 2568160,
+    "duration": 3841,
+    "text": "grow and get have more and more live"
+  },
+  {
+    "startTime": 2566680,
+    "endTime": 2569920,
+    "duration": 3240,
+    "text": "cells because this one all stays at five"
+  },
+  {
+    "startTime": 2568160,
+    "endTime": 2574000,
+    "duration": 5840,
+    "text": "cells all the way down something can"
+  },
+  {
+    "startTime": 2569920,
+    "endTime": 2575760,
+    "duration": 5840,
+    "text": "grow and get infinitely big and he put a"
+  },
+  {
+    "startTime": 2574000,
+    "endTime": 2577480,
+    "duration": 3480,
+    "text": "reward in Scientific American and the"
+  },
+  {
+    "startTime": 2575760,
+    "endTime": 2579839,
+    "duration": 4079,
+    "text": "Martin Garden article that wrote about"
+  },
+  {
+    "startTime": 2577480,
+    "endTime": 2581720,
+    "duration": 4240,
+    "text": "it was the most read article he ever"
+  },
+  {
+    "startTime": 2579839,
+    "endTime": 2584839,
+    "duration": 5000,
+    "text": "wrote and this is a guy who is like the"
+  },
+  {
+    "startTime": 2581720,
+    "endTime": 2586839,
+    "duration": 5119,
+    "text": "guru of all kind of popularization of"
+  },
+  {
+    "startTime": 2584839,
+    "endTime": 2589839,
+    "duration": 5000,
+    "text": "math and"
+  },
+  {
+    "startTime": 2586839,
+    "endTime": 2593240,
+    "duration": 6401,
+    "text": "science um"
+  },
+  {
+    "startTime": 2589839,
+    "endTime": 2595440,
+    "duration": 5601,
+    "text": "and this was Conway Cambridge writing"
+  },
+  {
+    "startTime": 2593240,
+    "endTime": 2597000,
+    "duration": 3760,
+    "text": "about it Martin Gardner in America"
+  },
+  {
+    "startTime": 2595440,
+    "endTime": 2599079,
+    "duration": 3639,
+    "text": "writing about it but the real"
+  },
+  {
+    "startTime": 2597000,
+    "endTime": 2602720,
+    "duration": 5720,
+    "text": "development started to happen in"
+  },
+  {
+    "startTime": 2599079,
+    "endTime": 2605160,
+    "duration": 6081,
+    "text": "MIT um the only"
+  },
+  {
+    "startTime": 2602720,
+    "endTime": 2607280,
+    "duration": 4560,
+    "text": "people the game Life came along at a"
+  },
+  {
+    "startTime": 2605160,
+    "endTime": 2608640,
+    "duration": 3480,
+    "text": "time where Computing was just just"
+  },
+  {
+    "startTime": 2607280,
+    "endTime": 2611040,
+    "duration": 3760,
+    "text": "beginning but you already have computers"
+  },
+  {
+    "startTime": 2608640,
+    "endTime": 2612800,
+    "duration": 4160,
+    "text": "if you're like in a big um kind of"
+  },
+  {
+    "startTime": 2611040,
+    "endTime": 2616160,
+    "duration": 5120,
+    "text": "organization or if you were at a"
+  },
+  {
+    "startTime": 2612800,
+    "endTime": 2617280,
+    "duration": 4480,
+    "text": "university someone like MIT and I don't"
+  },
+  {
+    "startTime": 2616160,
+    "endTime": 2619359,
+    "duration": 3199,
+    "text": "know if you know where the word hacking"
+  },
+  {
+    "startTime": 2617280,
+    "endTime": 2621200,
+    "duration": 3920,
+    "text": "comes from the word hacking um"
+  },
+  {
+    "startTime": 2619359,
+    "endTime": 2623359,
+    "duration": 4000,
+    "text": "originally comes from the MIT model"
+  },
+  {
+    "startTime": 2621200,
+    "endTime": 2624559,
+    "duration": 3359,
+    "text": "Railway Club basically and a hackers"
+  },
+  {
+    "startTime": 2623359,
+    "endTime": 2626480,
+    "duration": 3121,
+    "text": "where you kind of customize something"
+  },
+  {
+    "startTime": 2624559,
+    "endTime": 2628599,
+    "duration": 4040,
+    "text": "just for the hell of it just to make it"
+  },
+  {
+    "startTime": 2626480,
+    "endTime": 2632040,
+    "duration": 5560,
+    "text": "fun and so the hackers were the people"
+  },
+  {
+    "startTime": 2628599,
+    "endTime": 2633480,
+    "duration": 4881,
+    "text": "who worked the my more ra rway Club but"
+  },
+  {
+    "startTime": 2632040,
+    "endTime": 2635160,
+    "duration": 3120,
+    "text": "when computers came along they became"
+  },
+  {
+    "startTime": 2633480,
+    "endTime": 2636880,
+    "duration": 3400,
+    "text": "not so interested in model Railways and"
+  },
+  {
+    "startTime": 2635160,
+    "endTime": 2638599,
+    "duration": 3439,
+    "text": "working on computers and the thing with"
+  },
+  {
+    "startTime": 2636880,
+    "endTime": 2640880,
+    "duration": 4000,
+    "text": "game of life as you saw incredibly"
+  },
+  {
+    "startTime": 2638599,
+    "endTime": 2644839,
+    "duration": 6240,
+    "text": "simple rules but incredibly complex"
+  },
+  {
+    "startTime": 2640880,
+    "endTime": 2649520,
+    "duration": 8640,
+    "text": "Behavior it became basically the first"
+  },
+  {
+    "startTime": 2644839,
+    "endTime": 2651720,
+    "duration": 6881,
+    "text": "computer craze that the hackers at MIT"
+  },
+  {
+    "startTime": 2649520,
+    "endTime": 2654240,
+    "duration": 4720,
+    "text": "and this is in essenti the people whose"
+  },
+  {
+    "startTime": 2651720,
+    "endTime": 2658559,
+    "duration": 6839,
+    "text": "you know the for fathers"
+  },
+  {
+    "startTime": 2654240,
+    "endTime": 2661880,
+    "duration": 7640,
+    "text": "or not you know four brothers say of you"
+  },
+  {
+    "startTime": 2658559,
+    "endTime": 2663760,
+    "duration": 5201,
+    "text": "know Steve Jobs Bill Gates Etc were the"
+  },
+  {
+    "startTime": 2661880,
+    "endTime": 2665240,
+    "duration": 3360,
+    "text": "hackers at MIT working on The Game of"
+  },
+  {
+    "startTime": 2663760,
+    "endTime": 2667839,
+    "duration": 4079,
+    "text": "Life which was basically the biggest"
+  },
+  {
+    "startTime": 2665240,
+    "endTime": 2669480,
+    "duration": 4240,
+    "text": "deal in Computing in the early 7s"
+  },
+  {
+    "startTime": 2667839,
+    "endTime": 2671760,
+    "duration": 3921,
+    "text": "and Bill gosper who was the kind of King"
+  },
+  {
+    "startTime": 2669480,
+    "endTime": 2675240,
+    "duration": 5760,
+    "text": "of the hackers discovered and won the"
+  },
+  {
+    "startTime": 2671760,
+    "endTime": 2679480,
+    "duration": 7720,
+    "text": "prize for the first pattern that grows"
+  },
+  {
+    "startTime": 2675240,
+    "endTime": 2679480,
+    "duration": 4240,
+    "text": "um without bound which is"
+  },
+  {
+    "startTime": 2680400,
+    "endTime": 2685839,
+    "duration": 5439,
+    "text": "this and it's looks like kind of pair of"
+  },
+  {
+    "startTime": 2683160,
+    "endTime": 2688319,
+    "duration": 5159,
+    "text": "lungs and what it's doing it's called a"
+  },
+  {
+    "startTime": 2685839,
+    "endTime": 2690200,
+    "duration": 4361,
+    "text": "glider gun and basically it's"
+  },
+  {
+    "startTime": 2688319,
+    "endTime": 2694520,
+    "duration": 6201,
+    "text": "just"
+  },
+  {
+    "startTime": 2690200,
+    "endTime": 2696440,
+    "duration": 6240,
+    "text": "um every period spits out a glider and"
+  },
+  {
+    "startTime": 2694520,
+    "endTime": 2698760,
+    "duration": 4240,
+    "text": "that will carry on getting bigger there"
+  },
+  {
+    "startTime": 2696440,
+    "endTime": 2700599,
+    "duration": 4159,
+    "text": "the total of life cells just gets bigger"
+  },
+  {
+    "startTime": 2698760,
+    "endTime": 2701960,
+    "duration": 3200,
+    "text": "and bigger and the more that people"
+  },
+  {
+    "startTime": 2700599,
+    "endTime": 2704839,
+    "duration": 4240,
+    "text": "looked at they started to find other"
+  },
+  {
+    "startTime": 2701960,
+    "endTime": 2706880,
+    "duration": 4920,
+    "text": "patterns that did other interesting"
+  },
+  {
+    "startTime": 2704839,
+    "endTime": 2709800,
+    "duration": 4961,
+    "text": "things so this thing here is called an"
+  },
+  {
+    "startTime": 2706880,
+    "endTime": 2713000,
+    "duration": 6120,
+    "text": "eater and what an eater does is an eater"
+  },
+  {
+    "startTime": 2709800,
+    "endTime": 2714319,
+    "duration": 4519,
+    "text": "will eat anything that you send at it um"
+  },
+  {
+    "startTime": 2713000,
+    "endTime": 2716520,
+    "duration": 3520,
+    "text": "so"
+  },
+  {
+    "startTime": 2714319,
+    "endTime": 2717760,
+    "duration": 3441,
+    "text": "this gave the first indication that this"
+  },
+  {
+    "startTime": 2716520,
+    "endTime": 2719319,
+    "duration": 2799,
+    "text": "actually might have some use because"
+  },
+  {
+    "startTime": 2717760,
+    "endTime": 2722119,
+    "duration": 4359,
+    "text": "it's like how to build a self-repairing"
+  },
+  {
+    "startTime": 2719319,
+    "endTime": 2725480,
+    "duration": 6161,
+    "text": "object but also it meant that you could"
+  },
+  {
+    "startTime": 2722119,
+    "endTime": 2727559,
+    "duration": 5440,
+    "text": "start to just have these amazing kind of"
+  },
+  {
+    "startTime": 2725480,
+    "endTime": 2730319,
+    "duration": 4839,
+    "text": "engineering uh p patterns where you"
+  },
+  {
+    "startTime": 2727559,
+    "endTime": 2732200,
+    "duration": 4641,
+    "text": "could build massive patterns and all the"
+  },
+  {
+    "startTime": 2730319,
+    "endTime": 2736240,
+    "duration": 5921,
+    "text": "debris you could have eers just clean"
+  },
+  {
+    "startTime": 2732200,
+    "endTime": 2736240,
+    "duration": 4040,
+    "text": "them up so let's have a look"
+  },
+  {
+    "startTime": 2736440,
+    "endTime": 2741599,
+    "duration": 5159,
+    "text": "at at the eater what happens this is a"
+  },
+  {
+    "startTime": 2739040,
+    "endTime": 2743920,
+    "duration": 4880,
+    "text": "glider coming in to an eater gets eaten"
+  },
+  {
+    "startTime": 2741599,
+    "endTime": 2747800,
+    "duration": 6201,
+    "text": "this say another spaceship just just"
+  },
+  {
+    "startTime": 2743920,
+    "endTime": 2751000,
+    "duration": 7080,
+    "text": "gets eaten and let's now look at this is"
+  },
+  {
+    "startTime": 2747800,
+    "endTime": 2754599,
+    "duration": 6799,
+    "text": "the sort of thing that people started"
+  },
+  {
+    "startTime": 2751000,
+    "endTime": 2756359,
+    "duration": 5359,
+    "text": "to build so this is a glider moving and"
+  },
+  {
+    "startTime": 2754599,
+    "endTime": 2758440,
+    "duration": 3841,
+    "text": "I'm going to be getting out of it what's"
+  },
+  {
+    "startTime": 2756359,
+    "endTime": 2761400,
+    "duration": 5041,
+    "text": "happening so going to this other massive"
+  },
+  {
+    "startTime": 2758440,
+    "endTime": 2761400,
+    "duration": 2960,
+    "text": "pattern what's going to happen to the"
+  },
+  {
+    "startTime": 2762359,
+    "endTime": 2767200,
+    "duration": 4841,
+    "text": "glider Bing it bounces so that's"
+  },
+  {
+    "startTime": 2765240,
+    "endTime": 2769839,
+    "duration": 4599,
+    "text": "basically a glider reflector it will"
+  },
+  {
+    "startTime": 2767200,
+    "endTime": 2773079,
+    "duration": 5879,
+    "text": "bounce a glider at um"
+  },
+  {
+    "startTime": 2769839,
+    "endTime": 2774440,
+    "duration": 4601,
+    "text": "90° and so as we keep on going out we"
+  },
+  {
+    "startTime": 2773079,
+    "endTime": 2777280,
+    "duration": 4201,
+    "text": "see we've got these gliders and kind of"
+  },
+  {
+    "startTime": 2774440,
+    "endTime": 2778079,
+    "duration": 3639,
+    "text": "out of space and what's interesting is"
+  },
+  {
+    "startTime": 2777280,
+    "endTime": 2779119,
+    "duration": 1839,
+    "text": "that now you're looking at you're"
+  },
+  {
+    "startTime": 2778079,
+    "endTime": 2782119,
+    "duration": 4040,
+    "text": "thinking oh yeah it's like these little"
+  },
+  {
+    "startTime": 2779119,
+    "endTime": 2784400,
+    "duration": 5281,
+    "text": "ants walking around the grid no every"
+  },
+  {
+    "startTime": 2782119,
+    "endTime": 2789000,
+    "duration": 6881,
+    "text": "cell is only responding to the eight"
+  },
+  {
+    "startTime": 2784400,
+    "endTime": 2792000,
+    "duration": 7600,
+    "text": "cells around it so there is no kind of"
+  },
+  {
+    "startTime": 2789000,
+    "endTime": 2794160,
+    "duration": 5160,
+    "text": "overall guiding thing but yet there is"
+  },
+  {
+    "startTime": 2792000,
+    "endTime": 2795319,
+    "duration": 3319,
+    "text": "so Game of Life is such a great way to"
+  },
+  {
+    "startTime": 2794160,
+    "endTime": 2797640,
+    "duration": 3480,
+    "text": "understand how things at different"
+  },
+  {
+    "startTime": 2795319,
+    "endTime": 2800440,
+    "duration": 5121,
+    "text": "scales take on different appearances so"
+  },
+  {
+    "startTime": 2797640,
+    "endTime": 2804200,
+    "duration": 6560,
+    "text": "we keeping on going out of this"
+  },
+  {
+    "startTime": 2800440,
+    "endTime": 2806280,
+    "duration": 5840,
+    "text": "pattern all these are gliders in in"
+  },
+  {
+    "startTime": 2804200,
+    "endTime": 2809520,
+    "duration": 5320,
+    "text": "streams and here we"
+  },
+  {
+    "startTime": 2806280,
+    "endTime": 2814960,
+    "duration": 8680,
+    "text": "are in fact what this"
+  },
+  {
+    "startTime": 2809520,
+    "endTime": 2817520,
+    "duration": 8000,
+    "text": "is It's a gun so I going"
+  },
+  {
+    "startTime": 2814960,
+    "endTime": 2819720,
+    "duration": 4760,
+    "text": "to goes back in in a second"
+  },
+  {
+    "startTime": 2817520,
+    "endTime": 2822880,
+    "duration": 5360,
+    "text": "yeah magnifies these are the two kind of"
+  },
+  {
+    "startTime": 2819720,
+    "endTime": 2824559,
+    "duration": 4839,
+    "text": "barrels and everything is working in"
+  },
+  {
+    "startTime": 2822880,
+    "endTime": 2827000,
+    "duration": 4120,
+    "text": "such sort of"
+  },
+  {
+    "startTime": 2824559,
+    "endTime": 2830000,
+    "duration": 5441,
+    "text": "synchronicity"
+  },
+  {
+    "startTime": 2827000,
+    "endTime": 2830000,
+    "duration": 3000,
+    "text": "that"
+  },
+  {
+    "startTime": 2830559,
+    "endTime": 2835800,
+    "duration": 5241,
+    "text": "um we going in that get that these these"
+  },
+  {
+    "startTime": 2834559,
+    "endTime": 2837559,
+    "duration": 3000,
+    "text": "things that this is a g this is a"
+  },
+  {
+    "startTime": 2835800,
+    "endTime": 2839240,
+    "duration": 3440,
+    "text": "spaceship a special slightly larger"
+  },
+  {
+    "startTime": 2837559,
+    "endTime": 2841760,
+    "duration": 4201,
+    "text": "spaceship than a"
+  },
+  {
+    "startTime": 2839240,
+    "endTime": 2843319,
+    "duration": 4079,
+    "text": "glider yeah get in there that that that"
+  },
+  {
+    "startTime": 2841760,
+    "endTime": 2845280,
+    "duration": 3520,
+    "text": "will be shut out so this thing will keep"
+  },
+  {
+    "startTime": 2843319,
+    "endTime": 2848760,
+    "duration": 5441,
+    "text": "on going forever just shooting out"
+  },
+  {
+    "startTime": 2845280,
+    "endTime": 2850800,
+    "duration": 5520,
+    "text": "shooting out those spaceship"
+  },
+  {
+    "startTime": 2848760,
+    "endTime": 2854119,
+    "duration": 5359,
+    "text": "now what kind of things can you build"
+  },
+  {
+    "startTime": 2850800,
+    "endTime": 2856520,
+    "duration": 5720,
+    "text": "using the game of life and I wanted to"
+  },
+  {
+    "startTime": 2854119,
+    "endTime": 2858920,
+    "duration": 4801,
+    "text": "show you this pattern so this is a"
+  },
+  {
+    "startTime": 2856520,
+    "endTime": 2861599,
+    "duration": 5079,
+    "text": "pattern 20,000 cells it's the Civ of"
+  },
+  {
+    "startTime": 2858920,
+    "endTime": 2864520,
+    "duration": 5600,
+    "text": "aristes what it's doing it's a gun"
+  },
+  {
+    "startTime": 2861599,
+    "endTime": 2867040,
+    "duration": 5441,
+    "text": "that's shooting out spaceships only in"
+  },
+  {
+    "startTime": 2864520,
+    "endTime": 2869000,
+    "duration": 4480,
+    "text": "the prime number positions okay this is"
+  },
+  {
+    "startTime": 2867040,
+    "endTime": 2870880,
+    "duration": 3840,
+    "text": "two three four is not prime so it's not"
+  },
+  {
+    "startTime": 2869000,
+    "endTime": 2873839,
+    "duration": 4839,
+    "text": "there that's five six is not there"
+  },
+  {
+    "startTime": 2870880,
+    "endTime": 2876240,
+    "duration": 5360,
+    "text": "that's seven okay that's nine nine is"
+  },
+  {
+    "startTime": 2873839,
+    "endTime": 2879800,
+    "duration": 5961,
+    "text": "not going to come out because a glider"
+  },
+  {
+    "startTime": 2876240,
+    "endTime": 2883960,
+    "duration": 7720,
+    "text": "gets shot at it okay so what is actually"
+  },
+  {
+    "startTime": 2879800,
+    "endTime": 2886880,
+    "duration": 7080,
+    "text": "happening here is that as this gets big"
+  },
+  {
+    "startTime": 2883960,
+    "endTime": 2891000,
+    "duration": 7040,
+    "text": "that goes along there this thing here"
+  },
+  {
+    "startTime": 2886880,
+    "endTime": 2893359,
+    "duration": 6479,
+    "text": "shoots a glider every"
+  },
+  {
+    "startTime": 2891000,
+    "endTime": 2896040,
+    "duration": 5040,
+    "text": "three in other words anything that's"
+  },
+  {
+    "startTime": 2893359,
+    "endTime": 2898160,
+    "duration": 4801,
+    "text": "divisible by three is going to kill this"
+  },
+  {
+    "startTime": 2896040,
+    "endTime": 2901720,
+    "duration": 5680,
+    "text": "is shoots something every five this"
+  },
+  {
+    "startTime": 2898160,
+    "endTime": 2904520,
+    "duration": 6360,
+    "text": "every seven this every nine and if I go"
+  },
+  {
+    "startTime": 2901720,
+    "endTime": 2907480,
+    "duration": 5760,
+    "text": "to the"
+  },
+  {
+    "startTime": 2904520,
+    "endTime": 2909079,
+    "duration": 4559,
+    "text": "next this one here"
+  },
+  {
+    "startTime": 2907480,
+    "endTime": 2914040,
+    "duration": 6560,
+    "text": "oh hang"
+  },
+  {
+    "startTime": 2909079,
+    "endTime": 2917040,
+    "duration": 7961,
+    "text": "on how how to press play yeah"
+  },
+  {
+    "startTime": 2914040,
+    "endTime": 2917040,
+    "duration": 3000,
+    "text": "so"
+  },
+  {
+    "startTime": 2917680,
+    "endTime": 2924040,
+    "duration": 6360,
+    "text": "again so yeah so this is shooting every"
+  },
+  {
+    "startTime": 2920920,
+    "endTime": 2926200,
+    "duration": 5280,
+    "text": "three so we've"
+  },
+  {
+    "startTime": 2924040,
+    "endTime": 2928440,
+    "duration": 4400,
+    "text": "had yeah that's"
+  },
+  {
+    "startTime": 2926200,
+    "endTime": 2931119,
+    "duration": 4919,
+    "text": "seven this is"
+  },
+  {
+    "startTime": 2928440,
+    "endTime": 2934240,
+    "duration": 5800,
+    "text": "nine because we know all even numbers"
+  },
+  {
+    "startTime": 2931119,
+    "endTime": 2936960,
+    "duration": 5841,
+    "text": "aren't Prime we only shoot out the odds"
+  },
+  {
+    "startTime": 2934240,
+    "endTime": 2939280,
+    "duration": 5040,
+    "text": "that is nine okay that's 11 that's going"
+  },
+  {
+    "startTime": 2936960,
+    "endTime": 2939280,
+    "duration": 2320,
+    "text": "to get"
+  },
+  {
+    "startTime": 2939319,
+    "endTime": 2944960,
+    "duration": 5641,
+    "text": "through"
+  },
+  {
+    "startTime": 2941480,
+    "endTime": 2946760,
+    "duration": 5280,
+    "text": "so it's the C of aristes turned into"
+  },
+  {
+    "startTime": 2944960,
+    "endTime": 2949280,
+    "duration": 4320,
+    "text": "this kind of Intergalactic shoe ATT"
+  },
+  {
+    "startTime": 2946760,
+    "endTime": 2953520,
+    "duration": 6760,
+    "text": "between gliders and spaceships um that's"
+  },
+  {
+    "startTime": 2949280,
+    "endTime": 2955760,
+    "duration": 6480,
+    "text": "11 the next one is 15 so 15 is divisible"
+  },
+  {
+    "startTime": 2953520,
+    "endTime": 2958359,
+    "duration": 4839,
+    "text": "by that's the three coming in that's the"
+  },
+  {
+    "startTime": 2955760,
+    "endTime": 2960119,
+    "duration": 4359,
+    "text": "five coming in that's 15 so that's going"
+  },
+  {
+    "startTime": 2958359,
+    "endTime": 2963480,
+    "duration": 5121,
+    "text": "to get"
+  },
+  {
+    "startTime": 2960119,
+    "endTime": 2966319,
+    "duration": 6200,
+    "text": "short so we could let this pattern go"
+  },
+  {
+    "startTime": 2963480,
+    "endTime": 2968680,
+    "duration": 5200,
+    "text": "forever and it would just shoot out"
+  },
+  {
+    "startTime": 2966319,
+    "endTime": 2973280,
+    "duration": 6961,
+    "text": "gliding and I've got one slide to go"
+  },
+  {
+    "startTime": 2968680,
+    "endTime": 2975520,
+    "duration": 6840,
+    "text": "left which is this one here"
+  },
+  {
+    "startTime": 2973280,
+    "endTime": 2978520,
+    "duration": 5240,
+    "text": "so what is the extent of The Game of"
+  },
+  {
+    "startTime": 2975520,
+    "endTime": 2981640,
+    "duration": 6120,
+    "text": "Life what can the Game of Life do um you"
+  },
+  {
+    "startTime": 2978520,
+    "endTime": 2983559,
+    "duration": 5039,
+    "text": "know it can find prime numbers actually"
+  },
+  {
+    "startTime": 2981640,
+    "endTime": 2985960,
+    "duration": 4320,
+    "text": "speeding up cuz I don't have enough time"
+  },
+  {
+    "startTime": 2983559,
+    "endTime": 2989160,
+    "duration": 5601,
+    "text": "the game of Life can do absolutely"
+  },
+  {
+    "startTime": 2985960,
+    "endTime": 2990960,
+    "duration": 5000,
+    "text": "anything that any computer can do right"
+  },
+  {
+    "startTime": 2989160,
+    "endTime": 2993200,
+    "duration": 4040,
+    "text": "because what does the computer at its"
+  },
+  {
+    "startTime": 2990960,
+    "endTime": 2994960,
+    "duration": 4000,
+    "text": "most basic level it's a bunch of wires"
+  },
+  {
+    "startTime": 2993200,
+    "endTime": 2999440,
+    "duration": 6240,
+    "text": "with a pulse going through it it's"
+  },
+  {
+    "startTime": 2994960,
+    "endTime": 3001920,
+    "duration": 6960,
+    "text": "binary you can emulate a wire with a"
+  },
+  {
+    "startTime": 2999440,
+    "endTime": 3003880,
+    "duration": 4440,
+    "text": "pulse going through it by a stream of"
+  },
+  {
+    "startTime": 3001920,
+    "endTime": 3005640,
+    "duration": 3720,
+    "text": "gliders like here so when there's a"
+  },
+  {
+    "startTime": 3003880,
+    "endTime": 3007440,
+    "duration": 3560,
+    "text": "space it's a zero when there's a glider"
+  },
+  {
+    "startTime": 3005640,
+    "endTime": 3009480,
+    "duration": 3840,
+    "text": "there's a one what else do you need you"
+  },
+  {
+    "startTime": 3007440,
+    "endTime": 3010799,
+    "duration": 3359,
+    "text": "need logic gates you can make the three"
+  },
+  {
+    "startTime": 3009480,
+    "endTime": 3013240,
+    "duration": 3760,
+    "text": "logic gates there are patterns for the"
+  },
+  {
+    "startTime": 3010799,
+    "endTime": 3014680,
+    "duration": 3881,
+    "text": "three logic gates and you need um you"
+  },
+  {
+    "startTime": 3013240,
+    "endTime": 3015960,
+    "duration": 2720,
+    "text": "need wires to be able to cross each"
+  },
+  {
+    "startTime": 3014680,
+    "endTime": 3018400,
+    "duration": 3720,
+    "text": "other you can do that just by thinning"
+  },
+  {
+    "startTime": 3015960,
+    "endTime": 3020160,
+    "duration": 4200,
+    "text": "out the wires so they don't hit and you"
+  },
+  {
+    "startTime": 3018400,
+    "endTime": 3021880,
+    "duration": 3480,
+    "text": "need a memory register you can do that"
+  },
+  {
+    "startTime": 3020160,
+    "endTime": 3023799,
+    "duration": 3639,
+    "text": "with the block which is the square and"
+  },
+  {
+    "startTime": 3021880,
+    "endTime": 3025640,
+    "duration": 3760,
+    "text": "the block at a certain distance keeping"
+  },
+  {
+    "startTime": 3023799,
+    "endTime": 3028119,
+    "duration": 4320,
+    "text": "the memory"
+  },
+  {
+    "startTime": 3025640,
+    "endTime": 3030599,
+    "duration": 4959,
+    "text": "so the mathematical term for that would"
+  },
+  {
+    "startTime": 3028119,
+    "endTime": 3033160,
+    "duration": 5041,
+    "text": "be that life is universal because it's"
+  },
+  {
+    "startTime": 3030599,
+    "endTime": 3034880,
+    "duration": 4281,
+    "text": "capable of a universal computation so"
+  },
+  {
+    "startTime": 3033160,
+    "endTime": 3037240,
+    "duration": 4080,
+    "text": "even though it would be very inefficient"
+  },
+  {
+    "startTime": 3034880,
+    "endTime": 3039599,
+    "duration": 4719,
+    "text": "way to do it you can actually"
+  },
+  {
+    "startTime": 3037240,
+    "endTime": 3043280,
+    "duration": 6040,
+    "text": "use you know the game Life"
+  },
+  {
+    "startTime": 3039599,
+    "endTime": 3045720,
+    "duration": 6121,
+    "text": "which incredibly Simple Rules can do"
+  },
+  {
+    "startTime": 3043280,
+    "endTime": 3050000,
+    "duration": 6720,
+    "text": "anything that the most complicated"
+  },
+  {
+    "startTime": 3045720,
+    "endTime": 3051480,
+    "duration": 5760,
+    "text": "sophisticated computer could ever do and"
+  },
+  {
+    "startTime": 3050000,
+    "endTime": 3054520,
+    "duration": 4520,
+    "text": "I guess on"
+  },
+  {
+    "startTime": 3051480,
+    "endTime": 3056960,
+    "duration": 5480,
+    "text": "that which is kind of quite a wow we"
+  },
+  {
+    "startTime": 3054520,
+    "endTime": 3058440,
+    "duration": 3920,
+    "text": "come to the end of The Talk The um"
+  },
+  {
+    "startTime": 3056960,
+    "endTime": 3060000,
+    "duration": 3040,
+    "text": "that's the name of the book which has"
+  },
+  {
+    "startTime": 3058440,
+    "endTime": 3061520,
+    "duration": 3080,
+    "text": "all more information both about"
+  },
+  {
+    "startTime": 3060000,
+    "endTime": 3066240,
+    "duration": 6240,
+    "text": "emotional responses to numbers loads of"
+  },
+  {
+    "startTime": 3061520,
+    "endTime": 3067319,
+    "duration": 5799,
+    "text": "things in between um culating cellometer"
+  },
+  {
+    "startTime": 3066240,
+    "endTime": 3069319,
+    "duration": 3079,
+    "text": "and you know the whole idea about the"
+  },
+  {
+    "startTime": 3067319,
+    "endTime": 3070440,
+    "duration": 3121,
+    "text": "cellometer is that it's really good for"
+  },
+  {
+    "startTime": 3069319,
+    "endTime": 3073760,
+    "duration": 4441,
+    "text": "um"
+  },
+  {
+    "startTime": 3070440,
+    "endTime": 3075480,
+    "duration": 5040,
+    "text": "emulating uh replication and people have"
+  },
+  {
+    "startTime": 3073760,
+    "endTime": 3077839,
+    "duration": 4079,
+    "text": "now started to get patterns that do"
+  },
+  {
+    "startTime": 3075480,
+    "endTime": 3079799,
+    "duration": 4319,
+    "text": "self-replicate in the sort of vman sense"
+  },
+  {
+    "startTime": 3077839,
+    "endTime": 3081760,
+    "duration": 3921,
+    "text": "of self-replicating and mathematicians"
+  },
+  {
+    "startTime": 3079799,
+    "endTime": 3083079,
+    "duration": 3280,
+    "text": "think it's only a matter of time that"
+  },
+  {
+    "startTime": 3081760,
+    "endTime": 3086319,
+    "duration": 4559,
+    "text": "you will be able to create"
+  },
+  {
+    "startTime": 3083079,
+    "endTime": 3088960,
+    "duration": 5881,
+    "text": "self-replicating creatures that live on"
+  },
+  {
+    "startTime": 3086319,
+    "endTime": 3092280,
+    "duration": 5961,
+    "text": "a kind of big infinite grid of the game"
+  },
+  {
+    "startTime": 3088960,
+    "endTime": 3094640,
+    "duration": 5680,
+    "text": "of life so this kind of game is turning"
+  },
+  {
+    "startTime": 3092280,
+    "endTime": 3098480,
+    "duration": 6200,
+    "text": "into life and there are philosophers who"
+  },
+  {
+    "startTime": 3094640,
+    "endTime": 3101760,
+    "duration": 7120,
+    "text": "say that actually the best explanation"
+  },
+  {
+    "startTime": 3098480,
+    "endTime": 3103480,
+    "duration": 5000,
+    "text": "for the world and the universe is a bit"
+  },
+  {
+    "startTime": 3101760,
+    "endTime": 3106400,
+    "duration": 4640,
+    "text": "like the game of life that there's some"
+  },
+  {
+    "startTime": 3103480,
+    "endTime": 3109040,
+    "duration": 5560,
+    "text": "initial configuration of um kind of"
+  },
+  {
+    "startTime": 3106400,
+    "endTime": 3110160,
+    "duration": 3760,
+    "text": "discrete elements of some way and that"
+  },
+  {
+    "startTime": 3109040,
+    "endTime": 3113079,
+    "duration": 4039,
+    "text": "we are"
+  },
+  {
+    "startTime": 3110160,
+    "endTime": 3116319,
+    "duration": 6159,
+    "text": "just you know squillions of generations"
+  },
+  {
+    "startTime": 3113079,
+    "endTime": 3117960,
+    "duration": 4881,
+    "text": "Beyond from that beginning grid so again"
+  },
+  {
+    "startTime": 3116319,
+    "endTime": 3120319,
+    "duration": 4000,
+    "text": "it's it's interesting to think"
+  },
+  {
+    "startTime": 3117960,
+    "endTime": 3121720,
+    "duration": 3760,
+    "text": "philosophically about that these are"
+  },
+  {
+    "startTime": 3120319,
+    "endTime": 3124280,
+    "duration": 3961,
+    "text": "that's the first book numberand that's"
+  },
+  {
+    "startTime": 3121720,
+    "endTime": 3126160,
+    "duration": 4440,
+    "text": "the football book that I did I Blog"
+  },
+  {
+    "startTime": 3124280,
+    "endTime": 3128720,
+    "duration": 4440,
+    "text": "alexv numberand the guardian every"
+  },
+  {
+    "startTime": 3126160,
+    "endTime": 3130319,
+    "duration": 4159,
+    "text": "couple of weeks and I'm on social media"
+  },
+  {
+    "startTime": 3128720,
+    "endTime": 3132040,
+    "duration": 3320,
+    "text": "if you want to follow any of the math"
+  },
+  {
+    "startTime": 3130319,
+    "endTime": 3134480,
+    "duration": 4161,
+    "text": "popularization work I do thank you very"
+  },
+  {
+    "startTime": 3132040,
+    "endTime": 3137000,
+    "duration": 4960,
+    "text": "much sorry for talking for a bit longer"
+  },
+  {
+    "startTime": 3134480,
+    "endTime": 3139680,
+    "duration": 5200,
+    "text": "than I probably expected to thank"
+  },
+  {
+    "startTime": 3137000,
+    "endTime": 3142559,
+    "duration": 5559,
+    "text": "you thank you so much that was that was"
+  },
+  {
+    "startTime": 3139680,
+    "endTime": 3143799,
+    "duration": 4119,
+    "text": "crazy stuff absolutely brilliant and I"
+  },
+  {
+    "startTime": 3142559,
+    "endTime": 3145160,
+    "duration": 2601,
+    "text": "people have to run I'm afraid it's not"
+  },
+  {
+    "startTime": 3143799,
+    "endTime": 3146599,
+    "duration": 2800,
+    "text": "it's not rudeness I think people have"
+  },
+  {
+    "startTime": 3145160,
+    "endTime": 3147680,
+    "duration": 2520,
+    "text": "meetings at 2:00 but I think we'"
+  },
+  {
+    "startTime": 3146599,
+    "endTime": 3148920,
+    "duration": 2321,
+    "text": "probably run out of time for for"
+  },
+  {
+    "startTime": 3147680,
+    "endTime": 3150599,
+    "duration": 2919,
+    "text": "questions except you neglected to say"
+  },
+  {
+    "startTime": 3148920,
+    "endTime": 3151720,
+    "duration": 2800,
+    "text": "what your favorite number was that's the"
+  },
+  {
+    "startTime": 3150599,
+    "endTime": 3153520,
+    "duration": 2921,
+    "text": "thing I don't have a favorite number"
+  },
+  {
+    "startTime": 3151720,
+    "endTime": 3155119,
+    "duration": 3399,
+    "text": "which is why I got interested in it in"
+  },
+  {
+    "startTime": 3153520,
+    "endTime": 3157280,
+    "duration": 3760,
+    "text": "the first place that's a good answer I"
+  },
+  {
+    "startTime": 3155119,
+    "endTime": 3159400,
+    "duration": 4281,
+    "text": "have answer will be around for a few"
+  },
+  {
+    "startTime": 3157280,
+    "endTime": 3161319,
+    "duration": 4039,
+    "text": "minutes be around and if you want to ask"
+  },
+  {
+    "startTime": 3159400,
+    "endTime": 3164130,
+    "duration": 4730,
+    "text": "questions one to one uh feel free to do"
+  },
+  {
+    "startTime": 3161319,
+    "endTime": 3170079,
+    "duration": 8760,
+    "text": "so thank you very much indeed"
+  },
+  {
+    "startTime": 3164130,
+    "endTime": 3170079,
+    "duration": 5949,
+    "text": "[Applause]"
+  }
+]

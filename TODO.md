@@ -3,10 +3,6 @@
 - [x] update youtubeApiClient.getVideoDetails to return details without captions
 - [x] move captions from youtubeApiClient.getVideoDetails to youtubeApiClient.getCaptions
 - [?] update getVideoSubtitles to use youtubeApiClient.getCaptions
-  https://justlove.ro/checkout/order-received/115294/?key=wc_order_00AGHmu5jKS2X
-
-// check captions here s0GNmddgbVE
-https://www.youtube.com/watch?v=s0GNmddgbVE&ab_channel=WWE
 
 every channel
 scrape
@@ -29,9 +25,11 @@ can I use foreign key as a primary key?
 do we always need to have created_at & updated_at fields?
 
 video no subs
-https://www.youtube.com/watch?v=_XoyAD2tFhM
-
+<https://www.youtube.com/watch?v=_XoyAD2tFhM>
 
 finalize switch to hasManualCaptions hasAutoCaptions or something like this
 filter out music channels, either during sync with elastic or even during initial scrapping
 get rid of "x2", "x3", "xN" in video for calculating similariy, but probably keep it in the final captions stored in db
+
+CANT FETCH captions
+<https://www.youtube.com/watch?v=C-GrRIgdmW8&t=53s>

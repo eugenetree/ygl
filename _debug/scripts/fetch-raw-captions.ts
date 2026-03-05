@@ -6,7 +6,7 @@ import { CaptionCleanUpService } from "../../src/modules/scrapers/_legacy/captio
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 
 const main = async () => {
-  const videoId = process.argv[2] || "aUpCBA13Zpo";
+  const videoId = process.argv[2] || "TpT37dWYG6I";
   const result = await new YoutubeApiGetVideo(new Logger({ context: "fetch-raw-captions", category: "debug" }), new YtDlpClient(new Logger({ context: "fetch-raw-captions", category: "debug" }))).getVideo(videoId);
   if (!result.ok) {
     console.error("Failed to fetch video:", result.error);
