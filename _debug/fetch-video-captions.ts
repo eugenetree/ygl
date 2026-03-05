@@ -6,7 +6,7 @@ import { Caption } from "../src/modules/youtube-api/youtube-api.types.js";
 
 const logger = new Logger({ context: "debug", category: "debug" });
 const ytDlpClient = new YtDlpClient(logger);
-const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient); const VIDEO_ID = "fStLnjrZF_c";
+const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient); const VIDEO_ID = "C-GrRIgdmW8";
 
 async function fetchVideoCaptions() {
   console.log(`Fetching video data for: ${VIDEO_ID}`);

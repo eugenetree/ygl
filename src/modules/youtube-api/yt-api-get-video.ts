@@ -64,7 +64,11 @@ export class YoutubeApiGetVideo {
       thumbnail: ytData.thumbnail,
     };
 
-    const language = this.detectLanguage(ytData.language, ytData.automatic_captions);
+    if (!ytData.language) {
+      this.logger.warn(`No language detected for video ${videoId}.`);
+    }
+
+    const language = ytData.language ? this.detectLanguage(ytData.language) : null;
 
     if (!language) {
       const hasManual = ytData.subtitles && Object.keys(ytData.subtitles).length > 0;
@@ -78,14 +82,11 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const autoUrl = Object.entries(ytData.automatic_captions || {})
-      .find(([lang]) => lang.startsWith(language))?.[1]
-      ?.find(track => track.ext === "json3")?.url;
-
+    const autoUrl = this.getCaptionsUrl(ytData.automatic_captions || {}, language);
     if (!autoUrl) {
       return Failure({
         type: "PARSING_ERROR",
-        message: "No auto captions json3 URL found",
+        message: "No auto captions found",
         context: { language, availableAuto: Object.keys(ytData.automatic_captions || {}) },
       });
     }
@@ -95,22 +96,7 @@ export class YoutubeApiGetVideo {
       return Failure(autoCaptionsResult.error);
     }
 
-    let manualUrl = ytData.subtitles?.[language]?.find(track => track.ext === "json3")?.url;
-
-    if (!manualUrl) {
-      // Fallback: check if any manual track shares the same base language
-      const baseLang = language.split("-")[0];
-      const fallbackEntry = Object.entries(ytData.subtitles || {}).find(
-        ([langCode]) => langCode.split("-")[0] === baseLang
-      );
-
-      if (fallbackEntry) {
-        manualUrl = fallbackEntry[1].find(track => track.ext === "json3")?.url;
-        if (manualUrl) {
-          this.logger.info(`Manual captions not found for exact lang ${language}, using fallback lang ${fallbackEntry[0]}`);
-        }
-      }
-    }
+    const manualUrl = this.getCaptionsUrl(ytData.subtitles || {}, language);
 
     if (!manualUrl) {
       return Success({
@@ -137,30 +123,51 @@ export class YoutubeApiGetVideo {
   }
 
   private detectLanguage(
-    detectLangInfo: string | null | undefined,
-    automaticCaptions: Record<string, any[]> | undefined
+    ytLanguage: string
   ): LanguageCode | null {
-    // yt-dlp usually provides the primary language in `language`
-    if (detectLangInfo && isValidLanguageCode(detectLangInfo.toLowerCase())) {
-      return detectLangInfo.toLowerCase() as LanguageCode;
+    const lang = ytLanguage.toLowerCase();
+
+    if (isValidLanguageCode(lang)) {
+      return lang;
     }
 
-    // fallback: if we have automatic captions, pick the first valid primary language
-    const languagesWithAutoCaptions = Object.keys(automaticCaptions || {});
-
-    if (languagesWithAutoCaptions.length === 0) {
-      return null;
+    if (lang.includes("-")) {
+      const baseLang = lang.split("-")[0];
+      if (isValidLanguageCode(baseLang)) {
+        return baseLang;
+      }
     }
 
-    // Try to find common languages first (en, es, fr, etc...)
-    // Usually YouTube auto-generates tracking for English first if spoken.
-    // If not, we just take the first one that is a standard language code.
-    const firstValid = languagesWithAutoCaptions.find(l => isValidLanguageCode(l.toLowerCase()));
-    if (!firstValid) {
-      return null;
+    return null;
+  }
+
+  private getCaptionsUrl(
+    captions: Record<string, { ext: string; url: string }[]>,
+    language: string
+  ): string | undefined {
+    // 1. Try exact match
+    const exactMatch = captions[language]?.find(track => track.ext === "json3")?.url;
+    if (exactMatch) return exactMatch;
+
+    // 2. Try prefix match (e.g. "en" if looking for "en-us")
+    const prefixMatch = Object.entries(captions).find(([lang]) => lang.startsWith(language))?.[1]
+      ?.find(track => track.ext === "json3")?.url;
+    if (prefixMatch) return prefixMatch;
+
+    // 3. Try base language fallback if language contains dash (e.g. "en" if looking for "en-us")
+    if (language.includes("-")) {
+      const baseLang = language.split("-")[0];
+      const baseLangMatch = Object.entries(captions).find(([langCode]) => langCode.split("-")[0] === baseLang);
+      if (baseLangMatch) {
+        const url = baseLangMatch[1].find(track => track.ext === "json3")?.url;
+        if (url) {
+          this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${baseLangMatch[0]}`);
+          return url;
+        }
+      }
     }
 
-    return firstValid.toLowerCase() as LanguageCode;
+    return undefined;
   }
 
   private async getCaptions({
