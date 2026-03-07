@@ -152,6 +152,12 @@ export class ProcessVideoService {
         "channelId",
         "viewCount",
         "thumbnail",
+        "asr",
+        "abr",
+        "acodec",
+        "audioChannels",
+        "audioQuality",
+        "isDrc",
       ]),
       // if only manual captions exist, we can't infer video language from them
       languageCode: videoDto.captionStatus === "NONE" || videoDto.captionStatus === "MANUAL_ONLY"

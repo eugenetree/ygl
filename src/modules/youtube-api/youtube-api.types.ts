@@ -25,6 +25,12 @@ type VideoBase = {
   channelId: string;
   viewCount: number;
   thumbnail: string;
+  asr: number | null;
+  abr: number | null;
+  acodec: string | null;
+  audioChannels: number | null;
+  audioQuality: string | null;
+  isDrc: boolean | null;
 };
 
 export type Video =

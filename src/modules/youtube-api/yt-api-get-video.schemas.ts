@@ -10,6 +10,12 @@ export const inputSchemas = {
     view_count: z.number().int().optional().default(0),
     thumbnail: z.string(),
     language: z.string().optional().nullable(),
+    asr: z.number().int().optional().nullable(),
+    abr: z.number().optional().nullable(),
+    acodec: z.string().optional().nullable(),
+    audio_channels: z.number().int().optional().nullable(),
+    audio_quality: z.string().optional().nullable(),
+    is_drc: z.boolean().optional().nullable(),
     subtitles: z.record(
       z.array(
         z.object({

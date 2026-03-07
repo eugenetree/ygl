@@ -10,6 +10,7 @@ import { validator } from "../_common/validation/validator.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
 import { Caption, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
+import { writeFileSync } from "fs";
 
 type GetCaptionsParams = {
   baseUrl: string;
@@ -48,6 +49,9 @@ export class YoutubeApiGetVideo {
     const jsonResponse = execResult.value[0];
     const validationResult = validator.validate(inputSchemas.ytDlpJson, jsonResponse);
 
+    console.log("Debug::::")
+    writeFileSync("debug.json", JSON.stringify(jsonResponse, null, 2));
+
     if (!validationResult.ok) {
       return Failure(validationResult.error);
     }
@@ -62,6 +66,12 @@ export class YoutubeApiGetVideo {
       channelId: ytData.channel_id,
       viewCount: ytData.view_count ?? 0,
       thumbnail: ytData.thumbnail,
+      asr: ytData.asr ?? null,
+      abr: ytData.abr ?? null,
+      acodec: ytData.acodec ?? null,
+      audioChannels: ytData.audio_channels ?? null,
+      audioQuality: ytData.audio_quality ?? null,
+      isDrc: ytData.is_drc ?? null,
     };
 
     if (!ytData.language) {

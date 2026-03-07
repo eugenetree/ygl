@@ -59,7 +59,7 @@ export class VideoEntriesProcessor {
 
     if (!createVideoResult.ok) {
       this.logger.error({
-        message: `CRITICAL: Failed to create video ${video.id} with ${captions.length} captions.`,
+        message: `Failed to create video ${video.id} with ${captions.length} captions.`,
         error: createVideoResult.error,
       });
 

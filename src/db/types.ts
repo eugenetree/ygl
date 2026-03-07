@@ -93,6 +93,12 @@ export interface VideosTable {
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
   captionsSimilarityScore: number | null;
+  asr: number | null;
+  abr: number | null;
+  acodec: string | null;
+  audioChannels: number | null;
+  audioQuality: string | null;
+  isDrc: boolean | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

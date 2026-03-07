@@ -26,6 +26,12 @@ export type Video = {
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
   captionsSimilarityScore: number | null;
+  asr: number | null;
+  abr: number | null;
+  acodec: string | null;
+  audioChannels: number | null;
+  audioQuality: string | null;
+  isDrc: boolean | null;
   channelId: string;
   createdAt: Date;
   updatedAt: Date;
