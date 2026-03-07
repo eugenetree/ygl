@@ -29,7 +29,7 @@ export class VideoEntryRepository {
       });
     }
 
-    return Success((result.value as unknown as VideoEntry) ?? null);
+    return Success((result.value) ?? null);
   }
 
   async create(

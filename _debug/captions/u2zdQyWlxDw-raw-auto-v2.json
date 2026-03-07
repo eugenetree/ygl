@@ -1,0 +1,9106 @@
+{
+  "wireMagic": "pb3",
+  "pens": [
+    {}
+  ],
+  "wsWinStyles": [
+    {},
+    {
+      "mhModeHint": 2,
+      "juJustifCode": 0,
+      "sdScrollDir": 3
+    }
+  ],
+  "wpWinPositions": [
+    {},
+    {
+      "apPoint": 6,
+      "ahHorPos": 20,
+      "avVerPos": 100,
+      "rcRows": 2,
+      "ccCols": 40
+    }
+  ],
+  "events": [
+    {
+      "tStartMs": 0,
+      "dDurationMs": 486725,
+      "id": 1,
+      "wpWinPosId": 1,
+      "wsWinStyleId": 1
+    },
+    {
+      "tStartMs": 8480,
+      "dDurationMs": 8879,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "3,000",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " supported,",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 12549,
+      "dDurationMs": 4810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 12559,
+      "dDurationMs": 7281,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "$6",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " million",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " direct",
+          "tOffsetMs": 1281,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " income",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers,",
+          "tOffsetMs": 2641,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 17349,
+      "dDurationMs": 2491,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 17359,
+      "dDurationMs": 5361,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "50",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " tons",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 641,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " food",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " waste",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " prevented",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " every",
+          "tOffsetMs": 2161,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 19830,
+      "dDurationMs": 2890,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 19840,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "months.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " These",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " numbers",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " represent",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 22710,
+      "dDurationMs": 1850,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 22720,
+      "dDurationMs": 3840,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "farmworks",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " impact",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " over",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " last",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " five",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 24550,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 24560,
+      "dDurationMs": 4240,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "years.",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 26550,
+      "dDurationMs": 2250,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 26560,
+      "dDurationMs": 4240,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "But",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " what",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " if",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " tell",
+          "tOffsetMs": 879,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " no",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 28790,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 28800,
+      "dDurationMs": 3599,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "longer",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " most",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " important",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " metrics",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 30790,
+      "dDurationMs": 1609,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 30800,
+      "dDurationMs": 4240,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "anymore?",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 32389,
+      "dDurationMs": 2651,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 32399,
+      "dDurationMs": 5680,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Today,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " number",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " one",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " metric",
+          "tOffsetMs": 1521,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " care",
+          "tOffsetMs": 2401,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 35030,
+      "dDurationMs": 3049,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 35040,
+      "dDurationMs": 4960,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "about",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " as",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " CEO",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Farmworks",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 2720,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 38069,
+      "dDurationMs": 1931,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 38079,
+      "dDurationMs": 4480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "profitability.",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 39990,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 40000,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Now,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " before",
+          "tOffsetMs": 719,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " judge",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " think,",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " how",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 42549,
+      "dDurationMs": 2651,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 42559,
+      "dDurationMs": 6480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "did",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " let",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " this",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " capitalist",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " on",
+          "tOffsetMs": 1281,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " stage,",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 45190,
+      "dDurationMs": 3849,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 45200,
+      "dDurationMs": 6160,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "hear",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out.",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Five",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " ago,",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 3039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " co-ounded",
+          "tOffsetMs": 3280,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 49029,
+      "dDurationMs": 2331,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 49039,
+      "dDurationMs": 5121,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Farmworks",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grand",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " mission",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " build",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 51350,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 51360,
+      "dDurationMs": 6400,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "1,000",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 879,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " smart,",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " highly",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " productive",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 54150,
+      "dDurationMs": 3610,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 54160,
+      "dDurationMs": 6640,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "farms",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " across",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Kenya.",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " We",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " invested",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 2960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " water",
+          "tOffsetMs": 3280,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 57750,
+      "dDurationMs": 3050,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 57760,
+      "dDurationMs": 5599,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "dams,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " net",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " houses,",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " drip",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " irrigation,",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 60790,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 60800,
+      "dDurationMs": 6160,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "organic",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " fertilizers.",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " We",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " had",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " every",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " right",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 63349,
+      "dDurationMs": 3611,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 63359,
+      "dDurationMs": 6721,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "climate",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " solution",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " by",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " book.",
+          "tOffsetMs": 1361,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 2800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " then",
+          "tOffsetMs": 3041,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 66950,
+      "dDurationMs": 3130,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 66960,
+      "dDurationMs": 5120,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "harvest",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " time",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " came",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " realized",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " when",
+          "tOffsetMs": 2800,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 70070,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 70080,
+      "dDurationMs": 4000,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "walking",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " into",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grading",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " shed,",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " there",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 72070,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 72080,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "were",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " crates",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " tomatoes",
+          "tOffsetMs": 719,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " rotting",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " away",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 74070,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 74080,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "because",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " didn't",
+          "tOffsetMs": 719,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " enough",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " orders.",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 76390,
+      "dDurationMs": 2250,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 76400,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Our",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " storage",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " room",
+          "tOffsetMs": 719,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " bursting",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 78630,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 78640,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "onions.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " It",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " looks",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " almost",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " funny,",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 81270,
+      "dDurationMs": 2090,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 81280,
+      "dDurationMs": 5040,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "standing",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " there",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " thinking,",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " great,",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " now",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 83350,
+      "dDurationMs": 2970,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 83360,
+      "dDurationMs": 5439,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "what?",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " At",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " end",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " day,",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " every",
+          "tOffsetMs": 2640,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 86310,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 86320,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "farmer",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " has",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " answer",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " one",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " question.",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Who",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 88789,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 88799,
+      "dDurationMs": 5041,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "is",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " going",
+          "tOffsetMs": 161,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " buy",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " produce",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " pay",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 90870,
+      "dDurationMs": 2970,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 90880,
+      "dDurationMs": 4960,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "all",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hard",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " work",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " investment?",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Without",
+          "tOffsetMs": 2640,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 93830,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 93840,
+      "dDurationMs": 5599,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "the",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " financial",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " outcomes,",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 95830,
+      "dDurationMs": 3609,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 95840,
+      "dDurationMs": 6080,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "initiatives",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " cannot",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sustain",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " themselves.",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 99429,
+      "dDurationMs": 2491,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 99439,
+      "dDurationMs": 4881,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "This",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " lesson",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hit",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " particularly",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hard",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 2241,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 101910,
+      "dDurationMs": 2410,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 101920,
+      "dDurationMs": 5680,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "few",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " ago",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " during",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " one",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " investor",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 104310,
+      "dDurationMs": 3290,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 104320,
+      "dDurationMs": 5600,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "visits.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " The",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " investor",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " asked",
+          "tOffsetMs": 2159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 2640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " group",
+          "tOffsetMs": 2880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 3119,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 107590,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 107600,
+      "dDurationMs": 5280,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "farmers,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " \"So,",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " how",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " do",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " like",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " working",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 109910,
+      "dDurationMs": 2970,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 109920,
+      "dDurationMs": 5440,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "with",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Farmworks",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " so",
+          "tOffsetMs": 879,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " far?\"",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " One",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmer",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " said,",
+          "tOffsetMs": 2720,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 112870,
+      "dDurationMs": 2490,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 112880,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "\"Yeah,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " like",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " them",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " lot.\"",
+          "tOffsetMs": 1279,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " so",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " far.",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 115350,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 115360,
+      "dDurationMs": 4399,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "you",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " see,",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " every",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " two",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " there",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " new",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 117670,
+      "dDurationMs": 2089,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 117680,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "organization",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " coming",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1439,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " new",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 119749,
+      "dDurationMs": 2251,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 119759,
+      "dDurationMs": 4241,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "project.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " They",
+          "tOffsetMs": 561,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " disappear",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " after",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " two",
+          "tOffsetMs": 1521,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years.",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 121990,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 122000,
+      "dDurationMs": 5040,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "So",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " will",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " see",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " how",
+          "tOffsetMs": 799,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " long",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmworks",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 123990,
+      "dDurationMs": 3050,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 124000,
+      "dDurationMs": 5599,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "last.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " felt",
+          "tOffsetMs": 1439,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " stomach",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " drop",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 2799,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 127030,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 127040,
+      "dDurationMs": 5919,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "moment.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " These",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 1279,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " gotten",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " used",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 129589,
+      "dDurationMs": 3370,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 129599,
+      "dDurationMs": 6000,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "to",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " countless",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " NOS's,",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " donors,",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " startups",
+          "tOffsetMs": 2401,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 132949,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 132959,
+      "dDurationMs": 5521,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "rowing",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grand",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " visions,",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " big",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 135589,
+      "dDurationMs": 2891,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 135599,
+      "dDurationMs": 5761,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "promises",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " only",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " vanish",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " when",
+          "tOffsetMs": 2081,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " funding",
+          "tOffsetMs": 2401,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 138470,
+      "dDurationMs": 2890,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 138480,
+      "dDurationMs": 5680,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "dries",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " up.",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " without",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " financial",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 141350,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 141360,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "sustainability,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " too",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " would",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " gone",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 144150,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 144160,
+      "dDurationMs": 4079,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "just",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " few",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " seasons.",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 146150,
+      "dDurationMs": 2089,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 146160,
+      "dDurationMs": 4719,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "In",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " moment,",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " finding",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " financial",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 148229,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 148239,
+      "dDurationMs": 5441,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "sustainability",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Farmworks",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " meant",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 2401,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 150869,
+      "dDurationMs": 2811,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 150879,
+      "dDurationMs": 5521,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "had",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 161,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sell",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " all",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 1281,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " produce.",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So",
+          "tOffsetMs": 2561,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 153670,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 153680,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "that's",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " when",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " threw",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " myself",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " into",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Kenya's",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 156390,
+      "dDurationMs": 3050,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 156400,
+      "dDurationMs": 5440,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "vegetable",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " wholesale",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market.",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " This",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 5:00",
+          "tOffsetMs": 2720,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 159430,
+      "dDurationMs": 2410,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 159440,
+      "dDurationMs": 4960,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "a.m.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " at",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Mariti,",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " one",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " largest",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 161830,
+      "dDurationMs": 2570,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 161840,
+      "dDurationMs": 5360,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "wholesale",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " markets",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " downtown",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Nairobi.",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 164390,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 164400,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "It",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " chaotic.",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " many",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sellers",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " fighting",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 167190,
+      "dDurationMs": 2090,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 167200,
+      "dDurationMs": 3679,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "for",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " best",
+          "tOffsetMs": 319,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " spot",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sell.",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " The",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " customers",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 169270,
+      "dDurationMs": 1609,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 169280,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "are",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " fighting",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " highest",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " quality",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 170869,
+      "dDurationMs": 3211,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 170879,
+      "dDurationMs": 4881,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "creative",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " tomatoes.",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I'm",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Chinese,",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " so",
+          "tOffsetMs": 2961,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 174070,
+      "dDurationMs": 1690,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 174080,
+      "dDurationMs": 5439,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "I'm",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " very",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " much",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " used",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 799,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " crowds",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 175750,
+      "dDurationMs": 3769,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 175760,
+      "dDurationMs": 5520,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "competition.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " this",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " next",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " level.",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 179509,
+      "dDurationMs": 1771,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 179519,
+      "dDurationMs": 4000,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "I",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " immediately",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " knew",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " had",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1281,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " part",
+          "tOffsetMs": 1521,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 181270,
+      "dDurationMs": 2249,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 181280,
+      "dDurationMs": 4480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "this",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " excitement.",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 183509,
+      "dDurationMs": 2251,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 183519,
+      "dDurationMs": 4961,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "I",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " started",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " delivering",
+          "tOffsetMs": 561,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " tomatoes",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 185750,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 185760,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "trucks",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " markets.",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " on",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " first",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 188470,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 188480,
+      "dDurationMs": 5600,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "day,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " got",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " pushed",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " down",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " ground",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " by",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 190949,
+      "dDurationMs": 3131,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 190959,
+      "dDurationMs": 6721,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "a",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " vendor.",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Not",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " exactly",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " welcome",
+          "tOffsetMs": 2481,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 194070,
+      "dDurationMs": 3610,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 194080,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "I",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " expecting.",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " over",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years,",
+          "tOffsetMs": 2799,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 3360,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 197670,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 197680,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "learned",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " part",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market.",
+          "tOffsetMs": 1279,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 199830,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 199840,
+      "dDurationMs": 4160,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "figured",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " how",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " prices",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " actually",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " work,",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 201990,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 202000,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "how",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " weather",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " totally",
+          "tOffsetMs": 879,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " change",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " supply",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 203990,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 204000,
+      "dDurationMs": 5120,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "and",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " demand",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " overnight,",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " made",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " friends",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 206790,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 206800,
+      "dDurationMs": 4480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "with",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " ladies,",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " many",
+          "tOffsetMs": 1359,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " them",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " who",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 2159,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 209110,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 209120,
+      "dDurationMs": 5119,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "now",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " customers,",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " proudly",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " selling",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 211270,
+      "dDurationMs": 2969,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 211280,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "produce",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmworks.",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 214229,
+      "dDurationMs": 2251,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 214239,
+      "dDurationMs": 5121,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Once",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " figured",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out,",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " were",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 216470,
+      "dDurationMs": 2890,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 216480,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "able",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 319,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sell",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " almost",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " everything.",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " In",
+          "tOffsetMs": 2319,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " fact,",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 219350,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 219360,
+      "dDurationMs": 4959,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "we",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " realized",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " own",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " could",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 221670,
+      "dDurationMs": 2649,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 221680,
+      "dDurationMs": 4559,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "never",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " enough",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " meet",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " full",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " demand.",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 224309,
+      "dDurationMs": 1930,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 224319,
+      "dDurationMs": 4241,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "In",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " end,",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " people",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " eating",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " every",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " day",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 226229,
+      "dDurationMs": 2331,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 226239,
+      "dDurationMs": 6000,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "of",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " year,",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " no",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmer",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 2161,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 228550,
+      "dDurationMs": 3689,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 228560,
+      "dDurationMs": 6319,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "harvesting",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 365",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " days",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " year.",
+          "tOffsetMs": 2319,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So,",
+          "tOffsetMs": 3039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 3440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 232229,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 232239,
+      "dDurationMs": 4881,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "decided",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " partner",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers,",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 234869,
+      "dDurationMs": 2251,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 234879,
+      "dDurationMs": 5041,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "starting",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " by",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " training",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " them",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 237110,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 237120,
+      "dDurationMs": 5679,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "smart",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " techniques.",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " this",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " what",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 239910,
+      "dDurationMs": 2889,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 239920,
+      "dDurationMs": 5360,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "surprised",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me.",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " When",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " gave",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " drip",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 242789,
+      "dDurationMs": 2491,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 242799,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "irrigation",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " kits,",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sometimes",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sit",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 245270,
+      "dDurationMs": 2329,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 245280,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "unused.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " When",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " show",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " them",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 2159,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 247589,
+      "dDurationMs": 2411,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 247599,
+      "dDurationMs": 5441,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "hygienic",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " crop",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " support",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " structures,",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 2161,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 249990,
+      "dDurationMs": 3050,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 250000,
+      "dDurationMs": 5920,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "were",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " still",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " using",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " same",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " old",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " method.",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " It",
+          "tOffsetMs": 2799,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 253030,
+      "dDurationMs": 2890,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 253040,
+      "dDurationMs": 5039,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "was",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hard",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " admit,",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " reality",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 2640,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 255910,
+      "dDurationMs": 2169,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 255920,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "were",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " imposing",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " solutions,",
+          "tOffsetMs": 719,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " really",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 258069,
+      "dDurationMs": 2651,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 258079,
+      "dDurationMs": 5361,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "solving",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " problems.",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " The",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " drip",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " irrigation",
+          "tOffsetMs": 2081,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 260710,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 260720,
+      "dDurationMs": 5360,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "kit",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " saves",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " water,",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " costs",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " fuel",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 263430,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 263440,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "operate.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " The",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hygienic",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " crop",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " support",
+          "tOffsetMs": 2319,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 266070,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 266080,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "structure",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " might",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " prevent",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " disease,",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 268629,
+      "dDurationMs": 2651,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 268639,
+      "dDurationMs": 5120,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "cost",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " money",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 641,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " buy.",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " We",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " were",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " providing",
+          "tOffsetMs": 2161,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 271270,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 271280,
+      "dDurationMs": 5280,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "knowledge,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " really",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " capital",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " or",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 273749,
+      "dDurationMs": 2811,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 273759,
+      "dDurationMs": 5041,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "guaranteed",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " returns.",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " without",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " enough",
+          "tOffsetMs": 2561,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 276550,
+      "dDurationMs": 2250,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 276560,
+      "dDurationMs": 4480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "financial",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " incentives,",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " cannot",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 278790,
+      "dDurationMs": 2250,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 278800,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "really",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " afford",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " implement",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " those",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " good",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 281030,
+      "dDurationMs": 3530,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 281040,
+      "dDurationMs": 5680,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "ideas.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " changed",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " approach.",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 284550,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 284560,
+      "dDurationMs": 4240,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Instead",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " focusing",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " on",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " training,",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 286710,
+      "dDurationMs": 2090,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 286720,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "simply",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " started",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " buying",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " distributing",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 288790,
+      "dDurationMs": 2250,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 288800,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "the",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " produce",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " give",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " them",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " real",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 291030,
+      "dDurationMs": 2490,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 291040,
+      "dDurationMs": 4879,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "income.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " What",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " happened",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " next",
+          "tOffsetMs": 1599,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " struck",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " me",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 293510,
+      "dDurationMs": 2409,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 293520,
+      "dDurationMs": 4640,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "even",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " because",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " income",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 295909,
+      "dDurationMs": 2251,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 295919,
+      "dDurationMs": 4881,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "us,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 641,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " actually",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " started",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 298150,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 298160,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "invest",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 319,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " better",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " practices,",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " better",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " uh",
+          "tOffsetMs": 2479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 300790,
+      "dDurationMs": 1930,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 300800,
+      "dDurationMs": 4399,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "better",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " equipments,",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " investing",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " their",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 302710,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 302720,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "own",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms.",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " turns",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " right",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 305189,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 305199,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "economics",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " powerful",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " than",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2481,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 307909,
+      "dDurationMs": 1850,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 307919,
+      "dDurationMs": 4161,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "right",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " knowledge.",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 309749,
+      "dDurationMs": 2331,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 309759,
+      "dDurationMs": 4481,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "And",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " know",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " what",
+          "tOffsetMs": 641,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " else?",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Supposedly,",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 312070,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 312080,
+      "dDurationMs": 5119,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "young",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " people",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " very",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " interested",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 314230,
+      "dDurationMs": 2969,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 314240,
+      "dDurationMs": 5120,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "agriculture.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " That",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " true.",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Young",
+          "tOffsetMs": 2640,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 317189,
+      "dDurationMs": 2171,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 317199,
+      "dDurationMs": 4321,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "people",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 161,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Kenya",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " love",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " agriculture,",
+          "tOffsetMs": 1041,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 319350,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 319360,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "what",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " love",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " even",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 321510,
+      "dDurationMs": 3050,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 321520,
+      "dDurationMs": 5440,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "decent",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " job",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " earn",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " decent",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " income.",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " At",
+          "tOffsetMs": 2720,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 324550,
+      "dDurationMs": 2410,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 324560,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Farmworks,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " than",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 80%",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 326950,
+      "dDurationMs": 2809,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 326960,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "employees",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " under",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " age",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 30.",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " We",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 329749,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 329759,
+      "dDurationMs": 4081,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "are in",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " an",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " agriculture",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " business",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " made",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " by",
+          "tOffsetMs": 1841,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 331830,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 331840,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "young",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " talent.",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 333830,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 333840,
+      "dDurationMs": 4400,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Over",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years,",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grown",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " into",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " one",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 336150,
+      "dDurationMs": 2090,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 336160,
+      "dDurationMs": 6080,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "of",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 80,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " largest",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " vegetable",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " wholesalers",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 338230,
+      "dDurationMs": 4010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 338240,
+      "dDurationMs": 6399,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Kenya.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " In",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 2024,",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sold",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 100",
+          "tOffsetMs": 2959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " million",
+          "tOffsetMs": 3440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 342230,
+      "dDurationMs": 2409,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 342240,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "tomatoes.",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 344629,
+      "dDurationMs": 3371,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 344639,
+      "dDurationMs": 5681,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "That",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " might",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sound",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " like",
+          "tOffsetMs": 721,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " lot.",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 347990,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 348000,
+      "dDurationMs": 5919,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Until",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " do",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " math,",
+          "tOffsetMs": 800,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " it's",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " barely",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " two",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 350310,
+      "dDurationMs": 3609,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 350320,
+      "dDurationMs": 5680,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "tomato",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " per",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " person",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 879,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Kenya.",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So,",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 3040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " still",
+          "tOffsetMs": 3280,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 353909,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 353919,
+      "dDurationMs": 4881,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "have",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 161,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " lot",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " room",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grow",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1441,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " long",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 355990,
+      "dDurationMs": 2810,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 356000,
+      "dDurationMs": 5520,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "way",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " go.",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " remember",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " original",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 358790,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 358800,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "dream",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " building",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 10,000",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 361510,
+      "dDurationMs": 1850,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 361520,
+      "dDurationMs": 5280,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "still",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " being",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " realized",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " different",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 363350,
+      "dDurationMs": 3450,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 363360,
+      "dDurationMs": 6160,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "way.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Today",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 2080,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " being",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " built",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 3200,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 366790,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 366800,
+      "dDurationMs": 5600,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "by",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " by",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " who",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " know",
+          "tOffsetMs": 2239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " their",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 369510,
+      "dDurationMs": 2890,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 369520,
+      "dDurationMs": 5280,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "own",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " land",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " communities",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " best",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 372390,
+      "dDurationMs": 2410,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 372400,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "steady",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " uptake",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " consistent",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 374790,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 374800,
+      "dDurationMs": 4239,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "income",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us.",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " They",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " are",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " now",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " able",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 376950,
+      "dDurationMs": 2089,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 376960,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "invest",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " their",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " own",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1359,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " reach",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 379029,
+      "dDurationMs": 2811,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 379039,
+      "dDurationMs": 5521,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "to",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " when",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " need",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " help.",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Finding",
+          "tOffsetMs": 2401,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 381830,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 381840,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "financial",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sustainability",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 1359,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " easy.",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 384550,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 384560,
+      "dDurationMs": 4639,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "For",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " after",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " finding",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 1359,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market,",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 2240,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 387029,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 387039,
+      "dDurationMs": 4321,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "were",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " still",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " bleeding",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " money.",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 1521,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " had",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1841,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " make",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 389189,
+      "dDurationMs": 2171,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 389199,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "difficult",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " decisions",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " of",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " shutting",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " down",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 391350,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 391360,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "priced",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " demonstration",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farms,",
+          "tOffsetMs": 1119,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " halting",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " new",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 393909,
+      "dDurationMs": 2651,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 393919,
+      "dDurationMs": 5761,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "partnerships,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " even",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " closing",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " regions",
+          "tOffsetMs": 1761,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 396550,
+      "dDurationMs": 3130,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 396560,
+      "dDurationMs": 5199,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "were",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " too",
+          "tOffsetMs": 160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " far",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " away",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1359,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " serve.",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 399670,
+      "dDurationMs": 2089,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 399680,
+      "dDurationMs": 4459,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Turns",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " out",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " it",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " really",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " difficult",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 401749,
+      "dDurationMs": 2390,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 401759,
+      "dDurationMs": 4401,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "save",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " money",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " compared",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1121,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " spending",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " it.",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 404129,
+      "dDurationMs": 2031,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 404139,
+      "dDurationMs": 4661,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "[snorts]"
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 421,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 581,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " knew",
+          "tOffsetMs": 821,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1060,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " only",
+          "tOffsetMs": 1301,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " way",
+          "tOffsetMs": 1541,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 1620,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 1861,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 406150,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 406160,
+      "dDurationMs": 3759,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "to",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " survive",
+          "tOffsetMs": 159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " grow",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " impact",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 408790,
+      "dDurationMs": 1129,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 408800,
+      "dDurationMs": 2959,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "through",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " finding",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " financial",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 409909,
+      "dDurationMs": 1850,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 409919,
+      "dDurationMs": 3921,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "sustainability.",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 411749,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 411759,
+      "dDurationMs": 4641,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Today,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we're",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " business",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1361,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " healthy",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 413830,
+      "dDurationMs": 2570,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 413840,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "margins",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " growth.",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " More",
+          "tOffsetMs": 1520,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " than",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " 300",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 416390,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 416400,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "employees",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " work",
+          "tOffsetMs": 639,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us,",
+          "tOffsetMs": 1120,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " than",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 418550,
+      "dDurationMs": 2570,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 418560,
+      "dDurationMs": 4639,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "10,000",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " market",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " vendors",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " rely",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " on",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " us",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 421110,
+      "dDurationMs": 2089,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 421120,
+      "dDurationMs": 4240,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "their",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " daily",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " supplies.",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 423189,
+      "dDurationMs": 2171,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 423199,
+      "dDurationMs": 4720,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "The",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " hard",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " lesson",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " learned",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " years",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 425350,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 425360,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "of",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " being",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 399,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " social",
+          "tOffsetMs": 559,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " entrepreneur,",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 427909,
+      "dDurationMs": 2331,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 427919,
+      "dDurationMs": 5041,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "real",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " sustainability,",
+          "tOffsetMs": 321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " or",
+          "tOffsetMs": 2081,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 430230,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 430240,
+      "dDurationMs": 5200,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "otherwise,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " must",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " come",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " economics",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 432950,
+      "dDurationMs": 2490,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 432960,
+      "dDurationMs": 5120,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "first.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I'm",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " talking",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " about",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " choosing",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 435430,
+      "dDurationMs": 2650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 435440,
+      "dDurationMs": 4479,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "profit",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " over",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " planet.",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " But",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " I",
+          "tOffsetMs": 2159,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 2400,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 438070,
+      "dDurationMs": 1849,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 438080,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "recognized",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 640,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " without",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " viable",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 439909,
+      "dDurationMs": 2491,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 439919,
+      "dDurationMs": 5441,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "economics,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 881,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " projects",
+          "tOffsetMs": 1601,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 2161,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 442390,
+      "dDurationMs": 2970,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 442400,
+      "dDurationMs": 5519,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "initiatives",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " might",
+          "tOffsetMs": 799,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " remain",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " as",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " expensive",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 445350,
+      "dDurationMs": 2569,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 445360,
+      "dDurationMs": 4239,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "experiments",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 880,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " not",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " really",
+          "tOffsetMs": 1360,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " scalable",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 447909,
+      "dDurationMs": 1690,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 447919,
+      "dDurationMs": 3761,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "solutions.",
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 449589,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 449599,
+      "dDurationMs": 4081,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Think",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " about",
+          "tOffsetMs": 241,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " it.",
+          "tOffsetMs": 401,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " When",
+          "tOffsetMs": 961,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " farmers",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " earn",
+          "tOffsetMs": 1681,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " an",
+          "tOffsetMs": 1841,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 451670,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 451680,
+      "dDurationMs": 4320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "income,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 799,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " invest",
+          "tOffsetMs": 959,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " better",
+          "tOffsetMs": 1680,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 453670,
+      "dDurationMs": 2330,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 453680,
+      "dDurationMs": 4880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "practices.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " When",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " companies",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " achieve",
+          "tOffsetMs": 1919,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 455990,
+      "dDurationMs": 2570,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 456000,
+      "dDurationMs": 5039,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "profitability,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 960,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " protect",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1840,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " scale",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 458550,
+      "dDurationMs": 2489,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 458560,
+      "dDurationMs": 5039,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "our",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " impact.",
+          "tOffsetMs": 320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " When",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " communities",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " prosper",
+          "tOffsetMs": 2079,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 461029,
+      "dDurationMs": 2570,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 461039,
+      "dDurationMs": 4641,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "economically,",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " they're",
+          "tOffsetMs": 1280,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " able",
+          "tOffsetMs": 1600,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 1921,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 463589,
+      "dDurationMs": 2091,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 463599,
+      "dDurationMs": 5681,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "afford",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 481,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " care",
+          "tOffsetMs": 801,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " about",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " their",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " environment",
+          "tOffsetMs": 1521,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 465670,
+      "dDurationMs": 3610,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 465680,
+      "dDurationMs": 6320,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "in",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 239,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " long",
+          "tOffsetMs": 400,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " term.",
+          "tOffsetMs": 560,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " So",
+          "tOffsetMs": 1760,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " here",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " is",
+          "tOffsetMs": 2160,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " my",
+          "tOffsetMs": 2320,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " message.",
+          "tOffsetMs": 2639,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 469270,
+      "dDurationMs": 2730,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 469280,
+      "dDurationMs": 4800,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "The",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " best",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " thing",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 1039,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " do",
+          "tOffsetMs": 1199,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " our",
+          "tOffsetMs": 1759,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 2000,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 471990,
+      "dDurationMs": 2090,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 472000,
+      "dDurationMs": 5520,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "is",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 240,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " build",
+          "tOffsetMs": 479,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " economically",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " viable",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 474070,
+      "dDurationMs": 3450,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 474080,
+      "dDurationMs": 6399,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "solutions.",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Let",
+          "tOffsetMs": 1200,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " there",
+          "tOffsetMs": 1440,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " economics",
+          "tOffsetMs": 1839,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " first.",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 477510,
+      "dDurationMs": 2969,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 477520,
+      "dDurationMs": 7185,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Then",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 480,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " only",
+          "tOffsetMs": 720,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " then",
+          "tOffsetMs": 1040,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " can",
+          "tOffsetMs": 1519,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1679,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " unlock",
+          "tOffsetMs": 1920,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " real",
+          "tOffsetMs": 2480,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 480469,
+      "dDurationMs": 4236,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 480479,
+      "dDurationMs": 6246,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "lasting",
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " climate",
+          "tOffsetMs": 641,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " impact.",
+          "tOffsetMs": 1201,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " Thank",
+          "tOffsetMs": 2321,
+          "acAsrConf": 0
+        },
+        {
+          "utf8": " you.",
+          "tOffsetMs": 2560,
+          "acAsrConf": 0
+        }
+      ]
+    },
+    {
+      "tStartMs": 484695,
+      "dDurationMs": 2030,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 484705,
+      "dDurationMs": 2020,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "[applause]"
+        }
+      ]
+    }
+  ]
+}

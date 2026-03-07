@@ -10,7 +10,6 @@ import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../domain/vi
 import { Video as VideoDto } from "../../youtube-api/youtube-api.types.js";
 import { VideoService } from "../../domain/video.service.js";
 import { VideoProcessError } from "./process-video.service.types.js";
-import { VideoCaptionsAnalyzer } from "./video-captions-analyzer.js";
 import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
 import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
 import { CaptionsSimilarityService } from "./captions-similarity-service.js";
@@ -27,7 +26,6 @@ export class ProcessVideoService {
     private readonly logger: Logger,
     private readonly captionService: CaptionService,
     private readonly videoService: VideoService,
-    private readonly videoCaptionsAnalyzer: VideoCaptionsAnalyzer,
     private readonly processManualCaptionsService: ProcessManualCaptionsService,
     private readonly processAutoCaptionsService: ProcessAutoCaptionsService,
     private readonly captionsSimilarityService: CaptionsSimilarityService,

@@ -33,8 +33,8 @@ export class YtDlpClient {
       // We use the raw execBuilder to have full control over the arguments
       const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
 
-      // Enable command line printing to stderr for better debugging
-      builder.debugPrint(true);
+      // Disable command line printing to stderr to reduce noise
+      builder.debugPrint(false);
 
       const result = await builder.exec();
 
@@ -93,7 +93,7 @@ export class YtDlpClient {
       }
 
       const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
-      builder.debugPrint(true);
+      builder.debugPrint(false);
 
       let errorResult: YtDlpError | undefined;
       const queue: T[] = [];
