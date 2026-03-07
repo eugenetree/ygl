@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { SearchChannelEntry } from "./search-channel-entry.js";
+import { ChannelEntry } from "./channel-entry.js";
 
 @injectable()
-export class SearchChannelEntryService {
-  create(data: { id: string; queryId: string }): SearchChannelEntry {
+export class ChannelEntryService {
+  create(data: { id: string; queryId: string }): ChannelEntry {
     return {
       id: data.id,
       queryId: data.queryId,

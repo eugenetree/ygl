@@ -1,7 +1,7 @@
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { DatabaseError, SearchChannelEntryDb } from "../../../db/types.js";
+import { DatabaseError, ChannelEntryDb } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
@@ -10,13 +10,13 @@ export class ChannelEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
   public async getNextEntry(): Promise<Result<
-    SearchChannelEntryDb | null,
+    ChannelEntryDb | null,
     DatabaseError
   >> {
     const result =
       await tryCatch(
         dbClient
-          .updateTable("searchChannelEntries")
+          .updateTable("channelEntries")
           .set({
             processingStatus: "PROCESSING",
           })
@@ -24,7 +24,7 @@ export class ChannelEntriesQueue {
             "id",
             "in",
             (eb) =>
-              eb.selectFrom("searchChannelEntries")
+              eb.selectFrom("channelEntries")
                 .select("id")
                 .where("processingStatus", "=", "PENDING")
                 .limit(1)
@@ -54,7 +54,7 @@ export class ChannelEntriesQueue {
     const result =
       await tryCatch(
         dbClient
-          .updateTable("searchChannelEntries")
+          .updateTable("channelEntries")
           .set({
             processingStatus: "SUCCEEDED",
           })
@@ -76,7 +76,7 @@ export class ChannelEntriesQueue {
     const result =
       await tryCatch(
         dbClient
-          .updateTable("searchChannelEntries")
+          .updateTable("channelEntries")
           .set({
             processingStatus: "FAILED",
           })

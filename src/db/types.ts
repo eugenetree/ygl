@@ -40,7 +40,7 @@ export interface Database {
   channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
   captions: CaptionsTable;
   elasticCaptionsSync: ElasticCaptionsSyncTable;
-  searchChannelEntries: SearchChannelEntriesTable;
+  channelEntries: ChannelEntriesTable;
   videoEntries: VideoEntriesTable;
 }
 
@@ -54,7 +54,7 @@ export interface SearchChannelQueriesTable {
   updatedAt: Generated<Date>;
 }
 
-export interface SearchChannelEntriesTable {
+export interface ChannelEntriesTable {
   id: string;
   queryId: string;
   processingStatus: ProcessingStatus;
@@ -181,9 +181,9 @@ export type SearchChannelQueryDb = Selectable<SearchChannelQueriesTable>;
 export type InsertableSearchChannelQuery = Insertable<SearchChannelQueriesTable>;
 export type UpdateableSearchChannelQuery = Updateable<SearchChannelQueriesTable>;
 
-export type SearchChannelEntryDb = Selectable<SearchChannelEntriesTable>;
-export type InsertableSearchChannelEntryDb = Insertable<SearchChannelEntriesTable>;
-export type UpdateableSearchChannelEntryDb = Updateable<SearchChannelEntriesTable>;
+export type ChannelEntryDb = Selectable<ChannelEntriesTable>;
+export type InsertableChannelEntryDb = Insertable<ChannelEntriesTable>;
+export type UpdateableChannelEntryDb = Updateable<ChannelEntriesTable>;
 
 export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
 export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;

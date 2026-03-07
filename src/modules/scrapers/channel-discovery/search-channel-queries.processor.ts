@@ -6,7 +6,7 @@ import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "./channel-entry.repository.js";
-import { SearchChannelEntryService } from "../../domain/search-channel-entry.service.js";
+import { ChannelEntryService } from "../../domain/channel-entry.service.js";
 
 @injectable()
 export class SearchChannelQueriesProcessor {
@@ -14,7 +14,7 @@ export class SearchChannelQueriesProcessor {
 		private readonly logger: Logger,
 		private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
 		private readonly channelEntryRepository: ChannelEntryRepository,
-		private readonly searchChannelEntryService: SearchChannelEntryService,
+		private readonly channelEntryService: ChannelEntryService,
 	) {
 		this.logger.setContext(SearchChannelQueriesProcessor.name);
 	}
@@ -84,7 +84,7 @@ export class SearchChannelQueriesProcessor {
 			return Success(undefined);
 		}
 
-		const domainEntry = this.searchChannelEntryService.create({
+		const domainEntry = this.channelEntryService.create({
 			id: channelEntry.id,
 			queryId,
 		});

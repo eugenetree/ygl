@@ -35,7 +35,7 @@ export class ChannelEntriesWorker {
       const entry = entryResult.value;
 
       if (!entry) {
-        this.logger.info("No PENDING search-channel-entries found. Waiting...");
+        this.logger.info("No PENDING channel-entries found. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }

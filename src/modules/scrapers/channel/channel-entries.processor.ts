@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { SearchChannelEntryDb } from "../../../db/types.js";
+import { ChannelEntryDb } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { YoutubeApiGetChannel } from "../../youtube-api/yt-api-get-channel.js";
@@ -18,7 +18,7 @@ export class ChannelEntriesProcessor {
     this.logger.setContext(ChannelEntriesProcessor.name);
   }
 
-  public async process(entry: SearchChannelEntryDb): Promise<Result<void, BaseError | any>> {
+  public async process(entry: ChannelEntryDb): Promise<Result<void, BaseError | any>> {
     this.logger.info(`Fetching channel ${entry.id} via Youtube API.`);
 
     const fullChannelInfoResult = await this.youtubeApiGetChannel.getChannel(

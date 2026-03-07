@@ -1,4 +1,4 @@
-export type SearchChannelEntry = {
+export type ChannelEntry = {
   id: string;
   queryId: string;
   processingStatus: "PENDING" | "PROCESSING" | "SUCCEEDED" | "FAILED";

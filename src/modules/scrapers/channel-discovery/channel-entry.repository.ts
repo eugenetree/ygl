@@ -2,13 +2,13 @@ import { dbClient } from "../../../db/client.js";
 import { DatabaseError } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { SearchChannelEntry } from "../../domain/search-channel-entry.js";
+import { ChannelEntry } from "../../domain/channel-entry.js";
 
 export class ChannelEntryRepository {
-  public async create(channelEntry: SearchChannelEntry): Promise<Result<void, DatabaseError>> {
+  public async create(channelEntry: ChannelEntry): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .insertInto("searchChannelEntries")
+        .insertInto("channelEntries")
         .values(channelEntry)
         .execute()
     );
@@ -23,10 +23,10 @@ export class ChannelEntryRepository {
     return Success(undefined);
   }
 
-  public async findById(id: string): Promise<Result<SearchChannelEntry | null, DatabaseError>> {
+  public async findById(id: string): Promise<Result<ChannelEntry | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .selectFrom("searchChannelEntries")
+        .selectFrom("channelEntries")
         .selectAll()
         .where("id", "=", id)
         .executeTakeFirst()
