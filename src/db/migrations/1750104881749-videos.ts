@@ -15,6 +15,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("languageCode", "varchar")
     .addColumn("autoCaptionsStatus", "varchar", (col) => col.notNull())
     .addColumn("manualCaptionsStatus", "varchar", (col) => col.notNull())
+    .addColumn("captionsSimilarityScore", "real")
 
     .addColumn("createdAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
     .addColumn("updatedAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))

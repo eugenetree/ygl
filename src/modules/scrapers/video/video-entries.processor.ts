@@ -21,7 +21,7 @@ export class VideoEntriesProcessor {
   public async process(
     entry: VideoEntryDb
   ): Promise<Result<void, BaseError | any>> {
-    this.logger.info(`Fetching video ${entry.id} via Youtube API.`);
+    this.logger.info(`Fetching video ${entry.id} via Youtube.`);
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entry.id);
 

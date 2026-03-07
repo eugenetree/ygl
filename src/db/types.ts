@@ -92,8 +92,7 @@ export interface VideosTable {
   languageCode: LanguageCode | null;
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
-  captionsProcessingStatus: Generated<ProcessingStatus>;
-  captionsProcessingStatusUpdatedAt: Date | null;
+  captionsSimilarityScore: number | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

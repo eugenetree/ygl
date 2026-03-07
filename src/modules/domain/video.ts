@@ -14,7 +14,6 @@ export type ManualCaptionsStatus =
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
   | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
-  | "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
 
 export type Video = {
   id: string;
@@ -26,6 +25,7 @@ export type Video = {
   languageCode: LanguageCode | null;
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
+  captionsSimilarityScore: number | null;
   channelId: string;
   createdAt: Date;
   updatedAt: Date;

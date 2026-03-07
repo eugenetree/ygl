@@ -9,7 +9,6 @@ import { CaptionService } from "../../domain/caption.service.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../domain/video.js";
 import { Video as VideoDto } from "../../youtube-api/youtube-api.types.js";
 import { VideoService } from "../../domain/video.service.js";
-import { VideoProcessError } from "./process-video.service.types.js";
 import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
 import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
 import { CaptionsSimilarityService } from "./captions-similarity-service.js";
@@ -33,7 +32,7 @@ export class ProcessVideoService {
 
   async process(
     videoDto: VideoDto,
-  ): Promise<Result<ProcessResult, VideoProcessError>> {
+  ): Promise<Result<ProcessResult, void>> {
     // no captions at all
     if (videoDto.captionStatus === "NONE") {
       return Success({
@@ -41,6 +40,7 @@ export class ProcessVideoService {
           videoDto,
           autoCaptionsStatus: "CAPTIONS_ABSENT",
           manualCaptionsStatus: "CAPTIONS_ABSENT",
+          captionsSimilarityScore: null,
         }),
         autoCaptions: null,
         manualCaptions: null,
@@ -54,6 +54,7 @@ export class ProcessVideoService {
           videoDto,
           autoCaptionsStatus: "CAPTIONS_ABSENT",
           manualCaptionsStatus: "CAPTIONS_PENDING_VALIDATION",
+          captionsSimilarityScore: null,
         }),
         autoCaptions: null,
         manualCaptions: null,
@@ -81,6 +82,7 @@ export class ProcessVideoService {
           videoDto,
           autoCaptionsStatus,
           manualCaptionsStatus: "CAPTIONS_ABSENT",
+          captionsSimilarityScore: null,
         }),
         autoCaptions,
         manualCaptions: null,
@@ -89,6 +91,7 @@ export class ProcessVideoService {
 
     let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
     let manualCaptions: Caption[] | null = null;
+    let captionsSimilarityScore: number | null = null;
 
     let processManualResult = null;
 
@@ -114,11 +117,7 @@ export class ProcessVideoService {
         manualCaptions: processManualResult.value,
       });
 
-      // if score is below 95% matched tokens, we consider them invalid
-      if (similarityResult.score < 0.95) {
-        manualCaptionsStatus = "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
-        manualCaptions = null;
-      }
+      captionsSimilarityScore = similarityResult.score;
     }
 
     return Success({
@@ -126,6 +125,7 @@ export class ProcessVideoService {
         videoDto,
         autoCaptionsStatus,
         manualCaptionsStatus,
+        captionsSimilarityScore,
       }),
       autoCaptions,
       manualCaptions,
@@ -136,10 +136,12 @@ export class ProcessVideoService {
     videoDto,
     autoCaptionsStatus,
     manualCaptionsStatus,
+    captionsSimilarityScore,
   }: {
     videoDto: VideoDto;
     autoCaptionsStatus: AutoCaptionsStatus;
     manualCaptionsStatus: ManualCaptionsStatus;
+    captionsSimilarityScore: number | null;
   }): Video {
     return this.videoService.create({
       ...pick(videoDto, [
@@ -157,6 +159,7 @@ export class ProcessVideoService {
         : videoDto.languageCode,
       autoCaptionsStatus,
       manualCaptionsStatus,
+      captionsSimilarityScore,
     });
   }
 

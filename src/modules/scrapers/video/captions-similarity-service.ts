@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { Caption } from "../../youtube-api/youtube-api.types.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 type TokenOccurrence = {
   token: string;
@@ -94,7 +95,10 @@ const TEXT_REPLACEMENTS: Array<{ from: RegExp; to: string }> = [
 
 @injectable()
 export class CaptionsSimilarityService {
-  constructor(private readonly logger: Logger) { }
+  constructor(
+    private readonly logger: Logger,
+    private readonly captionCleanUpService: CaptionCleanUpService,
+  ) { }
 
   async calculateSimilarity({
     manualCaptions,
@@ -103,11 +107,11 @@ export class CaptionsSimilarityService {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
   }): Promise<SimilarityResult> {
-    const manualOccurrences = this.toTokenOccurrences(manualCaptions);
-    const autoOccurrences = this.toTokenOccurrences(autoCaptions);
+    const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
+    const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
 
-    console.log("debug: manualTokenOccurrences", manualOccurrences);
-    console.log("debug: autoTokenOccurrences", autoOccurrences);
+    const manualOccurrences = this.toTokenOccurrences(manualNormalized);
+    const autoOccurrences = this.toTokenOccurrences(autoNormalized);
 
     if (manualOccurrences.length === 0 || autoOccurrences.length === 0) {
       return {
@@ -123,15 +127,11 @@ export class CaptionsSimilarityService {
     const autoTokenTimeIndex = this.buildTokenTimeIndex(autoOccurrences);
     const autoSorted = [...autoOccurrences].sort((a, b) => a.startTime - b.startTime);
 
-    console.log("debug: autoTokenTimeIndex", autoTokenTimeIndex);
-
     // Find the global time shift that maximises manual→auto recall
     const bestShift = this.findBestShift({
       manualOccurrences,
       autoTokenTimeIndex,
     });
-
-    console.log("debug: bestShift", bestShift);
 
     // Score manual→auto with the best shift
     const details = this.calculateMatchDetails({
@@ -142,7 +142,7 @@ export class CaptionsSimilarityService {
       useFuzzy: true,
     });
 
-    if (Math.abs(bestShift.shiftMs) > 1_200) {
+    if (Math.abs(bestShift.shiftMs) > 2000) {
       this.logger.warn(
         "Manual captions appear time-shifted relative to auto captions." +
         " shiftMs=" + bestShift.shiftMs +
@@ -208,8 +208,6 @@ export class CaptionsSimilarityService {
         bestShiftMs = shiftMs;
       }
     }
-
-    console.log("debug: scores", scores);
 
     return { shiftMs: bestShiftMs, score: bestScore };
   }

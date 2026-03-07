@@ -22,16 +22,16 @@ export class ProcessAutoCaptionsService {
   async process(captions: Caption[]): Promise<Result<Caption[], ProcessAutoCaptionsError>> {
     let resultCaptions: Caption[] = captions;
     // Normalize caption timings (fix overlapping captions)
-    resultCaptions = this.fixOverlappingTimestamps(resultCaptions);
+    // resultCaptions = this.fixOverlappingTimestamps(resultCaptions);
 
     // Normalize individual captions (remove noise, but keep all captions)
-    resultCaptions = resultCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
+    // resultCaptions = resultCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
 
     // Merge short segments into longer ones (15 words, 5 seconds)
-    resultCaptions = this.captionCleanUpService.mergeShortCaptions(resultCaptions);
+    // resultCaptions = this.captionCleanUpService.mergeShortCaptions(resultCaptions);
 
     // Filter out empty/meaningless captions after merging
-    resultCaptions = resultCaptions.filter(caption => this.captionCleanUpService.shouldKeepCaption(caption));
+    // resultCaptions = resultCaptions.filter(caption => this.captionCleanUpService.shouldKeepCaption(caption));
 
     if (resultCaptions.length === 0) {
       return Failure({

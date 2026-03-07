@@ -27,7 +27,7 @@ export class YoutubeApiGetVideo {
   public async getVideo(
     videoId: string
   ): Promise<Result<Video, YtDlpError | FetchError | ParsingError | ValidationError>> {
-    this.logger.info(`Processing video entry ${videoId}...`);
+    this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
     const args = ["--dump-json", "--no-download", "--skip-download", "--no-warnings"];
