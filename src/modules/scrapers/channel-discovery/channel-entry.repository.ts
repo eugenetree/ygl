@@ -1,8 +1,8 @@
-import { dbClient } from "../../../../db/client.js";
-import { DatabaseError } from "../../../../db/types.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { tryCatch } from "../../../_common/try-catch.js";
-import { SearchChannelEntry } from "../../../domain/search-channel-entry.js";
+import { dbClient } from "../../../db/client.js";
+import { DatabaseError } from "../../../db/types.js";
+import { Failure, Result, Success } from "../../../types/index.js";
+import { tryCatch } from "../../_common/try-catch.js";
+import { SearchChannelEntry } from "../../domain/search-channel-entry.js";
 
 export class ChannelEntryRepository {
   public async create(channelEntry: SearchChannelEntry): Promise<Result<void, DatabaseError>> {

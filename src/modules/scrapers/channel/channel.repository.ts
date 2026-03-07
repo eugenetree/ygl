@@ -7,7 +7,6 @@ import { Logger } from "../../_common/logger/logger.js";
 import { Channel } from "../../domain/channel.js";
 import { DatabaseError } from "../../../db/types.js";
 
-// TODO: migrate to service layer before accessing repository
 @injectable()
 export class ChannelRepository {
   constructor(private readonly logger: Logger) {

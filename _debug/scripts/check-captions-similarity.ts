@@ -1,10 +1,10 @@
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/video-entries/captions-similarity-service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video-entries/caption-clean-up.service.js";
-import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video-entries/process-auto-captions.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video-entries/process-manual-captions.service.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions-similarity-service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
+import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video/process-auto-captions.service.js";
+import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
 import { writeFileSync, mkdirSync } from "fs";
 
 const main = async () => {

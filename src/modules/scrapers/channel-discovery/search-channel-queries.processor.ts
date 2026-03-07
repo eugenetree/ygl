@@ -5,7 +5,7 @@ import { SearchChannelQuery } from "../../domain/search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../youtube-api/yt-api-search-channels-via-videos.js";
-import { ChannelEntryRepository } from "../channel-entries/repositories/channel-entry.repository.js";
+import { ChannelEntryRepository } from "./channel-entry.repository.js";
 import { SearchChannelEntryService } from "../../domain/search-channel-entry.service.js";
 
 @injectable()

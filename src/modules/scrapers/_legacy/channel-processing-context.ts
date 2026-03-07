@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { VideoProcessError } from "../video-entries/process-video.service.types.js";
+import { VideoProcessError } from "../video/process-video.service.types.js";
 import { FetchError } from "../../_common/http/errors.js";
 import { ParsingError, ValidationError } from "../../_common/validation/errors.js";
 import { DatabaseError } from "../../../db/types.js";

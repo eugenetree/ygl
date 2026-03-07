@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { YoutubeApiGetChannelVideoEntries } from "../../youtube-api/yt-api-get-channel-video-entries.js";
-import { VideoEntryRepository } from "../video-entries/video-entry.repository.js";
+import { VideoEntryRepository } from "../video/video-entry.repository.js";
 import { VideoEntryService } from "../../domain/video-entry.service.js";
 import { Channel } from "../../domain/channel.js";
 import { BaseError } from "../../_common/errors.js";
