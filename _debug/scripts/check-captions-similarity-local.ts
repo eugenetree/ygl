@@ -15,8 +15,8 @@ const main = async () => {
   }
 
   const logger = new Logger({ context: "check-similarity-local", category: "debug" });
-  const similarityService = new CaptionsSimilarityService(logger);
   const captionCleanUpService = new CaptionCleanUpService();
+  const similarityService = new CaptionsSimilarityService(logger, captionCleanUpService);
   const processAutoCaptionsService = new ProcessAutoCaptionsService(logger, captionCleanUpService);
   const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
 

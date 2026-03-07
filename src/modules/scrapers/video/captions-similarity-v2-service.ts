@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Caption } from "../../youtube-api/youtube-api.types.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { CaptionsSimilarityService } from "./captions-similarity-service.js";
+import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 type TokenOccurrence = {
   token: string;
@@ -11,8 +12,8 @@ type TokenOccurrence = {
 
 @injectable()
 export class CaptionsSimilarityV2Service extends CaptionsSimilarityService {
-  constructor(logger: Logger) {
-    super(logger);
+  constructor(logger: Logger, captionCleanUpService: CaptionCleanUpService) {
+    super(logger, captionCleanUpService);
   }
 
   /**

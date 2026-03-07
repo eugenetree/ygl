@@ -8,8 +8,8 @@ const main = async () => {
   const videoId = "AzNWmFaOqJI";
   const logger = new Logger({ context: "check-similarity-v2-local", category: "debug" });
 
-  const similarityService = new CaptionsSimilarityV2Service(logger);
   const captionCleanUpService = new CaptionCleanUpService();
+  const similarityService = new CaptionsSimilarityV2Service(logger, captionCleanUpService);
   const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
 
   console.log(`Reading local captions for video: ${videoId}`);

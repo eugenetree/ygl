@@ -3,9 +3,51 @@ import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
-import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions-similarity-v2-service.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions-similarity-service.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
 import { httpClient } from "../../src/modules/_common/http/index.js";
+import { Caption } from "../../src/modules/youtube-api/youtube-api.types.js";
+
+/**
+ * Parses YouTube's TimedText "srv3" JSON format into standard Caption objects.
+ * This format provides word-level timing via 'segs'.
+ */
+function parseRawAutoCaptions(raw: any): Caption[] {
+  const captions: Caption[] = [];
+  const events = raw.events || [];
+
+  for (const event of events) {
+    if (!event.segs) continue;
+
+    const eventStart = event.tStartMs || 0;
+    const eventDuration = event.dDurationMs || 0;
+
+    for (let i = 0; i < event.segs.length; i++) {
+      const seg = event.segs[i];
+      const text = (seg.utf8 || "").trim();
+      if (!text) continue;
+
+      const startTime = eventStart + (seg.tOffsetMs || 0);
+
+      // Estimating end time: either the next segment's start or event end
+      let endTime;
+      if (i < event.segs.length - 1 && event.segs[i + 1].tOffsetMs !== undefined) {
+        endTime = eventStart + event.segs[i + 1].tOffsetMs;
+      } else {
+        endTime = eventStart + eventDuration;
+      }
+
+      captions.push({
+        startTime,
+        endTime,
+        duration: endTime - startTime,
+        text,
+      });
+    }
+  }
+
+  return captions;
+}
 
 const main = async () => {
   const videoId = process.argv[2];
@@ -18,8 +60,8 @@ const main = async () => {
 
   const ytDlpClient = new YtDlpClient(logger);
   const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient);
-  const similarityService = new CaptionsSimilarityV2Service(logger);
   const captionCleanUpService = new CaptionCleanUpService();
+  const similarityService = new CaptionsSimilarityService(logger, captionCleanUpService);
   const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
 
   console.log(`\n======================================================`);
@@ -40,7 +82,7 @@ const main = async () => {
   }
 
   // 2. Fetch raw auto captions from YouTube via yt-dlp metadata
-  // We need the raw srv3/json3 format for the V2 similarity service
+  // We need the raw srv3/json3 format for the similarity check
   console.log("Fetching raw auto captions (json3 format)...");
   const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
   const args = ["--dump-json", "--no-download", "--skip-download", "--no-warnings"];
@@ -84,20 +126,20 @@ const main = async () => {
     return;
   }
 
-  // 5. Calculate Similarity V2
-  console.log("\nCalculating Similarity (V2)...");
-  const similarityResult = await similarityService.calculateSimilarityV2({
+  // 5. Calculate Similarity
+  console.log("\nCalculating Similarity...");
+  const autoCaptions = parseRawAutoCaptions(autoCaptionsRaw);
+  const similarityResult = await similarityService.calculateSimilarity({
     manualCaptions: manualResult.value,
-    autoCaptionsRaw: autoCaptionsRaw,
+    autoCaptions,
   });
 
   // 6. Print Results
   console.log("\n======================================================");
-  console.log(`Similarity Check Results (V2)`);
+  console.log(`Similarity Check Results`);
   console.log(`======================================================`);
   console.log(`Manual Captions Segments (Processed): ${manualResult.value.length}`);
   console.log(`Similarity Score: ${(similarityResult.score * 100).toFixed(2)}%`);
-  console.log(`Calculated Threshold: ${similarityResult.threshold}`);
   console.log(`Manual Token Count: ${similarityResult.manualTokenCount}`);
   console.log(`Auto Token Count: ${similarityResult.autoTokenCount}`);
   console.log(`Detected Shift: ${similarityResult.shiftMs}ms`);
