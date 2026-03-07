@@ -13,26 +13,6 @@ export class ChannelRepository {
     this.logger.setContext(ChannelRepository.name);
   }
 
-  async findById(id: string): Promise<Result<Channel | null, DatabaseError>> {
-    const result = await tryCatch(
-      dbClient
-        .selectFrom("channels")
-        .selectAll()
-        .where("id", "=", id)
-        .executeTakeFirst(),
-    );
-
-    if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-        context: { id },
-      });
-    }
-
-    return Success(result.value ?? null);
-  }
-
   async create(
     channel: Channel,
   ): Promise<Result<void, DatabaseError>> {

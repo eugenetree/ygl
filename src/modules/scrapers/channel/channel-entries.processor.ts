@@ -5,7 +5,7 @@ import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { YoutubeApiGetChannel } from "../../youtube-api/yt-api-get-channel.js";
 import { ChannelService } from "../../domain/channel.service.js";
-import { ChannelRepository } from "../video-discovery/channel.repository.js";
+import { ChannelRepository } from "./channel.repository.js";
 
 @injectable()
 export class ChannelEntriesProcessor {
