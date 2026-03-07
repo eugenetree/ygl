@@ -35,18 +35,19 @@ export class VideoEntriesWorker {
       const entry = entryResult.value;
 
       if (!entry) {
-        this.logger.info("No PENDING video-entries found. Waiting...");
+        this.logger.info("Video entries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
       this.logger.info("Waiting 5 seconds");
       await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
-      this.logger.info(`Processing video entry ${entry.id}`);
+      this.logger.info(`Processing video entry ${entry.id}...`);
       const processResult = await this.videoEntriesProcessor.process(entry);
 
       if (!processResult.ok) {
         this.logger.error({
+          message: `Failed to process video entry ${entry.id}`,
           error: processResult.error,
           context: { entryId: entry.id },
         });
@@ -55,12 +56,15 @@ export class VideoEntriesWorker {
         continue;
       }
 
+      this.logger.info(`Processing video entry ${entry.id} finished`);
+
       const markAsSuccessResult = await this.videoEntriesQueue.markAsSuccess(
         entry.id
       );
 
       if (!markAsSuccessResult.ok) {
         this.logger.error({
+          message: `Failed to mark video entry ${entry.id} as success`,
           error: markAsSuccessResult.error,
           context: { entryId: entry.id },
         });

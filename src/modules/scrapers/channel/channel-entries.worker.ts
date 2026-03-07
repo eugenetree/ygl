@@ -35,16 +35,17 @@ export class ChannelEntriesWorker {
       const entry = entryResult.value;
 
       if (!entry) {
-        this.logger.info("No PENDING channel-entries found. Waiting...");
+        this.logger.info("Channel entries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
-      this.logger.info(`Processing channel entry ${entry.id}`);
+      this.logger.info(`Processing channel entry ${entry.id}...`);
       const processResult = await this.channelEntriesProcessor.process(entry);
 
       if (!processResult.ok) {
         this.logger.error({
+          message: `Failed to process channel entry ${entry.id}`,
           error: processResult.error,
           context: { entryId: entry.id },
         });
@@ -54,10 +55,13 @@ export class ChannelEntriesWorker {
         continue;
       }
 
+      this.logger.info(`Processing channel entry ${entry.id} finished`);
+
       const markAsSuccessResult = await this.channelEntriesQueue.markAsSuccess(entry.id);
 
       if (!markAsSuccessResult.ok) {
         this.logger.error({
+          message: `Failed to mark channel entry ${entry.id} as success`,
           error: markAsSuccessResult.error,
           context: { entryId: entry.id },
         });

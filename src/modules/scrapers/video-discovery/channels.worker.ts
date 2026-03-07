@@ -36,12 +36,12 @@ export class ChannelsWorker {
       const channel = channelResult.value;
 
       if (!channel) {
-        this.logger.info("No channels waiting for videos discovery found. Waiting...");
+        this.logger.info("Channels queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
-      this.logger.info(`Discovering videos for channel ${channel.id}`);
+      this.logger.info(`Processing channel ${channel.id}...`);
       const processResult = await this.channelsProcessor.process(channel);
 
       if (!processResult.ok) {
@@ -56,11 +56,13 @@ export class ChannelsWorker {
         return;
       }
 
+      this.logger.info(`Processing channel ${channel.id} finished`);
+
       const markAsSuccessResult = await this.channelsQueue.markAsSuccess(channel.id);
 
       if (!markAsSuccessResult.ok) {
         this.logger.error({
-          message: "Failed to mark channel videos discovery as success",
+          message: `Failed to mark channel ${channel.id} as success`,
           error: markAsSuccessResult.error,
           context: { channelId: channel.id },
         });

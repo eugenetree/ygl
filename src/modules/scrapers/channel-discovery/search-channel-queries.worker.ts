@@ -35,14 +35,14 @@ export class SearchChannelQueriesWorker {
       const query = queryResult.value;
 
       if (!query) {
-        this.logger.info("No queries found. Waiting.");
+        this.logger.info("Search queries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      this.logger.info(`Processing query ${query.id} started`);
+      this.logger.info(`Processing query ${query.id}...`);
       const processResult = await this.searchChannelQueriesProcessor.process(query);
 
       if (!processResult.ok) {
