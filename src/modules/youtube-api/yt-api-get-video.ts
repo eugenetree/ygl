@@ -49,9 +49,6 @@ export class YoutubeApiGetVideo {
     const jsonResponse = execResult.value[0];
     const validationResult = validator.validate(inputSchemas.ytDlpJson, jsonResponse);
 
-    console.log("Debug::::")
-    writeFileSync("debug.json", JSON.stringify(jsonResponse, null, 2));
-
     if (!validationResult.ok) {
       return Failure(validationResult.error);
     }

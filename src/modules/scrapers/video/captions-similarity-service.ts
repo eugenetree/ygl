@@ -108,8 +108,11 @@ export class CaptionsSimilarityService {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
   }): Promise<SimilarityResult> {
-    const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
-    const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
+    // const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
+    // const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
+
+    const manualNormalized = manualCaptions;
+    const autoNormalized = autoCaptions;
 
     const manualOccurrences = this.toTokenOccurrences(manualNormalized);
     const autoOccurrences = this.toTokenOccurrences(autoNormalized);
@@ -231,6 +234,11 @@ export class CaptionsSimilarityService {
     missingOccurrences: TokenOccurrence[];
     timingMissOccurrences: TokenOccurrence[];
   } {
+    if (useFuzzy) {
+      writeFileSync(`_debug/captions/manual-occurrences.json`, JSON.stringify(manualOccurrences, null, 2));
+      writeFileSync(`_debug/captions/auto-token-time-index.json`, JSON.stringify(autoTokenTimeIndex, null, 2));
+    }
+
     let matchedCount = 0;
     const missingOccurrences: TokenOccurrence[] = [];
     const timingMissOccurrences: TokenOccurrence[] = [];
@@ -266,9 +274,6 @@ export class CaptionsSimilarityService {
         const fuzzyMatched = candidates.some(
           cand => {
             const ratio = levenshteinRatio(manual.token, cand.token);
-            if (ratio > .5) {
-              // console.log(manual.token, cand.token, ratio);
-            }
             return ratio >= FUZZY_THRESHOLD;
           },
         );

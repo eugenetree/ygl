@@ -83,41 +83,41 @@ const main = async () => {
 
   // 2. Fetch raw auto captions from YouTube via yt-dlp metadata
   // We need the raw srv3/json3 format for the similarity check
-  console.log("Fetching raw auto captions (json3 format)...");
-  const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
-  const args = ["--dump-json", "--no-download", "--skip-download", "--no-warnings"];
-  const execResult = await ytDlpClient.execJson<any>([url, ...args]);
+  // console.log("Fetching raw auto captions (json3 format)...");
+  // const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
+  // const args = ["--dump-json", "--no-download", "--skip-download", "--no-warnings"];
+  // const execResult = await ytDlpClient.execJson<any>([url, ...args]);
 
-  if (!execResult.ok || execResult.value.length === 0) {
-    console.error("Failed to fetch video data from yt-dlp.");
-    return;
-  }
-  const ytData = execResult.value[0];
-  const language = video.languageCode?.split('-')[0] || "en";
+  // if (!execResult.ok || execResult.value.length === 0) {
+  //   console.error("Failed to fetch video data from yt-dlp.");
+  //   return;
+  // }
+  // const ytData = execResult.value[0];
+  // const language = video.languageCode?.split('-')[0] || "en";
 
-  let autoTrack = ytData.automatic_captions?.[language]?.find((t: any) => t.ext === "json3");
-  if (!autoTrack) {
-    // fallback to English if the specific language is not found
-    autoTrack = ytData.automatic_captions?.['en']?.find((t: any) => t.ext === "json3");
-  }
+  // let autoTrack = ytData.automatic_captions?.[language]?.find((t: any) => t.ext === "json3");
+  // if (!autoTrack) {
+  //   // fallback to English if the specific language is not found
+  //   autoTrack = ytData.automatic_captions?.['en']?.find((t: any) => t.ext === "json3");
+  // }
 
-  if (!autoTrack) {
-    console.error(`Auto captions (json3) not found for language: ${language} or en`);
-    return;
-  }
+  // if (!autoTrack) {
+  //   console.error(`Auto captions (json3) not found for language: ${language} or en`);
+  //   return;
+  // }
 
-  const autoCaptionsResponse = await httpClient.get(autoTrack.url);
-  if (!autoCaptionsResponse.ok) {
-    console.error("Failed to download raw auto captions via HTTP client.");
-    return;
-  }
-  const autoCaptionsRaw = autoCaptionsResponse.value;
+  // const autoCaptionsResponse = await httpClient.get(autoTrack.url);
+  // if (!autoCaptionsResponse.ok) {
+  //   console.error("Failed to download raw auto captions via HTTP client.");
+  //   return;
+  // }
+  // const autoCaptionsRaw = autoCaptionsResponse.value;
 
   // 3. Save raw data for debugging
-  mkdirSync("_debug/captions", { recursive: true });
-  writeFileSync(`_debug/captions/${videoId}-raw-auto-v2.json`, JSON.stringify(autoCaptionsRaw, null, 2));
-  writeFileSync(`_debug/captions/${videoId}-raw-manual-v2.json`, JSON.stringify(video.manualCaptions, null, 2));
-  console.log(`Saved raw captions to _debug/captions/${videoId}-raw-*-v2.json`);
+  // mkdirSync("_debug/captions", { recursive: true });
+  // writeFileSync(`_debug/captions/${videoId}-raw-auto-v2.json`, JSON.stringify(autoCaptionsRaw, null, 2));
+  // writeFileSync(`_debug/captions/${videoId}-raw-manual-v2.json`, JSON.stringify(video.manualCaptions, null, 2));
+  // console.log(`Saved raw captions to _debug/captions/${videoId}-raw-*-v2.json`);
 
   // 4. Process manual captions
   const manualResult = await processManualCaptionsService.process(video.manualCaptions);
@@ -128,11 +128,15 @@ const main = async () => {
 
   // 5. Calculate Similarity
   console.log("\nCalculating Similarity...");
-  const autoCaptions = parseRawAutoCaptions(autoCaptionsRaw);
+  // const autoCaptions = parseRawAutoCaptions(autoCaptionsRaw);
   const similarityResult = await similarityService.calculateSimilarity({
     manualCaptions: manualResult.value,
-    autoCaptions,
+    autoCaptions: video.autoCaptions,
   });
+
+  writeFileSync(`_debug/captions/${videoId}-auto-captions.json`, JSON.stringify(video.autoCaptions, null, 2));
+  writeFileSync(`_debug/captions/${videoId}-manual-captions.json`, JSON.stringify(manualResult.value, null, 2));
+  writeFileSync(`_debug/captions/${videoId}-similarity-result.json`, JSON.stringify(similarityResult, null, 2));
 
   // 6. Print Results
   console.log("\n======================================================");

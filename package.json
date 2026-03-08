@@ -15,7 +15,7 @@
     "format": "prettier . --write",
     "clean": "rm -rf dist",
     "start": "npm run clean && npx tsx src/index.ts",
-    "build": "npm run clean && npx tsc && node dist/src/modules/scrapers/bootstrap.js",
+    "build": "npm run clean && npx tsc",
     "run:channel-discovery": "npm run clean && npx tsc && node dist/src/modules/scrapers/channel-discovery/bootstrap.js",
     "run:channel": "npm run clean && npx tsc && node dist/src/modules/scrapers/channel/bootstrap.js",
     "run:video-discovery": "npm run clean && npx tsc && node dist/src/modules/scrapers/video-discovery/bootstrap.js",

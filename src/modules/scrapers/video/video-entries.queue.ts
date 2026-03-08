@@ -4,6 +4,7 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { DatabaseError, VideoEntryDb } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
+import { sql } from "kysely";
 
 @injectable()
 export class VideoEntriesQueue {
@@ -26,6 +27,7 @@ export class VideoEntriesQueue {
               .selectFrom("videoEntries")
               .select("id")
               .where("processingStatus", "=", "PENDING")
+              .orderBy(sql`random()`)
               .limit(1)
               .forUpdate()
               .skipLocked()
