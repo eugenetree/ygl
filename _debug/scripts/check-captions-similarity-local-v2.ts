@@ -5,7 +5,7 @@ import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/p
 import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions-similarity-v2-service.js";
 
 const main = async () => {
-  const videoId = "AzNWmFaOqJI";
+  const videoId = process.argv[2] || "AzNWmFaOqJI";
   const logger = new Logger({ context: "check-similarity-v2-local", category: "debug" });
 
   const captionCleanUpService = new CaptionCleanUpService();
@@ -16,10 +16,9 @@ const main = async () => {
   let autoCaptionsRaw, manualCaptionsRaw;
 
   try {
-    // auto.json is in root as per request
-    autoCaptionsRaw = JSON.parse(readFileSync(`auto.json`, "utf8"));
-    // manual is in _debug/captions
-    manualCaptionsRaw = JSON.parse(readFileSync(`_debug/captions/${videoId}-raw-manual.json`, "utf8"));
+    // Correct paths for the local files provided in metadata
+    autoCaptionsRaw = JSON.parse(readFileSync(`_debug/captions/${videoId}-raw-auto-v2.json`, "utf8"));
+    manualCaptionsRaw = JSON.parse(readFileSync(`_debug/captions/${videoId}-raw-manual-v2.json`, "utf8"));
   } catch (error: any) {
     console.error(`Failed to read local caption files:`, error.message);
     process.exit(1);
@@ -45,6 +44,15 @@ const main = async () => {
   console.log(`Manual Token Count: ${similarityResult.manualTokenCount}`);
   console.log(`Auto Token Count: ${similarityResult.autoTokenCount}`);
   console.log(`Detected Shift: ${similarityResult.shiftMs}ms`);
+
+  console.log("\n--- Normalized Manual Segments Sample ---");
+  manualResult.value.slice(0, 5).forEach((c, i) => {
+    console.log(`${i}: [${c.text.replace(/\n/g, '\\n')}]`);
+  });
+  console.log("...");
+  manualResult.value.slice(80, 90).forEach((c, i) => {
+    console.log(`${i + 80}: [${c.text.replace(/\n/g, '\\n')}]`);
+  });
 
   const formatToken = (t: any) => {
     const date = new Date(t.startTime);

@@ -32,7 +32,12 @@ export class ProcessVideoService {
 
   async process(
     videoDto: VideoDto,
-  ): Promise<Result<ProcessResult, void>> {
+  ): Promise<Result<ProcessResult, "MUSIC_VIDEO" | void>> {
+    if (this.isMusic(videoDto)) {
+      this.logger.info(`Ignoring music video ${videoDto.id}.`);
+      return Failure("MUSIC_VIDEO" as any);
+    }
+
     // no captions at all
     if (videoDto.captionStatus === "NONE") {
       return Success({
@@ -158,6 +163,11 @@ export class ProcessVideoService {
         "audioChannels",
         "audioQuality",
         "isDrc",
+        "categories",
+        "track",
+        "artist",
+        "album",
+        "creator",
       ]),
       // if only manual captions exist, we can't infer video language from them
       languageCode: videoDto.captionStatus === "NONE" || videoDto.captionStatus === "MANUAL_ONLY"
@@ -181,5 +191,14 @@ export class ProcessVideoService {
     return captionsDto.map((captionDto) =>
       this.captionService.create({ ...captionDto, videoId, type }),
     );
+  }
+
+  private isMusic(video: VideoDto): boolean {
+    const isMusicCategory = video.categories.some((cat) =>
+      cat.toLowerCase().includes("music"),
+    );
+    const hasMusicMetadata = !!(video.track || video.artist || video.album);
+
+    return isMusicCategory || hasMusicMetadata;
   }
 }

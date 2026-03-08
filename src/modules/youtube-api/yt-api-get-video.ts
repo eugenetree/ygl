@@ -72,6 +72,11 @@ export class YoutubeApiGetVideo {
       audioChannels: ytData.audio_channels ?? null,
       audioQuality: ytData.audio_quality ?? null,
       isDrc: ytData.is_drc ?? null,
+      categories: ytData.categories ?? [],
+      track: ytData.track ?? null,
+      artist: ytData.artist ?? null,
+      album: ytData.album ?? null,
+      creator: ytData.creator ?? null,
     };
 
     if (!ytData.language) {

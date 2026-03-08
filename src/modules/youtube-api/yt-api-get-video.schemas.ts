@@ -32,5 +32,10 @@ export const inputSchemas = {
         })
       )
     ).optional(),
+    categories: z.array(z.string()).optional().default([]),
+    track: z.string().optional().nullable(),
+    artist: z.string().optional().nullable(),
+    album: z.string().optional().nullable(),
+    creator: z.string().optional().nullable(),
   }),
 };

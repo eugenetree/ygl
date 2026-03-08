@@ -31,6 +31,11 @@ type VideoBase = {
   audioChannels: number | null;
   audioQuality: string | null;
   isDrc: boolean | null;
+  categories: string[];
+  track: string | null;
+  artist: string | null;
+  album: string | null;
+  creator: string | null;
 };
 
 export type Video =

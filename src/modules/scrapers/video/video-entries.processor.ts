@@ -39,8 +39,12 @@ export class VideoEntriesProcessor {
     this.logger.info(`Processing and saving video ${videoDto.id} into db.`);
 
     const processVideoResult = await this.videoProcessor.process(videoDto);
-
     if (!processVideoResult.ok) {
+      if (processVideoResult.error === "MUSIC_VIDEO") {
+        this.logger.info(`Video ${entry.id} is a music video. Skipping.`);
+        return Success(undefined);
+      }
+
       this.logger.error({
         error: processVideoResult.error,
         context: { videoId: entry.id },
