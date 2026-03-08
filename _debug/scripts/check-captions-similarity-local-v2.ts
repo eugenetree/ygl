@@ -45,14 +45,6 @@ const main = async () => {
   console.log(`Auto Token Count: ${similarityResult.autoTokenCount}`);
   console.log(`Detected Shift: ${similarityResult.shiftMs}ms`);
 
-  console.log("\n--- Normalized Manual Segments Sample ---");
-  manualResult.value.slice(0, 5).forEach((c, i) => {
-    console.log(`${i}: [${c.text.replace(/\n/g, '\\n')}]`);
-  });
-  console.log("...");
-  manualResult.value.slice(80, 90).forEach((c, i) => {
-    console.log(`${i + 80}: [${c.text.replace(/\n/g, '\\n')}]`);
-  });
 
   const formatToken = (t: any) => {
     const date = new Date(t.startTime);

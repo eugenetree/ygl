@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Caption } from "../../youtube-api/youtube-api.types.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
+import { writeFileSync } from "fs";
 
 type TokenOccurrence = {
   token: string;
@@ -107,8 +108,8 @@ export class CaptionsSimilarityService {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
   }): Promise<SimilarityResult> {
-    const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
-    const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
+    const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
+    const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
 
     const manualOccurrences = this.toTokenOccurrences(manualNormalized);
     const autoOccurrences = this.toTokenOccurrences(autoNormalized);
@@ -266,7 +267,7 @@ export class CaptionsSimilarityService {
           cand => {
             const ratio = levenshteinRatio(manual.token, cand.token);
             if (ratio > .5) {
-              console.log(manual.token, cand.token, ratio);
+              // console.log(manual.token, cand.token, ratio);
             }
             return ratio >= FUZZY_THRESHOLD;
           },

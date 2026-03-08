@@ -99,6 +99,11 @@ export interface VideosTable {
   audioChannels: number | null;
   audioQuality: string | null;
   isDrc: boolean | null;
+  categories: string[];
+  track: string | null;
+  artist: string | null;
+  album: string | null;
+  creator: string | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
