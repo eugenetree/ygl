@@ -13,7 +13,7 @@ export class SearchChannelQueriesWorker {
     private readonly searchChannelQueriesProcessor: SearchChannelQueriesProcessor,
   ) { }
 
-  public async start() {
+  public async start(shouldContinue: () => boolean = () => true) {
     if (this.isRunning) {
       return;
     }
@@ -21,6 +21,12 @@ export class SearchChannelQueriesWorker {
     this.isRunning = true;
 
     while (this.isRunning) {
+      if (!shouldContinue()) {
+        this.logger.info("shouldContinue() returned false. Stopping worker.");
+        this.isRunning = false;
+        return;
+      }
+
       const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
 
       if (!queryResult.ok) {

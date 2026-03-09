@@ -7,10 +7,12 @@ import { Logger } from "../../_common/logger/logger.js";
 import { SearchChannelQueriesWorker } from "./search-channel-queries.worker.js";
 import { SearchChannelQueriesSeeder } from "./search-channel-queries.seeder.js";
 
-const spawnWorker = ({
+export const spawnWorker = async ({
   name,
+  shouldContinue,
 }: {
   name: string;
+  shouldContinue?: () => boolean;
 }) => {
   const container = new Container({ autobind: true });
 
@@ -24,7 +26,7 @@ const spawnWorker = ({
   container.bind(HttpClient).toConstantValue(httpClient);
 
   const worker = container.get(SearchChannelQueriesWorker);
-  worker.start();
+  await worker.start(shouldContinue);
 };
 
 export async function bootstrap() {
@@ -46,4 +48,4 @@ export async function bootstrap() {
   spawnWorker({ name: "default" });
 }
 
-bootstrap();
+// bootstrap();

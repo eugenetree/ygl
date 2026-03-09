@@ -40,10 +40,10 @@ export class VideoEntriesProcessor {
 
     const processVideoResult = await this.videoProcessor.process(videoDto);
     if (!processVideoResult.ok) {
-      if (processVideoResult.error === "MUSIC_VIDEO") {
-        this.logger.info(`Video ${entry.id} is a music video. Skipping.`);
-        return Success(undefined);
-      }
+      // if (processVideoResult.error === "MUSIC_VIDEO") {
+      //   this.logger.info(`Video ${entry.id} is a music video. Skipping.`);
+      //   return Success(undefined);
+      // }
 
       this.logger.error({
         error: processVideoResult.error,

@@ -13,7 +13,7 @@ export class ChannelEntriesWorker {
     private readonly channelEntriesProcessor: ChannelEntriesProcessor,
   ) { }
 
-  public async start() {
+  public async start(shouldContinue: () => boolean = () => true) {
     if (this.isRunning) {
       return;
     }
@@ -21,6 +21,12 @@ export class ChannelEntriesWorker {
     this.isRunning = true;
 
     while (this.isRunning) {
+      if (!shouldContinue()) {
+        this.logger.info("shouldContinue() returned false. Stopping worker.");
+        this.isRunning = false;
+        return;
+      }
+
       const entryResult = await this.channelEntriesQueue.getNextEntry();
 
       if (!entryResult.ok) {

@@ -13,7 +13,7 @@ export class VideoEntriesWorker {
     private readonly videoEntriesProcessor: VideoEntriesProcessor
   ) { }
 
-  public async start() {
+  public async start(shouldContinue: () => boolean = () => true) {
     if (this.isRunning) {
       return;
     }
@@ -21,6 +21,12 @@ export class VideoEntriesWorker {
     this.isRunning = true;
 
     while (this.isRunning) {
+      if (!shouldContinue()) {
+        this.logger.info("shouldContinue() returned false. Stopping worker.");
+        this.isRunning = false;
+        return;
+      }
+
       const entryResult = await this.videoEntriesQueue.getNextEntry();
 
       if (!entryResult.ok) {

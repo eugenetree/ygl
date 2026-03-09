@@ -6,10 +6,12 @@ import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { ChannelEntriesWorker } from "./channel-entries.worker.js";
 
-const spawnWorker = ({
+export const spawnWorker = async ({
   name,
+  shouldContinue,
 }: {
   name: string;
+  shouldContinue?: () => boolean;
 }) => {
   const container = new Container({ autobind: true });
 
@@ -23,11 +25,11 @@ const spawnWorker = ({
   container.bind(HttpClient).toConstantValue(httpClient);
 
   const worker = container.get(ChannelEntriesWorker);
-  worker.start();
+  await worker.start(shouldContinue);
 };
 
 export async function bootstrap() {
   spawnWorker({ name: "default" });
 }
 
-bootstrap();
+// bootstrap();

@@ -6,10 +6,12 @@ import { Logger } from "../../_common/logger/logger.js";
 import { YtDlpClient } from "../../youtube-api/yt-dlp-client.js";
 import { ChannelsWorker } from "./channels.worker.js";
 
-const spawnWorker = ({
+export const spawnWorker = async ({
   name,
+  shouldContinue,
 }: {
   name: string;
+  shouldContinue?: () => boolean;
 }) => {
   const container = new Container({ autobind: true });
 
@@ -23,7 +25,7 @@ const spawnWorker = ({
   container.bind(YtDlpClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelsWorker);
-  worker.start();
+  await worker.start(shouldContinue);
 };
 
 export async function bootstrap() {
@@ -36,4 +38,4 @@ export async function bootstrap() {
   spawnWorker({ name: "default" });
 }
 
-bootstrap();
+// bootstrap();

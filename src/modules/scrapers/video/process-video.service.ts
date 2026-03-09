@@ -33,10 +33,10 @@ export class ProcessVideoService {
   async process(
     videoDto: VideoDto,
   ): Promise<Result<ProcessResult, "MUSIC_VIDEO" | void>> {
-    if (this.isMusic(videoDto)) {
-      this.logger.info(`Ignoring music video ${videoDto.id}.`);
-      return Failure("MUSIC_VIDEO" as any);
-    }
+    // if (this.isMusic(videoDto)) {
+    //   this.logger.info(`Ignoring music video ${videoDto.id}.`);
+    //   return Failure("MUSIC_VIDEO" as any);
+    // }
 
     // no captions at all
     if (videoDto.captionStatus === "NONE") {
