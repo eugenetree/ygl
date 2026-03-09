@@ -7,7 +7,6 @@ export class ChannelEntryService {
     return {
       id: data.id,
       queryId: data.queryId,
-      processingStatus: "PENDING",
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -2,6 +2,11 @@ import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 import { LanguageCode } from "../modules/i18n/index.js";
 
+// Processing status fields (processingStatus, videosDiscoveryStatus) are infrastructure-only
+// they exist solely for queuing and are not part of the domain model.
+// Ideally each would live in a separate queue table, but we inline them on entity tables
+// for simpler queries and less storage overhead.
+
 export type ProcessingStatus =
   | "PENDING"
   | "PROCESSING"
@@ -34,18 +39,18 @@ export type ChannelVideosScrapeProcessingStatus =
 export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
 
 export interface Database {
-  searchChannelQueries: SearchChannelQueriesTable;
-  channels: ChannelsTable;
-  videos: VideosTable;
-  channelVideosScrapeMetadata: ChannelVideosScrapeMetadataTable;
-  captions: CaptionsTable;
-  elasticCaptionsSync: ElasticCaptionsSyncTable;
-  channelEntries: ChannelEntriesTable;
-  videoEntries: VideoEntriesTable;
+  searchChannelQueries: SearchChannelQueriesRow;
+  channels: ChannelsRow;
+  videos: VideosRow;
+  channelVideosScrapeMetadata: ChannelVideosScrapeMetadataRow;
+  captions: CaptionsRow;
+  elasticCaptionsSync: ElasticCaptionsSyncRow;
+  channelEntries: ChannelEntriesRow;
+  videoEntries: VideoEntriesRow;
 }
 
 
-export interface SearchChannelQueriesTable {
+export interface SearchChannelQueriesRow {
   id: string;
   query: string;
   processingStatus: ProcessingStatus;
@@ -54,7 +59,7 @@ export interface SearchChannelQueriesTable {
   updatedAt: Generated<Date>;
 }
 
-export interface ChannelEntriesTable {
+export interface ChannelEntriesRow {
   id: string;
   queryId: string;
   processingStatus: ProcessingStatus;
@@ -62,7 +67,7 @@ export interface ChannelEntriesTable {
   updatedAt: Generated<Date>;
 }
 
-export interface ChannelsTable {
+export interface ChannelsRow {
   id: string;
   name: string;
   description: string | null;
@@ -81,7 +86,7 @@ export interface ChannelsTable {
   updatedAt: Generated<Date>;
 }
 
-export interface VideosTable {
+export interface VideosRow {
   id: string;
   title: string;
   duration: number;
@@ -108,7 +113,7 @@ export interface VideosTable {
   updatedAt: Generated<Date>;
 }
 
-export interface CaptionsTable {
+export interface CaptionsRow {
   id: string;
   startTime: number;
   endTime: number;
@@ -120,7 +125,7 @@ export interface CaptionsTable {
   updatedAt: Generated<Date>;
 }
 
-export interface ChannelVideosScrapeMetadataTable {
+export interface ChannelVideosScrapeMetadataRow {
   id: Generated<string>;
   channelId: string;
   firstVideoId: string | null;
@@ -149,7 +154,7 @@ export interface ChannelVideosScrapeMetadataTable {
   updatedAt: Generated<Date>;
 }
 
-export interface ElasticCaptionsSyncTable {
+export interface ElasticCaptionsSyncRow {
   id: Generated<string>;
   syncStatus: ElasticCaptionsSyncStatus;
   syncStartedAt: Date | null;
@@ -160,7 +165,7 @@ export interface ElasticCaptionsSyncTable {
   updatedAt: Generated<Date>;
 }
 
-export interface VideoEntriesTable {
+export interface VideoEntriesRow {
   id: string;
   channelId: string;
   processingStatus: ProcessingStatus;
@@ -168,40 +173,40 @@ export interface VideoEntriesTable {
   updatedAt: Generated<Date>;
 }
 
-export type Channel = Selectable<ChannelsTable>;
-export type InsertableChannel = Insertable<ChannelsTable>;
-export type UpdateableChannel = Updateable<ChannelsTable>;
+export type ChannelRow = Selectable<ChannelsRow>;
+export type InsertableChannelRow = Insertable<ChannelsRow>;
+export type UpdateableChannelRow = Updateable<ChannelsRow>;
 
-export type ChannelVideosScrapeMetadata =
-  Selectable<ChannelVideosScrapeMetadataTable>;
+export type ChannelVideosScrapeMetadataSelectable =
+  Selectable<ChannelVideosScrapeMetadataRow>;
 export type InsertableChannelVideosScrapeMetadata =
-  Insertable<ChannelVideosScrapeMetadataTable>;
+  Insertable<ChannelVideosScrapeMetadataRow>;
 export type UpdateableChannelVideosScrapeMetadata =
-  Updateable<ChannelVideosScrapeMetadataTable>;
+  Updateable<ChannelVideosScrapeMetadataRow>;
 
-export type Video = Selectable<VideosTable>;
-export type InsertableVideo = Insertable<VideosTable>;
-export type UpdateableVideo = Updateable<VideosTable>;
+export type VideoRow = Selectable<VideosRow>;
+export type InsertableVideoRow = Insertable<VideosRow>;
+export type UpdateableVideoRow = Updateable<VideosRow>;
 
-export type Caption = Selectable<CaptionsTable>;
-export type InsertableCaption = Insertable<CaptionsTable>;
-export type UpdateableCaption = Updateable<CaptionsTable>;
+export type CaptionRow = Selectable<CaptionsRow>;
+export type InsertableCaptionRow = Insertable<CaptionsRow>;
+export type UpdateableCaptionRow = Updateable<CaptionsRow>;
 
-export type SearchChannelQueryDb = Selectable<SearchChannelQueriesTable>;
-export type InsertableSearchChannelQuery = Insertable<SearchChannelQueriesTable>;
-export type UpdateableSearchChannelQuery = Updateable<SearchChannelQueriesTable>;
+export type SearchChannelQueryRow = Selectable<SearchChannelQueriesRow>;
+export type InsertableSearchChannelQueryRow = Insertable<SearchChannelQueriesRow>;
+export type UpdateableSearchChannelQueryRow = Updateable<SearchChannelQueriesRow>;
 
-export type ChannelEntryDb = Selectable<ChannelEntriesTable>;
-export type InsertableChannelEntryDb = Insertable<ChannelEntriesTable>;
-export type UpdateableChannelEntryDb = Updateable<ChannelEntriesTable>;
+export type ChannelEntryRow = Selectable<ChannelEntriesRow>;
+export type InsertableChannelEntryRow = Insertable<ChannelEntriesRow>;
+export type UpdateableChannelEntryRow = Updateable<ChannelEntriesRow>;
 
-export type ElasticCaptionsSync = Selectable<ElasticCaptionsSyncTable>;
-export type InsertableElasticCaptionsSync = Insertable<ElasticCaptionsSyncTable>;
-export type UpdateableElasticCaptionsSync = Updateable<ElasticCaptionsSyncTable>;
+export type ElasticCaptionsSyncSelectable = Selectable<ElasticCaptionsSyncRow>;
+export type InsertableElasticCaptionsSyncRow = Insertable<ElasticCaptionsSyncRow>;
+export type UpdateableElasticCaptionsSyncRow = Updateable<ElasticCaptionsSyncRow>;
 
-export type VideoEntryDb = Selectable<VideoEntriesTable>;
-export type InsertableVideoEntryDb = Insertable<VideoEntriesTable>;
-export type UpdateableVideoEntryDb = Updateable<VideoEntriesTable>;
+export type VideoEntryRow = Selectable<VideoEntriesRow>;
+export type InsertableVideoEntryRow = Insertable<VideoEntriesRow>;
+export type UpdateableVideoEntryRow = Updateable<VideoEntriesRow>;
 
 export type DatabaseError = {
   type: "DATABASE";

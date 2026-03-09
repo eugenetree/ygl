@@ -1,7 +1,7 @@
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { DatabaseError, VideoEntryDb } from "../../../db/types.js";
+import { DatabaseError, VideoEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 import { sql } from "kysely";
@@ -11,7 +11,7 @@ export class VideoEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
   public async getNextEntry(): Promise<
-    Result<VideoEntryDb | null, DatabaseError>
+    Result<VideoEntryRow | null, DatabaseError>
   > {
     const result = await tryCatch(
       dbClient

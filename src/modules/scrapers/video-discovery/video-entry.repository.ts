@@ -36,7 +36,7 @@ export class VideoEntryRepository {
     videoEntry: VideoEntry,
   ): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
-      dbClient.insertInto("videoEntries").values(videoEntry).execute()
+      dbClient.insertInto("videoEntries").values({ ...videoEntry, processingStatus: "PENDING" as const }).execute()
     );
 
     if (!insertResult.ok) {

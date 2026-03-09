@@ -81,7 +81,7 @@ export class SearchChannelQueriesSeeder {
             chunk.map((word: string) => ({
               id: crypto.randomUUID(),
               query: word,
-              processingStatus: "PENDING" as const,
+              processingStatus: "PENDING",
             })),
           )
           .execute(),

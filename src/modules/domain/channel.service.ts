@@ -4,19 +4,10 @@ import { Channel } from "./channel.js";
 @injectable()
 export class ChannelService {
   create(
-    channel: Omit<
-      Channel,
-      | "id"
-      | "createdAt"
-      | "updatedAt"
-      | "videosDiscoveryStatus"
-      | "videosDiscoveryStatusUpdatedAt"
-    >,
+    channel: Omit<Channel, "id" | "createdAt" | "updatedAt">,
   ): Channel {
     return {
       id: crypto.randomUUID(),
-      videosDiscoveryStatus: "PENDING",
-      videosDiscoveryStatusUpdatedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
       ...channel,

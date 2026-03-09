@@ -4,10 +4,9 @@ import { VideoEntry } from "./video-entry.js";
 @injectable()
 export class VideoEntryService {
   create(
-    videoEntry: Omit<VideoEntry, "createdAt" | "updatedAt" | "processingStatus">,
+    videoEntry: Omit<VideoEntry, "createdAt" | "updatedAt">,
   ): VideoEntry {
     return {
-      processingStatus: "PENDING",
       createdAt: new Date(),
       updatedAt: new Date(),
       ...videoEntry,

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { VideoEntryDb } from "../../../db/types.js";
+import { VideoEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { YoutubeApiGetVideo } from "../../youtube-api/yt-api-get-video.js";
 import { ProcessVideoService } from "./process-video.service.js";
-import { VideoRepository } from "./video-repository.js";
+import { VideoRepository } from "./video.repository.js";
 
 @injectable()
 export class VideoEntriesProcessor {
@@ -19,7 +19,7 @@ export class VideoEntriesProcessor {
   }
 
   public async process(
-    entry: VideoEntryDb
+    entry: VideoEntryRow
   ): Promise<Result<void, BaseError | any>> {
     this.logger.info(`Fetching video ${entry.id} via Youtube.`);
 

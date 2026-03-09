@@ -1,7 +1,7 @@
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { DatabaseError, ChannelEntryDb } from "../../../db/types.js";
+import { DatabaseError, ChannelEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
@@ -10,7 +10,7 @@ export class ChannelEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
   public async getNextEntry(): Promise<Result<
-    ChannelEntryDb | null,
+    ChannelEntryRow | null,
     DatabaseError
   >> {
     const result =
