@@ -2,9 +2,9 @@ import { mkdirSync, writeFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions-similarity-service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
+import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/captions/process-manual-captions.service.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
 import { httpClient } from "../../src/modules/_common/http/index.js";
 import { Caption } from "../../src/modules/youtube-api/youtube-api.types.js";
 

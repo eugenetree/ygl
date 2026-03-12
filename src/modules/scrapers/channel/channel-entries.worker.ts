@@ -1,7 +1,8 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { ChannelEntriesQueue } from "./channel-entries.queue.js";
-import { ChannelEntriesProcessor } from "./channel-entries.processor.js";
+import { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
+import { ChannelsQueue } from "../video-discovery/index.js";
 
 @injectable()
 export class ChannelEntriesWorker {
@@ -10,7 +11,8 @@ export class ChannelEntriesWorker {
   constructor(
     private readonly logger: Logger,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
-    private readonly channelEntriesProcessor: ChannelEntriesProcessor,
+    private readonly processChannelEntry: ProcessChannelEntryUseCase,
+    private readonly channelsQueue: ChannelsQueue,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -47,7 +49,7 @@ export class ChannelEntriesWorker {
       }
 
       this.logger.info(`Processing channel entry ${entry.id}...`);
-      const processResult = await this.channelEntriesProcessor.process(entry);
+      const processResult = await this.processChannelEntry.execute(entry);
 
       if (!processResult.ok) {
         this.logger.error({
@@ -56,7 +58,21 @@ export class ChannelEntriesWorker {
           context: { entryId: entry.id },
         });
 
-        // E.g if it's a deleted channel, mark it as FAILED
+        await this.channelEntriesQueue.markAsFailed(entry.id);
+        continue;
+      }
+
+      const channel = processResult.value;
+
+      const enqueueResult = await this.channelsQueue.enqueue(channel.id);
+
+      if (!enqueueResult.ok) {
+        this.logger.error({
+          message: `Failed to enqueue channel ${channel.id} for video discovery`,
+          error: enqueueResult.error,
+          context: { channelId: channel.id },
+        });
+
         await this.channelEntriesQueue.markAsFailed(entry.id);
         continue;
       }

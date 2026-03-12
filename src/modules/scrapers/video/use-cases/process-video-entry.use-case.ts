@@ -1,26 +1,26 @@
 import { injectable } from "inversify";
-import { Logger } from "../../_common/logger/logger.js";
-import { VideoEntryRow } from "../../../db/types.js";
-import { Failure, Result, Success } from "../../../types/index.js";
-import { BaseError } from "../../_common/errors.js";
-import { YoutubeApiGetVideo } from "../../youtube-api/yt-api-get-video.js";
-import { ProcessVideoService } from "./process-video.service.js";
-import { VideoRepository } from "./video.repository.js";
+import { Logger } from "../../../_common/logger/logger.js";
+import { VideoEntryRow } from "../../../../db/types.js";
+import { Failure, Result, Success } from "../../../../types/index.js";
+import { BaseError } from "../../../_common/errors.js";
+import { YoutubeApiGetVideo } from "../../../youtube-api/yt-api-get-video.js";
+import { ProcessVideoService } from "../process-video.service.js";
+import { VideoRepository } from "../video.repository.js";
 
 @injectable()
-export class VideoEntriesProcessor {
+export class ProcessVideoEntryUseCase {
   constructor(
     private readonly logger: Logger,
     private readonly videoProcessor: ProcessVideoService,
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo
   ) {
-    this.logger.setContext(VideoEntriesProcessor.name);
+    this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async process(
+  public async execute(
     entry: VideoEntryRow
-  ): Promise<Result<void, BaseError | any>> {
+  ): Promise<Result<void, BaseError>> {
     this.logger.info(`Fetching video ${entry.id} via Youtube.`);
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entry.id);
@@ -39,21 +39,8 @@ export class VideoEntriesProcessor {
     this.logger.info(`Processing and saving video ${videoDto.id} into db.`);
 
     const processVideoResult = await this.videoProcessor.process(videoDto);
-    if (!processVideoResult.ok) {
-      // if (processVideoResult.error === "MUSIC_VIDEO") {
-      //   this.logger.info(`Video ${entry.id} is a music video. Skipping.`);
-      //   return Success(undefined);
-      // }
 
-      this.logger.error({
-        error: processVideoResult.error,
-        context: { videoId: entry.id },
-      });
-
-      return Failure(processVideoResult.error);
-    }
-
-    const { video, autoCaptions, manualCaptions } = processVideoResult.value;
+    const { video, autoCaptions, manualCaptions } = processVideoResult;
     const captions = [...(autoCaptions ?? []), ...(manualCaptions ?? [])];
 
     const createVideoResult = await this.videoRepository.createWithCaptions(

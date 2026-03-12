@@ -9,88 +9,86 @@ import { injectable } from "inversify";
 export class ChannelEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
-  public async getNextEntry(): Promise<Result<
-    ChannelEntryRow | null,
-    DatabaseError
-  >> {
-    const result =
-      await tryCatch(
-        dbClient
-          .updateTable("channelEntries")
-          .set({
-            processingStatus: "PROCESSING",
-          })
+  public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      dbClient
+        .insertInto("channelJobs")
+        .values({ channelId, status: "PENDING", statusUpdatedAt: new Date() })
+        .execute(),
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(undefined);
+  }
+
+  public async getNextEntry(): Promise<Result<ChannelEntryRow | null, DatabaseError>> {
+    const result = await tryCatch(
+      dbClient.transaction().execute(async (trx) => {
+        const job = await trx
+          .updateTable("channelJobs")
+          .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
           .where(
             "id",
             "in",
             (eb) =>
-              eb.selectFrom("channelEntries")
+              eb.selectFrom("channelJobs")
                 .select("id")
-                .where("processingStatus", "=", "PENDING")
+                .where("status", "=", "PENDING")
                 .limit(1)
                 .forUpdate()
-                .skipLocked()
+                .skipLocked(),
           )
-          .returningAll()
-          .executeTakeFirst()
-      )
+          .returning("channelId")
+          .executeTakeFirst();
+
+        if (!job) return null;
+        return trx
+          .selectFrom("channelEntries")
+          .selectAll()
+          .where("id", "=", job.channelId)
+          .executeTakeFirst();
+      })
+    );
 
     if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-      })
+      return Failure({ type: "DATABASE", error: result.error });
     }
 
-    const nextEntry = result.value;
-    if (!nextEntry) {
-      return Success(null);
-    }
-
-    return Success(nextEntry)
+    return Success(result.value ?? null);
   }
 
   public async markAsSuccess(entryId: string): Promise<Result<void, DatabaseError>> {
-    const result =
-      await tryCatch(
-        dbClient
-          .updateTable("channelEntries")
-          .set({
-            processingStatus: "SUCCEEDED",
-          })
-          .where("id", "=", entryId)
-          .execute()
-      )
+    const result = await tryCatch(
+      dbClient
+        .updateTable("channelJobs")
+        .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
+        .where("channelId", "=", entryId)
+        .execute()
+    );
 
     if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-      })
+      return Failure({ type: "DATABASE", error: result.error });
     }
 
-    return Success(undefined)
+    return Success(undefined);
   }
 
   public async markAsFailed(entryId: string): Promise<Result<void, DatabaseError>> {
-    const result =
-      await tryCatch(
-        dbClient
-          .updateTable("channelEntries")
-          .set({
-            processingStatus: "FAILED",
-          })
-          .where("id", "=", entryId)
-          .execute()
-      )
+    const result = await tryCatch(
+      dbClient
+        .updateTable("channelJobs")
+        .set({ status: "FAILED", statusUpdatedAt: new Date() })
+        .where("channelId", "=", entryId)
+        .execute()
+    );
 
     if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-      })
+      return Failure({ type: "DATABASE", error: result.error });
     }
 
-    return Success(undefined)
+    return Success(undefined);
   }
 }

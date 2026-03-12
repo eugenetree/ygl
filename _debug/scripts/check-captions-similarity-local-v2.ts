@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
-import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions-similarity-v2-service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
+import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/captions/process-manual-captions.service.js";
+import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions/captions-similarity-v2.service.js";
 
 const main = async () => {
   const videoId = process.argv[2] || "AzNWmFaOqJI";

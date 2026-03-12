@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
-import { VideoEntriesProcessor } from "./video-entries.processor.js";
+import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry.use-case.js";
 
 @injectable()
 export class VideoEntriesWorker {
@@ -10,7 +10,7 @@ export class VideoEntriesWorker {
   constructor(
     private readonly logger: Logger,
     private readonly videoEntriesQueue: VideoEntriesQueue,
-    private readonly videoEntriesProcessor: VideoEntriesProcessor
+    private readonly processVideoEntry: ProcessVideoEntryUseCase
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -49,7 +49,7 @@ export class VideoEntriesWorker {
       this.logger.info("Waiting 5 seconds");
       await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
       this.logger.info(`Processing video entry ${entry.id}...`);
-      const processResult = await this.videoEntriesProcessor.process(entry);
+      const processResult = await this.processVideoEntry.execute(entry);
 
       if (!processResult.ok) {
         this.logger.error({

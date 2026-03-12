@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
-import { SearchChannelQueriesProcessor } from "./search-channel-queries.processor.js";
+import { FindChannelsUseCase } from "./use-cases/find-channels.use-case.js";
 
 @injectable()
 export class SearchChannelQueriesWorker {
@@ -10,7 +10,7 @@ export class SearchChannelQueriesWorker {
   constructor(
     private readonly logger: Logger,
     private readonly searchChannelQueriesQueue: SearchChannelQueriesQueue,
-    private readonly searchChannelQueriesProcessor: SearchChannelQueriesProcessor,
+    private readonly processSearchQuery: FindChannelsUseCase,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -49,7 +49,7 @@ export class SearchChannelQueriesWorker {
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
       this.logger.info(`Processing query ${query.id}...`);
-      const processResult = await this.searchChannelQueriesProcessor.process(query);
+      const processResult = await this.processSearchQuery.execute(query);
 
       if (!processResult.ok) {
         this.logger.error({

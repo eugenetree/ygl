@@ -1,24 +1,24 @@
 import { injectable } from "inversify";
-import { Logger } from "../../_common/logger/logger.js";
-import { ChannelEntryRow } from "../../../db/types.js";
-import { Failure, Result, Success } from "../../../types/index.js";
-import { BaseError } from "../../_common/errors.js";
-import { YoutubeApiGetChannel } from "../../youtube-api/yt-api-get-channel.js";
-import { ChannelService } from "../../domain/channel.service.js";
-import { ChannelRepository } from "./channel.repository.js";
+import { Logger } from "../../../_common/logger/logger.js";
+import { ChannelEntryRow } from "../../../../db/types.js";
+import { Failure, Result, Success } from "../../../../types/index.js";
+import { BaseError } from "../../../_common/errors.js";
+import { YoutubeApiGetChannel } from "../../../youtube-api/yt-api-get-channel.js";
+import { ChannelService } from "../../../domain/channel.service.js";
+import { ChannelRepository } from "../channel.repository.js";
 
 @injectable()
-export class ChannelEntriesProcessor {
+export class ProcessChannelEntryUseCase {
   constructor(
     private readonly logger: Logger,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
     private readonly channelService: ChannelService,
   ) {
-    this.logger.setContext(ChannelEntriesProcessor.name);
+    this.logger.setContext(ProcessChannelEntryUseCase.name);
   }
 
-  public async process(entry: ChannelEntryRow): Promise<Result<void, BaseError | any>> {
+  public async execute(entry: ChannelEntryRow): Promise<Result<{ id: string }, BaseError | any>> {
     this.logger.info(`Fetching channel ${entry.id} via Youtube API.`);
 
     const fullChannelInfoResult = await this.youtubeApiGetChannel.getChannel(
@@ -40,8 +40,6 @@ export class ChannelEntriesProcessor {
 
     const domainChannel = this.channelService.create(fullChannelInfo);
 
-    // TODO: Could apply CHANNEL_SUBS_MIN filter here if needed
-
     const createChannelResult = await this.channelRepository.create(domainChannel);
 
     if (!createChannelResult.ok) {
@@ -53,6 +51,6 @@ export class ChannelEntriesProcessor {
       return Failure(createChannelResult.error);
     }
 
-    return Success(undefined);
+    return Success({ id: domainChannel.id });
   }
 }

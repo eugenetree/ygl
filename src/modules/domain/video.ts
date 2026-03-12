@@ -37,6 +37,7 @@ export type Video = {
   artist: string | null;
   album: string | null;
   creator: string | null;
+  captionsShift: number | null;
   channelId: string;
   createdAt: Date;
   updatedAt: Date;

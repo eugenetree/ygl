@@ -9,9 +9,9 @@ import { CaptionService } from "../../domain/caption.service.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../domain/video.js";
 import { Video as VideoDto } from "../../youtube-api/youtube-api.types.js";
 import { VideoService } from "../../domain/video.service.js";
-import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
-import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
-import { CaptionsSimilarityService } from "./captions-similarity-service.js";
+import { ProcessManualCaptionsService } from "./captions/process-manual-captions.service.js";
+import { ProcessAutoCaptionsService } from "./captions/process-auto-captions.service.js";
+import { CaptionsSimilarityService } from "./captions/captions-similarity.service.js";
 
 type ProcessResult = {
   video: Video;
@@ -32,7 +32,7 @@ export class ProcessVideoService {
 
   async process(
     videoDto: VideoDto,
-  ): Promise<Result<ProcessResult, "MUSIC_VIDEO" | void>> {
+  ): Promise<ProcessResult> {
     // if (this.isMusic(videoDto)) {
     //   this.logger.info(`Ignoring music video ${videoDto.id}.`);
     //   return Failure("MUSIC_VIDEO" as any);
@@ -40,7 +40,7 @@ export class ProcessVideoService {
 
     // no captions at all
     if (videoDto.captionStatus === "NONE") {
-      return Success({
+      return {
         video: this.videoToDomain({
           videoDto,
           autoCaptionsStatus: "CAPTIONS_ABSENT",
@@ -49,12 +49,12 @@ export class ProcessVideoService {
         }),
         autoCaptions: null,
         manualCaptions: null,
-      });
+      };
     }
 
     // manual captions exist but no auto — schedule for future processing
     if (videoDto.captionStatus === "MANUAL_ONLY") {
-      return Success({
+      return {
         video: this.videoToDomain({
           videoDto,
           autoCaptionsStatus: "CAPTIONS_ABSENT",
@@ -63,7 +63,7 @@ export class ProcessVideoService {
         }),
         autoCaptions: null,
         manualCaptions: null,
-      });
+      };
     }
 
     // captionStatus === "AUTO_ONLY" | "BOTH" from here on
@@ -82,21 +82,23 @@ export class ProcessVideoService {
       : null;
 
     if (videoDto.captionStatus === "AUTO_ONLY") {
-      return Success({
+      return {
         video: this.videoToDomain({
           videoDto,
           autoCaptionsStatus,
           manualCaptionsStatus: "CAPTIONS_ABSENT",
           captionsSimilarityScore: null,
+          captionsShift: null,
         }),
         autoCaptions,
         manualCaptions: null,
-      });
+      };
     }
 
     let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
     let manualCaptions: Caption[] | null = null;
     let captionsSimilarityScore: number | null = null;
+    let captionsShift: number | null = null;
 
     let processManualResult = null;
 
@@ -123,18 +125,20 @@ export class ProcessVideoService {
       });
 
       captionsSimilarityScore = similarityResult.score;
+      captionsShift = similarityResult.shiftMs;
     }
 
-    return Success({
+    return {
       video: this.videoToDomain({
         videoDto,
         autoCaptionsStatus,
         manualCaptionsStatus,
         captionsSimilarityScore,
+        captionsShift,
       }),
       autoCaptions,
       manualCaptions,
-    });
+    };
   }
 
   private videoToDomain({
@@ -142,11 +146,13 @@ export class ProcessVideoService {
     autoCaptionsStatus,
     manualCaptionsStatus,
     captionsSimilarityScore,
+    captionsShift,
   }: {
     videoDto: VideoDto;
     autoCaptionsStatus: AutoCaptionsStatus;
     manualCaptionsStatus: ManualCaptionsStatus;
     captionsSimilarityScore: number | null;
+    captionsShift: number | null;
   }): Video {
     return this.videoService.create({
       ...pick(videoDto, [
@@ -176,6 +182,7 @@ export class ProcessVideoService {
       autoCaptionsStatus,
       manualCaptionsStatus,
       captionsSimilarityScore,
+      captionsShift,
     });
   }
 

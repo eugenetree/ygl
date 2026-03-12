@@ -1,6 +1,6 @@
-import { Failure, Result, Success } from "../../../types/index.js";
-import { Logger } from "../../_common/logger/logger.js";
-import { Caption } from "../../youtube-api/youtube-api.types.js";
+import { Failure, Result, Success } from "../../../../types/index.js";
+import { Logger } from "../../../_common/logger/logger.js";
+import { Caption } from "../../../youtube-api/youtube-api.types.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { injectable } from "inversify";
 

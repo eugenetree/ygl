@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { ChannelsQueue } from "./channels.queue.js";
-import { ChannelsProcessor } from "./channels.processor.js";
+import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
 
 @injectable()
 export class ChannelsWorker {
@@ -10,7 +10,7 @@ export class ChannelsWorker {
   constructor(
     private readonly logger: Logger,
     private readonly channelsQueue: ChannelsQueue,
-    private readonly channelsProcessor: ChannelsProcessor,
+    private readonly findChannelVideos: FindChannelVideosUseCase,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -48,7 +48,7 @@ export class ChannelsWorker {
       }
 
       this.logger.info(`Processing channel ${channel.id}...`);
-      const processResult = await this.channelsProcessor.process(channel);
+      const processResult = await this.findChannelVideos.execute(channel);
 
       if (!processResult.ok) {
         this.logger.error({

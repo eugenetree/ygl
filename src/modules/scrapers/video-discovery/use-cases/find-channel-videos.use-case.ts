@@ -1,26 +1,27 @@
 import { injectable } from "inversify";
-import { Logger } from "../../_common/logger/logger.js";
-import { Failure, Result, Success } from "../../../types/index.js";
-import { YoutubeApiGetChannelVideoEntries } from "../../youtube-api/yt-api-get-channel-video-entries.js";
-import { VideoEntryService } from "../../domain/video-entry.service.js";
-import { Channel } from "../../domain/channel.js";
-import { BaseError } from "../../_common/errors.js";
-import { VideoEntryRepository } from "./video-entry.repository.js";
+import { Logger } from "../../../_common/logger/logger.js";
+import { Failure, Result, Success } from "../../../../types/index.js";
+import { YoutubeApiGetChannelVideoEntries } from "../../../youtube-api/yt-api-get-channel-video-entries.js";
+import { VideoEntryService } from "../../../domain/video-entry.service.js";
+import { BaseError } from "../../../_common/errors.js";
+import { VideoEntryRepository } from "../video-entry.repository.js";
+import { VideoEntriesQueue } from "../../video/index.js";
 
 type ProcessError = BaseError;
 
 @injectable()
-export class ChannelsProcessor {
+export class FindChannelVideosUseCase {
   constructor(
     private readonly logger: Logger,
     private readonly videoEntryRepository: VideoEntryRepository,
     private readonly videoEntryService: VideoEntryService,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
+    private readonly videoEntriesQueue: VideoEntriesQueue,
   ) {
-    this.logger.setContext(ChannelsProcessor.name);
+    this.logger.setContext(FindChannelVideosUseCase.name);
   }
 
-  public async process(channel: Channel): Promise<Result<void, ProcessError>> {
+  public async execute(channel: { id: string }): Promise<Result<void, ProcessError>> {
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
       channelId: channel.id,
     });
@@ -95,6 +96,18 @@ export class ChannelsProcessor {
       });
 
       return Failure(createEntryResult.error);
+    }
+
+    const enqueueResult = await this.videoEntriesQueue.enqueue(rawEntry.id, channelId);
+
+    if (!enqueueResult.ok) {
+      this.logger.error({
+        message: "Error enqueuing video",
+        error: enqueueResult.error,
+        context: { videoId: rawEntry.id },
+      });
+
+      return Failure(enqueueResult.error);
     }
 
     return Success(undefined);

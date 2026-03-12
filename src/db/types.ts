@@ -47,6 +47,43 @@ export interface Database {
   elasticCaptionsSync: ElasticCaptionsSyncRow;
   channelEntries: ChannelEntriesRow;
   videoEntries: VideoEntriesRow;
+  channelDiscoveryJobs: ChannelDiscoveryJobsRow;
+  channelJobs: ChannelJobsRow;
+  videoDiscoveryJobs: VideoDiscoveryJobsRow;
+  videoJobs: VideoJobsRow;
+}
+
+export interface ChannelDiscoveryJobsRow {
+  id: Generated<string>;
+  searchQueryId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface ChannelJobsRow {
+  id: Generated<string>;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface VideoDiscoveryJobsRow {
+  id: Generated<string>;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface VideoJobsRow {
+  id: Generated<string>;
+  videoId: string;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
 }
 
 
@@ -109,6 +146,7 @@ export interface VideosRow {
   artist: string | null;
   album: string | null;
   creator: string | null;
+  captionsShift: number | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

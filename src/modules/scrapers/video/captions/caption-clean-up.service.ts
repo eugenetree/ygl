@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Caption } from "../../youtube-api/youtube-api.types.js";
+import { Caption } from "../../../youtube-api/youtube-api.types.js";
 
 @injectable()
 export class CaptionCleanUpService {
