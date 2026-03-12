@@ -39,6 +39,13 @@ export type Video = {
   creator: string | null;
   captionsShift: number | null;
   channelId: string;
+  uploadedAt: Date | null;
+  description: string | null;
+  likeCount: number | null;
+  commentCount: number | null;
+  availability: string | null;
+  playableInEmbed: boolean | null;
+  channelIsVerified: boolean | null;
   createdAt: Date;
   updatedAt: Date;
 };

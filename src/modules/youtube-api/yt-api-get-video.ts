@@ -74,6 +74,13 @@ export class YoutubeApiGetVideo {
       artist: ytData.artist ?? null,
       album: ytData.album ?? null,
       creator: ytData.creator ?? null,
+      uploadedAt: ytData.timestamp ? new Date(ytData.timestamp * 1000) : null,
+      description: ytData.description ?? null,
+      likeCount: ytData.like_count ?? null,
+      commentCount: ytData.comment_count ?? null,
+      availability: ytData.availability ?? null,
+      playableInEmbed: ytData.playable_in_embed ?? null,
+      channelIsVerified: ytData.channel_is_verified ?? null,
     };
 
     if (!ytData.language) {

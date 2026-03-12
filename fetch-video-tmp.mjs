@@ -1,94 +1,65 @@
-/**
- * yt-dlp video inspector
- * Usage:  node fetch-video-tmp.mjs [youtube-url-or-video-id]
- * Output: prints all top-level metadata fields + saves full JSON to _debug/
- *
- * Examples:
- *   node fetch-video-tmp.mjs
- *   node fetch-video-tmp.mjs https://www.youtube.com/watch?v=iGeXGdYE7UE
- *   node fetch-video-tmp.mjs dQw4w9WgXcQ
- */
-
 import { YtDlp } from 'ytdlp-nodejs';
-import { writeFileSync, mkdirSync } from 'fs';
-import { resolve } from 'path';
-
-const DEFAULT_URL = 'https://www.youtube.com/watch?v=iGeXGdYE7UE';
-const input = process.argv[2] ?? DEFAULT_URL;
-
-// Accept bare video ID (11 chars) or full URL
-const url = input.startsWith('http') ? input : `https://www.youtube.com/watch?v=${input}`;
-
-console.log(`\nFetching: ${url}\n`);
 
 const ytdlp = new YtDlp();
+const url = 'https://www.youtube.com/watch?v=Sk5x9KZvPBU';
+
 const builder = ytdlp
   .execBuilder(url)
   .addArgs('--dump-json', '--no-download', '--skip-download', '--no-warnings');
 
 builder.debugPrint(false);
-
 const result = await builder.exec();
 
 if (result.exitCode !== 0) {
-  console.error('yt-dlp error:', result.stderr);
+  console.error('Error:', result.stderr);
   process.exit(1);
 }
 
 const data = JSON.parse(result.output.trim());
 
-// Save full raw dump
-const debugDir = resolve('./_debug');
-mkdirSync(debugDir, { recursive: true });
-const outPath = resolve(debugDir, `yt-dlp-dump-${data.id}.json`);
-writeFileSync(outPath, JSON.stringify(data, null, 2), 'utf8');
-console.log(`Full JSON saved to: ${outPath}\n`);
+// Fields to skip (large arrays/objects)
+const SKIP = new Set(['formats', 'subtitles', 'automatic_captions', 'thumbnails', 'requested_formats', 'requested_subtitles', 'heatmap']);
 
-// ─── Pretty-print all top-level fields ───────────────────────────────────────
-const LARGE_ARRAYS = new Set(['formats', 'subtitles', 'automatic_captions', 'thumbnails', 'requested_formats', 'requested_subtitles', 'heatmap', '_format_sort_fields', 'http_headers']);
+// Fields we currently extract in ygl
+const CURRENTLY_EXTRACTED = new Set([
+  'id', 'title', 'duration', 'tags', 'channel_id', 'view_count',
+  'thumbnail', 'language', 'asr', 'abr', 'acodec', 'audio_channels',
+  'audio_quality', 'is_drc', 'categories', 'track', 'artist', 'album', 'creator'
+]);
 
-// Fields ygl currently extracts
-const EXTRACTED = new Set([
+// Fields of interest we want to check
+const FIELDS_OF_INTEREST = [
   'id', 'title', 'duration', 'tags', 'channel_id', 'view_count',
   'thumbnail', 'language', 'asr', 'abr', 'acodec', 'audio_channels',
   'audio_quality', 'is_drc', 'categories', 'track', 'artist', 'album', 'creator',
-]);
+  // New fields to check
+  'like_count', 'comment_count', 'channel', 'channel_follower_count', 'channel_is_verified',
+  'uploader', 'uploader_id', 'uploader_url',
+  'upload_date', 'timestamp', 'availability',
+  'is_live', 'was_live', 'live_status',
+  'age_limit', 'playable_in_embed',
+  'chapters', 'license', 'release_date', 'release_timestamp', 'media_type',
+  'heatmap', 'description'
+];
 
-// Fields available but not yet extracted
-const AVAILABLE_NEW = new Set([
-  'upload_date', 'timestamp', 'description', 'like_count', 'comment_count',
-  'channel', 'channel_follower_count', 'channel_is_verified',
-  'uploader_id', 'uploader_url', 'availability', 'age_limit',
-  'live_status', 'media_type', 'is_live', 'was_live',
-  'playable_in_embed', 'chapters', 'release_timestamp', 'release_date',
-  'license', 'heatmap',
-]);
-
-console.log('═'.repeat(90));
-console.log('  STATUS                          FIELD                          VALUE');
-console.log('═'.repeat(90));
-
+console.log('\n=== TOP-LEVEL KEYS IN JSON (excluding large arrays) ===\n');
 for (const [k, v] of Object.entries(data)) {
-  if (LARGE_ARRAYS.has(k)) {
-    const len = Array.isArray(v) ? v.length : (v ? Object.keys(v).length : 0);
-    const status = AVAILABLE_NEW.has(k) ? '⚡ available (not extracted)' : '── (skipped)';
-    console.log(`  ${status.padEnd(32)} ${k.padEnd(30)} [${len} entries]`);
-    continue;
+  if (!SKIP.has(k)) {
+    const display = JSON.stringify(v);
+    console.log(`  ${k}: ${display?.slice(0, 100)}`);
   }
-
-  let status;
-  if (EXTRACTED.has(k))          status = '✅ extracted';
-  else if (AVAILABLE_NEW.has(k)) status = '⚡ available (not extracted)';
-  else                           status = '── internal/other';
-
-  const display = JSON.stringify(v);
-  const trimmed = display && display.length > 60 ? display.slice(0, 57) + '...' : display;
-  console.log(`  ${status.padEnd(32)} ${k.padEnd(30)} ${trimmed}`);
 }
 
-console.log('═'.repeat(90));
-console.log(`\nVideo: "${data.title}" (${data.id})`);
-console.log(`Channel: ${data.channel} (${data.uploader_id})`);
-console.log(`Uploaded: ${data.upload_date} (timestamp: ${data.timestamp} = ${new Date(data.timestamp * 1000).toISOString()})`);
-console.log(`Duration: ${data.duration}s  |  Views: ${data.view_count?.toLocaleString()}  |  Likes: ${data.like_count?.toLocaleString()}  |  Comments: ${data.comment_count?.toLocaleString()}`);
-console.log(`Availability: ${data.availability}  |  Age limit: ${data.age_limit}  |  Status: ${data.live_status}`);
+console.log('\n=== FIELDS OF INTEREST ===\n');
+for (const field of FIELDS_OF_INTEREST) {
+  const present = field in data;
+  const value = data[field];
+  const isExtracted = CURRENTLY_EXTRACTED.has(field);
+  const status = !present ? '❌ ABSENT' : isExtracted ? '✅ EXTRACTED' : '⚡ AVAILABLE (not extracted)';
+  const displayVal = field === 'description' ? (JSON.stringify(value)?.slice(0, 80) + '...') : JSON.stringify(value)?.slice(0, 100);
+  console.log(`  ${status.padEnd(30)} ${field.padEnd(30)} = ${displayVal}`);
+}
+
+// Check heatmap separately
+const hasHeatmap = 'heatmap' in data && Array.isArray(data.heatmap);
+console.log(`\n  ${(hasHeatmap ? '⚡ AVAILABLE (not extracted)' : '❌ ABSENT').padEnd(30)} ${'heatmap'.padEnd(30)} = ${hasHeatmap ? `Array with ${data.heatmap.length} entries` : 'null/missing'}`);

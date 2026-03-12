@@ -82,7 +82,6 @@ export class SearchChannelQueriesSeeder {
             chunk.map((word: string, index: number) => ({
               id: queryIds[index],
               query: word,
-              processingStatus: "PENDING",
             })),
           )
           .execute(),

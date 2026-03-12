@@ -5,7 +5,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("channelDiscoveryJobs")
     .addColumn("id", "uuid", (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn("searchQueryId", "varchar", (col) =>
+    .addColumn("searchQueryId", "uuid", (col) =>
       col.references("searchChannelQueries.id").notNull().unique(),
     )
     .addColumn("status", sql`processing_status`, (col) => col.notNull())

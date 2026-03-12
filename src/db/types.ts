@@ -2,11 +2,6 @@ import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 import { LanguageCode } from "../modules/i18n/index.js";
 
-// Processing status fields (processingStatus, videosDiscoveryStatus) are infrastructure-only
-// they exist solely for queuing and are not part of the domain model.
-// Ideally each would live in a separate queue table, but we inline them on entity tables
-// for simpler queries and less storage overhead.
-
 export type ProcessingStatus =
   | "PENDING"
   | "PROCESSING"
@@ -90,8 +85,6 @@ export interface VideoJobsRow {
 export interface SearchChannelQueriesRow {
   id: string;
   query: string;
-  processingStatus: ProcessingStatus;
-  processingStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -99,7 +92,6 @@ export interface SearchChannelQueriesRow {
 export interface ChannelEntriesRow {
   id: string;
   queryId: string;
-  processingStatus: ProcessingStatus;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -117,8 +109,7 @@ export interface ChannelsRow {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
-  videosDiscoveryStatus: Generated<ProcessingStatus>;
-  videosDiscoveryStatusUpdatedAt: Date | null;
+  keywords: string[];
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -147,6 +138,13 @@ export interface VideosRow {
   album: string | null;
   creator: string | null;
   captionsShift: number | null;
+  uploadedAt: Date | null;
+  description: string | null;
+  likeCount: number | null;
+  commentCount: number | null;
+  availability: string | null;
+  playableInEmbed: boolean | null;
+  channelIsVerified: boolean | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

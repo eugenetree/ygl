@@ -27,8 +27,7 @@ const rawChannelInfoSchema = z.object({
   name: z.string(),
   description: z.string(),
   avatar: z.string(),
-  // TODO: maybe bring this later
-  // keywords: z.string(),
+  keywords: z.string().optional(),
   subscriberCount: z.string().optional(),
   viewCount: z.string().optional(),
   videoCount: z.string().optional(),
@@ -45,8 +44,7 @@ const processedChannelInfoSchema = schemaForType<Channel>()(
     name: z.string(),
     description: z.string().nullable(),
     avatar: z.string(),
-    // TODO: maybe bring this later
-    // keywords: z.array(z.string()),
+    keywords: z.array(z.string()),
     subscriberCount: z.number(),
     viewCount: z.number(),
     videoCount: z.number(),
@@ -88,8 +86,7 @@ export class ChannelInfoExtractor {
       name: metadataRenderer?.title,
       description: metadataRenderer?.description,
       avatar: metadataRenderer?.avatar?.thumbnails?.[0]?.url,
-      // TODO: maybe bring this later
-      // keywords: metadataRenderer?.keywords,
+      keywords: metadataRenderer?.keywords,
       subscriberCount: aboutChannelViewModel?.subscriberCountText,
       viewCount: aboutChannelViewModel?.viewCountText,
       videoCount: aboutChannelViewModel?.videoCountText,
@@ -118,8 +115,7 @@ export class ChannelInfoExtractor {
         ? rawChannelData.description
         : null,
       avatar: rawChannelData.avatar,
-      // TODO: maybe bring this later
-      // keywords: this.processKeywords(rawChannelData.keywords),
+      keywords: this.processKeywords(rawChannelData.keywords ?? ""),
       subscriberCount: this.processSubscriberCount(
         rawChannelData.subscriberCount,
       ),

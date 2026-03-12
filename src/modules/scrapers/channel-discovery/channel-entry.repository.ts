@@ -9,7 +9,7 @@ export class ChannelEntryRepository {
     const result = await tryCatch(
       dbClient
         .insertInto("channelEntries")
-        .values({ ...channelEntry, processingStatus: "PENDING" })
+        .values(channelEntry)
         .execute()
     );
 

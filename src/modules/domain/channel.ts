@@ -11,6 +11,7 @@ export type Channel = {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
+  keywords: string[];
   createdAt: Date;
   updatedAt: Date;
 };

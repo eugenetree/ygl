@@ -19,7 +19,7 @@ export class ChannelRepository {
     const insertResult = await tryCatch(
       dbClient
         .insertInto("channels")
-        .values({ ...channel, videosDiscoveryStatus: "PENDING", videosDiscoveryStatusUpdatedAt: null })
+        .values(channel)
         .execute(),
     );
 

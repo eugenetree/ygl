@@ -27,10 +27,10 @@ async function main() {
   }
 
   const scrapers = [
-    { name: "Channel Entries", spawn: spawnChannelWorker, timeoutMs: MINUTE_MS },
-    { name: "Video Entries", spawn: spawnVideoWorker, timeoutMs: HOUR_MS },
     { name: "Search Queries", spawn: spawnSearchWorker, timeoutMs: MINUTE_MS },
+    { name: "Channel Entries", spawn: spawnChannelWorker, timeoutMs: MINUTE_MS },
     { name: "Video Discovery", spawn: spawnDiscoveryWorker, timeoutMs: MINUTE_MS },
+    { name: "Video Entries", spawn: spawnVideoWorker, timeoutMs: HOUR_MS },
   ];
 
   while (true) {

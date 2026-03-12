@@ -37,5 +37,12 @@ export const inputSchemas = {
     artist: z.string().optional().nullable(),
     album: z.string().optional().nullable(),
     creator: z.string().optional().nullable(),
+    timestamp: z.number().int().optional().nullable(),
+    description: z.string().optional().nullable(),
+    like_count: z.number().int().optional().nullable(),
+    comment_count: z.number().int().optional().nullable(),
+    availability: z.string().optional().nullable(),
+    playable_in_embed: z.boolean().optional().nullable(),
+    channel_is_verified: z.boolean().optional().nullable(),
   }),
 };

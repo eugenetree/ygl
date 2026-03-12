@@ -58,7 +58,7 @@ export class YoutubeApiGetChannelVideoEntries {
       "--flat-playlist",
       "--no-warnings",
       "--lazy-playlist",
-      "--sleep-requests", "5"
+      "--sleep-requests", "5",
     ];
 
     const stream = this.ytDlpClient.execJsonStream<unknown>(args);
