@@ -11,7 +11,10 @@ import { DatabaseError } from "../../../db/types.js";
 export class VideoRepository {
   constructor(private readonly logger: Logger) { }
 
-  async createWithCaptions(video: Video, captions: Caption[]): Promise<Result<void, DatabaseError>> {
+  async createWithCaptions(
+    video: Omit<Video, "createdAt" | "updatedAt">,
+    captions: Omit<Caption, "id" | "createdAt" | "updatedAt">[],
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.transaction().execute(async (trx) => {
         await trx
@@ -27,6 +30,7 @@ export class VideoRepository {
             .values(
               captions.map((caption) => ({
                 ...caption,
+                id: crypto.randomUUID(),
                 videoId: video.id,
               })),
             )

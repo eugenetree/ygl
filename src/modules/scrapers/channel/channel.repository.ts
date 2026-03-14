@@ -14,12 +14,14 @@ export class ChannelRepository {
   }
 
   async create(
-    channel: Channel,
-  ): Promise<Result<void, DatabaseError>> {
+    channel: Omit<Channel, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Result<{ id: string }, DatabaseError>> {
+    const id = crypto.randomUUID();
+
     const insertResult = await tryCatch(
       dbClient
         .insertInto("channels")
-        .values(channel)
+        .values({ ...channel, id })
         .execute(),
     );
 
@@ -27,7 +29,7 @@ export class ChannelRepository {
       this.logger.error({
         message: "Failed to create channel",
         error: insertResult.error,
-        context: { channelId: channel.id },
+        context: { channelId: id },
       });
 
       return Failure({
@@ -36,6 +38,6 @@ export class ChannelRepository {
       });
     }
 
-    return Success(undefined);
+    return Success({ id });
   }
 }

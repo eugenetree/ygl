@@ -5,7 +5,7 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { ChannelEntry } from "../../domain/channel-entry.js";
 
 export class ChannelEntryRepository {
-  public async create(channelEntry: ChannelEntry): Promise<Result<void, DatabaseError>> {
+  public async create(channelEntry: Omit<ChannelEntry, "createdAt" | "updatedAt">): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
         .insertInto("channelEntries")

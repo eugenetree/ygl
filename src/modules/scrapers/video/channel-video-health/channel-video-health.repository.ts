@@ -22,11 +22,7 @@ export class ChannelVideoHealthRepository {
       });
     }
 
-    if (result.value) {
-      return Success(ChannelVideosHealth._fromDb(result.value));
-    }
-
-    return Success(null);
+    return Success(result.value ?? null);
   }
 
   public async save(healthRecord: ChannelVideosHealth): Promise<Result<void, DatabaseError>> {

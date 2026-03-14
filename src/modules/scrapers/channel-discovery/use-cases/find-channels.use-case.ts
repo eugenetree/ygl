@@ -5,7 +5,6 @@ import { Failure, Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entry.repository.js";
-import { ChannelEntryService } from "../../../domain/channel-entry.service.js";
 import { ChannelEntriesQueue } from "../../channel/index.js";
 
 @injectable()
@@ -14,7 +13,6 @@ export class FindChannelsUseCase {
     private readonly logger: Logger,
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly channelEntryRepository: ChannelEntryRepository,
-    private readonly channelEntryService: ChannelEntryService,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
   ) {
     this.logger.setContext(FindChannelsUseCase.name);
@@ -84,13 +82,8 @@ export class FindChannelsUseCase {
       return Success(undefined);
     }
 
-    const domainEntry = this.channelEntryService.create({
-      id: channelEntry.id,
-      queryId,
-    });
-
     const createChannelEntryResult =
-      await this.channelEntryRepository.create(domainEntry);
+      await this.channelEntryRepository.create({ id: channelEntry.id, queryId });
 
     if (!createChannelEntryResult.ok) {
       this.logger.error({
@@ -101,7 +94,7 @@ export class FindChannelsUseCase {
       return Failure(createChannelEntryResult.error);
     }
 
-    const enqueueResult = await this.channelEntriesQueue.enqueue(domainEntry.id);
+    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id);
 
     if (!enqueueResult.ok) {
       this.logger.error({

@@ -34,6 +34,7 @@ export class SearchChannelQueriesQueue {
 					.executeTakeFirst();
 
 				if (!job) return null;
+
 				return trx
 					.selectFrom("searchChannelQueries")
 					.selectAll()

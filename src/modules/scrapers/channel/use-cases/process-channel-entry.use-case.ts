@@ -4,7 +4,6 @@ import { ChannelEntryRow } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { YoutubeApiGetChannel } from "../../../youtube-api/yt-api-get-channel.js";
-import { ChannelService } from "../../../domain/channel.service.js";
 import { ChannelRepository } from "../channel.repository.js";
 
 @injectable()
@@ -13,7 +12,6 @@ export class ProcessChannelEntryUseCase {
     private readonly logger: Logger,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
-    private readonly channelService: ChannelService,
   ) {
     this.logger.setContext(ProcessChannelEntryUseCase.name);
   }
@@ -38,9 +36,7 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Validating and saving channel ${fullChannelInfo.id} into db.`);
 
-    const domainChannel = this.channelService.create(fullChannelInfo);
-
-    const createChannelResult = await this.channelRepository.create(domainChannel);
+    const createChannelResult = await this.channelRepository.create(fullChannelInfo);
 
     if (!createChannelResult.ok) {
       this.logger.error({
@@ -51,6 +47,6 @@ export class ProcessChannelEntryUseCase {
       return Failure(createChannelResult.error);
     }
 
-    return Success({ id: domainChannel.id });
+    return Success({ id: createChannelResult.value.id });
   }
 }

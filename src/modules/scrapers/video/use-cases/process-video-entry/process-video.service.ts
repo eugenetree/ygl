@@ -4,27 +4,25 @@ import { pick } from "lodash-es";
 import { Failure, Result, Success } from "../../../../../types/index.js";
 import { Logger } from "../../../../_common/logger/logger.js";
 import { Caption } from "../../../../domain/caption.js";
-import { Caption as CaptionDto } from "../../../../youtube-api/youtube-api.types.js";
-import { CaptionService } from "../../../../domain/caption.service.js";
+import { Caption as CaptionDto, Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../../../domain/video.js";
-import { Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
-import { VideoService } from "../../../../domain/video.service.js";
 import { ProcessManualCaptionsService } from "../../captions/process-manual-captions.service.js";
 import { ProcessAutoCaptionsService } from "../../captions/process-auto-captions.service.js";
 import { CaptionsSimilarityService } from "../../captions/captions-similarity.service.js";
 
+type VideoData = Omit<Video, "createdAt" | "updatedAt">;
+type CaptionData = Omit<Caption, "id" | "createdAt" | "updatedAt">;
+
 type ProcessResult = {
-  video: Video;
-  autoCaptions: Caption[] | null;
-  manualCaptions: Caption[] | null;
+  video: VideoData;
+  autoCaptions: CaptionData[] | null;
+  manualCaptions: CaptionData[] | null;
 };
 
 @injectable()
 export class ProcessVideoService {
   constructor(
     private readonly logger: Logger,
-    private readonly captionService: CaptionService,
-    private readonly videoService: VideoService,
     private readonly processManualCaptionsService: ProcessManualCaptionsService,
     private readonly processAutoCaptionsService: ProcessAutoCaptionsService,
     private readonly captionsSimilarityService: CaptionsSimilarityService,
@@ -93,7 +91,7 @@ export class ProcessVideoService {
     }
 
     let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
-    let manualCaptions: Caption[] | null = null;
+    let manualCaptions: CaptionData[] | null = null;
     let captionsSimilarityScore: number | null = null;
     let captionsShift: number | null = null;
 
@@ -150,8 +148,8 @@ export class ProcessVideoService {
     manualCaptionsStatus: ManualCaptionsStatus;
     captionsSimilarityScore: number | null;
     captionsShift: number | null;
-  }): Video {
-    return this.videoService.create({
+  }): VideoData {
+    return {
       ...pick(videoDto, [
         "id",
         "title",
@@ -187,7 +185,7 @@ export class ProcessVideoService {
       manualCaptionsStatus,
       captionsSimilarityScore,
       captionsShift,
-    });
+    };
   }
 
   private captionsToDomain({
@@ -198,9 +196,11 @@ export class ProcessVideoService {
     videoId: string;
     captionsDto: CaptionDto[];
     type: "auto" | "manual";
-  }) {
-    return captionsDto.map((captionDto) =>
-      this.captionService.create({ ...captionDto, videoId, type }),
-    );
+  }): CaptionData[] {
+    return captionsDto.map((captionDto) => ({
+      ...captionDto,
+      videoId,
+      type,
+    }));
   }
 }

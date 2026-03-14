@@ -2,7 +2,6 @@ import { injectable } from "inversify";
 import { Logger } from "../../../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { YoutubeApiGetChannelVideoEntries } from "../../../youtube-api/yt-api-get-channel-video-entries.js";
-import { VideoEntryService } from "../../../domain/video-entry.service.js";
 import { BaseError } from "../../../_common/errors.js";
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
@@ -14,7 +13,6 @@ export class FindChannelVideosUseCase {
   constructor(
     private readonly logger: Logger,
     private readonly videoEntryRepository: VideoEntryRepository,
-    private readonly videoEntryService: VideoEntryService,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
     private readonly videoEntriesQueue: VideoEntriesQueue,
   ) {
@@ -81,12 +79,10 @@ export class FindChannelVideosUseCase {
       return Success(undefined);
     }
 
-    const domainEntry = this.videoEntryService.create({
+    const createEntryResult = await this.videoEntryRepository.create({
       id: rawEntry.id,
       channelId,
     });
-
-    const createEntryResult = await this.videoEntryRepository.create(domainEntry);
 
     if (!createEntryResult.ok) {
       this.logger.error({
