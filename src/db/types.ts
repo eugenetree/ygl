@@ -215,6 +215,8 @@ export interface ChannelVideoHealthRow {
   channelId: string;
   succeededVideosStreak: number;
   failedVideosStreak: number;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
 }
 
 export type ChannelRow = Selectable<ChannelsRow>;

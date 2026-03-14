@@ -50,3 +50,5 @@ export type Video = {
   updatedAt: Date;
 };
 
+export type CreateVideoParams = Omit<Video, "createdAt" | "updatedAt">;
+

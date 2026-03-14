@@ -3,7 +3,7 @@ import { dbClient } from "../../../../db/client.js";
 import { DatabaseError } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import { ChannelVideosHealth } from "./channel-videos-health.js";
+import { ChannelVideosHealth, CreateChannelVideosHealthParams } from "./channel-videos-health.js";
 
 @injectable()
 export class ChannelVideoHealthRepository {
@@ -25,11 +25,33 @@ export class ChannelVideoHealthRepository {
     return Success(result.value ?? null);
   }
 
-  public async save(healthRecord: ChannelVideosHealth): Promise<Result<void, DatabaseError>> {
+  public async create(healthRecord: CreateChannelVideosHealthParams): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.insertInto("channelVideosHealth")
-        .values(healthRecord)
-        .onConflict((eb) => eb.column("id").doUpdateSet(healthRecord))
+        .values({
+          ...healthRecord,
+          id: crypto.randomUUID(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .execute()
+    );
+
+    if (!result.ok) {
+      return Failure({
+        type: "DATABASE",
+        error: result.error,
+      });
+    }
+
+    return Success(undefined);
+  }
+
+  public async update(healthRecord: ChannelVideosHealth): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      dbClient.updateTable("channelVideosHealth")
+        .set(healthRecord)
+        .where("id", "=", healthRecord.id)
         .execute()
     );
 

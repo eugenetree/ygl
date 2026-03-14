@@ -26,9 +26,20 @@ export class ProcessVideoEntryUseCase {
   ): Promise<Result<void, BaseError>> {
     this.logger.info(`Fetching video ${entry.id} via Youtube.`);
 
-    const healthRecordResult = await this.getHealthRecord(entry.channelId);
+    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(entry.channelId);
     if (!healthRecordResult.ok) {
       return healthRecordResult;
+    }
+
+    const healthRecord = healthRecordResult.value;
+    if (healthRecord && healthRecord.failedVideosStreak >= 5) {
+      return Failure({
+        type: "TOO_MANY_FAILED_VIDEOS",
+        context: {
+          videoId: entry.id,
+          channelId: entry.channelId,
+        }
+      });
     }
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entry.id);
@@ -39,10 +50,8 @@ export class ProcessVideoEntryUseCase {
         context: { videoId: entry.id },
       });
 
-      return this.handleUseCaseFailure({
-        error: videoDtoResult.error,
-        healthRecord: healthRecordResult.value
-      })
+      await this.syncChannelHealth(entry.channelId, healthRecord, false);
+      return videoDtoResult;
     }
 
     const videoDto = videoDtoResult.value;
@@ -65,10 +74,8 @@ export class ProcessVideoEntryUseCase {
         error: createVideoResult.error,
       });
 
-      return this.handleUseCaseFailure({
-        error: createVideoResult.error,
-        healthRecord: healthRecordResult.value
-      });
+      await this.syncChannelHealth(entry.channelId, healthRecord, false);
+      return createVideoResult;
     }
 
     this.logger.info(
@@ -76,54 +83,30 @@ export class ProcessVideoEntryUseCase {
       }, manualCaptions=${manualCaptions?.length ?? 0}.`
     );
 
-    return this.handleUseCaseSuccess({
-      healthRecord: healthRecordResult.value
-    });
+    await this.syncChannelHealth(entry.channelId, healthRecord, true);
+
+    return Success(undefined);
   }
 
-  private async getHealthRecord(channelId: string): Promise<Result<ChannelVideosHealth, DatabaseError>> {
-    const channelVideosHealthRecordResult =
-      await this.channelVideosHealthRepository.getHealthRecord(channelId);
-
-    if (!channelVideosHealthRecordResult.ok) {
-      return channelVideosHealthRecordResult;
-    }
-
-    const channelVideosHealthRecord =
-      channelVideosHealthRecordResult.value ?? {
-        id: crypto.randomUUID(),
-        channelId,
-        succeededVideosStreak: 0,
-        failedVideosStreak: 0,
-      };
-
-    return Success(channelVideosHealthRecord);
-  }
-
-  private async handleUseCaseSuccess({
-    healthRecord
+  private async syncChannelHealth({
+    channelId,
+    current,
+    isSuccess
   }: {
-    healthRecord: ChannelVideosHealth
-  }) {
-    healthRecord.succeededVideosStreak += 1;
-    healthRecord.failedVideosStreak = 0;
-    const healthRecordSaveResult = await this.channelVideosHealthRepository.save(healthRecord);
-    return healthRecordSaveResult.ok ? Success(undefined) : healthRecordSaveResult;
-  }
+    channelId: string;
+    current: ChannelVideosHealth | null;
+    isSuccess: boolean;
+  }): Promise<Result<void, DatabaseError>> {
+    const nextData = {
+      channelId,
+      succeededVideosStreak: isSuccess ? (current?.succeededVideosStreak ?? 0) + 1 : 0,
+      failedVideosStreak: isSuccess ? 0 : (current?.failedVideosStreak ?? 0) + 1,
+    };
 
-  private async handleUseCaseFailure<T>({
-    error,
-    healthRecord
-  }: {
-    error: T,
-    healthRecord: ChannelVideosHealth
-  }) {
-    const healthRecordSaveResult = await this.channelVideosHealthRepository.save({
-      ...healthRecord,
-      failedVideosStreak: healthRecord.failedVideosStreak + 1,
-      succeededVideosStreak: 0,
-    });
-
-    return healthRecordSaveResult.ok ? Failure(error) : healthRecordSaveResult;
+    return current
+      ? await this.channelVideosHealthRepository.update({ ...current, ...nextData })
+      : await this.channelVideosHealthRepository.create(nextData);
   }
 }
+
+
