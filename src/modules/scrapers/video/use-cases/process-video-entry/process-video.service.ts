@@ -1,17 +1,17 @@
 import { injectable } from "inversify";
 import { pick } from "lodash-es";
 
-import { Failure, Result, Success } from "../../../types/index.js";
-import { Logger } from "../../_common/logger/logger.js";
-import { Caption } from "../../domain/caption.js";
-import { Caption as CaptionDto } from "../../youtube-api/youtube-api.types.js";
-import { CaptionService } from "../../domain/caption.service.js";
-import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../domain/video.js";
-import { Video as VideoDto } from "../../youtube-api/youtube-api.types.js";
-import { VideoService } from "../../domain/video.service.js";
-import { ProcessManualCaptionsService } from "./captions/process-manual-captions.service.js";
-import { ProcessAutoCaptionsService } from "./captions/process-auto-captions.service.js";
-import { CaptionsSimilarityService } from "./captions/captions-similarity.service.js";
+import { Failure, Result, Success } from "../../../../../types/index.js";
+import { Logger } from "../../../../_common/logger/logger.js";
+import { Caption } from "../../../../domain/caption.js";
+import { Caption as CaptionDto } from "../../../../youtube-api/youtube-api.types.js";
+import { CaptionService } from "../../../../domain/caption.service.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../../../domain/video.js";
+import { Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
+import { VideoService } from "../../../../domain/video.service.js";
+import { ProcessManualCaptionsService } from "../../captions/process-manual-captions.service.js";
+import { ProcessAutoCaptionsService } from "../../captions/process-auto-captions.service.js";
+import { CaptionsSimilarityService } from "../../captions/captions-similarity.service.js";
 
 type ProcessResult = {
   video: Video;
@@ -33,11 +33,6 @@ export class ProcessVideoService {
   async process(
     videoDto: VideoDto,
   ): Promise<ProcessResult> {
-    // if (this.isMusic(videoDto)) {
-    //   this.logger.info(`Ignoring music video ${videoDto.id}.`);
-    //   return Failure("MUSIC_VIDEO" as any);
-    // }
-
     // no captions at all
     if (videoDto.captionStatus === "NONE") {
       return {
@@ -207,14 +202,5 @@ export class ProcessVideoService {
     return captionsDto.map((captionDto) =>
       this.captionService.create({ ...captionDto, videoId, type }),
     );
-  }
-
-  private isMusic(video: VideoDto): boolean {
-    const isMusicCategory = video.categories.some((cat) =>
-      cat.toLowerCase().includes("music"),
-    );
-    const hasMusicMetadata = !!(video.track || video.artist || video.album);
-
-    return isMusicCategory || hasMusicMetadata;
   }
 }

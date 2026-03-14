@@ -46,6 +46,7 @@ export interface Database {
   channelJobs: ChannelJobsRow;
   videoDiscoveryJobs: VideoDiscoveryJobsRow;
   videoJobs: VideoJobsRow;
+  channelVideosHealth: ChannelVideoHealthRow;
 }
 
 export interface ChannelDiscoveryJobsRow {
@@ -207,6 +208,13 @@ export interface VideoEntriesRow {
   processingStatus: ProcessingStatus;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
+}
+
+export interface ChannelVideoHealthRow {
+  id: string;
+  channelId: string;
+  succeededVideosStreak: number;
+  failedVideosStreak: number;
 }
 
 export type ChannelRow = Selectable<ChannelsRow>;
