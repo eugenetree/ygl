@@ -1,5 +1,5 @@
 import { Client } from "@elastic/elasticsearch";
-import { Caption } from "../domain/caption.js";
+import { Caption } from "../scrapers/video/captions/caption.js";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
 
@@ -23,11 +23,10 @@ export class ElasticSyncService {
     }
 
     await this.esClient.bulk({
-      index: "captions",
-      body: captions.map(caption => ({
-        index: { _id: caption.id },
-        document: caption,
-      })),
+      body: captions.flatMap(caption => [
+        { index: { _index: "captions", _id: caption.id } },
+        caption._toPersistance(),
+      ]),
     });
   }
 

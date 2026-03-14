@@ -55,7 +55,7 @@ export type Video =
     captionStatus: "MANUAL_ONLY";
     languageCode: null;
     autoCaptions: null;
-    manualCaptions: null;
+    manualCaptions: Caption[];
   })
   | (VideoBase & {
     captionStatus: "AUTO_ONLY";

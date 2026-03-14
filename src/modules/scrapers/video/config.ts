@@ -1,0 +1,1 @@
+export const MAX_FAILED_VIDEOS_STREAK = 5;

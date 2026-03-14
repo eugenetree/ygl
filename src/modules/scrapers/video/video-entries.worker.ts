@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
-import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry.use-case.js";
+import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
 
 @injectable()
 export class VideoEntriesWorker {

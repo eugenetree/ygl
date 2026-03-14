@@ -4,6 +4,7 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { DatabaseError, VideoEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
+import { MAX_FAILED_VIDEOS_STREAK } from "./config.js";
 
 @injectable()
 export class VideoEntriesQueue {
@@ -35,8 +36,15 @@ export class VideoEntriesQueue {
             "in",
             (eb) =>
               eb.selectFrom("videoJobs")
-                .select("id")
+                .leftJoin("channelVideosHealth", "channelVideosHealth.channelId", "videoJobs.channelId")
+                .select("videoJobs.id")
                 .where("status", "=", "PENDING")
+                .where((eb) =>
+                  eb.or([
+                    eb("channelVideosHealth.failedVideosStreak", "is", null),
+                    eb("channelVideosHealth.failedVideosStreak", "<", MAX_FAILED_VIDEOS_STREAK),
+                  ])
+                )
                 .limit(1)
                 .forUpdate()
                 .skipLocked()
