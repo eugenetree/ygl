@@ -6,7 +6,9 @@ import { BaseError } from "../../../_common/errors.js";
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
 
-type ProcessError = BaseError;
+type Input = {
+  channelId: string;
+}
 
 @injectable()
 export class FindChannelVideosUseCase {
@@ -19,9 +21,9 @@ export class FindChannelVideosUseCase {
     this.logger.setContext(FindChannelVideosUseCase.name);
   }
 
-  public async execute(channel: { id: string }): Promise<Result<void, ProcessError>> {
+  public async execute({ channelId }: Input): Promise<Result<void, BaseError>> {
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
-      channelId: channel.id,
+      channelId,
     });
 
     for await (const chunkResult of entriesGenerator) {
@@ -29,10 +31,10 @@ export class FindChannelVideosUseCase {
         this.logger.error({
           message: "Failed to get channel video entries",
           error: chunkResult.error,
-          context: { channelId: channel.id },
+          context: { channelId },
         });
 
-        return Failure(chunkResult.error);
+        return chunkResult;
       }
 
       const chunkResponse = chunkResult.value;
@@ -43,10 +45,10 @@ export class FindChannelVideosUseCase {
 
       if (chunkResponse.status === "found") {
         for (const videoEntryResponse of chunkResponse.chunk) {
-          const processEntryResult = await this.processVideoEntry(channel.id, videoEntryResponse);
+          const processEntryResult = await this.processVideoEntry(channelId, videoEntryResponse.id);
 
           if (!processEntryResult.ok) {
-            return Failure(processEntryResult.error);
+            return processEntryResult;
           }
         }
       }
@@ -57,30 +59,29 @@ export class FindChannelVideosUseCase {
 
   private async processVideoEntry(
     channelId: string,
-    rawEntry: { id: string },
-  ): Promise<Result<void, ProcessError>> {
-    this.logger.info(`Processing video entry ${rawEntry.id} for channel ${channelId}.`);
+    entryId: string,
+  ): Promise<Result<void, BaseError>> {
+    this.logger.info(`Processing video entry ${entryId} for channel ${channelId}.`);
 
-    const entryLookupResult = await this.videoEntryRepository.findById(rawEntry.id);
-
+    const entryLookupResult = await this.videoEntryRepository.findById(entryId);
     if (!entryLookupResult.ok) {
       this.logger.error({
         message: "Error looking up video entry",
         error: entryLookupResult.error,
-        context: { videoId: rawEntry.id },
+        context: { videoId: entryId },
       });
 
-      return Failure(entryLookupResult.error);
+      return entryLookupResult;
     }
 
     const existingEntry = entryLookupResult.value;
     if (existingEntry) {
-      this.logger.info(`Video entry (${rawEntry.id}) already exists. Skipping.`);
+      this.logger.info(`Video entry (${entryId}) already exists. Skipping.`);
       return Success(undefined);
     }
 
     const createEntryResult = await this.videoEntryRepository.create({
-      id: rawEntry.id,
+      id: entryId,
       channelId,
     });
 
@@ -88,23 +89,26 @@ export class FindChannelVideosUseCase {
       this.logger.error({
         message: "Error creating video entry",
         error: createEntryResult.error,
-        context: { videoId: rawEntry.id },
+        context: { videoId: entryId },
       });
 
-      return Failure(createEntryResult.error);
+      return createEntryResult;
     }
 
-    const enqueueResult = await this.videoEntriesQueue.enqueue(rawEntry.id, channelId);
+    this.logger.info(`Video entry (${entryId}) created.`);
 
+    const enqueueResult = await this.videoEntriesQueue.enqueue(entryId, channelId);
     if (!enqueueResult.ok) {
       this.logger.error({
         message: "Error enqueuing video",
         error: enqueueResult.error,
-        context: { videoId: rawEntry.id },
+        context: { videoId: entryId },
       });
 
-      return Failure(enqueueResult.error);
+      return enqueueResult;
     }
+
+    this.logger.info(`Video entry (${entryId}) enqueued.`);
 
     return Success(undefined);
   }

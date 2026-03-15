@@ -4,7 +4,7 @@ import { dbClient } from "../../../db/client.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { Channel } from "../../domain/channel.js";
+import { ChannelProps } from "./channel.js";
 import { DatabaseError } from "../../../db/types.js";
 
 @injectable()
@@ -14,14 +14,12 @@ export class ChannelRepository {
   }
 
   async create(
-    channel: Omit<Channel, "id" | "createdAt" | "updatedAt">,
-  ): Promise<Result<{ id: string }, DatabaseError>> {
-    const id = crypto.randomUUID();
-
+    channel: ChannelProps,
+  ): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
       dbClient
         .insertInto("channels")
-        .values({ ...channel, id })
+        .values(channel)
         .execute(),
     );
 
@@ -29,7 +27,7 @@ export class ChannelRepository {
       this.logger.error({
         message: "Failed to create channel",
         error: insertResult.error,
-        context: { channelId: id },
+        context: { channelId: channel.id },
       });
 
       return Failure({
@@ -38,6 +36,6 @@ export class ChannelRepository {
       });
     }
 
-    return Success({ id });
+    return Success(undefined);
   }
 }

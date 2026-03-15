@@ -3,8 +3,8 @@ import { dbClient } from "../../../db/client.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { Caption } from "../../domain/caption.js";
-import { Video } from "../../domain/video.js";
+import { Caption, CaptionProps } from "./caption.js";
+import { Video, VideoProps } from "./video.js";
 import { DatabaseError } from "../../../db/types.js";
 
 @injectable()
@@ -12,16 +12,14 @@ export class VideoRepository {
   constructor(private readonly logger: Logger) { }
 
   async createWithCaptions(
-    video: Omit<Video, "createdAt" | "updatedAt">,
-    captions: Omit<Caption, "id" | "createdAt" | "updatedAt">[],
+    video: VideoProps,
+    captions: CaptionProps[],
   ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.transaction().execute(async (trx) => {
         await trx
           .insertInto("videos")
-          .values({
-            ...video,
-          })
+          .values(video)
           .execute();
 
         if (captions.length > 0) {

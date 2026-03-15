@@ -1,11 +1,16 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../_common/logger/logger.js";
-import { SearchChannelQuery } from "../../../domain/search-channel-query.js";
+import { SearchChannelQuery } from "../search-channel-query.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entry.repository.js";
 import { ChannelEntriesQueue } from "../../channel/index.js";
+
+type Input = {
+  queryId: string;
+  queryText: string;
+}
 
 @injectable()
 export class FindChannelsUseCase {
@@ -18,9 +23,9 @@ export class FindChannelsUseCase {
     this.logger.setContext(FindChannelsUseCase.name);
   }
 
-  public async execute(queryRecord: SearchChannelQuery) {
+  public async execute({ queryId, queryText }: Input) {
     const searchGenerator = this.youtubeApiSearchChannels.searchChannels({
-      query: queryRecord.query,
+      query: queryText,
     });
 
     for await (const searchResult of searchGenerator) {
@@ -37,12 +42,12 @@ export class FindChannelsUseCase {
       if (searchResponse.status === "found") {
         for (const channelEntry of searchResponse.chunk) {
           const processChannelEntryResult = await this.processChannelEntry({
-            queryId: queryRecord.id,
+            queryId,
             channelEntry,
           });
 
           if (!processChannelEntryResult.ok) {
-            return Failure(processChannelEntryResult.error);
+            return processChannelEntryResult;
           }
         }
       }
@@ -94,8 +99,9 @@ export class FindChannelsUseCase {
       return Failure(createChannelEntryResult.error);
     }
 
-    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id);
+    this.logger.info(`Channel entry ${channelEntry.id} created.`);
 
+    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id);
     if (!enqueueResult.ok) {
       this.logger.error({
         error: enqueueResult.error,
@@ -104,6 +110,8 @@ export class FindChannelsUseCase {
 
       return Failure(enqueueResult.error);
     }
+
+    this.logger.info(`Channel entry ${channelEntry.id} enqueued for next step.`);
 
     return Success(undefined);
   }

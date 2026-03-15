@@ -1,8 +1,9 @@
+import { sql } from "kysely";
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { DatabaseError } from "../../../db/types.js";
-import { SearchChannelQuery } from "../../domain/search-channel-query.js";
+import { SearchChannelQuery } from "./search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
@@ -26,6 +27,8 @@ export class SearchChannelQueriesQueue {
 							eb.selectFrom("channelDiscoveryJobs")
 								.select("id")
 								.where("status", "=", "PENDING")
+								// temporary things to discover more scenarios
+								.orderBy(sql`random()`)
 								.limit(1)
 								.forUpdate()
 								.skipLocked(),

@@ -1,17 +1,17 @@
 import { injectable } from "inversify";
-import { dbClient } from "../../../../db/client.js";
-import { DatabaseError } from "../../../../db/types.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { tryCatch } from "../../../_common/try-catch.js";
-import { ChannelVideosHealth, CreateChannelVideosHealthParams } from "./channel-videos-health.js";
+import { dbClient } from "../../../db/client.js";
+import { DatabaseError } from "../../../db/types.js";
+import { Failure, Result, Success } from "../../../types/index.js";
+import { tryCatch } from "../../_common/try-catch.js";
+import { ChannelVideosHealth, ChannelVideosHealthProps } from "./channel-videos-health.js";
 
 @injectable()
 export class ChannelVideoHealthRepository {
-  public async getHealthRecord(id: string): Promise<Result<ChannelVideosHealth | null, DatabaseError>> {
+  public async getHealthRecord(channelId: string): Promise<Result<ChannelVideosHealth | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient.selectFrom("channelVideosHealth")
         .selectAll()
-        .where("id", "=", id)
+        .where("channelId", "=", channelId)
         .executeTakeFirst()
     );
 
@@ -25,7 +25,7 @@ export class ChannelVideoHealthRepository {
     return Success(result.value ?? null);
   }
 
-  public async create(healthRecord: CreateChannelVideosHealthParams): Promise<Result<void, DatabaseError>> {
+  public async create(healthRecord: ChannelVideosHealthProps): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.insertInto("channelVideosHealth")
         .values({

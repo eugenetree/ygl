@@ -1,22 +1,18 @@
 import { injectable } from "inversify";
 import { pick } from "lodash-es";
 
-import { Failure, Result, Success } from "../../../../../types/index.js";
 import { Logger } from "../../../../_common/logger/logger.js";
-import { Caption } from "../../../../domain/caption.js";
+import { CaptionProps } from "../../caption.js";
 import { Caption as CaptionDto, Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
-import { AutoCaptionsStatus, ManualCaptionsStatus, Video } from "../../../../domain/video.js";
-import { ProcessManualCaptionsService } from "../../captions/process-manual-captions.service.js";
-import { ProcessAutoCaptionsService } from "../../captions/process-auto-captions.service.js";
-import { CaptionsSimilarityService } from "../../captions/captions-similarity.service.js";
-
-type VideoData = Omit<Video, "createdAt" | "updatedAt">;
-type CaptionData = Omit<Caption, "id" | "createdAt" | "updatedAt">;
+import { AutoCaptionsStatus, ManualCaptionsStatus, VideoProps } from "../../video.js";
+import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
+import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
+import { CaptionsSimilarityService } from "./captions-similarity.service.js";
 
 type ProcessResult = {
-  video: VideoData;
-  autoCaptions: CaptionData[] | null;
-  manualCaptions: CaptionData[] | null;
+  video: VideoProps;
+  autoCaptions: CaptionProps[] | null;
+  manualCaptions: CaptionProps[] | null;
 };
 
 @injectable()
@@ -28,95 +24,42 @@ export class ProcessVideoService {
     private readonly captionsSimilarityService: CaptionsSimilarityService,
   ) { }
 
-  async process(
-    videoDto: VideoDto,
-  ): Promise<ProcessResult> {
-    // no captions at all
-    if (videoDto.captionStatus === "NONE") {
-      return {
-        video: this.videoToDomain({
-          videoDto,
-          autoCaptionsStatus: "CAPTIONS_ABSENT",
-          manualCaptionsStatus: "CAPTIONS_ABSENT",
-          captionsSimilarityScore: null,
-          captionsShift: null,
-        }),
-        autoCaptions: null,
-        manualCaptions: null,
-      };
-    }
+  async process(videoDto: VideoDto): Promise<ProcessResult> {
+    const { id: videoId, autoCaptions: autoDto, manualCaptions: manualDto } = videoDto;
 
-    // manual captions exist but no auto — schedule for future processing
-    if (videoDto.captionStatus === "MANUAL_ONLY") {
-      return {
-        video: this.videoToDomain({
-          videoDto,
-          autoCaptionsStatus: "CAPTIONS_ABSENT",
-          manualCaptionsStatus: "CAPTIONS_PENDING_VALIDATION",
-          captionsSimilarityScore: null,
-          captionsShift: null,
-        }),
-        autoCaptions: null,
-        manualCaptions: null,
-      };
-    }
+    let autoCaptionsStatus: AutoCaptionsStatus = "CAPTIONS_ABSENT";
+    let autoCaptions: CaptionProps[] | null = null;
+    let processAutoValue: CaptionDto[] | null = null;
 
-    // captionStatus === "AUTO_ONLY" | "BOTH" from here on
-    const processAutoResult = await this.processAutoCaptionsService.process(videoDto.autoCaptions);
-
-    const autoCaptionsStatus: AutoCaptionsStatus = processAutoResult.ok
-      ? "CAPTIONS_VALID"
-      : processAutoResult.error.type;
-
-    const autoCaptions = processAutoResult.ok
-      ? this.captionsToDomain({
-        videoId: videoDto.id,
-        captionsDto: processAutoResult.value,
-        type: "auto",
-      })
-      : null;
-
-    if (videoDto.captionStatus === "AUTO_ONLY") {
-      return {
-        video: this.videoToDomain({
-          videoDto,
-          autoCaptionsStatus,
-          manualCaptionsStatus: "CAPTIONS_ABSENT",
-          captionsSimilarityScore: null,
-          captionsShift: null,
-        }),
-        autoCaptions,
-        manualCaptions: null,
-      };
+    if (autoDto) {
+      const result = await this.processAutoCaptionsService.process(autoDto);
+      autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
+      if (result.ok) {
+        processAutoValue = result.value;
+        autoCaptions = this.captionsToDomain({ videoId, captionsDto: result.value, type: "auto" });
+      }
     }
 
     let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
-    let manualCaptions: CaptionData[] | null = null;
+    let manualCaptions: CaptionProps[] | null = null;
+    let processManualValue: CaptionDto[] | null = null;
+
+    if (manualDto) {
+      const result = await this.processManualCaptionsService.process(manualDto);
+      manualCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
+      if (result.ok) {
+        processManualValue = result.value;
+        manualCaptions = this.captionsToDomain({ videoId, captionsDto: result.value, type: "manual" });
+      }
+    }
+
     let captionsSimilarityScore: number | null = null;
     let captionsShift: number | null = null;
 
-    let processManualResult = null;
-
-    if (videoDto.manualCaptions) {
-      processManualResult = await this.processManualCaptionsService.process(videoDto.manualCaptions);
-
-      manualCaptionsStatus = processManualResult.ok
-        ? "CAPTIONS_VALID"
-        : processManualResult.error.type;
-
-      manualCaptions = processManualResult.ok
-        ? this.captionsToDomain({
-          videoId: videoDto.id,
-          captionsDto: processManualResult.value,
-          type: "manual",
-        })
-        : null;
-    }
-
-    if (processAutoResult.ok && processManualResult?.ok) {
+    if (processAutoValue && processManualValue) {
       const similarityResult = await this.captionsSimilarityService.calculateSimilarity({
-        autoCaptions: processAutoResult.value,
-        manualCaptions: processManualResult.value,
+        autoCaptions: processAutoValue,
+        manualCaptions: processManualValue,
       });
 
       captionsSimilarityScore = similarityResult.score;
@@ -148,7 +91,7 @@ export class ProcessVideoService {
     manualCaptionsStatus: ManualCaptionsStatus;
     captionsSimilarityScore: number | null;
     captionsShift: number | null;
-  }): VideoData {
+  }): VideoProps {
     return {
       ...pick(videoDto, [
         "id",
@@ -158,6 +101,7 @@ export class ProcessVideoService {
         "channelId",
         "viewCount",
         "thumbnail",
+        "languageCode",
         "asr",
         "abr",
         "acodec",
@@ -178,9 +122,6 @@ export class ProcessVideoService {
         "channelIsVerified",
       ]),
       // if only manual captions exist, we can't infer video language from them
-      languageCode: videoDto.captionStatus === "NONE" || videoDto.captionStatus === "MANUAL_ONLY"
-        ? null
-        : videoDto.languageCode,
       autoCaptionsStatus,
       manualCaptionsStatus,
       captionsSimilarityScore,
@@ -196,7 +137,7 @@ export class ProcessVideoService {
     videoId: string;
     captionsDto: CaptionDto[];
     type: "auto" | "manual";
-  }): CaptionData[] {
+  }): CaptionProps[] {
     return captionsDto.map((captionDto) => ({
       ...captionDto,
       videoId,

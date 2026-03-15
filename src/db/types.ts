@@ -205,7 +205,6 @@ export interface ElasticCaptionsSyncRow {
 export interface VideoEntriesRow {
   id: string;
   channelId: string;
-  processingStatus: ProcessingStatus;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

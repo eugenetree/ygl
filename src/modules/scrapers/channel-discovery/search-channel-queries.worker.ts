@@ -28,7 +28,6 @@ export class SearchChannelQueriesWorker {
       }
 
       const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
-
       if (!queryResult.ok) {
         this.logger.error({
           error: queryResult.error,
@@ -39,7 +38,6 @@ export class SearchChannelQueriesWorker {
       }
 
       const query = queryResult.value;
-
       if (!query) {
         this.logger.info("Search queries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
@@ -47,33 +45,45 @@ export class SearchChannelQueriesWorker {
       }
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
+      this.logger.info(`Processing search query ${query.id}...`);
 
-      this.logger.info(`Processing query ${query.id}...`);
-      const processResult = await this.processSearchQuery.execute(query);
+      const processResult = await this.processSearchQuery.execute({
+        queryId: query.id,
+        queryText: query.query,
+      });
 
       if (!processResult.ok) {
         this.logger.error({
-          message: `Processing query ${query.id} failed`,
+          message: `Processing search query ${query.id} failed`,
           error: processResult.error,
           context: { queryId: query.id },
         });
 
-        await this.searchChannelQueriesQueue.markAsFailed(query.id);
-        this.isRunning = false;
-        return;
+        const markAsFailedResult = await this.searchChannelQueriesQueue.markAsFailed(query.id);
+        if (!markAsFailedResult.ok) {
+          this.logger.error({
+            message: `Marking search query ${query.id} as failed failed`,
+            error: markAsFailedResult.error,
+            context: { queryId: query.id },
+          });
+
+          this.isRunning = false;
+          return;
+        }
+
+        continue;
       }
 
-      this.logger.info(`Processing query ${query.id} finished`);
-      const markAsSuccessResult = await this.searchChannelQueriesQueue.markAsSuccess(query.id);
+      this.logger.info(`Processing search query ${query.id} finished`);
 
+      const markAsSuccessResult = await this.searchChannelQueriesQueue.markAsSuccess(query.id);
       if (!markAsSuccessResult.ok) {
         this.logger.error({
-          message: `Marking query ${query.id} as success failed`,
+          message: `Marking search query ${query.id} as success failed`,
           error: markAsSuccessResult.error,
           context: { queryId: query.id },
         });
 
-        await this.searchChannelQueriesQueue.markAsFailed(query.id);
         this.isRunning = false;
         return;
       }

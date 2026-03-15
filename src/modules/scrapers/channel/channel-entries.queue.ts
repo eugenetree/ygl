@@ -4,6 +4,7 @@ import { tryCatch } from "../../_common/try-catch.js";
 import { DatabaseError, ChannelEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
+import { sql } from "kysely";
 
 @injectable()
 export class ChannelEntriesQueue {
@@ -37,6 +38,8 @@ export class ChannelEntriesQueue {
               eb.selectFrom("channelJobs")
                 .select("id")
                 .where("status", "=", "PENDING")
+                // temporary things to discover more scenarios
+                .orderBy(sql`random()`)
                 .limit(1)
                 .forUpdate()
                 .skipLocked(),

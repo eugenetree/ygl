@@ -4,3 +4,5 @@ export type VideoEntry = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type VideoEntryProps = Omit<VideoEntry, "createdAt" | "updatedAt">;

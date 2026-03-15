@@ -3,4 +3,6 @@ export type ChannelEntry = {
   queryId: string;
   createdAt: Date;
   updatedAt: Date;
-}
+};
+
+export type ChannelEntryProps = Omit<ChannelEntry, "createdAt" | "updatedAt">;

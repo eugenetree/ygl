@@ -6,8 +6,14 @@ import { BaseError } from "../../../../_common/errors.js";
 import { YoutubeApiGetVideo } from "../../../../youtube-api/yt-api-get-video.js";
 import { ProcessVideoService } from "./process-video.service.js";
 import { VideoRepository } from "../../video.repository.js";
-import { ChannelVideoHealthRepository } from "../../channel-video-health/channel-video-health.repository.js";
-import { ChannelVideosHealth } from "../../channel-video-health/channel-videos-health.js";
+import { ChannelVideoHealthRepository } from "../../channel-video-health.repository.js";
+import { ChannelVideosHealth, ChannelVideosHealthProps } from "../../channel-videos-health.js";
+import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
+
+type Input = {
+  entryId: string;
+  channelId: string;
+}
 
 @injectable()
 export class ProcessVideoEntryUseCase {
@@ -21,69 +27,71 @@ export class ProcessVideoEntryUseCase {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute(
-    entry: VideoEntryRow
-  ): Promise<Result<void, BaseError>> {
-    this.logger.info(`Fetching video ${entry.id} via Youtube.`);
-
-    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(entry.channelId);
+  public async execute({ entryId, channelId }: Input): Promise<Result<void, BaseError>> {
+    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(channelId);
     if (!healthRecordResult.ok) {
       return healthRecordResult;
     }
 
     const healthRecord = healthRecordResult.value;
-    if (healthRecord && healthRecord.failedVideosStreak >= 5) {
+    if (healthRecord && healthRecord.failedVideosStreak >= MAX_FAILED_VIDEOS_STREAK) {
       return Failure({
         type: "TOO_MANY_FAILED_VIDEOS",
         context: {
-          videoId: entry.id,
-          channelId: entry.channelId,
+          videoId: entryId,
+          channelId,
         }
       });
     }
 
-    const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entry.id);
+    const processEntryResult = await this.processEntry(entryId);
 
+    const syncResult = await this.syncChannelHealth({
+      channelId,
+      current: healthRecord,
+      isSuccess: processEntryResult.ok
+    });
+
+    if (!syncResult.ok) {
+      return syncResult;
+    }
+
+    return processEntryResult;
+  }
+
+  private async processEntry(
+    entryId: string
+  ): Promise<Result<void, BaseError>> {
+    this.logger.info(`Fetching video ${entryId}.`);
+
+    const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entryId);
     if (!videoDtoResult.ok) {
       this.logger.error({
         error: videoDtoResult.error,
-        context: { videoId: entry.id },
+        context: { videoId: entryId },
       });
 
-      await this.syncChannelHealth(entry.channelId, healthRecord, false);
       return videoDtoResult;
     }
 
     const videoDto = videoDtoResult.value;
+    this.logger.info(`Processing and saving video ${videoDto.id}.`);
 
-    this.logger.info(`Processing and saving video ${videoDto.id} into db.`);
-
-    const processVideoResult = await this.videoProcessor.process(videoDto);
-
-    const { video, autoCaptions, manualCaptions } = processVideoResult;
+    const { video, autoCaptions, manualCaptions } = await this.videoProcessor.process(videoDto);
     const captions = [...(autoCaptions ?? []), ...(manualCaptions ?? [])];
 
-    const createVideoResult = await this.videoRepository.createWithCaptions(
-      video,
-      captions
-    );
-
+    const createVideoResult = await this.videoRepository.createWithCaptions(video, captions);
     if (!createVideoResult.ok) {
       this.logger.error({
         message: `Failed to create video ${video.id} with ${captions.length} captions.`,
         error: createVideoResult.error,
       });
-
-      await this.syncChannelHealth(entry.channelId, healthRecord, false);
       return createVideoResult;
     }
 
     this.logger.info(
-      `Video ${video.id} persisted. autoCaptions=${autoCaptions?.length ?? 0
-      }, manualCaptions=${manualCaptions?.length ?? 0}.`
+      `Video ${video.id} persisted. autoCaptions=${autoCaptions?.length ?? 0}, manualCaptions=${manualCaptions?.length ?? 0}.`
     );
-
-    await this.syncChannelHealth(entry.channelId, healthRecord, true);
 
     return Success(undefined);
   }
@@ -97,7 +105,7 @@ export class ProcessVideoEntryUseCase {
     current: ChannelVideosHealth | null;
     isSuccess: boolean;
   }): Promise<Result<void, DatabaseError>> {
-    const nextData = {
+    const nextData: ChannelVideosHealthProps = {
       channelId,
       succeededVideosStreak: isSuccess ? (current?.succeededVideosStreak ?? 0) + 1 : 0,
       failedVideosStreak: isSuccess ? 0 : (current?.failedVideosStreak ?? 0) + 1,

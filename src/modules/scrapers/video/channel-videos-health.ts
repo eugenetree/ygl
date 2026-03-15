@@ -7,4 +7,4 @@ export type ChannelVideosHealth = {
   updatedAt: Date;
 };
 
-export type ChannelVideoHealthProps = Omit<ChannelVideosHealth, "id" | "createdAt" | "updatedAt">;
+export type ChannelVideosHealthProps = Omit<ChannelVideosHealth, "id" | "createdAt" | "updatedAt">;

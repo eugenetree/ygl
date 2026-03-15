@@ -1,4 +1,4 @@
-import { LanguageCode } from "../i18n/index.js";
+import { LanguageCode } from "../../i18n/index.js";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
@@ -50,5 +50,5 @@ export type Video = {
   updatedAt: Date;
 };
 
-export type CreateVideoParams = Omit<Video, "createdAt" | "updatedAt">;
+export type VideoProps = Omit<Video, "createdAt" | "updatedAt">;
 

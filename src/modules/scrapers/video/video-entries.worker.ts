@@ -28,7 +28,6 @@ export class VideoEntriesWorker {
       }
 
       const entryResult = await this.videoEntriesQueue.getNextEntry();
-
       if (!entryResult.ok) {
         this.logger.error({
           error: entryResult.error,
@@ -39,17 +38,19 @@ export class VideoEntriesWorker {
       }
 
       const entry = entryResult.value;
-
       if (!entry) {
         this.logger.info("Video entries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
-      this.logger.info("Waiting 5 seconds");
       await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
       this.logger.info(`Processing video entry ${entry.id}...`);
-      const processResult = await this.processVideoEntry.execute(entry);
+
+      const processResult = await this.processVideoEntry.execute({
+        channelId: entry.channelId,
+        entryId: entry.id
+      });
 
       if (!processResult.ok) {
         this.logger.error({
@@ -58,16 +59,24 @@ export class VideoEntriesWorker {
           context: { entryId: entry.id },
         });
 
-        await this.videoEntriesQueue.markAsFailed(entry.id);
+        const markAsFailedResult = await this.videoEntriesQueue.markAsFailed(entry.id);
+        if (!markAsFailedResult.ok) {
+          this.logger.error({
+            message: `Failed to mark video entry ${entry.id} as failed`,
+            error: markAsFailedResult.error,
+            context: { entryId: entry.id },
+          });
+
+          this.isRunning = false;
+          return;
+        }
+
         continue;
       }
 
       this.logger.info(`Processing video entry ${entry.id} finished`);
 
-      const markAsSuccessResult = await this.videoEntriesQueue.markAsSuccess(
-        entry.id
-      );
-
+      const markAsSuccessResult = await this.videoEntriesQueue.markAsSuccess(entry.id);
       if (!markAsSuccessResult.ok) {
         this.logger.error({
           message: `Failed to mark video entry ${entry.id} as success`,
@@ -75,7 +84,6 @@ export class VideoEntriesWorker {
           context: { entryId: entry.id },
         });
 
-        await this.videoEntriesQueue.markAsFailed(entry.id);
         this.isRunning = false;
         return;
       }

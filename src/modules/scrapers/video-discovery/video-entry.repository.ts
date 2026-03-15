@@ -4,7 +4,7 @@ import { DatabaseError } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { VideoEntry } from "../../domain/video-entry.js";
+import { VideoEntry, VideoEntryProps } from "./video-entry.js";
 
 @injectable()
 export class VideoEntryRepository {
@@ -33,10 +33,10 @@ export class VideoEntryRepository {
   }
 
   async create(
-    videoEntry: Omit<VideoEntry, "createdAt" | "updatedAt">,
+    videoEntry: VideoEntryProps,
   ): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
-      dbClient.insertInto("videoEntries").values({ ...videoEntry, processingStatus: "PENDING" }).execute()
+      dbClient.insertInto("videoEntries").values(videoEntry).execute()
     );
 
     if (!insertResult.ok) {

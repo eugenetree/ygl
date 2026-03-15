@@ -9,3 +9,5 @@ export type Caption = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CaptionProps = Omit<Caption, "id" | "createdAt" | "updatedAt">;

@@ -1,5 +1,5 @@
 import { Client } from "@elastic/elasticsearch";
-import { Caption } from "../domain/caption.js";
+import { Caption } from "../scrapers/video/caption.js";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
 

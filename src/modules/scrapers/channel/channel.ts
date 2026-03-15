@@ -15,3 +15,5 @@ export type Channel = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ChannelProps = Omit<Channel, "createdAt" | "updatedAt">;

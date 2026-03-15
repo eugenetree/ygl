@@ -75,6 +75,8 @@ export class SearchChannelQueriesSeeder {
       const chunk = words.slice(i, i + chunkSize);
       const queryIds = chunk.map(() => crypto.randomUUID());
 
+      this.logger.info(`Seeding ${chunk.length} queries into storage`);
+
       const dbResult = await tryCatch(
         dbClient
           .insertInto("searchChannelQueries")

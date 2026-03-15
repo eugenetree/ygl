@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import { Caption } from "../../../youtube-api/youtube-api.types.js";
-import { Logger } from "../../../_common/logger/logger.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { writeFileSync } from "fs";
+import { Logger } from "../../../../_common/logger/logger.js";
+import { Caption } from "../../../../youtube-api/youtube-api.types.js";
 
 type TokenOccurrence = {
   token: string;
@@ -108,9 +108,6 @@ export class CaptionsSimilarityService {
     manualCaptions: Caption[];
     autoCaptions: Caption[];
   }): Promise<SimilarityResult> {
-    // const manualNormalized = manualCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
-    // const autoNormalized = autoCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption)).filter(({ text }) => text.length > 3);
-
     const manualNormalized = manualCaptions;
     const autoNormalized = autoCaptions;
 
