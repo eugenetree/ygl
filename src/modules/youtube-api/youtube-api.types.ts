@@ -52,10 +52,12 @@ export type Video =
     manualCaptions: null;
   })
   | (VideoBase & {
+    // if only manual captions present, we don't pass them
+    // because we don't know which languae should we use
     captionStatus: "MANUAL_ONLY";
     languageCode: null;
     autoCaptions: null;
-    manualCaptions: Caption[];
+    manualCaptions: null;
   })
   | (VideoBase & {
     captionStatus: "AUTO_ONLY";

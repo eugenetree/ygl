@@ -3,6 +3,7 @@ import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { writeFileSync } from "fs";
 import { Logger } from "../../../../_common/logger/logger.js";
 import { Caption } from "../../../../youtube-api/youtube-api.types.js";
+import { CaptionProps } from "../../caption.js";
 
 type TokenOccurrence = {
   token: string;
@@ -105,8 +106,8 @@ export class CaptionsSimilarityService {
     manualCaptions,
     autoCaptions,
   }: {
-    manualCaptions: Caption[];
-    autoCaptions: Caption[];
+    manualCaptions: CaptionProps[];
+    autoCaptions: CaptionProps[];
   }): Promise<SimilarityResult> {
     const manualNormalized = manualCaptions;
     const autoNormalized = autoCaptions;
@@ -231,11 +232,6 @@ export class CaptionsSimilarityService {
     missingOccurrences: TokenOccurrence[];
     timingMissOccurrences: TokenOccurrence[];
   } {
-    if (useFuzzy) {
-      writeFileSync(`_debug/captions/manual-occurrences.json`, JSON.stringify(manualOccurrences, null, 2));
-      writeFileSync(`_debug/captions/auto-token-time-index.json`, JSON.stringify(autoTokenTimeIndex, null, 2));
-    }
-
     let matchedCount = 0;
     const missingOccurrences: TokenOccurrence[] = [];
     const timingMissOccurrences: TokenOccurrence[] = [];

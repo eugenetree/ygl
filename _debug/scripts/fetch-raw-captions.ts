@@ -1,6 +1,8 @@
+// @ts-nocheck
+
 import { writeFileSync, mkdirSync } from "fs";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video/captions/process-auto-captions.service.js";
+import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/captions/auto-captions.validator.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
@@ -22,7 +24,7 @@ const main = async () => {
   writeFileSync(`_debug/captions/${video.id}-raw-manual.json`, JSON.stringify(video.manualCaptions, null, 2));
   writeFileSync(`_debug/captions/${video.id}-raw-auto.json`, JSON.stringify(video.autoCaptions, null, 2));
 
-  const autoCaptionsResult = await new ProcessAutoCaptionsService(new Logger({ context: "fetch-raw-captions" }), new CaptionCleanUpService()).process(video.autoCaptions || []);
+  const autoCaptionsResult = await new AutoCaptionsValidator(new Logger({ context: "fetch-raw-captions" }), new CaptionCleanUpService()).validate(video.autoCaptions || []);
   if (autoCaptionsResult.ok) {
     writeFileSync(`_debug/captions/${video.id}-processed-auto.json`, JSON.stringify(autoCaptionsResult.value, null, 2));
   }

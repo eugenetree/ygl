@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../../_common/logger/logger.js";
-import { DatabaseError, VideoEntryRow } from "../../../../../db/types.js";
+import { DatabaseError } from "../../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../../types/index.js";
 import { BaseError } from "../../../../_common/errors.js";
 import { YoutubeApiGetVideo } from "../../../../youtube-api/yt-api-get-video.js";
@@ -9,6 +9,7 @@ import { VideoRepository } from "../../video.repository.js";
 import { ChannelVideoHealthRepository } from "../../channel-video-health.repository.js";
 import { ChannelVideosHealth, ChannelVideosHealthProps } from "../../channel-videos-health.js";
 import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
+import { CaptionProps } from "../../caption.js";
 
 type Input = {
   entryId: string;
@@ -78,7 +79,23 @@ export class ProcessVideoEntryUseCase {
     this.logger.info(`Processing and saving video ${videoDto.id}.`);
 
     const { video, autoCaptions, manualCaptions } = await this.videoProcessor.process(videoDto);
-    const captions = [...(autoCaptions ?? []), ...(manualCaptions ?? [])];
+    // We only store captions when manual captions exist (auto required as companion)
+    const captions: CaptionProps[] = [];
+
+    if (manualCaptions?.length) {
+      if (!autoCaptions?.length) {
+        return Failure({
+          type: "UNEXPECTED_STATE",
+          context: { videoId: video.id }
+        })
+      }
+
+      captions.push(...manualCaptions, ...autoCaptions);
+    }
+
+    if (autoCaptions?.length && !manualCaptions?.length) {
+      this.logger.info(`Video ${video.id} has only auto captions. They won't be saved.`);
+    }
 
     const createVideoResult = await this.videoRepository.createWithCaptions(video, captions);
     if (!createVideoResult.ok) {

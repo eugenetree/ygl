@@ -1,10 +1,12 @@
+// @ts-nocheck
+
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions/captions-similarity.service.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
-import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video/captions/process-auto-captions.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/captions/process-manual-captions.service.js";
+import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/captions/auto-captions.validator.js";
+import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
 import { writeFileSync, mkdirSync } from "fs";
 
 const main = async () => {
@@ -21,8 +23,8 @@ const main = async () => {
   const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient);
   const captionCleanUpService = new CaptionCleanUpService();
   const similarityService = new CaptionsSimilarityService(logger, captionCleanUpService);
-  const processAutoCaptionsService = new ProcessAutoCaptionsService(logger, captionCleanUpService);
-  const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
+  const autoCaptionsValidator = new AutoCaptionsValidator(logger, captionCleanUpService);
+  const manualCaptionsValidator = new ManualCaptionsValidator(logger, captionCleanUpService);
 
   console.log(`Fetching captions for video: ${videoId}`);
   const result = await youtubeApiGetVideo.getVideo(videoId);
@@ -50,13 +52,13 @@ const main = async () => {
   writeFileSync(`_debug/captions/${videoId}-raw-auto.json`, JSON.stringify(video.autoCaptions, null, 2));
   writeFileSync(`_debug/captions/${videoId}-raw-manual.json`, JSON.stringify(video.manualCaptions, null, 2));
 
-  const autoResult = await processAutoCaptionsService.process(video.autoCaptions!);
+  const autoResult = await autoCaptionsValidator.validate(video.autoCaptions!);
   if (!autoResult.ok) {
     console.log(`Auto captions processing failed: ${autoResult.error.type}`);
     return;
   }
 
-  const manualResult = await processManualCaptionsService.process(video.manualCaptions!);
+  const manualResult = await manualCaptionsValidator.validate(video.manualCaptions!);
   if (!manualResult.ok) {
     console.log(`Manual captions processing failed: ${manualResult.error.type}`);
     return;

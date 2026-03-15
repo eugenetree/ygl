@@ -52,12 +52,12 @@ class CaptionsExtractor {
 
       const { tStartMs, dDurationMs, segs } = eventParseResult.data;
       const caption: Caption = {
-        startTime: tStartMs,
-        endTime: tStartMs + dDurationMs,
-        duration: dDurationMs,
+        startTime: Math.round(tStartMs),
+        endTime: Math.round(tStartMs + dDurationMs),
+        duration: Math.round(dDurationMs),
         textSegments: segs.map((seg) => ({
           utf8: seg.utf8,
-          offsetTime: seg.tOffsetMs ?? 0,
+          offsetTime: seg.tOffsetMs ? Math.round(seg.tOffsetMs) : 0,
         })),
       };
 

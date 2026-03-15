@@ -5,8 +5,8 @@ import { Logger } from "../../../../_common/logger/logger.js";
 import { CaptionProps } from "../../caption.js";
 import { Caption as CaptionDto, Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus, VideoProps } from "../../video.js";
-import { ProcessManualCaptionsService } from "./process-manual-captions.service.js";
-import { ProcessAutoCaptionsService } from "./process-auto-captions.service.js";
+import { ManualCaptionsValidator } from "./manual-captions.validator.js";
+import { AutoCaptionsValidator } from "./auto-captions.validator.js";
 import { CaptionsSimilarityService } from "./captions-similarity.service.js";
 
 type ProcessResult = {
@@ -19,8 +19,8 @@ type ProcessResult = {
 export class ProcessVideoService {
   constructor(
     private readonly logger: Logger,
-    private readonly processManualCaptionsService: ProcessManualCaptionsService,
-    private readonly processAutoCaptionsService: ProcessAutoCaptionsService,
+    private readonly manualCaptionsValidator: ManualCaptionsValidator,
+    private readonly autoCaptionsValidator: AutoCaptionsValidator,
     private readonly captionsSimilarityService: CaptionsSimilarityService,
   ) { }
 
@@ -32,34 +32,32 @@ export class ProcessVideoService {
     let processAutoValue: CaptionDto[] | null = null;
 
     if (autoDto) {
-      const result = await this.processAutoCaptionsService.process(autoDto);
+      const result = this.autoCaptionsValidator.validate(autoDto);
       autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-      if (result.ok) {
-        processAutoValue = result.value;
-        autoCaptions = this.captionsToDomain({ videoId, captionsDto: result.value, type: "auto" });
-      }
+      processAutoValue = autoDto;
+      autoCaptions = this.captionsToDomain({ videoId, captionsDto: autoDto, type: "auto" });
     }
 
-    let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
+    let manualCaptionsStatus: ManualCaptionsStatus = videoDto.captionStatus === "MANUAL_ONLY"
+      ? "CAPTIONS_PENDING_VALIDATION"
+      : "CAPTIONS_ABSENT";
     let manualCaptions: CaptionProps[] | null = null;
     let processManualValue: CaptionDto[] | null = null;
 
     if (manualDto) {
-      const result = await this.processManualCaptionsService.process(manualDto);
+      const result = this.manualCaptionsValidator.validate(manualDto);
       manualCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-      if (result.ok) {
-        processManualValue = result.value;
-        manualCaptions = this.captionsToDomain({ videoId, captionsDto: result.value, type: "manual" });
-      }
+      processManualValue = manualDto;
+      manualCaptions = this.captionsToDomain({ videoId, captionsDto: manualDto, type: "manual" });
     }
 
     let captionsSimilarityScore: number | null = null;
     let captionsShift: number | null = null;
 
-    if (processAutoValue && processManualValue) {
+    if (autoCaptions && manualCaptions) {
       const similarityResult = await this.captionsSimilarityService.calculateSimilarity({
-        autoCaptions: processAutoValue,
-        manualCaptions: processManualValue,
+        autoCaptions,
+        manualCaptions,
       });
 
       captionsSimilarityScore = similarityResult.score;

@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 import { readFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/captions/process-manual-captions.service.js";
+import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
 import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions/captions-similarity-v2.service.js";
 
 const main = async () => {
@@ -10,7 +12,7 @@ const main = async () => {
 
   const captionCleanUpService = new CaptionCleanUpService();
   const similarityService = new CaptionsSimilarityV2Service(logger, captionCleanUpService);
-  const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
+  const manualCaptionsValidator = new ManualCaptionsValidator(logger, captionCleanUpService);
 
   console.log(`Reading local captions for video: ${videoId}`);
   let autoCaptionsRaw, manualCaptionsRaw;
@@ -27,7 +29,7 @@ const main = async () => {
   console.log(`Auto Captions (Raw events): ${autoCaptionsRaw.events?.length || 0}`);
   console.log(`Manual Captions (Raw segments): ${manualCaptionsRaw.length}`);
 
-  const manualResult = await processManualCaptionsService.process(manualCaptionsRaw);
+  const manualResult = await manualCaptionsValidator.validate(manualCaptionsRaw);
   if (!manualResult.ok) {
     console.log(`Manual captions processing failed: ${manualResult.error.type}`);
     return;

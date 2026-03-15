@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Logger } from "../../../_common/logger/logger.js";
-import { Caption } from "../../../youtube-api/youtube-api.types.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
+import { Logger } from "../../../../_common/logger/logger.js";
+import { Caption } from "../../../../youtube-api/youtube-api.types.js";
+import { Failure, Result, Success } from "../../../../../types/index.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
-export type ProcessManualCaptionsError =
+export type ManualCaptionsValidationError =
   | { type: "CAPTIONS_EMPTY"; }
   | { type: "CAPTIONS_TOO_SHORT"; }
   | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"; }
@@ -13,13 +13,13 @@ export type ProcessManualCaptionsError =
 const MIN_CAPTION_SEGMENTS = 10;
 
 @injectable()
-export class ProcessManualCaptionsService {
+export class ManualCaptionsValidator {
   constructor(
     private readonly logger: Logger,
     private readonly captionCleanUpService: CaptionCleanUpService,
   ) { }
 
-  async process(captions: Caption[]): Promise<Result<Caption[], ProcessManualCaptionsError>> {
+  validate(captions: Caption[]): Result<void, ManualCaptionsValidationError> {
     if (this.hasOverlappingTimestamps(captions)) {
       return Failure({
         type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS",
@@ -55,7 +55,7 @@ export class ProcessManualCaptionsService {
       });
     }
 
-    return Success(resultCaptions);
+    return Success(undefined);
   }
 
   // This is still under review

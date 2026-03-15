@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";

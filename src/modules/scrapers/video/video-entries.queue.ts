@@ -5,6 +5,7 @@ import { DatabaseError, VideoEntryRow } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 import { MAX_FAILED_VIDEOS_STREAK } from "./config.js";
+import { sql } from "kysely";
 
 @injectable()
 export class VideoEntriesQueue {
@@ -36,18 +37,23 @@ export class VideoEntriesQueue {
             "in",
             (eb) =>
               eb.selectFrom("videoJobs")
-                .leftJoin("channelVideosHealth", "channelVideosHealth.channelId", "videoJobs.channelId")
                 .select("videoJobs.id")
                 .where("status", "=", "PENDING")
                 .where((eb) =>
-                  eb.or([
-                    eb("channelVideosHealth.failedVideosStreak", "is", null),
-                    eb("channelVideosHealth.failedVideosStreak", "<", MAX_FAILED_VIDEOS_STREAK),
-                  ])
+                  eb.not(
+                    eb.exists(
+                      eb.selectFrom("channelVideosHealth")
+                        .select("id")
+                        .whereRef("channelVideosHealth.channelId", "=", "videoJobs.channelId")
+                        .where("failedVideosStreak", ">=", MAX_FAILED_VIDEOS_STREAK)
+                    )
+                  )
                 )
+                // temporary things to discover more scenarios
+                .orderBy(sql`random()`)
                 .limit(1)
                 .forUpdate()
-                .skipLocked()
+                .skipLocked(),
           )
           .returning(["videoId", "channelId"])
           .executeTakeFirst();
