@@ -4,6 +4,7 @@ import { writeFileSync } from "fs";
 import { Logger } from "../../../../_common/logger/logger.js";
 import { Caption } from "../../../../youtube-api/youtube-api.types.js";
 import { CaptionProps } from "../../caption.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
 
 type TokenOccurrence = {
   token: string;
@@ -96,7 +97,7 @@ const TEXT_REPLACEMENTS: Array<{ from: RegExp; to: string }> = [
 ];
 
 @injectable()
-export class CaptionsSimilarityService {
+export class CaptionSimilarityService {
   constructor(
     private readonly logger: Logger,
     private readonly captionCleanUpService: CaptionCleanUpService,
@@ -106,8 +107,8 @@ export class CaptionsSimilarityService {
     manualCaptions,
     autoCaptions,
   }: {
-    manualCaptions: CaptionProps[];
-    autoCaptions: CaptionProps[];
+    manualCaptions: CaptionSegment[];
+    autoCaptions: CaptionSegment[];
   }): Promise<SimilarityResult> {
     const manualNormalized = manualCaptions;
     const autoNormalized = autoCaptions;
@@ -363,10 +364,18 @@ export class CaptionsSimilarityService {
   }
 
   private normalizeText(text: string): string {
-    let normalizedText = text.toLowerCase();
+    let normalizedText = text
+      // Remove speaker labels (e.g., "Sapnap:", "George:")
+      .replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1')
+      // Remove sound effects in brackets/asterisks (e.g., [laughter], *music*)
+      .replace(/\[.*?\]/g, '')
+      .replace(/\*[^*]+\*/g, '')
+      .toLowerCase();
+
     for (const replacement of TEXT_REPLACEMENTS) {
       normalizedText = normalizedText.replace(replacement.from, replacement.to);
     }
+
     return normalizedText
       .replace(/[^a-z0-9\s]/g, " ")
       .replace(/\s+/g, " ")

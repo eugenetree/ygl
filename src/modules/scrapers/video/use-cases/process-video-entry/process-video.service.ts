@@ -1,13 +1,11 @@
 import { injectable } from "inversify";
 import { pick } from "lodash-es";
 
-import { Logger } from "../../../../_common/logger/logger.js";
 import { CaptionProps } from "../../caption.js";
 import { Caption as CaptionDto, Video as VideoDto } from "../../../../youtube-api/youtube-api.types.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus, VideoProps } from "../../video.js";
-import { ManualCaptionsValidator } from "./manual-captions.validator.js";
-import { AutoCaptionsValidator } from "./auto-captions.validator.js";
-import { CaptionsSimilarityService } from "./captions-similarity.service.js";
+import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
+import { CaptionAnalysisService } from "./caption-analysis.service.js";
 
 type ProcessResult = {
   video: VideoProps;
@@ -18,62 +16,22 @@ type ProcessResult = {
 @injectable()
 export class ProcessVideoService {
   constructor(
-    private readonly logger: Logger,
-    private readonly manualCaptionsValidator: ManualCaptionsValidator,
-    private readonly autoCaptionsValidator: AutoCaptionsValidator,
-    private readonly captionsSimilarityService: CaptionsSimilarityService,
+    private readonly captionAnalysisService: CaptionAnalysisService,
   ) { }
 
   async process(videoDto: VideoDto): Promise<ProcessResult> {
     const { id: videoId, autoCaptions: autoDto, manualCaptions: manualDto } = videoDto;
 
-    let autoCaptionsStatus: AutoCaptionsStatus = "CAPTIONS_ABSENT";
-    let autoCaptions: CaptionProps[] | null = null;
-    let processAutoValue: CaptionDto[] | null = null;
-
-    if (autoDto) {
-      const result = this.autoCaptionsValidator.validate(autoDto);
-      autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-      processAutoValue = autoDto;
-      autoCaptions = this.captionsToDomain({ videoId, captionsDto: autoDto, type: "auto" });
-    }
-
-    let manualCaptionsStatus: ManualCaptionsStatus = videoDto.captionStatus === "MANUAL_ONLY"
-      ? "CAPTIONS_PENDING_VALIDATION"
-      : "CAPTIONS_ABSENT";
-    let manualCaptions: CaptionProps[] | null = null;
-    let processManualValue: CaptionDto[] | null = null;
-
-    if (manualDto) {
-      const result = this.manualCaptionsValidator.validate(manualDto);
-      manualCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-      processManualValue = manualDto;
-      manualCaptions = this.captionsToDomain({ videoId, captionsDto: manualDto, type: "manual" });
-    }
-
-    let captionsSimilarityScore: number | null = null;
-    let captionsShift: number | null = null;
-
-    if (autoCaptions && manualCaptions) {
-      const similarityResult = await this.captionsSimilarityService.calculateSimilarity({
-        autoCaptions,
-        manualCaptions,
-      });
-
-      captionsSimilarityScore = similarityResult.score;
-      captionsShift = similarityResult.shiftMs;
-    }
+    const analysis = await this.captionAnalysisService.analyze({
+      autoCaptions: autoDto,
+      manualCaptions: manualDto,
+      manualCaptionsPendingValidation: videoDto.captionStatus === "MANUAL_ONLY",
+    });
 
     return {
-      video: this.videoToDomain({
-        videoDto,
-        autoCaptionsStatus,
-        manualCaptionsStatus,
-        captionsSimilarityScore,
-        captionsShift,
-      }),
-      autoCaptions,
-      manualCaptions,
+      video: this.videoToDomain({ videoDto, ...analysis }),
+      autoCaptions: autoDto ? this.captionsToDomain({ videoId, captionsDto: autoDto, type: "auto" }) : null,
+      manualCaptions: manualDto ? this.captionsToDomain({ videoId, captionsDto: manualDto, type: "manual" }) : null,
     };
   }
 
@@ -124,6 +82,7 @@ export class ProcessVideoService {
       manualCaptionsStatus,
       captionsSimilarityScore,
       captionsShift,
+      captionsProcessingAlgorithmVersion: CAPTIONS_PROCESSING_ALGORITHM_VERSION,
     };
   }
 

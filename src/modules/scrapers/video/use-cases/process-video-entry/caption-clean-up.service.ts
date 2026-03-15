@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { Caption } from "../../../../youtube-api/youtube-api.types.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
 
 @injectable()
 export class CaptionCleanUpService {
-  public normalizeCaption(caption: Caption): Caption {
+  public normalizeCaption(caption: CaptionSegment): CaptionSegment {
     let text = caption.text;
 
     // Normalize newlines to spaces first
@@ -18,9 +18,13 @@ export class CaptionCleanUpService {
     // Only matches at word boundaries to avoid false positives like "3:30" or "http://"
     text = text.replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1');
 
-    // Remove sound effects and descriptions in brackets
-    // Examples: [laughter], [music] etc
+    // Remove sound effects and descriptions in brackets/asterisks
+    // Examples: [laughter], [music], *music*, *applause* etc
     text = text.replace(/\[.*?\]/g, '');
+    text = text.replace(/\*[^*]+\*/g, '');
+
+    // Remove special symbols
+    text = text.replace(/[$%^&*@#~`+=|\\<>{}]/g, '');
 
     // Remove multiple spaces
     text = text.replace(/\s+/g, ' ');
@@ -34,7 +38,7 @@ export class CaptionCleanUpService {
     };
   }
 
-  public shouldKeepCaption(caption: Caption): boolean {
+  public shouldKeepCaption(caption: CaptionSegment): boolean {
     const text = caption.text;
 
     // Remove empty captions
@@ -57,7 +61,7 @@ export class CaptionCleanUpService {
     return true;
   }
 
-  public mergeShortCaptions(captions: Caption[]): Caption[] {
+  public mergeShortCaptions(captions: CaptionSegment[]): CaptionSegment[] {
     if (captions.length === 0) {
       return [];
     }
@@ -65,8 +69,8 @@ export class CaptionCleanUpService {
     const MAX_WORDS = 15;
     const MAX_DURATION_MS = 5000;
 
-    const mergedCaptions: Caption[] = [];
-    let currentCaption: Caption | null = null;
+    const mergedCaptions: CaptionSegment[] = [];
+    let currentCaption: CaptionSegment | null = null;
     let currentWordCount = 0;
 
     for (const caption of captions) {

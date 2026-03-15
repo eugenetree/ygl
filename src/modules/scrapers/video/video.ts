@@ -38,6 +38,7 @@ export type Video = {
   album: string | null;
   creator: string | null;
   captionsShift: number | null;
+  captionsProcessingAlgorithmVersion: string | null;
   channelId: string;
   uploadedAt: Date | null;
   description: string | null;

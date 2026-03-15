@@ -21,13 +21,23 @@ export class AutoCaptionsValidator {
 
   validate(captions: Caption[]): Result<void, AutoCaptionsValidationError> {
     let resultCaptions: Caption[] = captions;
+
     if (resultCaptions.length === 0) {
       return Failure({
         type: "CAPTIONS_EMPTY",
       });
     }
 
-    if (resultCaptions.length < MIN_TOTAL_WORDS) {
+    resultCaptions = resultCaptions.map(
+      this.captionCleanUpService.normalizeCaption
+    );
+
+    const totalWords = resultCaptions.reduce(
+      (acc, c) => acc + c.text.split(' ').length,
+      0
+    );
+
+    if (totalWords < MIN_TOTAL_WORDS) {
       return Failure({
         type: "CAPTIONS_TOO_SHORT",
       });

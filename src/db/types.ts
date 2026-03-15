@@ -22,7 +22,6 @@ export type ManualCaptionsStatus =
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
   | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
-  | "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
 
 export type ChannelVideosScrapeProcessingStatus =
   | "NOT_STARTED"
@@ -139,6 +138,7 @@ export interface VideosRow {
   album: string | null;
   creator: string | null;
   captionsShift: number | null;
+  captionsProcessingAlgorithmVersion: string | null;
   uploadedAt: Date | null;
   description: string | null;
   likeCount: number | null;
