@@ -21,7 +21,7 @@ export class FindCaptionsUseCase {
         bool: {
           must: {
             match: {
-              "document.text": {
+              text: {
                 query: query,
                 operator: "and",
               },
@@ -29,7 +29,7 @@ export class FindCaptionsUseCase {
           },
           should: {
             match_phrase: {
-              "document.text": query,
+              text: query,
             },
           },
         },

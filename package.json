@@ -22,6 +22,7 @@
     "run:video": "npm run clean && npx tsc && node dist/src/modules/scrapers/video/bootstrap.js",
     "run:captions-search": "npm run clean && npx tsc && node dist/src/modules/captions-search/bootstrap.js",
     "sync:elastic": "npm run clean && npx tsc && node dist/src/modules/captions-search/bootstrap.js",
+    "resync:elastic": "npm run clean && npx tsc && node dist/src/modules/captions-search/resync-bootstrap.js",
     "find-captions": "npm run clean && npx tsc && node dist/src/modules/captions-search/find-captions-bootstrap.js",
     "run:all": "npm run clean && npx tsc && node dist/src/modules/scrapers/bootstrap.js",
     "run:scrapers": "npm run clean && npx tsc && node dist/src/modules/scrapers/main.js",
