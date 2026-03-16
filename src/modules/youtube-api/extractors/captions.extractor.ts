@@ -5,6 +5,7 @@ import { ValidationError } from "../../_common/validation/errors.js";
 
 type GetCaptionsParams = {
   jsonResponse: unknown;
+  type: "manual" | "auto"
 };
 
 type Caption = {
@@ -32,6 +33,7 @@ const eventSchema = z.object({
 class CaptionsExtractor {
   extractFromJson({
     jsonResponse,
+    type,
   }: GetCaptionsParams): Result<Caption[], ValidationError> {
     const resultCaptions: Caption[] = [];
 
@@ -51,17 +53,43 @@ class CaptionsExtractor {
       }
 
       const { tStartMs, dDurationMs, segs } = eventParseResult.data;
-      const caption: Caption = {
-        startTime: Math.round(tStartMs),
-        endTime: Math.round(tStartMs + dDurationMs),
-        duration: Math.round(dDurationMs),
-        textSegments: segs.map((seg) => ({
-          utf8: seg.utf8,
-          offsetTime: seg.tOffsetMs ? Math.round(seg.tOffsetMs) : 0,
-        })),
-      };
 
-      resultCaptions.push(caption);
+      if (type === "manual") {
+        const caption: Caption = {
+          startTime: Math.round(tStartMs),
+          endTime: Math.round(tStartMs + dDurationMs),
+          duration: Math.round(dDurationMs),
+          textSegments: segs.map((seg) => ({
+            utf8: seg.utf8,
+            offsetTime: seg.tOffsetMs ? Math.round(seg.tOffsetMs) : 0,
+          })),
+        };
+
+        resultCaptions.push(caption);
+        continue;
+      }
+
+      for (let i = 0; i < segs.length; i++) {
+        const currentSeg = segs[i];
+        const nextSeg = segs[i + 1];
+
+        const startTime = Math.round(tStartMs + (currentSeg?.tOffsetMs ?? 0));
+        const endTime = Math.round(tStartMs + (nextSeg?.tOffsetMs ?? (tStartMs + dDurationMs)));
+
+        const caption: Caption = {
+          startTime,
+          endTime,
+          duration: endTime - startTime,
+          textSegments: [
+            {
+              utf8: currentSeg.utf8,
+              offsetTime: currentSeg.tOffsetMs ? Math.round(currentSeg.tOffsetMs) : 0,
+            },
+          ],
+        }
+
+        resultCaptions.push(caption);
+      }
     }
 
     return Success(resultCaptions);

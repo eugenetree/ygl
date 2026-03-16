@@ -33,3 +33,16 @@ get rid of "x2", "x3", "xN" in video for calculating similariy, but probably kee
 
 CANT FETCH captions
 <https://www.youtube.com/watch?v=C-GrRIgdmW8&t=53s>
+
+
+----
+check where en-orig coming from
+
+2026-03-16T03:56:45.705Z [info]
+[video-entries-worker-main:yt-dlp-client]
+Running yt-dlp via wrapper with args: https://youtube.com/watch?v=Ljz2-VmmzGk --dump-json --no-download --skip-download --no-warnings
+
+2026-03-16T03:56:49.380Z [info]
+[video-entries-worker-main:youtube-api-get-video]
+Captions not found for exact lang en-us, using fallback lang en-orig
+----

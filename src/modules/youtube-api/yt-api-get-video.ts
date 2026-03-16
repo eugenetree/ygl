@@ -14,6 +14,7 @@ import { writeFileSync } from "fs";
 
 type GetCaptionsParams = {
   baseUrl: string;
+  type: "manual" | "auto"
 };
 
 @injectable()
@@ -112,7 +113,7 @@ export class YoutubeApiGetVideo {
 
     await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
 
-    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl });
+    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl, type: "auto" });
     if (!autoCaptionsResult.ok) {
       return Failure(autoCaptionsResult.error);
     }
@@ -129,7 +130,7 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl });
+    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl, type: "manual" });
     if (!manualCaptionsResult.ok) {
       return Failure(manualCaptionsResult.error);
     }
@@ -193,6 +194,7 @@ export class YoutubeApiGetVideo {
 
   private async getCaptions({
     baseUrl,
+    type,
   }: GetCaptionsParams): Promise<Result<{ captions: Caption[] }, ParsingError | FetchError | ValidationError>> {
     // yt-dlp urls are already in json3 format based on our filtering,
     // but just to be absolutely safe:
@@ -206,6 +208,7 @@ export class YoutubeApiGetVideo {
 
     const captionsResult = captionsExtractor.extractFromJson({
       jsonResponse: captionsResponseResult.value,
+      type,
     });
 
     if (!captionsResult.ok) {

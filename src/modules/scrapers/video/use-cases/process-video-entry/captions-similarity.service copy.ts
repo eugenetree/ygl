@@ -24,13 +24,18 @@ type SimilarityResult = {
 const SHIFT_SCAN_MIN_MS = -3000;
 const SHIFT_SCAN_MAX_MS = 3000;
 const SHIFT_SCAN_STEP_MS = 500;
-const TIME_TOLERANCE_MS = 500;
-const FUZZY_WINDOW_MS = 500;  // ±3s window for fuzzy candidate lookup
+const TIME_TOLERANCE_MS = 1000;
+const FUZZY_WINDOW_MS = 3000;  // ±3s window for fuzzy candidate lookup
 const FUZZY_THRESHOLD = 70;   // Levenshtein ratio (0-100) to count as a match
+
+// Minimum token length — single and two-letter words are too ambiguous for
+// timing-sensitive matching and skew the shift detection.
+const MIN_TOKEN_LENGTH = 3;
 
 // High-frequency words add noise in matching because they appear everywhere.
 const STOP_TOKENS = new Set([
   "a",
+  "ah",
   "an",
   "and",
   "are",
@@ -39,16 +44,31 @@ const STOP_TOKENS = new Set([
   "be",
   "but",
   "by",
+  "do",
+  "er",
   "for",
   "from",
+  "he",
+  "her",
+  "him",
+  "his",
   "i",
+  "if",
   "in",
   "is",
   "it",
   "its",
+  "me",
+  "my",
+  "no",
+  "not",
   "of",
+  "oh",
+  "ok",
   "on",
   "or",
+  "our",
+  "so",
   "that",
   "the",
   "their",
@@ -56,9 +76,14 @@ const STOP_TOKENS = new Set([
   "they",
   "this",
   "to",
+  "um",
+  "uh",
+  "up",
+  "us",
   "was",
   "we",
   "with",
+  "yes",
   "you",
 ]);
 
@@ -183,44 +208,70 @@ export class CaptionSimilarityService {
     manualOccurrences: TokenOccurrence[];
     autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
   }): { shiftMs: number; score: number } {
+    // Use only tokens that appear exactly once in both tracks as "anchors".
+    // These rare tokens give a clean, unambiguous time delta unaffected by
+    // rolling-window duplicates or high-frequency repeating words.
+    const manualCounts = new Map<string, number>();
+    for (const occ of manualOccurrences) {
+      manualCounts.set(occ.token, (manualCounts.get(occ.token) ?? 0) + 1);
+    }
+
+    const deltaCounts = new Map<number, number>();
+    const anchorsUsed: Array<{ token: string; delta: number }> = [];
+
+    for (const manual of manualOccurrences) {
+      // Skip tokens that appear more than once in manual (ambiguous)
+      if ((manualCounts.get(manual.token) ?? 0) > 1) continue;
+
+      const autoRanges = autoTokenTimeIndex.get(manual.token);
+      // Skip tokens absent from auto or appearing more than once in auto
+      if (!autoRanges || autoRanges.length !== 1) continue;
+
+      const manualMid = (manual.startTime + manual.endTime) / 2;
+      const autoMid = (autoRanges[0].startTime + autoRanges[0].endTime) / 2;
+      const delta = autoMid - manualMid;
+
+      if (delta < SHIFT_SCAN_MIN_MS || delta > SHIFT_SCAN_MAX_MS) continue;
+
+      const bucket = Math.round(delta / SHIFT_SCAN_STEP_MS) * SHIFT_SCAN_STEP_MS;
+      deltaCounts.set(bucket, (deltaCounts.get(bucket) ?? 0) + 1);
+      anchorsUsed.push({ token: manual.token, delta });
+    }
+
+    console.log("debug: anchor delta histogram", [...deltaCounts.entries()].sort((a, b) => a[0] - b[0]));
+    console.log("debug: anchors used", anchorsUsed.length);
+
+    // Only commit to a non-zero shift if the winning bucket is clearly dominant:
+    // it must hold at least 30 % of all anchor votes.  A genuine global offset
+    // produces a sharp spike; segmentation noise produces a flat histogram.
+    const totalAnchors = anchorsUsed.length;
     let bestShiftMs = 0;
-    let bestScore = -1;
 
-    const scores = [];
-
-    for (
-      let shiftMs = SHIFT_SCAN_MIN_MS;
-      shiftMs <= SHIFT_SCAN_MAX_MS;
-      shiftMs += SHIFT_SCAN_STEP_MS
-    ) {
-      // Shift scan uses exact matches only (fast path, no fuzzy needed)
-      const score = this.calculateMatchDetails({
-        manualOccurrences,
-        autoTokenTimeIndex,
-        autoSorted: [],
-        shiftMs,
-        useFuzzy: false,
-      }).matchRate;
-
-      scores.push({ shiftMs, score });
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestShiftMs = shiftMs;
-      } else if (score === bestScore && Math.abs(shiftMs) < Math.abs(bestShiftMs)) {
-        bestShiftMs = shiftMs;
+    if (totalAnchors >= 5) {
+      let bestVotes = 0;
+      for (const [bucket, votes] of deltaCounts) {
+        if (votes > bestVotes || (votes === bestVotes && Math.abs(bucket) < Math.abs(bestShiftMs))) {
+          bestShiftMs = bucket;
+          bestVotes = votes;
+        }
       }
 
-      const zeroScore = scores.find(s => s.shiftMs === 0)?.score!;
-      if ((zeroScore !== bestScore) && bestScore - zeroScore > .05) {
-        bestScore = bestScore;
-      } else {
-        bestScore = zeroScore;
+      const confidence = bestVotes / totalAnchors;
+      console.log(`debug: best bucket=${bestShiftMs}ms votes=${bestVotes}/${totalAnchors} confidence=${(confidence * 100).toFixed(1)}%`);
+
+      if (confidence < 0.30) {
         bestShiftMs = 0;
       }
     }
 
-    console.log("debug: scores", scores)
+    const bestScore = this.calculateMatchDetails({
+      manualOccurrences,
+      autoTokenTimeIndex,
+      autoSorted: [],
+      shiftMs: bestShiftMs,
+      useFuzzy: false,
+    }).matchRate;
+
     return { shiftMs: bestShiftMs, score: bestScore };
   }
 
@@ -359,7 +410,7 @@ export class CaptionSimilarityService {
       const tokens = normalizedText
         .split(" ")
         .map(token => token.trim())
-        .filter(token => token.length >= 2 && !STOP_TOKENS.has(token));
+        .filter(token => token.length >= MIN_TOKEN_LENGTH && !STOP_TOKENS.has(token));
 
       for (const token of tokens) {
         tokenOccurrences.push({
