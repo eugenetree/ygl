@@ -8,6 +8,18 @@ import { Logger } from "../_common/logger/logger.js";
 const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;
 
+let shutdownRequested = false;
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received, finishing current scraper and exiting...");
+  shutdownRequested = true;
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received, finishing current scraper and exiting...");
+  shutdownRequested = true;
+});
+
 async function main() {
   const logger = new Logger({
     context: "scrapers-main",
@@ -33,11 +45,13 @@ async function main() {
     { name: "Video Entries", spawn: spawnVideoWorker, timeoutMs: HOUR_MS },
   ];
 
-  while (true) {
+  while (!shutdownRequested) {
     for (const scraper of scrapers) {
+      if (shutdownRequested) break;
       const scraperStartTime = Date.now();
       const timeoutMs = scraper.timeoutMs;
       const shouldContinue = () => {
+        if (shutdownRequested) return false;
         const elapsed = Date.now() - scraperStartTime;
         return elapsed < timeoutMs;
       };
@@ -46,7 +60,13 @@ async function main() {
       logger.info(`Starting session for ${scraper.name} scraper (${durationLabel} limit)...`);
       try {
         await scraper.spawn({ name: "main", shouldContinue });
+        const elapsed = Date.now() - scraperStartTime;
         logger.info(`${scraper.name} scraper session finished.`);
+
+        if (elapsed < 5000 && !shutdownRequested) {
+          logger.error({ message: `${scraper.name} exited too quickly (${elapsed}ms). Likely a fatal error. Exiting.` });
+          process.exit(1);
+        }
       } catch (err) {
         logger.error({
           message: `Critical error during ${scraper.name} scraper session`,
@@ -58,6 +78,8 @@ async function main() {
 
     logger.info("Cycle finished. Starting over...");
   }
+
+  logger.info("Shutdown complete.");
 }
 
 main().catch((err) => {

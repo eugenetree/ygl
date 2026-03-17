@@ -9,3 +9,4 @@ _yt-dlp-node
 _yt-dlp
 .vscode
 db/dump/
+.env

@@ -8,7 +8,12 @@
       "Bash(npm run:*)",
       "Bash(ls /c/projects/ygl/_debug/scripts/*.ts)",
       "Bash(node dist/_debug/scripts/check-captions-similarity-db.js -GZgwm_MZQ0)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker volume:*)",
+      "Bash(grep -E \"^[^/]*src[^/]*\\\\.\\(ts\\)$|src/index\")",
+      "Bash(find /c/projects/ygl -name .github -o -name .gitlab-ci.yml -o -name *.test.ts -o -name *.spec.ts -o -name .env* -type f)",
+      "WebSearch"
     ]
   }
 }
