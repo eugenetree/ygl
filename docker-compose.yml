@@ -12,8 +12,6 @@ services:
       DB_PORT: ${DB_PORT:-5432}
       ES_NODE: ${ES_NODE:-http://elasticsearch:9200}
     stop_grace_period: 10m
-    ports:
-      - "3000:3000"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
