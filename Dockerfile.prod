@@ -18,4 +18,5 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /usr/src/app/dist ./dist
 
-CMD ["sh", "-c", "node dist/src/db/scripts/run-migrations.js && node dist/src/modules/scrapers/main.js"]
+CMD ["sleep", "infinity"]
+# CMD ["sh", "-c", "node dist/src/db/scripts/run-migrations.js && node dist/src/modules/scrapers/main.js"]
