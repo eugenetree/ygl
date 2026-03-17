@@ -68,7 +68,7 @@ export class SearchChannelQueriesSeeder {
       );
     }
 
-    const words = Object.keys(wordsResult.value!) as string[];
+    const words = Object.keys(wordsResult.value!).slice(0, 50) as string[];
     const chunkSize = 100;
 
     for (let i = 0; i < words.length; i += chunkSize) {
