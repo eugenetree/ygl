@@ -1,5 +1,5 @@
 import { Client } from "@elastic/elasticsearch";
-import { Caption } from "../domain/caption.js";
+import { Caption } from "../scrapers/video/caption.js";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
 
@@ -24,11 +24,19 @@ export class ElasticSyncService {
 
     await this.esClient.bulk({
       index: "captions",
-      body: captions.map(caption => ({
-        index: { _id: caption.id },
-        document: caption,
-      })),
+      operations: captions.flatMap(caption => [
+        { index: { _id: caption.id } },
+        caption,
+      ]),
     });
+  }
+
+  async deleteIndex() {
+    const exists = await this.esClient.indices.exists({ index: "captions" });
+    if (exists) {
+      this.logger.info("Deleting captions index");
+      await this.esClient.indices.delete({ index: "captions" });
+    }
   }
 
   private async createIndex() {

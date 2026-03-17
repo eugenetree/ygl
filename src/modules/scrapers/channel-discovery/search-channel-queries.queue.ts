@@ -1,8 +1,9 @@
+import { sql } from "kysely";
 import { dbClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { DatabaseError } from "../../../db/types.js";
-import { SearchChannelQuery } from "../../domain/search-channel-query.js";
+import { SearchChannelQuery } from "./search-channel-query.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { injectable } from "inversify";
 
@@ -14,86 +15,73 @@ export class SearchChannelQueriesQueue {
 		SearchChannelQuery | null,
 		DatabaseError
 	>> {
-		const result =
-			await tryCatch(
-				dbClient
-					.updateTable("searchChannelQueries")
-					.set({
-						processingStatus: "PROCESSING",
-					})
+		const result = await tryCatch(
+			dbClient.transaction().execute(async (trx) => {
+				const job = await trx
+					.updateTable("channelDiscoveryJobs")
+					.set({ status: "PROCESSING", statusUpdatedAt: new Date() })
 					.where(
 						"id",
 						"in",
 						(eb) =>
-							eb.selectFrom("searchChannelQueries")
+							eb.selectFrom("channelDiscoveryJobs")
 								.select("id")
-								.where("processingStatus", "=", "PENDING")
+								.where("status", "=", "PENDING")
+								// temporary things to discover more scenarios
+								.orderBy(sql`random()`)
 								.limit(1)
 								.forUpdate()
-								.skipLocked()
+								.skipLocked(),
 					)
-					.returningAll()
-					.executeTakeFirst()
-			)
+					.returning("searchQueryId")
+					.executeTakeFirst();
+
+				if (!job) return null;
+
+				return trx
+					.selectFrom("searchChannelQueries")
+					.selectAll()
+					.where("id", "=", job.searchQueryId)
+					.executeTakeFirst();
+			})
+		);
 
 		if (!result.ok) {
-			return Failure({
-				type: "DATABASE",
-				error: result.error,
-			})
+			return Failure({ type: "DATABASE", error: result.error });
 		}
 
-		const nextQuery = result.value;
-		if (!nextQuery) {
-			return Success(null);
-		}
-
-		return Success(nextQuery)
+		return Success(result.value ?? null);
 	}
 
 	public async markAsSuccess(queryId: string): Promise<Result<void, DatabaseError>> {
-		const result =
-			await tryCatch(
-				dbClient
-					.updateTable("searchChannelQueries")
-					.set({
-						processingStatus: "SUCCEEDED",
-						processingStatusUpdatedAt: new Date(),
-					})
-					.where("id", "=", queryId)
-					.execute()
-			)
+		const result = await tryCatch(
+			dbClient
+				.updateTable("channelDiscoveryJobs")
+				.set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
+				.where("searchQueryId", "=", queryId)
+				.execute()
+		);
 
 		if (!result.ok) {
-			return Failure({
-				type: "DATABASE",
-				error: result.error,
-			})
+			return Failure({ type: "DATABASE", error: result.error });
 		}
 
-		return Success(undefined)
+		return Success(undefined);
 	}
 
 	public async markAsFailed(queryId: string): Promise<Result<void, DatabaseError>> {
-		const result =
-			await tryCatch(
-				dbClient
-					.updateTable("searchChannelQueries")
-					.set({
-						processingStatus: "FAILED",
-						processingStatusUpdatedAt: new Date(),
-					})
-					.where("id", "=", queryId)
-					.execute()
-			)
+		const result = await tryCatch(
+			dbClient
+				.updateTable("channelDiscoveryJobs")
+				.set({ status: "FAILED", statusUpdatedAt: new Date() })
+				.where("searchQueryId", "=", queryId)
+				.execute()
+		);
 
 		if (!result.ok) {
-			return Failure({
-				type: "DATABASE",
-				error: result.error,
-			})
+			return Failure({ type: "DATABASE", error: result.error });
 		}
 
-		return Success(undefined)
+		return Success(undefined);
 	}
 }

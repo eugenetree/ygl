@@ -5,8 +5,7 @@ export type Channel = {
   name: string;
   description: string | null;
   avatar: string;
-  // TODO: maybe bring this later
-  // keywords: string[];
+  keywords: string[];
   subscriberCount: number;
   viewCount: number;
   videoCount: number;
@@ -36,6 +35,13 @@ type VideoBase = {
   artist: string | null;
   album: string | null;
   creator: string | null;
+  uploadedAt: Date | null;
+  description: string | null;
+  likeCount: number | null;
+  commentCount: number | null;
+  availability: string | null;
+  playableInEmbed: boolean | null;
+  channelIsVerified: boolean | null;
 };
 
 export type Video =
@@ -46,6 +52,8 @@ export type Video =
     manualCaptions: null;
   })
   | (VideoBase & {
+    // if only manual captions present, we don't pass them
+    // because we don't know which languae should we use
     captionStatus: "MANUAL_ONLY";
     languageCode: null;
     autoCaptions: null;

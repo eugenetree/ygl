@@ -2,14 +2,14 @@ import { dbClient } from "../../../db/client.js";
 import { DatabaseError } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { ChannelEntry } from "../../domain/channel-entry.js";
+import { ChannelEntry, ChannelEntryProps } from "./channel-entry.js";
 
 export class ChannelEntryRepository {
-  public async create(channelEntry: ChannelEntry): Promise<Result<void, DatabaseError>> {
+  public async create(channelEntry: ChannelEntryProps): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
         .insertInto("channelEntries")
-        .values({ ...channelEntry, processingStatus: "PENDING" })
+        .values(channelEntry)
         .execute()
     );
 

@@ -2,11 +2,6 @@ import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 import { LanguageCode } from "../modules/i18n/index.js";
 
-// Processing status fields (processingStatus, videosDiscoveryStatus) are infrastructure-only
-// they exist solely for queuing and are not part of the domain model.
-// Ideally each would live in a separate queue table, but we inline them on entity tables
-// for simpler queries and less storage overhead.
-
 export type ProcessingStatus =
   | "PENDING"
   | "PROCESSING"
@@ -27,7 +22,6 @@ export type ManualCaptionsStatus =
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
   | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
-  | "CAPTIONS_LOW_SIMILARITY_WITH_AUTO";
 
 export type ChannelVideosScrapeProcessingStatus =
   | "NOT_STARTED"
@@ -47,14 +41,50 @@ export interface Database {
   elasticCaptionsSync: ElasticCaptionsSyncRow;
   channelEntries: ChannelEntriesRow;
   videoEntries: VideoEntriesRow;
+  channelDiscoveryJobs: ChannelDiscoveryJobsRow;
+  channelJobs: ChannelJobsRow;
+  videoDiscoveryJobs: VideoDiscoveryJobsRow;
+  videoJobs: VideoJobsRow;
+  channelVideosHealth: ChannelVideoHealthRow;
+}
+
+export interface ChannelDiscoveryJobsRow {
+  id: Generated<string>;
+  searchQueryId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface ChannelJobsRow {
+  id: Generated<string>;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface VideoDiscoveryJobsRow {
+  id: Generated<string>;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface VideoJobsRow {
+  id: Generated<string>;
+  videoId: string;
+  channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
 }
 
 
 export interface SearchChannelQueriesRow {
   id: string;
   query: string;
-  processingStatus: ProcessingStatus;
-  processingStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -62,7 +92,6 @@ export interface SearchChannelQueriesRow {
 export interface ChannelEntriesRow {
   id: string;
   queryId: string;
-  processingStatus: ProcessingStatus;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -80,8 +109,7 @@ export interface ChannelsRow {
   channelCreatedAt: Date;
   username: string;
   isArtist: boolean;
-  videosDiscoveryStatus: Generated<ProcessingStatus>;
-  videosDiscoveryStatusUpdatedAt: Date | null;
+  keywords: string[];
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -109,6 +137,15 @@ export interface VideosRow {
   artist: string | null;
   album: string | null;
   creator: string | null;
+  captionsShift: number | null;
+  captionsProcessingAlgorithmVersion: string | null;
+  uploadedAt: Date | null;
+  description: string | null;
+  likeCount: number | null;
+  commentCount: number | null;
+  availability: string | null;
+  playableInEmbed: boolean | null;
+  channelIsVerified: boolean | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -168,7 +205,15 @@ export interface ElasticCaptionsSyncRow {
 export interface VideoEntriesRow {
   id: string;
   channelId: string;
-  processingStatus: ProcessingStatus;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
+}
+
+export interface ChannelVideoHealthRow {
+  id: string;
+  channelId: string;
+  succeededVideosStreak: number;
+  failedVideosStreak: number;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

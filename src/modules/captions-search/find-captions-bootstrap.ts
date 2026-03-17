@@ -49,9 +49,9 @@ export const bootstrap = async () => {
     console.log(`${index + 1}. Score: ${hit._score}`);
     console.log(`   ID: ${hit._id}`);
     // @ts-expect-error - hit._source is not typed
-    const text = hit._source?.document?.text || hit._source?.text || "N/A";
+    const text = hit._source?.text || "N/A";
     // @ts-expect-error - hit._source is not typed
-    const videoId = hit._source?.document?.videoId || hit._source?.videoId || "N/A";
+    const videoId = hit._source?.videoId || "N/A";
     console.log(`   Video ID: ${videoId}`);
     console.log(`   Text: ${text}`);
     console.log("");

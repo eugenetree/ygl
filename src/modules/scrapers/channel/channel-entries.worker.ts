@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { ChannelEntriesQueue } from "./channel-entries.queue.js";
-import { ChannelEntriesProcessor } from "./channel-entries.processor.js";
+import { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
 
 @injectable()
 export class ChannelEntriesWorker {
@@ -10,7 +10,7 @@ export class ChannelEntriesWorker {
   constructor(
     private readonly logger: Logger,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
-    private readonly channelEntriesProcessor: ChannelEntriesProcessor,
+    private readonly processChannelEntry: ProcessChannelEntryUseCase,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -28,7 +28,6 @@ export class ChannelEntriesWorker {
       }
 
       const entryResult = await this.channelEntriesQueue.getNextEntry();
-
       if (!entryResult.ok) {
         this.logger.error({
           error: entryResult.error,
@@ -39,16 +38,16 @@ export class ChannelEntriesWorker {
       }
 
       const entry = entryResult.value;
-
       if (!entry) {
         this.logger.info("Channel entries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       this.logger.info(`Processing channel entry ${entry.id}...`);
-      const processResult = await this.channelEntriesProcessor.process(entry);
 
+      const processResult = await this.processChannelEntry.execute({ channelId: entry.id });
       if (!processResult.ok) {
         this.logger.error({
           message: `Failed to process channel entry ${entry.id}`,
@@ -56,15 +55,24 @@ export class ChannelEntriesWorker {
           context: { entryId: entry.id },
         });
 
-        // E.g if it's a deleted channel, mark it as FAILED
-        await this.channelEntriesQueue.markAsFailed(entry.id);
+        const markAsFailedResult = await this.channelEntriesQueue.markAsFailed(entry.id);
+        if (!markAsFailedResult.ok) {
+          this.logger.error({
+            message: `Failed to mark channel entry ${entry.id} as failed`,
+            error: markAsFailedResult.error,
+            context: { entryId: entry.id },
+          });
+
+          this.isRunning = false;
+          return;
+        }
+
         continue;
       }
 
       this.logger.info(`Processing channel entry ${entry.id} finished`);
 
       const markAsSuccessResult = await this.channelEntriesQueue.markAsSuccess(entry.id);
-
       if (!markAsSuccessResult.ok) {
         this.logger.error({
           message: `Failed to mark channel entry ${entry.id} as success`,
@@ -72,7 +80,6 @@ export class ChannelEntriesWorker {
           context: { entryId: entry.id },
         });
 
-        await this.channelEntriesQueue.markAsFailed(entry.id);
         this.isRunning = false;
         return;
       }

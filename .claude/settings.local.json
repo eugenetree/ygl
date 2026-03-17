@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(xargs grep:*)",
+      "Bash(xargs ls:*)",
+      "Bash(curl -s \"http://localhost:9200/captions/_search?pretty\" -H \"Content-Type: application/json\" -d '{\"\"query\"\":{\"\"match\"\":{\"\"document.videoId\"\":\"\"YRLrB6i3hLY\"\"}},\"\"size\"\":50,\"\"sort\"\":[{\"\"document.startTime\"\":{\"\"order\"\":\"\"asc\"\"}}],\"\"_source\"\":[\"\"document.startTime\"\",\"\"document.endTime\"\",\"\"document.text\"\",\"\"document.type\"\"]}')",
+      "Bash(npm run:*)",
+      "Bash(ls /c/projects/ygl/_debug/scripts/*.ts)",
+      "Bash(node dist/_debug/scripts/check-captions-similarity-db.js -GZgwm_MZQ0)",
+      "Bash(npx tsx:*)"
+    ]
+  }
+}

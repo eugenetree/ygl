@@ -14,6 +14,7 @@ import { writeFileSync } from "fs";
 
 type GetCaptionsParams = {
   baseUrl: string;
+  type: "manual" | "auto"
 };
 
 @injectable()
@@ -58,15 +59,15 @@ export class YoutubeApiGetVideo {
     const videoBase = {
       id: ytData.id,
       title: ytData.title,
-      duration: ytData.duration, // yt-dlp provides seconds, same as old extractor
+      duration: Math.round(ytData.duration), // yt-dlp provides seconds, same as old extractor
       keywords: ytData.tags ?? [],
       channelId: ytData.channel_id,
-      viewCount: ytData.view_count ?? 0,
+      viewCount: ytData.view_count ? Math.round(ytData.view_count) : 0,
       thumbnail: ytData.thumbnail,
-      asr: ytData.asr ?? null,
-      abr: ytData.abr ?? null,
+      asr: ytData.asr ? Math.round(ytData.asr) : null,
+      abr: ytData.abr ? Math.round(ytData.abr) : null,
       acodec: ytData.acodec ?? null,
-      audioChannels: ytData.audio_channels ?? null,
+      audioChannels: ytData.audio_channels ? Math.round(ytData.audio_channels) : null,
       audioQuality: ytData.audio_quality ?? null,
       isDrc: ytData.is_drc ?? null,
       categories: ytData.categories ?? [],
@@ -74,6 +75,13 @@ export class YoutubeApiGetVideo {
       artist: ytData.artist ?? null,
       album: ytData.album ?? null,
       creator: ytData.creator ?? null,
+      uploadedAt: ytData.timestamp ? new Date(ytData.timestamp * 1000) : null,
+      description: ytData.description ?? null,
+      likeCount: ytData.like_count ? Math.round(ytData.like_count) : null,
+      commentCount: ytData.comment_count ? Math.round(ytData.comment_count) : null,
+      availability: ytData.availability ?? null,
+      playableInEmbed: ytData.playable_in_embed ?? null,
+      channelIsVerified: ytData.channel_is_verified ?? null,
     };
 
     if (!ytData.language) {
@@ -103,7 +111,9 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl });
+    await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
+
+    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl, type: "auto" });
     if (!autoCaptionsResult.ok) {
       return Failure(autoCaptionsResult.error);
     }
@@ -120,7 +130,7 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl });
+    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl, type: "manual" });
     if (!manualCaptionsResult.ok) {
       return Failure(manualCaptionsResult.error);
     }
@@ -184,6 +194,7 @@ export class YoutubeApiGetVideo {
 
   private async getCaptions({
     baseUrl,
+    type,
   }: GetCaptionsParams): Promise<Result<{ captions: Caption[] }, ParsingError | FetchError | ValidationError>> {
     // yt-dlp urls are already in json3 format based on our filtering,
     // but just to be absolutely safe:
@@ -197,6 +208,7 @@ export class YoutubeApiGetVideo {
 
     const captionsResult = captionsExtractor.extractFromJson({
       jsonResponse: captionsResponseResult.value,
+      type,
     });
 
     if (!captionsResult.ok) {

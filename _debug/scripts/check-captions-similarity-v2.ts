@@ -1,10 +1,12 @@
+// @ts-nocheck
+
 import { mkdirSync, writeFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions-similarity-service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
+import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
 import { httpClient } from "../../src/modules/_common/http/index.js";
 import { Caption } from "../../src/modules/youtube-api/youtube-api.types.js";
 
@@ -62,7 +64,7 @@ const main = async () => {
   const youtubeApiGetVideo = new YoutubeApiGetVideo(logger, ytDlpClient);
   const captionCleanUpService = new CaptionCleanUpService();
   const similarityService = new CaptionsSimilarityService(logger, captionCleanUpService);
-  const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
+  const manualCaptionsValidator = new ManualCaptionsValidator(logger, captionCleanUpService);
 
   console.log(`\n======================================================`);
   console.log(`Fetching data for video: ${videoId}`);
@@ -120,7 +122,7 @@ const main = async () => {
   // console.log(`Saved raw captions to _debug/captions/${videoId}-raw-*-v2.json`);
 
   // 4. Process manual captions
-  const manualResult = await processManualCaptionsService.process(video.manualCaptions);
+  const manualResult = await manualCaptionsValidator.validate(video.manualCaptions);
   if (!manualResult.ok) {
     console.error(`Manual captions processing failed: ${manualResult.error.type}`);
     return;

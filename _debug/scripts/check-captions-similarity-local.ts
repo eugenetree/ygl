@@ -1,9 +1,11 @@
+// @ts-nocheck
+
 import { readFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions-similarity-service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/caption-clean-up.service.js";
-import { ProcessAutoCaptionsService } from "../../src/modules/scrapers/video/process-auto-captions.service.js";
-import { ProcessManualCaptionsService } from "../../src/modules/scrapers/video/process-manual-captions.service.js";
+import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
+import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/captions/auto-captions.validator.js";
+import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
 
 const main = async () => {
   const videoId = process.argv[2];
@@ -17,8 +19,8 @@ const main = async () => {
   const logger = new Logger({ context: "check-similarity-local", category: "debug" });
   const captionCleanUpService = new CaptionCleanUpService();
   const similarityService = new CaptionsSimilarityService(logger, captionCleanUpService);
-  const processAutoCaptionsService = new ProcessAutoCaptionsService(logger, captionCleanUpService);
-  const processManualCaptionsService = new ProcessManualCaptionsService(logger, captionCleanUpService);
+  const autoCaptionsValidator = new AutoCaptionsValidator(logger, captionCleanUpService);
+  const manualCaptionsValidator = new ManualCaptionsValidator(logger, captionCleanUpService);
 
   console.log(`Reading local captions for video: ${videoId}`);
   let rawAuto, rawManual;
@@ -34,13 +36,13 @@ const main = async () => {
   console.log(`Auto Captions: ${rawAuto.length} segments`);
   console.log(`Manual Captions: ${rawManual.length} segments`);
 
-  const autoResult = await processAutoCaptionsService.process(rawAuto);
+  const autoResult = await autoCaptionsValidator.validate(rawAuto);
   if (!autoResult.ok) {
     console.log(`Auto captions processing failed: ${autoResult.error.type}`);
     return;
   }
 
-  const manualResult = await processManualCaptionsService.process(rawManual);
+  const manualResult = await manualCaptionsValidator.validate(rawManual);
   if (!manualResult.ok) {
     console.log(`Manual captions processing failed: ${manualResult.error.type}`);
     return;

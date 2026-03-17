@@ -73,15 +73,17 @@ export class SearchChannelQueriesSeeder {
 
     for (let i = 0; i < words.length; i += chunkSize) {
       const chunk = words.slice(i, i + chunkSize);
+      const queryIds = chunk.map(() => crypto.randomUUID());
+
+      this.logger.info(`Seeding ${chunk.length} queries into storage`);
 
       const dbResult = await tryCatch(
         dbClient
           .insertInto("searchChannelQueries")
           .values(
-            chunk.map((word: string) => ({
-              id: crypto.randomUUID(),
+            chunk.map((word: string, index: number) => ({
+              id: queryIds[index],
               query: word,
-              processingStatus: "PENDING",
             })),
           )
           .execute(),
@@ -91,6 +93,21 @@ export class SearchChannelQueriesSeeder {
         return Failure(
           new Error("Failed to insert words into database", {
             cause: dbResult.error,
+          }),
+        );
+      }
+
+      const jobResult = await tryCatch(
+        dbClient
+          .insertInto("channelDiscoveryJobs")
+          .values(queryIds.map((id) => ({ searchQueryId: id, status: "PENDING" as const, statusUpdatedAt: new Date() })))
+          .execute(),
+      );
+
+      if (!jobResult.ok) {
+        return Failure(
+          new Error("Failed to insert channel discovery jobs", {
+            cause: jobResult.error,
           }),
         );
       }

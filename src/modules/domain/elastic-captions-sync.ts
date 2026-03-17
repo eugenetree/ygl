@@ -10,3 +10,5 @@ export type ElasticCaptionsSync = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ElasticCaptionsSyncProps = Omit<ElasticCaptionsSync, "createdAt" | "updatedAt">;
