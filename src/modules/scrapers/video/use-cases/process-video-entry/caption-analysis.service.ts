@@ -1,17 +1,19 @@
 import { injectable } from "inversify";
 
-import { CaptionProps } from "../../caption.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
 import { ManualCaptionsValidator } from "./manual-captions.validator.js";
 import { AutoCaptionsValidator } from "./auto-captions.validator.js";
 import { CaptionSimilarityService } from "./captions-similarity.service.js";
+import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
 
 type AnalysisResult = {
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
-  captionsSimilarityScore: number | null;
-  captionsShift: number | null;
-};
+  captionsProcessingAlgorithmVersion: string;
+} & (
+  | { captionsSimilarityScore: number; captionsShift: number }
+  | { captionsSimilarityScore: null; captionsShift: null }
+);
 
 export type CaptionSegment = {
   text: string;
@@ -28,15 +30,13 @@ export class CaptionAnalysisService {
     private readonly captionsSimilarityService: CaptionSimilarityService,
   ) { }
 
-  async analyze({
+  analyze({
     autoCaptions,
     manualCaptions,
-    manualCaptionsPendingValidation = false,
   }: {
     autoCaptions: CaptionSegment[] | null;
     manualCaptions: CaptionSegment[] | null;
-    manualCaptionsPendingValidation?: boolean;
-  }): Promise<AnalysisResult> {
+  }): AnalysisResult {
     let autoCaptionsStatus: AutoCaptionsStatus = "CAPTIONS_ABSENT";
 
     if (autoCaptions) {
@@ -44,33 +44,34 @@ export class CaptionAnalysisService {
       autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
     }
 
-    let manualCaptionsStatus: ManualCaptionsStatus = manualCaptionsPendingValidation
-      ? "CAPTIONS_PENDING_VALIDATION"
-      : "CAPTIONS_ABSENT";
+    let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
 
     if (manualCaptions) {
       const result = this.manualCaptionsValidator.validate(manualCaptions);
       manualCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
     }
 
-    let captionsSimilarityScore: number | null = null;
-    let captionsShift: number | null = null;
-
     if (autoCaptions && manualCaptions) {
-      const similarityResult = await this.captionsSimilarityService.calculateSimilarity({
+      const similarityResult = this.captionsSimilarityService.calculateSimilarity({
         autoCaptions,
         manualCaptions,
       });
 
-      captionsSimilarityScore = similarityResult.score;
-      captionsShift = similarityResult.shiftMs;
+      return {
+        autoCaptionsStatus,
+        manualCaptionsStatus,
+        captionsProcessingAlgorithmVersion: CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+        captionsSimilarityScore: similarityResult.score,
+        captionsShift: similarityResult.shiftMs,
+      };
     }
 
     return {
       autoCaptionsStatus,
       manualCaptionsStatus,
-      captionsSimilarityScore,
-      captionsShift,
+      captionsProcessingAlgorithmVersion: CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+      captionsSimilarityScore: null,
+      captionsShift: null,
     };
   }
 }

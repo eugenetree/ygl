@@ -18,10 +18,15 @@ export type VideoWithCaptions = {
 export class VideoRepository {
   constructor(private readonly logger: Logger) { }
 
-  async createWithCaptions(
+  async createWithCaptions({
+    video,
+    autoCaptions,
+    manualCaptions,
+  }: {
     video: VideoProps,
-    captions: CaptionProps[],
-  ): Promise<Result<void, DatabaseError>> {
+    autoCaptions: CaptionProps[],
+    manualCaptions: CaptionProps[],
+  }): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient.transaction().execute(async (trx) => {
         await trx
@@ -29,11 +34,24 @@ export class VideoRepository {
           .values(video)
           .execute();
 
-        if (captions.length > 0) {
+        if (autoCaptions.length > 0) {
           await trx
             .insertInto("captions")
             .values(
-              captions.map((caption) => ({
+              autoCaptions.map((caption) => ({
+                ...caption,
+                id: crypto.randomUUID(),
+                videoId: video.id,
+              })),
+            )
+            .execute();
+        }
+
+        if (manualCaptions.length > 0) {
+          await trx
+            .insertInto("captions")
+            .values(
+              manualCaptions.map((caption) => ({
                 ...caption,
                 id: crypto.randomUUID(),
                 videoId: video.id,

@@ -7,6 +7,7 @@
 log.txt
 _yt-dlp-node
 _yt-dlp
+_ytdlp
 .vscode
 db/dump/
 .env

@@ -1,6 +1,6 @@
 import { Failure, Result, Success } from "../../../../../types/index.js";
 import { Logger } from "../../../../_common/logger/logger.js";
-import { Caption } from "../../../../youtube-api/youtube-api.types.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
 import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { injectable } from "inversify";
 
@@ -19,8 +19,8 @@ export class AutoCaptionsValidator {
     private readonly captionCleanUpService: CaptionCleanUpService,
   ) { }
 
-  validate(captions: Caption[]): Result<void, AutoCaptionsValidationError> {
-    let resultCaptions: Caption[] = captions;
+  validate(captions: CaptionSegment[]): Result<void, AutoCaptionsValidationError> {
+    let resultCaptions: CaptionSegment[] = captions;
 
     if (resultCaptions.length === 0) {
       return Failure({

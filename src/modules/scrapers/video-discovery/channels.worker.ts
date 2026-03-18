@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { ChannelsQueue } from "./channels.queue.js";
 import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
 
 @injectable()
@@ -9,7 +8,6 @@ export class ChannelsWorker {
 
   constructor(
     private readonly logger: Logger,
-    private readonly channelsQueue: ChannelsQueue,
     private readonly findChannelVideos: FindChannelVideosUseCase,
   ) { }
 
@@ -27,63 +25,24 @@ export class ChannelsWorker {
         return;
       }
 
-      const channelResult = await this.channelsQueue.getNextChannel();
-      if (!channelResult.ok) {
+      const result = await this.findChannelVideos.execute();
+
+      if (!result.ok) {
         this.logger.error({
           message: "Failed to fetch next channel for videos discovery",
-          error: channelResult.error,
+          error: result.error,
         });
-
         this.isRunning = false;
         return;
       }
 
-      const channel = channelResult.value;
-      if (!channel) {
+      if (result.value.status === "empty") {
         this.logger.info("Channels queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
-      this.logger.info(`Processing channel ${channel.id}...`);
-
-      const processResult = await this.findChannelVideos.execute({ channelId: channel.id });
-      if (!processResult.ok) {
-        this.logger.error({
-          message: "Failed to process channel for videos discovery",
-          error: processResult.error,
-          context: { channelId: channel.id },
-        });
-
-        const markAsFailedResult = await this.channelsQueue.markAsFailed(channel.id);
-        if (!markAsFailedResult.ok) {
-          this.logger.error({
-            message: `Failed to mark channel ${channel.id} as failed`,
-            error: markAsFailedResult.error,
-            context: { channelId: channel.id },
-          });
-
-          this.isRunning = false;
-          return;
-        }
-
-        continue;
-      }
-
-      this.logger.info(`Processing channel ${channel.id} finished`);
-
-      const markAsSuccessResult = await this.channelsQueue.markAsSuccess(channel.id);
-      if (!markAsSuccessResult.ok) {
-        this.logger.error({
-          message: `Failed to mark channel ${channel.id} as success`,
-          error: markAsSuccessResult.error,
-          context: { channelId: channel.id },
-        });
-
-        this.isRunning = false;
-        return;
-      }
     }
   }
 }

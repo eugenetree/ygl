@@ -103,13 +103,13 @@ export class CaptionSimilarityService {
     private readonly captionCleanUpService: CaptionCleanUpService,
   ) { }
 
-  async calculateSimilarity({
+  calculateSimilarity({
     manualCaptions,
     autoCaptions,
   }: {
     manualCaptions: CaptionSegment[];
     autoCaptions: CaptionSegment[];
-  }): Promise<SimilarityResult> {
+  }): SimilarityResult {
     const manualNormalized = manualCaptions;
     const autoNormalized = autoCaptions;
 

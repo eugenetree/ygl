@@ -9,7 +9,6 @@ export type AutoCaptionsStatus =
 export type ManualCaptionsStatus =
   | "CAPTIONS_ABSENT"
   | "CAPTIONS_VALID"
-  | "CAPTIONS_PENDING_VALIDATION"
   | "CAPTIONS_EMPTY"
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"

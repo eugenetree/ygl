@@ -17,7 +17,6 @@ export type AutoCaptionsStatus =
 export type ManualCaptionsStatus =
   | "CAPTIONS_ABSENT"
   | "CAPTIONS_VALID"
-  | "CAPTIONS_PENDING_VALIDATION"
   | "CAPTIONS_EMPTY"
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
@@ -45,6 +44,7 @@ export interface Database {
   channelJobs: ChannelJobsRow;
   videoDiscoveryJobs: VideoDiscoveryJobsRow;
   videoJobs: VideoJobsRow;
+  transcriptionJobs: TranscriptionJobsRow;
   channelVideosHealth: ChannelVideoHealthRow;
 }
 
@@ -76,6 +76,14 @@ export interface VideoJobsRow {
   id: Generated<string>;
   videoId: string;
   channelId: string;
+  status: ProcessingStatus;
+  statusUpdatedAt: Date | null;
+  createdAt: Generated<Date>;
+}
+
+export interface TranscriptionJobsRow {
+  id: Generated<string>;
+  videoId: string;
   status: ProcessingStatus;
   statusUpdatedAt: Date | null;
   createdAt: Generated<Date>;

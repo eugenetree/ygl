@@ -4,31 +4,86 @@ import { DatabaseError } from "../../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../../types/index.js";
 import { BaseError } from "../../../../_common/errors.js";
 import { YoutubeApiGetVideo } from "../../../../youtube-api/yt-api-get-video.js";
-import { ProcessVideoService } from "./process-video.service.js";
+import { VideoMapper } from "./video.mapper.js";
 import { VideoRepository } from "../../video.repository.js";
 import { ChannelVideoHealthRepository } from "../../channel-video-health.repository.js";
 import { ChannelVideosHealth, ChannelVideosHealthProps } from "../../channel-videos-health.js";
 import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
 import { CaptionProps } from "../../caption.js";
-
-type Input = {
-  entryId: string;
-  channelId: string;
-}
+import { VideoEntriesQueue } from "../../video-entries.queue.js";
+import { QueueUseCaseResult } from "../../../_common/queue-use-case.types.js";
+import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
+import { CaptionAnalysisService } from "./caption-analysis.service.js";
+import { VideoProps } from "../../video.js";
 
 @injectable()
 export class ProcessVideoEntryUseCase {
   constructor(
     private readonly logger: Logger,
-    private readonly videoProcessor: ProcessVideoService,
+    private readonly videoMapper: VideoMapper,
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo,
     private readonly channelVideosHealthRepository: ChannelVideoHealthRepository,
+    private readonly videoEntriesQueue: VideoEntriesQueue,
+    private readonly transcriptionJobsQueue: TranscriptionJobsQueue,
+    private readonly captionAnalysisService: CaptionAnalysisService,
   ) {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute({ entryId, channelId }: Input): Promise<Result<void, BaseError>> {
+  public async execute(): Promise<QueueUseCaseResult> {
+    const entryResult = await this.videoEntriesQueue.getNextEntry();
+    if (!entryResult.ok) {
+      return Failure(entryResult.error);
+    }
+
+    const entry = entryResult.value;
+    if (!entry) {
+      return Success({ status: "empty" });
+    }
+
+    this.logger.info(`Processing video entry ${entry.id}...`);
+
+    const processResult = await this.processVideoEntry(entry.id, entry.channelId);
+
+    if (!processResult.ok) {
+      this.logger.error({
+        message: `Failed to process video entry ${entry.id}`,
+        error: processResult.error,
+        context: { entryId: entry.id },
+      });
+
+      const markAsFailedResult = await this.videoEntriesQueue.markAsFailed(entry.id);
+      if (!markAsFailedResult.ok) {
+        this.logger.error({
+          message: `Failed to mark video entry ${entry.id} as failed`,
+          error: markAsFailedResult.error,
+          context: { entryId: entry.id },
+        });
+
+        return Failure(markAsFailedResult.error);
+      }
+
+      return Failure(processResult.error);
+    }
+
+    this.logger.info(`Processing video entry ${entry.id} finished`);
+
+    const markAsSuccessResult = await this.videoEntriesQueue.markAsSuccess(entry.id);
+    if (!markAsSuccessResult.ok) {
+      this.logger.error({
+        message: `Failed to mark video entry ${entry.id} as success`,
+        error: markAsSuccessResult.error,
+        context: { entryId: entry.id },
+      });
+
+      return Failure(markAsSuccessResult.error);
+    }
+
+    return Success({ status: "processed" });
+  }
+
+  private async processVideoEntry(entryId: string, channelId: string): Promise<Result<void, BaseError>> {
     const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(channelId);
     if (!healthRecordResult.ok) {
       return healthRecordResult;
@@ -45,42 +100,58 @@ export class ProcessVideoEntryUseCase {
       });
     }
 
-    const processEntryResult = await this.processEntry(entryId);
+    const processResult = await this.processVideo(entryId);
 
     const syncResult = await this.syncChannelHealth({
       channelId,
       current: healthRecord,
-      isSuccess: processEntryResult.ok
+      isSuccess: processResult.ok
     });
 
     if (!syncResult.ok) {
       return syncResult;
     }
 
-    return processEntryResult;
+    return processResult;
   }
 
-  private async processEntry(
-    entryId: string
-  ): Promise<Result<void, BaseError>> {
-    this.logger.info(`Fetching video ${entryId}.`);
+  private async processVideo(videoId: string): Promise<Result<void, BaseError>> {
+    this.logger.info(`Fetching video ${videoId}.`);
 
-    const videoDtoResult = await this.youtubeApiGetVideo.getVideo(entryId);
+    const videoDtoResult = await this.youtubeApiGetVideo.getVideo(videoId);
     if (!videoDtoResult.ok) {
       this.logger.error({
         error: videoDtoResult.error,
-        context: { videoId: entryId },
+        context: { videoId },
       });
 
       return videoDtoResult;
     }
 
     const videoDto = videoDtoResult.value;
+    const { captionStatus } = videoDto;
+
     this.logger.info(`Processing and saving video ${videoDto.id}.`);
 
-    const { video, autoCaptions, manualCaptions } = await this.videoProcessor.process(videoDto);
-    // We only store captions when manual captions exist (auto required as companion)
-    const captions: CaptionProps[] = [];
+    const captionsAnalysisResult = this.captionAnalysisService.analyze({
+      autoCaptions: videoDto.autoCaptions,
+      manualCaptions: videoDto.manualCaptions,
+    });
+
+    const video: VideoProps = {
+      ...captionsAnalysisResult,
+      ...this.videoMapper.mapDtoToVideoProps({
+        videoDto,
+      }),
+    };
+
+    const autoCaptions: CaptionProps[] = videoDto.autoCaptions
+      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.autoCaptions, type: "auto" })
+      : [];
+
+    const manualCaptions: CaptionProps[] = videoDto.manualCaptions
+      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions, type: "manual" })
+      : [];
 
     if (manualCaptions?.length) {
       if (!autoCaptions?.length) {
@@ -89,21 +160,37 @@ export class ProcessVideoEntryUseCase {
           context: { videoId: video.id }
         })
       }
-
-      captions.push(...manualCaptions, ...autoCaptions);
     }
 
     if (autoCaptions?.length && !manualCaptions?.length) {
       this.logger.info(`Video ${video.id} has only auto captions. They won't be saved.`);
     }
 
-    const createVideoResult = await this.videoRepository.createWithCaptions(video, captions);
+    const createVideoResult = await this.videoRepository.createWithCaptions({
+      video,
+      autoCaptions,
+      manualCaptions,
+    });
+    
     if (!createVideoResult.ok) {
       this.logger.error({
-        message: `Failed to create video ${video.id} with ${captions.length} captions.`,
+        message: `Failed to create video ${video.id}.`,
         error: createVideoResult.error,
       });
       return createVideoResult;
+    }
+
+    if (captionStatus === "MANUAL_ONLY") {
+      // video has only some manual captions, but we need to have auto captions as well
+      // to derive the video language and understand which manual captions to pick
+      const enqueueResult = await this.transcriptionJobsQueue.enqueue(videoDto.id);
+      if (!enqueueResult.ok) {
+        this.logger.error({
+          message: `Failed to enqueue transcription job for video ${videoDto.id}`,
+          error: enqueueResult.error,
+        });
+        return enqueueResult;
+      }
     }
 
     this.logger.info(
@@ -133,5 +220,3 @@ export class ProcessVideoEntryUseCase {
       : await this.channelVideosHealthRepository.create(nextData);
   }
 }
-
-

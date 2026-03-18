@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
-import { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
 import { FindChannelsUseCase } from "./use-cases/find-channels.use-case.js";
 
 @injectable()
@@ -9,7 +8,6 @@ export class SearchChannelQueriesWorker {
 
   constructor(
     private readonly logger: Logger,
-    private readonly searchChannelQueriesQueue: SearchChannelQueriesQueue,
     private readonly processSearchQuery: FindChannelsUseCase,
   ) { }
 
@@ -27,66 +25,21 @@ export class SearchChannelQueriesWorker {
         return;
       }
 
-      const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
-      if (!queryResult.ok) {
-        this.logger.error({
-          error: queryResult.error,
-        });
+      const result = await this.processSearchQuery.execute();
 
+      if (!result.ok) {
+        this.logger.error({ error: result.error });
         this.isRunning = false;
         return;
       }
 
-      const query = queryResult.value;
-      if (!query) {
+      if (result.value.status === "empty") {
         this.logger.info("Search queries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
-      this.logger.info(`Processing search query ${query.id}...`);
-
-      const processResult = await this.processSearchQuery.execute({
-        queryId: query.id,
-        queryText: query.query,
-      });
-
-      if (!processResult.ok) {
-        this.logger.error({
-          message: `Processing search query ${query.id} failed`,
-          error: processResult.error,
-          context: { queryId: query.id },
-        });
-
-        const markAsFailedResult = await this.searchChannelQueriesQueue.markAsFailed(query.id);
-        if (!markAsFailedResult.ok) {
-          this.logger.error({
-            message: `Marking search query ${query.id} as failed failed`,
-            error: markAsFailedResult.error,
-            context: { queryId: query.id },
-          });
-
-          this.isRunning = false;
-          return;
-        }
-
-        continue;
-      }
-
-      this.logger.info(`Processing search query ${query.id} finished`);
-
-      const markAsSuccessResult = await this.searchChannelQueriesQueue.markAsSuccess(query.id);
-      if (!markAsSuccessResult.ok) {
-        this.logger.error({
-          message: `Marking search query ${query.id} as success failed`,
-          error: markAsSuccessResult.error,
-          context: { queryId: query.id },
-        });
-
-        this.isRunning = false;
-        return;
-      }
     }
   }
 }

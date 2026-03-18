@@ -13,7 +13,10 @@
       "Bash(docker volume:*)",
       "Bash(grep -E \"^[^/]*src[^/]*\\\\.\\(ts\\)$|src/index\")",
       "Bash(find /c/projects/ygl -name .github -o -name .gitlab-ci.yml -o -name *.test.ts -o -name *.spec.ts -o -name .env* -type f)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(find src/modules/scrapers -type f -name *.ts)",
+      "Read(//c/projects/ygl/**)",
+      "Bash(ls c:/projects/ygl/src/modules/scrapers/*/)"
     ]
   }
 }

@@ -5,10 +5,8 @@ import { YoutubeApiGetChannelVideoEntries } from "../../../youtube-api/yt-api-ge
 import { BaseError } from "../../../_common/errors.js";
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
-
-type Input = {
-  channelId: string;
-}
+import { ChannelsQueue } from "../channels.queue.js";
+import { QueueUseCaseResult } from "../../_common/queue-use-case.types.js";
 
 @injectable()
 export class FindChannelVideosUseCase {
@@ -17,11 +15,64 @@ export class FindChannelVideosUseCase {
     private readonly videoEntryRepository: VideoEntryRepository,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
     private readonly videoEntriesQueue: VideoEntriesQueue,
+    private readonly channelsQueue: ChannelsQueue,
   ) {
     this.logger.setContext(FindChannelVideosUseCase.name);
   }
 
-  public async execute({ channelId }: Input): Promise<Result<void, BaseError>> {
+  public async execute(): Promise<QueueUseCaseResult> {
+    const channelResult = await this.channelsQueue.getNextChannel();
+    if (!channelResult.ok) {
+      return Failure(channelResult.error);
+    }
+
+    const channel = channelResult.value;
+    if (!channel) {
+      return Success({ status: "empty" });
+    }
+
+    this.logger.info(`Processing channel ${channel.id}...`);
+
+    const processResult = await this.processChannel(channel.id);
+
+    if (!processResult.ok) {
+      this.logger.error({
+        message: "Failed to process channel for videos discovery",
+        error: processResult.error,
+        context: { channelId: channel.id },
+      });
+
+      const markAsFailedResult = await this.channelsQueue.markAsFailed(channel.id);
+      if (!markAsFailedResult.ok) {
+        this.logger.error({
+          message: `Failed to mark channel ${channel.id} as failed`,
+          error: markAsFailedResult.error,
+          context: { channelId: channel.id },
+        });
+
+        return Failure(markAsFailedResult.error);
+      }
+
+      return Failure(processResult.error);
+    }
+
+    this.logger.info(`Processing channel ${channel.id} finished`);
+
+    const markAsSuccessResult = await this.channelsQueue.markAsSuccess(channel.id);
+    if (!markAsSuccessResult.ok) {
+      this.logger.error({
+        message: `Failed to mark channel ${channel.id} as success`,
+        error: markAsSuccessResult.error,
+        context: { channelId: channel.id },
+      });
+
+      return Failure(markAsSuccessResult.error);
+    }
+
+    return Success({ status: "processed" });
+  }
+
+  private async processChannel(channelId: string): Promise<Result<void, BaseError>> {
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
       channelId,
     });
