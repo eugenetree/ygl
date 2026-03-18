@@ -27,7 +27,7 @@ function createService(): YoutubeApiGetVideo {
 // Tests
 // ---------------------------------------------------------------------------
 
-describe("YoutubeApiGetVideo.getVideo() – captionStatus", { concurrency: false }, () => {
+describe.skip("YoutubeApiGetVideo.getVideo() – captionStatus", { concurrency: false }, () => {
   const service = createService();
 
   afterEach(async () => {

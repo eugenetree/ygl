@@ -16,7 +16,9 @@
       "WebSearch",
       "Bash(find src/modules/scrapers -type f -name *.ts)",
       "Read(//c/projects/ygl/**)",
-      "Bash(ls c:/projects/ygl/src/modules/scrapers/*/)"
+      "Bash(ls c:/projects/ygl/src/modules/scrapers/*/)",
+      "Bash(npm test:*)",
+      "Bash(node -e \":*)"
     ]
   }
 }

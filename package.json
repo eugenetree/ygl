@@ -13,7 +13,7 @@
     "lint:fix": "eslint src --fix",
     "test": "node --test --import tsx \"src/**/*.test.ts\"",
     "format": "prettier . --write",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist/*",
     "start": "npm run clean && npx tsx src/index.ts",
     "build": "npm run clean && npx tsc",
     "run:channel-discovery": "npm run clean && npx tsc && node dist/src/modules/scrapers/channel-discovery/bootstrap.js",
