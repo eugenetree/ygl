@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
+import { VideoEntriesQueue } from "./video-entries.queue.js";
 
 @injectable()
 export class VideoEntriesWorker {
@@ -8,7 +9,8 @@ export class VideoEntriesWorker {
 
   constructor(
     private readonly logger: Logger,
-    private readonly processVideoEntry: ProcessVideoEntryUseCase
+    private readonly processVideoEntry: ProcessVideoEntryUseCase,
+    private readonly videoEntriesQueue: VideoEntriesQueue,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -25,19 +27,38 @@ export class VideoEntriesWorker {
         return;
       }
 
-      const result = await this.processVideoEntry.execute();
+      const entryResult = await this.videoEntriesQueue.getNextEntry();
 
-      if (!result.ok) {
-        this.logger.error({ error: result.error });
+      if (!entryResult.ok) {
+        this.logger.error({ error: entryResult.error });
         this.isRunning = false;
         return;
       }
 
-      if (result.value.status === "empty") {
+      const entry = entryResult.value;
+
+      if (!entry) {
         this.logger.info("Video entries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
+
+      const result = await this.processVideoEntry.execute({
+        id: entry.id,
+        channelId: entry.channelId,
+      });
+
+      if (!result.ok) {
+        this.logger.error({
+          message: `Failed to process video entry ${entry.id}`,
+          error: result.error,
+          context: { entryId: entry.id },
+        });
+        await this.videoEntriesQueue.markAsFailed(entry.id);
+        continue;
+      }
+
+      await this.videoEntriesQueue.markAsSuccess(entry.id);
 
       await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
     }

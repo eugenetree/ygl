@@ -7,7 +7,6 @@ import { VideoMapper } from "./video.mapper.js";
 import { VideoRepository } from "../../video.repository.js";
 import { YoutubeApiGetVideo } from "../../../../youtube-api/yt-api-get-video.js";
 import { ChannelVideoHealthRepository } from "../../channel-video-health.repository.js";
-import { VideoEntriesQueue } from "../../video-entries.queue.js";
 import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
 import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
@@ -17,11 +16,9 @@ import { CaptionProps } from "../../caption.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 
-const entry = {
+const videoEntry = {
   id: "video-1",
   channelId: "channel-1",
-  createdAt: new Date(),
-  updatedAt: new Date(),
 };
 
 const baseVideoDto = {
@@ -160,11 +157,6 @@ function createMocks() {
       create: mock.fn<ChannelVideoHealthRepository["create"]>(),
       update: mock.fn<ChannelVideoHealthRepository["update"]>(),
     },
-    videoEntriesQueue: {
-      getNextEntry: mock.fn<VideoEntriesQueue["getNextEntry"]>(),
-      markAsFailed: mock.fn<VideoEntriesQueue["markAsFailed"]>(),
-      markAsSuccess: mock.fn<VideoEntriesQueue["markAsSuccess"]>(),
-    },
     transcriptionJobsQueue: {
       enqueue: mock.fn<TranscriptionJobsQueue["enqueue"]>(),
     },
@@ -181,7 +173,6 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
     mocks.videoRepository as unknown as VideoRepository,
     mocks.youtubeApiGetVideo as unknown as YoutubeApiGetVideo,
     mocks.channelVideosHealthRepository as unknown as ChannelVideoHealthRepository,
-    mocks.videoEntriesQueue as unknown as VideoEntriesQueue,
     mocks.transcriptionJobsQueue as unknown as TranscriptionJobsQueue,
     mocks.captionAnalysisService as unknown as CaptionAnalysisService,
   );
@@ -201,9 +192,6 @@ describe("ProcessVideoEntryUseCase", () => {
     mocks = createMocks();
 
     // Happy-path defaults — individual tests override the one thing they care about
-    mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => Promise.resolve(Success(entry)));
-    mocks.videoEntriesQueue.markAsSuccess.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
-    mocks.videoEntriesQueue.markAsFailed.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
     mocks.channelVideosHealthRepository.getHealthRecord.mock.mockImplementation(() => Promise.resolve(Success(null)));
     mocks.channelVideosHealthRepository.create.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
     mocks.channelVideosHealthRepository.update.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
@@ -219,87 +207,13 @@ describe("ProcessVideoEntryUseCase", () => {
     sut = buildSut(mocks);
   });
 
-  describe("execute() — queue handling", () => {
-    it("returns { status: 'empty' } when queue has no entry", async () => {
-      mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => Promise.resolve(Success(null)));
-
-      const result = await sut.execute();
-
-      assert.deepEqual(result, Success({ status: "empty" }));
-    });
-
-    it("returns failure when getNextEntry fails", async () => {
-      mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
-
-      const result = await sut.execute();
-
-      assertFailure(result);
-      assert.deepEqual(result.error, dbError);
-    });
-
-    it("returns { status: 'processed' } on full success", async () => {
-      const result = await sut.execute();
-
-      assert.deepEqual(result, Success({ status: "processed" }));
-    });
-
-    it("calls markAsSuccess with the entry id on success", async () => {
-      await sut.execute();
-
-      assert.equal(mocks.videoEntriesQueue.markAsSuccess.mock.callCount(), 1);
-      assert.equal(mocks.videoEntriesQueue.markAsSuccess.mock.calls[0]!.arguments[0], entry.id);
-    });
-
-    it("calls markAsFailed when processing fails", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
-        Promise.resolve(Failure({ type: "YT_DLP_ERROR", message: "failed" })),
-      );
-
-      await sut.execute();
-
-      assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 1);
-      assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.calls[0]!.arguments[0], entry.id);
-    });
-
-    it("returns failure from processVideoEntry when processing fails", async () => {
-      const ytError = { type: "YT_DLP_ERROR" as const, message: "failed" };
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Failure(ytError)));
-
-      const result = await sut.execute();
-
-      assertFailure(result);
-      assert.deepEqual(result.error, ytError);
-    });
-
-    it("returns failure from markAsFailed when both processing and markAsFailed fail", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
-        Promise.resolve(Failure({ type: "YT_DLP_ERROR", message: "failed" })),
-      );
-      mocks.videoEntriesQueue.markAsFailed.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
-
-      const result = await sut.execute();
-
-      assertFailure(result);
-      assert.deepEqual(result.error, dbError);
-    });
-
-    it("returns failure when markAsSuccess fails", async () => {
-      mocks.videoEntriesQueue.markAsSuccess.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
-
-      const result = await sut.execute();
-
-      assertFailure(result);
-      assert.deepEqual(result.error, dbError);
-    });
-  });
-
-  describe("processVideoEntry() — health record gate", () => {
+  describe("health record gate", () => {
     it("returns failure when getHealthRecord fails", async () => {
       mocks.channelVideosHealthRepository.getHealthRecord.mock.mockImplementation(() =>
         Promise.resolve(Failure(dbError)),
       );
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.deepEqual(result.error, dbError);
@@ -310,7 +224,7 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Success({ ...existingHealthRecord, failedVideosStreak: MAX_FAILED_VIDEOS_STREAK })),
       );
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.equal(result.error.type, "TOO_MANY_FAILED_VIDEOS");
@@ -321,15 +235,15 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Success({ ...existingHealthRecord, failedVideosStreak: MAX_FAILED_VIDEOS_STREAK - 1 })),
       );
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
-      assert.deepEqual(result, Success({ status: "processed" }));
+      assert.equal(result.ok, true);
     });
 
     it("does not skip entry when no health record exists", async () => {
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
-      assert.deepEqual(result, Success({ status: "processed" }));
+      assert.equal(result.ok, true);
     });
   });
 
@@ -338,7 +252,7 @@ describe("ProcessVideoEntryUseCase", () => {
       const ytError = { type: "YT_DLP_ERROR" as const, message: "yt-dlp died" };
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Failure(ytError)));
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.deepEqual(result.error, ytError);
@@ -350,7 +264,7 @@ describe("ProcessVideoEntryUseCase", () => {
         ({ type }: { type: "auto" | "manual" }) => (type === "auto" ? [] : manualCaptionProps),
       );
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.equal(result.error.type, "UNEXPECTED_STATE");
@@ -359,7 +273,7 @@ describe("ProcessVideoEntryUseCase", () => {
     it("returns failure when createWithCaptions fails", async () => {
       mocks.videoRepository.createWithCaptions.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.deepEqual(result.error, dbError);
@@ -368,7 +282,7 @@ describe("ProcessVideoEntryUseCase", () => {
     it("enqueues a transcription job when captionStatus is MANUAL_ONLY", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 1);
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0], manualOnlyVideo.id);
@@ -377,13 +291,13 @@ describe("ProcessVideoEntryUseCase", () => {
     it("does not enqueue a transcription job when captionStatus is AUTO_ONLY", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(autoOnlyVideo)));
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
     });
 
     it("does not enqueue a transcription job when captionStatus is BOTH", async () => {
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
     });
@@ -392,7 +306,7 @@ describe("ProcessVideoEntryUseCase", () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
       mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
       assert.deepEqual(result.error, dbError);
@@ -401,7 +315,7 @@ describe("ProcessVideoEntryUseCase", () => {
 
   describe("syncChannelHealth()", () => {
     it("calls create when no existing health record", async () => {
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       assert.equal(mocks.channelVideosHealthRepository.create.mock.callCount(), 1);
       assert.equal(mocks.channelVideosHealthRepository.update.mock.callCount(), 0);
@@ -412,7 +326,7 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Success(existingHealthRecord)),
       );
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       assert.equal(mocks.channelVideosHealthRepository.update.mock.callCount(), 1);
       assert.equal(mocks.channelVideosHealthRepository.create.mock.callCount(), 0);
@@ -423,7 +337,7 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Success(existingHealthRecord)),
       );
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       const updated = mocks.channelVideosHealthRepository.update.mock.calls[0]!.arguments[0];
       assert.equal(updated.succeededVideosStreak, existingHealthRecord.succeededVideosStreak + 1);
@@ -431,12 +345,12 @@ describe("ProcessVideoEntryUseCase", () => {
     });
 
     it("creates a new health record with succeededVideosStreak=1 when none exists", async () => {
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       const created = mocks.channelVideosHealthRepository.create.mock.calls[0]!.arguments[0];
       assert.equal(created.succeededVideosStreak, 1);
       assert.equal(created.failedVideosStreak, 0);
-      assert.equal(created.channelId, entry.channelId);
+      assert.equal(created.channelId, videoEntry.channelId);
     });
 
     it("increments failedVideosStreak and resets succeededVideosStreak on processVideo failure", async () => {
@@ -447,7 +361,7 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Failure({ type: "YT_DLP_ERROR", message: "failed" })),
       );
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       const updated = mocks.channelVideosHealthRepository.update.mock.calls[0]!.arguments[0];
       assert.equal(updated.failedVideosStreak, existingHealthRecord.failedVideosStreak + 1);
@@ -459,20 +373,19 @@ describe("ProcessVideoEntryUseCase", () => {
         Promise.resolve(Failure({ type: "YT_DLP_ERROR", message: "failed" })),
       );
 
-      await sut.execute();
+      await sut.execute(videoEntry);
 
       const created = mocks.channelVideosHealthRepository.create.mock.calls[0]!.arguments[0];
       assert.equal(created.failedVideosStreak, 1);
       assert.equal(created.succeededVideosStreak, 0);
     });
 
-    it("returns failure and marks queue entry as failed when health sync fails", async () => {
+    it("returns failure when health sync fails", async () => {
       mocks.channelVideosHealthRepository.create.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
 
-      const result = await sut.execute();
+      const result = await sut.execute(videoEntry);
 
       assertFailure(result);
-      assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 1);
     });
   });
 });

@@ -18,7 +18,8 @@
       "Read(//c/projects/ygl/**)",
       "Bash(ls c:/projects/ygl/src/modules/scrapers/*/)",
       "Bash(npm test:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(gh repo:*)"
     ]
   }
 }

@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { FindChannelsUseCase } from "./use-cases/find-channels.use-case.js";
+import { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
 
 @injectable()
 export class SearchChannelQueriesWorker {
@@ -8,7 +9,8 @@ export class SearchChannelQueriesWorker {
 
   constructor(
     private readonly logger: Logger,
-    private readonly processSearchQuery: FindChannelsUseCase,
+    private readonly findChannels: FindChannelsUseCase,
+    private readonly searchChannelQueriesQueue: SearchChannelQueriesQueue,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -25,19 +27,38 @@ export class SearchChannelQueriesWorker {
         return;
       }
 
-      const result = await this.processSearchQuery.execute();
+      const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
 
-      if (!result.ok) {
-        this.logger.error({ error: result.error });
+      if (!queryResult.ok) {
+        this.logger.error({ error: queryResult.error });
         this.isRunning = false;
         return;
       }
 
-      if (result.value.status === "empty") {
+      const query = queryResult.value;
+
+      if (!query) {
         this.logger.info("Search queries queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
+
+      const result = await this.findChannels.execute({
+        queryId: query.id,
+        queryText: query.query,
+      });
+
+      if (!result.ok) {
+        this.logger.error({
+          message: `Processing search query ${query.id} failed`,
+          error: result.error,
+          context: { queryId: query.id },
+        });
+        await this.searchChannelQueriesQueue.markAsFailed(query.id);
+        continue;
+      }
+
+      await this.searchChannelQueriesQueue.markAsSuccess(query.id);
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }

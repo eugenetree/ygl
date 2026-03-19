@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { Logger } from "../../_common/logger/logger.js";
 import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
+import { ChannelsQueue } from "./channels.queue.js";
 
 @injectable()
 export class ChannelsWorker {
@@ -9,6 +10,7 @@ export class ChannelsWorker {
   constructor(
     private readonly logger: Logger,
     private readonly findChannelVideos: FindChannelVideosUseCase,
+    private readonly channelsQueue: ChannelsQueue,
   ) { }
 
   public async start(shouldContinue: () => boolean = () => true) {
@@ -25,22 +27,33 @@ export class ChannelsWorker {
         return;
       }
 
-      const result = await this.findChannelVideos.execute();
+      const channelResult = await this.channelsQueue.getNextChannel();
 
-      if (!result.ok) {
+      if (!channelResult.ok) {
         this.logger.error({
           message: "Failed to fetch next channel for videos discovery",
-          error: result.error,
+          error: channelResult.error,
         });
         this.isRunning = false;
         return;
       }
 
-      if (result.value.status === "empty") {
+      const channel = channelResult.value;
+
+      if (!channel) {
         this.logger.info("Channels queue is empty. Waiting...");
         await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
         continue;
       }
+
+      const result = await this.findChannelVideos.execute(channel.id);
+
+      if (!result.ok) {
+        await this.channelsQueue.markAsFailed(channel.id);
+        continue;
+      }
+
+      await this.channelsQueue.markAsSuccess(channel.id);
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }

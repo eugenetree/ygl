@@ -10,8 +10,6 @@ import { ChannelVideoHealthRepository } from "../../channel-video-health.reposit
 import { ChannelVideosHealth, ChannelVideosHealthProps } from "../../channel-videos-health.js";
 import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
 import { CaptionProps } from "../../caption.js";
-import { VideoEntriesQueue } from "../../video-entries.queue.js";
-import { QueueUseCaseResult } from "../../../_common/queue-use-case.types.js";
 import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
 import { VideoProps } from "../../video.js";
@@ -24,67 +22,16 @@ export class ProcessVideoEntryUseCase {
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo,
     private readonly channelVideosHealthRepository: ChannelVideoHealthRepository,
-    private readonly videoEntriesQueue: VideoEntriesQueue,
     private readonly transcriptionJobsQueue: TranscriptionJobsQueue,
     private readonly captionAnalysisService: CaptionAnalysisService,
   ) {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute(): Promise<QueueUseCaseResult> {
-    const entryResult = await this.videoEntriesQueue.getNextEntry();
-    if (!entryResult.ok) {
-      return Failure(entryResult.error);
-    }
+  public async execute(videoEntry: { id: string; channelId: string }): Promise<Result<void, BaseError>> {
+    this.logger.info(`Processing video entry ${videoEntry.id}...`);
 
-    const entry = entryResult.value;
-    if (!entry) {
-      return Success({ status: "empty" });
-    }
-
-    this.logger.info(`Processing video entry ${entry.id}...`);
-
-    const processResult = await this.processVideoEntry(entry.id, entry.channelId);
-
-    if (!processResult.ok) {
-      this.logger.error({
-        message: `Failed to process video entry ${entry.id}`,
-        error: processResult.error,
-        context: { entryId: entry.id },
-      });
-
-      const markAsFailedResult = await this.videoEntriesQueue.markAsFailed(entry.id);
-      if (!markAsFailedResult.ok) {
-        this.logger.error({
-          message: `Failed to mark video entry ${entry.id} as failed`,
-          error: markAsFailedResult.error,
-          context: { entryId: entry.id },
-        });
-
-        return Failure(markAsFailedResult.error);
-      }
-
-      return Failure(processResult.error);
-    }
-
-    this.logger.info(`Processing video entry ${entry.id} finished`);
-
-    const markAsSuccessResult = await this.videoEntriesQueue.markAsSuccess(entry.id);
-    if (!markAsSuccessResult.ok) {
-      this.logger.error({
-        message: `Failed to mark video entry ${entry.id} as success`,
-        error: markAsSuccessResult.error,
-        context: { entryId: entry.id },
-      });
-
-      return Failure(markAsSuccessResult.error);
-    }
-
-    return Success({ status: "processed" });
-  }
-
-  private async processVideoEntry(entryId: string, channelId: string): Promise<Result<void, BaseError>> {
-    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(channelId);
+    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(videoEntry.channelId);
     if (!healthRecordResult.ok) {
       return healthRecordResult;
     }
@@ -94,22 +41,26 @@ export class ProcessVideoEntryUseCase {
       return Failure({
         type: "TOO_MANY_FAILED_VIDEOS",
         context: {
-          videoId: entryId,
-          channelId,
+          videoId: videoEntry.id,
+          channelId: videoEntry.channelId,
         }
       });
     }
 
-    const processResult = await this.processVideo(entryId);
+    const processResult = await this.processVideo(videoEntry.id);
 
     const syncResult = await this.syncChannelHealth({
-      channelId,
+      channelId: videoEntry.channelId,
       current: healthRecord,
       isSuccess: processResult.ok
     });
 
     if (!syncResult.ok) {
       return syncResult;
+    }
+
+    if (processResult.ok) {
+      this.logger.info(`Processing video entry ${videoEntry.id} finished`);
     }
 
     return processResult;
@@ -171,7 +122,7 @@ export class ProcessVideoEntryUseCase {
       autoCaptions,
       manualCaptions,
     });
-    
+
     if (!createVideoResult.ok) {
       this.logger.error({
         message: `Failed to create video ${video.id}.`,
@@ -181,8 +132,6 @@ export class ProcessVideoEntryUseCase {
     }
 
     if (captionStatus === "MANUAL_ONLY") {
-      // video has only some manual captions, but we need to have auto captions as well
-      // to derive the video language and understand which manual captions to pick
       const enqueueResult = await this.transcriptionJobsQueue.enqueue(videoDto.id);
       if (!enqueueResult.ok) {
         this.logger.error({

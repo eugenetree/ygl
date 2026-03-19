@@ -28,6 +28,15 @@ export class ChannelsQueue {
   }
 
   public async getNextChannel(): Promise<Result<{ id: string } | null, DatabaseError>> {
+    const result = await this.getNextChannels(1);
+    if (!result.ok) {
+      return result;
+    }
+
+    return Success(result.value[0] ?? null);
+  }
+
+  public async getNextChannels(limit: number): Promise<Result<{ id: string }[], DatabaseError>> {
     const result = await tryCatch(
       dbClient
         .updateTable("videoDiscoveryJobs")
@@ -44,23 +53,19 @@ export class ChannelsQueue {
               .where("channels.countryCode", "in", SUPPORTED_COUNTRY_CODES)
               .orderBy("channels.subscriberCount", "desc")
               .orderBy("videoDiscoveryJobs.createdAt", "asc")
-              .limit(1)
+              .limit(limit)
               .forUpdate()
               .skipLocked()
         )
         .returning("channelId")
-        .executeTakeFirst()
+        .execute()
     );
 
     if (!result.ok) {
       return Failure({ type: "DATABASE", error: result.error });
     }
 
-    if (!result.value) {
-      return Success(null);
-    }
-
-    return Success({ id: result.value.channelId });
+    return Success(result.value.map((row) => ({ id: row.channelId })));
   }
 
   public async markAsSuccess(channelId: string): Promise<Result<void, DatabaseError>> {

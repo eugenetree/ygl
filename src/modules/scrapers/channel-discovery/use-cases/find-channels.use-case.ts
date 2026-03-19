@@ -5,8 +5,6 @@ import { BaseError } from "../../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entry.repository.js";
 import { ChannelEntriesQueue } from "../../channel/index.js";
-import { SearchChannelQueriesQueue } from "../search-channel-queries.queue.js";
-import { QueueUseCaseResult } from "../../_common/queue-use-case.types.js";
 
 @injectable()
 export class FindChannelsUseCase {
@@ -15,67 +13,13 @@ export class FindChannelsUseCase {
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly channelEntryRepository: ChannelEntryRepository,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
-    private readonly searchChannelQueriesQueue: SearchChannelQueriesQueue,
   ) {
     this.logger.setContext(FindChannelsUseCase.name);
   }
 
-  public async execute(): Promise<QueueUseCaseResult> {
-    const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
-    if (!queryResult.ok) {
-      return Failure(queryResult.error);
-    }
+  public async execute({ queryId, queryText }: { queryId: string; queryText: string }): Promise<Result<void, BaseError>> {
+    this.logger.info(`Processing search query ${queryId}...`);
 
-    const query = queryResult.value;
-    if (!query) {
-      return Success({ status: "empty" });
-    }
-
-    this.logger.info(`Processing search query ${query.id}...`);
-
-    const processResult = await this.processQuery({
-      queryId: query.id,
-      queryText: query.query,
-    });
-
-    if (!processResult.ok) {
-      this.logger.error({
-        message: `Processing search query ${query.id} failed`,
-        error: processResult.error,
-        context: { queryId: query.id },
-      });
-
-      const markAsFailedResult = await this.searchChannelQueriesQueue.markAsFailed(query.id);
-      if (!markAsFailedResult.ok) {
-        this.logger.error({
-          message: `Marking search query ${query.id} as failed failed`,
-          error: markAsFailedResult.error,
-          context: { queryId: query.id },
-        });
-
-        return Failure(markAsFailedResult.error);
-      }
-
-      return Failure(processResult.error);
-    }
-
-    this.logger.info(`Processing search query ${query.id} finished`);
-
-    const markAsSuccessResult = await this.searchChannelQueriesQueue.markAsSuccess(query.id);
-    if (!markAsSuccessResult.ok) {
-      this.logger.error({
-        message: `Marking search query ${query.id} as success failed`,
-        error: markAsSuccessResult.error,
-        context: { queryId: query.id },
-      });
-
-      return Failure(markAsSuccessResult.error);
-    }
-
-    return Success({ status: "processed" });
-  }
-
-  private async processQuery({ queryId, queryText }: { queryId: string; queryText: string }): Promise<Result<void, BaseError>> {
     const searchGenerator = this.youtubeApiSearchChannels.searchChannels({
       query: queryText,
     });
@@ -104,6 +48,8 @@ export class FindChannelsUseCase {
         }
       }
     }
+
+    this.logger.info(`Processing search query ${queryId} finished`);
 
     return Success(undefined);
   }
