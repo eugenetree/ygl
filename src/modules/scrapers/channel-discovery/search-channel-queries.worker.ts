@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Result, Success, Failure } from "../../../types/index.js";
+import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { WORKER_STOP_CAUSE, WorkerStopCause } from "../constants.js";
@@ -8,7 +8,7 @@ import { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
-  onError: (error: BaseError) => Promise<{ shouldContinue: boolean }>;
+  onError: (error: BaseError) => Promise<void>;
 };
 
 @injectable()
@@ -30,7 +30,7 @@ export class SearchChannelQueriesWorker {
     onError,
   }: WorkerOptions): Promise<Result<WorkerStopCause, BaseError>> {
     if (this.isRunning) {
-      return Success(WORKER_STOP_CAUSE.DONE);
+      return Failure({ type: "WORKER_ALREADY_RUNNING" });
     }
 
     this.isRunning = true;
@@ -39,7 +39,7 @@ export class SearchChannelQueriesWorker {
       if (!shouldContinue()) {
         this.logger.info("shouldContinue() returned false. Stopping worker.");
         this.isRunning = false;
-        return Success(WORKER_STOP_CAUSE.DONE);
+        return Success(WORKER_STOP_CAUSE.STOPPED);
       }
 
       const queryResult = await this.searchChannelQueriesQueue.getNextQuery();
@@ -48,7 +48,7 @@ export class SearchChannelQueriesWorker {
         this.logger.error({ error: queryResult.error });
         this.isRunning = false;
         await onError(queryResult.error);
-        return Failure(queryResult.error);
+        return queryResult;
       }
 
       const query = queryResult.value;
@@ -71,14 +71,9 @@ export class SearchChannelQueriesWorker {
           context: { queryId: query.id },
         });
         await this.searchChannelQueriesQueue.markAsFailed(query.id);
-
-        const { shouldContinue: canContinue } = await onError(result.error);
-        if (!canContinue) {
-          this.isRunning = false;
-          return Failure(result.error);
-        }
-
-        continue;
+        this.isRunning = false;
+        await onError(result.error);
+        return result;
       }
 
       await this.searchChannelQueriesQueue.markAsSuccess(query.id);

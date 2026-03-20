@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Result, Success, Failure } from "../../../types/index.js";
+import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { WORKER_STOP_CAUSE, WorkerStopCause } from "../constants.js";
@@ -8,7 +8,7 @@ import { VideoEntriesQueue } from "./video-entries.queue.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
-  onError: (error: BaseError) => Promise<{ shouldContinue: boolean }>;
+  onError: (error: BaseError) => Promise<void>;
 };
 
 @injectable()
@@ -30,7 +30,7 @@ export class VideoEntriesWorker {
     onError,
   }: WorkerOptions): Promise<Result<WorkerStopCause, BaseError>> {
     if (this.isRunning) {
-      return Success(WORKER_STOP_CAUSE.DONE);
+      return Failure({ type: "WORKER_ALREADY_RUNNING" });
     }
 
     this.isRunning = true;
@@ -39,7 +39,7 @@ export class VideoEntriesWorker {
       if (!shouldContinue()) {
         this.logger.info("shouldContinue() returned false. Stopping worker.");
         this.isRunning = false;
-        return Success(WORKER_STOP_CAUSE.DONE);
+        return Success(WORKER_STOP_CAUSE.STOPPED);
       }
 
       const entryResult = await this.videoEntriesQueue.getNextEntry();
@@ -48,7 +48,7 @@ export class VideoEntriesWorker {
         this.logger.error({ error: entryResult.error });
         this.isRunning = false;
         await onError(entryResult.error);
-        return Failure(entryResult.error);
+        return entryResult;
       }
 
       const entry = entryResult.value;
@@ -71,14 +71,9 @@ export class VideoEntriesWorker {
           context: { entryId: entry.id },
         });
         await this.videoEntriesQueue.markAsFailed(entry.id);
-
-        const { shouldContinue: canContinue } = await onError(result.error);
-        if (!canContinue) {
-          this.isRunning = false;
-          return Failure(result.error);
-        }
-
-        continue;
+        this.isRunning = false;
+        await onError(result.error);
+        return result;
       }
 
       await this.videoEntriesQueue.markAsSuccess(entry.id);

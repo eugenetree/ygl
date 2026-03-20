@@ -51,16 +51,9 @@ async function main() {
 
   const processScraperFailure = container.get(ProcessScraperFailureUseCase);
 
-  let videoWorkerFailed = false;
-
   const createOnError = (scraperName: ScraperName) => {
     return async (error: BaseError) => {
       await processScraperFailure.execute({ scraperName, error });
-      if (scraperName === SCRAPER_NAME.VIDEO) {
-        videoWorkerFailed = true;
-        return { shouldContinue: false };
-      }
-      return { shouldContinue: true };
     };
   };
 
@@ -72,8 +65,6 @@ async function main() {
   ];
 
   while (!shutdownRequested) {
-    let allEmpty = true;
-
     for (const scraper of scrapers) {
       if (shutdownRequested) {
         logger.info("Shutdown requested, exiting...");
@@ -98,23 +89,13 @@ async function main() {
 
         if (!result.ok) {
           logger.error({ message: `${scraper.name} scraper session failed.`, error: result.error });
-
-          if (videoWorkerFailed) {
-            logger.error({ message: "Video worker stopped due to failure. Exiting process." });
-            process.exit(1);
-          }
-
-          continue;
+          process.exit(1);
         }
 
         logger.info(`${scraper.name} scraper session finished (${result.value}).`);
 
-        if (result.value !== WORKER_STOP_CAUSE.EMPTY) {
-          allEmpty = false;
-        }
-
-        if (elapsed < 5000 && !shutdownRequested && result.value !== WORKER_STOP_CAUSE.EMPTY) {
-          logger.error({ message: `${scraper.name} exited too quickly (${elapsed}ms). Likely a fatal error. Exiting.` });
+        if (result.value === WORKER_STOP_CAUSE.EMPTY) {
+          logger.error({ message: `${scraper.name} exited because queue is empty. Exiting.` });
           process.exit(1);
         }
       } catch (err) {
@@ -126,12 +107,7 @@ async function main() {
       }
     }
 
-    if (allEmpty && !shutdownRequested) {
-      logger.info("All queues empty. Pausing for 1 minute...");
-      await new Promise((resolve) => setTimeout(resolve, MINUTE_MS));
-    } else {
-      logger.info("Cycle finished. Starting over...");
-    }
+    logger.info("Cycle finished. Starting over...");
   }
 
   logger.info("Shutdown complete.");

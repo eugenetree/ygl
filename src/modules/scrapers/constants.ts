@@ -10,6 +10,7 @@ export type ScraperName = (typeof SCRAPER_NAME)[keyof typeof SCRAPER_NAME];
 export const WORKER_STOP_CAUSE = {
   EMPTY: "EMPTY",
   DONE: "DONE",
+  STOPPED: "STOPPED",
 } as const;
 
 export type WorkerStopCause = (typeof WORKER_STOP_CAUSE)[keyof typeof WORKER_STOP_CAUSE];

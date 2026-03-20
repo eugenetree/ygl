@@ -25,7 +25,7 @@ const spawnWorker = async ({
   container.bind(HttpClient).toConstantValue(httpClient);
 
   const worker = container.get(VideoEntriesWorker);
-  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => ({ shouldContinue: true }) });
+  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => {} });
 };
 
 export async function bootstrap() {

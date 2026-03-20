@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Result, Success, Failure } from "../../../types/index.js";
+import { Failure, Result, Success } from "../../../types/index.js";
 import { BaseError } from "../../_common/errors.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { WORKER_STOP_CAUSE, WorkerStopCause } from "../constants.js";
@@ -8,7 +8,7 @@ import { ChannelsQueue } from "./channels.queue.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
-  onError: (error: BaseError) => Promise<{ shouldContinue: boolean }>;
+  onError: (error: BaseError) => Promise<void>;
 };
 
 @injectable()
@@ -30,7 +30,7 @@ export class ChannelsWorker {
     onError,
   }: WorkerOptions): Promise<Result<WorkerStopCause, BaseError>> {
     if (this.isRunning) {
-      return Success(WORKER_STOP_CAUSE.DONE);
+      return Failure({ type: "WORKER_ALREADY_RUNNING" });
     }
 
     this.isRunning = true;
@@ -39,7 +39,7 @@ export class ChannelsWorker {
       if (!shouldContinue()) {
         this.logger.info("shouldContinue() returned false. Stopping worker.");
         this.isRunning = false;
-        return Success(WORKER_STOP_CAUSE.DONE);
+        return Success(WORKER_STOP_CAUSE.STOPPED);
       }
 
       const channelResult = await this.channelsQueue.getNextChannel();
@@ -51,7 +51,7 @@ export class ChannelsWorker {
         });
         this.isRunning = false;
         await onError(channelResult.error);
-        return Failure(channelResult.error);
+        return channelResult;
       }
 
       const channel = channelResult.value;
@@ -66,14 +66,9 @@ export class ChannelsWorker {
 
       if (!result.ok) {
         await this.channelsQueue.markAsFailed(channel.id);
-
-        const { shouldContinue: canContinue } = await onError(result.error);
-        if (!canContinue) {
-          this.isRunning = false;
-          return Failure(result.error);
-        }
-
-        continue;
+        this.isRunning = false;
+        await onError(result.error);
+        return result;
       }
 
       await this.channelsQueue.markAsSuccess(channel.id);

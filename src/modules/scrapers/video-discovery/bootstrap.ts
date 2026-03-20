@@ -25,7 +25,7 @@ const spawnWorker = async ({
   container.bind(YtDlpClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelsWorker);
-  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => ({ shouldContinue: true }) });
+  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => {} });
 };
 
 export async function bootstrap() {
