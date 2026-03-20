@@ -18,16 +18,21 @@ const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;
 
 let shutdownRequested = false;
+let workerRunning = false;
 
-process.on("SIGTERM", () => {
-  console.log("SIGTERM received, finishing current scraper and exiting...");
+function requestShutdown(signal: string) {
   shutdownRequested = true;
-});
 
-process.on("SIGINT", () => {
-  console.log("SIGINT received, finishing current scraper and exiting...");
-  shutdownRequested = true;
-});
+  if (!workerRunning) {
+    console.log(`${signal} received, no worker running. Exiting.`);
+    process.exit(0);
+  }
+
+  console.log(`${signal} received, waiting for current worker to finish...`);
+}
+
+process.on("SIGTERM", () => requestShutdown("SIGTERM"));
+process.on("SIGINT", () => requestShutdown("SIGINT"));
 
 async function main() {
   const container = new Container({ autobind: true });
@@ -84,7 +89,9 @@ async function main() {
 
       try {
         const worker = container.get(scraper.workerClass);
+        workerRunning = true;
         const result = await worker.run({ shouldContinue, onError: scraper.onError });
+        workerRunning = false;
         const elapsed = Date.now() - scraperStartTime;
 
         if (!result.ok) {
@@ -99,6 +106,7 @@ async function main() {
           process.exit(1);
         }
       } catch (err) {
+        workerRunning = false;
         logger.error({
           message: `Critical error during ${scraper.name} scraper session`,
           error: err,

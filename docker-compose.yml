@@ -11,7 +11,9 @@ services:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
       ES_NODE: ${ES_NODE:-http://elasticsearch:9200}
-    stop_grace_period: 10m
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    stop_grace_period: ${STOP_GRACE_PERIOD}
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
