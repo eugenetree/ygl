@@ -7,7 +7,7 @@ import { Logger } from "../../_common/logger/logger.js";
 import { SearchChannelQueriesWorker } from "./search-channel-queries.worker.js";
 import { SearchChannelQueriesSeeder } from "./search-channel-queries.seeder.js";
 
-export const spawnWorker = async ({
+const spawnWorker = async ({
   name,
   shouldContinue,
 }: {
@@ -26,7 +26,7 @@ export const spawnWorker = async ({
   container.bind(HttpClient).toConstantValue(httpClient);
 
   const worker = container.get(SearchChannelQueriesWorker);
-  await worker.start(shouldContinue);
+  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => ({ shouldContinue: true }) });
 };
 
 export async function bootstrap() {

@@ -122,7 +122,7 @@ export class ProcessVideoEntryUseCase {
       autoCaptions,
       manualCaptions,
     });
-
+    
     if (!createVideoResult.ok) {
       this.logger.error({
         message: `Failed to create video ${video.id}.`,
@@ -132,6 +132,8 @@ export class ProcessVideoEntryUseCase {
     }
 
     if (captionStatus === "MANUAL_ONLY") {
+      // video has only some manual captions, but we need to have auto captions as well
+      // to derive the video language and understand which manual captions to pick
       const enqueueResult = await this.transcriptionJobsQueue.enqueue(videoDto.id);
       if (!enqueueResult.ok) {
         this.logger.error({

@@ -25,6 +25,13 @@ export class Logger {
     this.context = this.context + ":" + this.toKebabCase(context);
   }
 
+  public child(config: Config): Logger {
+    return new Logger({
+      context: config.context ?? this.context,
+      category: config.category ?? this.category,
+    });
+  }
+
   public info(message: string): void {
     const log = `${this.getTimestamp()} [info]\n[${this.context}]\n${message}\n`;
 

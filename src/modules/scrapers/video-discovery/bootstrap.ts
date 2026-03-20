@@ -6,7 +6,7 @@ import { Logger } from "../../_common/logger/logger.js";
 import { YtDlpClient } from "../../youtube-api/yt-dlp-client.js";
 import { ChannelsWorker } from "./channels.worker.js";
 
-export const spawnWorker = async ({
+const spawnWorker = async ({
   name,
   shouldContinue,
 }: {
@@ -25,7 +25,7 @@ export const spawnWorker = async ({
   container.bind(YtDlpClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelsWorker);
-  await worker.start(shouldContinue);
+  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => ({ shouldContinue: true }) });
 };
 
 export async function bootstrap() {

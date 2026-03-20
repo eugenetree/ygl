@@ -6,7 +6,7 @@ import { httpClient, HttpClient } from "../../_common/http/index.js";
 import { Logger } from "../../_common/logger/logger.js";
 import { ChannelEntriesWorker } from "./channel-entries.worker.js";
 
-export const spawnWorker = async ({
+const spawnWorker = async ({
   name,
   shouldContinue,
 }: {
@@ -25,7 +25,7 @@ export const spawnWorker = async ({
   container.bind(HttpClient).toConstantValue(httpClient);
 
   const worker = container.get(ChannelEntriesWorker);
-  await worker.start(shouldContinue);
+  await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => ({ shouldContinue: true }) });
 };
 
 export async function bootstrap() {

@@ -1,21 +1,36 @@
 import { injectable } from "inversify";
+import { Result, Success, Failure } from "../../../types/index.js";
+import { BaseError } from "../../_common/errors.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { WORKER_STOP_CAUSE, WorkerStopCause } from "../constants.js";
 import { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
 import { ChannelEntriesQueue } from "./channel-entries.queue.js";
+
+type WorkerOptions = {
+  shouldContinue: () => boolean;
+  onError: (error: BaseError) => Promise<{ shouldContinue: boolean }>;
+};
 
 @injectable()
 export class ChannelEntriesWorker {
   private isRunning: boolean = false;
 
   constructor(
-    private readonly logger: Logger,
+    logger: Logger,
     private readonly processChannelEntry: ProcessChannelEntryUseCase,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
-  ) { }
+  ) {
+    this.logger = logger.child({ context: "ChannelEntriesWorker", category: "worker-channel-fetcher" });
+  }
 
-  public async start(shouldContinue: () => boolean = () => true) {
+  private readonly logger: Logger;
+
+  public async run({
+    shouldContinue,
+    onError,
+  }: WorkerOptions): Promise<Result<WorkerStopCause, BaseError>> {
     if (this.isRunning) {
-      return;
+      return Success(WORKER_STOP_CAUSE.DONE);
     }
 
     this.isRunning = true;
@@ -24,7 +39,7 @@ export class ChannelEntriesWorker {
       if (!shouldContinue()) {
         this.logger.info("shouldContinue() returned false. Stopping worker.");
         this.isRunning = false;
-        return;
+        return Success(WORKER_STOP_CAUSE.DONE);
       }
 
       const entryResult = await this.channelEntriesQueue.getNextEntry();
@@ -32,15 +47,16 @@ export class ChannelEntriesWorker {
       if (!entryResult.ok) {
         this.logger.error({ error: entryResult.error });
         this.isRunning = false;
-        return;
+        await onError(entryResult.error);
+        return Failure(entryResult.error);
       }
 
       const entry = entryResult.value;
 
       if (!entry) {
-        this.logger.info("Channel entries queue is empty. Waiting...");
-        await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
-        continue;
+        this.logger.info("Channel entries queue is empty.");
+        this.isRunning = false;
+        return Success(WORKER_STOP_CAUSE.EMPTY);
       }
 
       const result = await this.processChannelEntry.execute(entry.id);
@@ -51,7 +67,15 @@ export class ChannelEntriesWorker {
           error: result.error,
           context: { entryId: entry.id },
         });
+
         await this.channelEntriesQueue.markAsFailed(entry.id);
+
+        const { shouldContinue: canContinue } = await onError(result.error);
+        if (!canContinue) {
+          this.isRunning = false;
+          return Failure(result.error);
+        }
+
         continue;
       }
 
@@ -59,5 +83,7 @@ export class ChannelEntriesWorker {
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
+
+    return Success(WORKER_STOP_CAUSE.DONE);
   }
 }

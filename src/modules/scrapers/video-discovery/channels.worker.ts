@@ -1,21 +1,36 @@
 import { injectable } from "inversify";
+import { Result, Success, Failure } from "../../../types/index.js";
+import { BaseError } from "../../_common/errors.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { WORKER_STOP_CAUSE, WorkerStopCause } from "../constants.js";
 import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
 import { ChannelsQueue } from "./channels.queue.js";
+
+type WorkerOptions = {
+  shouldContinue: () => boolean;
+  onError: (error: BaseError) => Promise<{ shouldContinue: boolean }>;
+};
 
 @injectable()
 export class ChannelsWorker {
   private isRunning: boolean = false;
 
   constructor(
-    private readonly logger: Logger,
+    logger: Logger,
     private readonly findChannelVideos: FindChannelVideosUseCase,
     private readonly channelsQueue: ChannelsQueue,
-  ) { }
+  ) {
+    this.logger = logger.child({ context: "ChannelsWorker", category: "worker-channel-videos-discovery" });
+  }
 
-  public async start(shouldContinue: () => boolean = () => true) {
+  private readonly logger: Logger;
+
+  public async run({
+    shouldContinue,
+    onError,
+  }: WorkerOptions): Promise<Result<WorkerStopCause, BaseError>> {
     if (this.isRunning) {
-      return;
+      return Success(WORKER_STOP_CAUSE.DONE);
     }
 
     this.isRunning = true;
@@ -24,7 +39,7 @@ export class ChannelsWorker {
       if (!shouldContinue()) {
         this.logger.info("shouldContinue() returned false. Stopping worker.");
         this.isRunning = false;
-        return;
+        return Success(WORKER_STOP_CAUSE.DONE);
       }
 
       const channelResult = await this.channelsQueue.getNextChannel();
@@ -35,21 +50,29 @@ export class ChannelsWorker {
           error: channelResult.error,
         });
         this.isRunning = false;
-        return;
+        await onError(channelResult.error);
+        return Failure(channelResult.error);
       }
 
       const channel = channelResult.value;
 
       if (!channel) {
-        this.logger.info("Channels queue is empty. Waiting...");
-        await new Promise((resolve) => setTimeout(resolve, 1000 * 60));
-        continue;
+        this.logger.info("Channels queue is empty.");
+        this.isRunning = false;
+        return Success(WORKER_STOP_CAUSE.EMPTY);
       }
 
       const result = await this.findChannelVideos.execute(channel.id);
 
       if (!result.ok) {
         await this.channelsQueue.markAsFailed(channel.id);
+
+        const { shouldContinue: canContinue } = await onError(result.error);
+        if (!canContinue) {
+          this.isRunning = false;
+          return Failure(result.error);
+        }
+
         continue;
       }
 
@@ -57,5 +80,7 @@ export class ChannelsWorker {
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
+
+    return Success(WORKER_STOP_CAUSE.DONE);
   }
 }
