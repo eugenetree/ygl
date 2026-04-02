@@ -2,8 +2,8 @@
 
 import { dbClient } from "../../src/db/client.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionSimilarityService } from "../../src/modules/scrapers/video/use-cases/process-video-entry/captions-similarity.service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/use-cases/process-video-entry/caption-clean-up.service.js";
+import { CaptionSimilarityService } from "../../src/modules/scraping/video/use-cases/process-video-entry/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scraping/video/use-cases/process-video-entry/caption-clean-up.service.js";
 
 const main = async () => {
   const videoId = process.argv[2];

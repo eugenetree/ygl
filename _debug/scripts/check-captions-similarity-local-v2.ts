@@ -2,9 +2,9 @@
 
 import { readFileSync } from "fs";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
-import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
-import { CaptionsSimilarityV2Service } from "../../src/modules/scrapers/video/captions/captions-similarity-v2.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scraping/video/captions/caption-clean-up.service.js";
+import { ManualCaptionsValidator } from "../../src/modules/scraping/video/captions/manual-captions.validator.js";
+import { CaptionsSimilarityV2Service } from "../../src/modules/scraping/video/captions/captions-similarity-v2.service.js";
 
 const main = async () => {
   const videoId = process.argv[2] || "AzNWmFaOqJI";

@@ -26,8 +26,9 @@
     "find-captions": "npm run clean && npx tsc && node dist/src/modules/captions-search/find-captions-bootstrap.js",
     "run:all": "npm run clean && npx tsc && node dist/src/modules/scrapers/bootstrap.js",
     "run:scrapers": "npm run clean && npx tsc && node dist/src/modules/scrapers/main.js",
-    "run:main": "npm run clean && npx tsc && node dist/src/main.js",
+    "main": "npm run clean && npx tsc && node dist/src/main.js",
     "go:all": "npm run db:migration:run && npm run clean && npx tsc && node dist/src/modules/scrapers/bootstrap.js",
+    "bot": "npm run clean && npx tsc && node dist/src/start-bot.js",
     "export:captions": "npx tsc captions.ts",
     "debug:fetch-captions": "npx tsx _debug/fetch-video-captions.ts",
     "run:reprocess-captions": "npm run clean && npx tsc && node dist/src/modules/scrapers/video/use-cases/reprocess-captions/bootstrap.js"

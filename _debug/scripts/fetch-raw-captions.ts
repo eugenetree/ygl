@@ -2,9 +2,9 @@
 
 import { writeFileSync, mkdirSync } from "fs";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
-import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/captions/auto-captions.validator.js";
+import { AutoCaptionsValidator } from "../../src/modules/scraping/video/captions/auto-captions.validator.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scraping/video/captions/caption-clean-up.service.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
 
 const main = async () => {

@@ -1,26 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc:*)",
-      "Bash(xargs grep:*)",
-      "Bash(xargs ls:*)",
-      "Bash(curl -s \"http://localhost:9200/captions/_search?pretty\" -H \"Content-Type: application/json\" -d '{\"\"query\"\":{\"\"match\"\":{\"\"document.videoId\"\":\"\"YRLrB6i3hLY\"\"}},\"\"size\"\":50,\"\"sort\"\":[{\"\"document.startTime\"\":{\"\"order\"\":\"\"asc\"\"}}],\"\"_source\"\":[\"\"document.startTime\"\",\"\"document.endTime\"\",\"\"document.text\"\",\"\"document.type\"\"]}')",
-      "Bash(npm run:*)",
-      "Bash(ls /c/projects/ygl/_debug/scripts/*.ts)",
-      "Bash(node dist/_debug/scripts/check-captions-similarity-db.js -GZgwm_MZQ0)",
-      "Bash(npx tsx:*)",
-      "Bash(docker exec:*)",
-      "Bash(docker volume:*)",
-      "Bash(grep -E \"^[^/]*src[^/]*\\\\.\\(ts\\)$|src/index\")",
-      "Bash(find /c/projects/ygl -name .github -o -name .gitlab-ci.yml -o -name *.test.ts -o -name *.spec.ts -o -name .env* -type f)",
-      "WebSearch",
-      "Bash(find src/modules/scrapers -type f -name *.ts)",
-      "Read(//c/projects/ygl/**)",
-      "Bash(ls c:/projects/ygl/src/modules/scrapers/*/)",
-      "Bash(npm test:*)",
-      "Bash(node -e \":*)",
-      "Bash(gh repo:*)",
-      "Bash(grep -E \"\\\\.ts$|\\\\.js$|tsconfig|package\")"
-    ]
+      "Bash(npx tsc --noEmit)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(cmd /c \"npm run build\")",
+      "Bash(grep -E \"\\(^|/\\)main\\\\.ts$|^[^/]*/\\(index|bootstrap\\)\\\\.ts$\")",
+      "Bash(grep -r \"Repository\" /Users/eugene/projects/yg/src/modules/scraping/scrapers/channel-discovery/*.worker.ts)",
+      "Bash(find /Users/eugene/projects/yg/src -type f \\\\\\(-name *use-case.ts -o -name *telegram-bot* -o -name *migration* \\\\\\))",
+      "Bash(git mv:*)",
+      "Bash(git add:*)",
+      "Bash(ls -la /Users/eugene/projects/yg/src/*.ts)",
+      "Bash(python3:*)"
+    ],
+    "deny": [],
+    "ask": []
   }
 }

@@ -3,10 +3,10 @@
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
-import { CaptionsSimilarityService } from "../../src/modules/scrapers/video/captions/captions-similarity.service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/captions/caption-clean-up.service.js";
-import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/captions/auto-captions.validator.js";
-import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/captions/manual-captions.validator.js";
+import { CaptionsSimilarityService } from "../../src/modules/scraping/video/captions/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scraping/video/captions/caption-clean-up.service.js";
+import { AutoCaptionsValidator } from "../../src/modules/scraping/video/captions/auto-captions.validator.js";
+import { ManualCaptionsValidator } from "../../src/modules/scraping/video/captions/manual-captions.validator.js";
 import { writeFileSync, mkdirSync } from "fs";
 
 const main = async () => {

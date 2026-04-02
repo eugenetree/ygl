@@ -1,6 +1,7 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 import { LanguageCode } from "../modules/i18n/index.js";
+import type { ScraperName } from "../modules/scraping/constants.js";
 
 export type ProcessingStatus =
   | "PENDING"
@@ -46,6 +47,12 @@ export interface Database {
   videoJobs: VideoJobsRow;
   transcriptionJobs: TranscriptionJobsRow;
   channelVideosHealth: ChannelVideoHealthRow;
+  scraperConfig: ScraperConfigRow;
+}
+
+export interface ScraperConfigRow {
+  scraperName: ScraperName;
+  enabled: boolean;
 }
 
 export interface ChannelDiscoveryJobsRow {

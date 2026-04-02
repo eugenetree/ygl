@@ -3,10 +3,10 @@
 import { Logger } from "../../src/modules/_common/logger/logger.js";
 import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
 import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
-import { AutoCaptionsValidator } from "../../src/modules/scrapers/video/use-cases/process-video-entry/auto-captions.validator.js";
-import { ManualCaptionsValidator } from "../../src/modules/scrapers/video/use-cases/process-video-entry/manual-captions.validator.js";
-import { CaptionSimilarityService } from "../../src/modules/scrapers/video/use-cases/process-video-entry/captions-similarity.service.js";
-import { CaptionCleanUpService } from "../../src/modules/scrapers/video/use-cases/process-video-entry/caption-clean-up.service.js";
+import { AutoCaptionsValidator } from "../../src/modules/scraping/video/use-cases/process-video-entry/auto-captions.validator.js";
+import { ManualCaptionsValidator } from "../../src/modules/scraping/video/use-cases/process-video-entry/manual-captions.validator.js";
+import { CaptionSimilarityService } from "../../src/modules/scraping/video/use-cases/process-video-entry/captions-similarity.service.js";
+import { CaptionCleanUpService } from "../../src/modules/scraping/video/use-cases/process-video-entry/caption-clean-up.service.js";
 import { writeFileSync } from "fs";
 
 const main = async () => {
