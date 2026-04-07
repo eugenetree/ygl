@@ -21,11 +21,12 @@
 
 **Goal:** Migration, `ScraperProcess` (bot-side handle), and `ScraperControlRepository` (scraper-side writer) give both processes a typed IPC contract — no bot or scraper logic changes yet.
 **Depends on:** none
+**Plans:** 2 plans
 
 ### Plans
 
-- **Plan 1.1: Migration** — write the Kysely migration that creates the `scraper_control` table with a seeded single row (`desired_state`, `actual_state`, `heartbeat_at`, `updated_at`)
-- **Plan 1.2: ScraperProcess + ScraperControlRepository** — implement `ScraperProcess` (bot-side, DB queries inside: `requestStart`, `requestStop`, `requestKill`, `getStatus`) and `ScraperControlRepository` (scraper-side: `setActualState`, `updateHeartbeat`); register both in DI
+- [ ] 01-01-PLAN.md — Migration: Kysely migration creating `scraper_control` (single seeded row) + register `ScraperControlRow`/state union types in `src/db/types.ts`
+- [ ] 01-02-PLAN.md — `ScraperControlRepository` (scraper-side: `setActualState`, `updateHeartbeat`) + `ScraperProcess` (bot-side: `requestStart`, `requestStop`, `requestKill`, `getStatus`); both `@injectable()` via autobind
 
 ### Requirements covered
 
@@ -118,7 +119,7 @@ DOCK-01, DOCK-02, DOCK-03, DOCK-04, DOCK-05, DOCK-06
 
 | Phase | Plans Complete | Status |
 |-------|----------------|--------|
-| 1. DB Schema + Infrastructure | 0/2 | Not started |
+| 1. DB Schema + Infrastructure | 0/2 | Planned |
 | 2. Scraper Process | 0/2 | Not started |
 | 3. Bot Process | 0/2 | Not started |
 | 4. Docker Split | 0/2 | Not started |
@@ -126,4 +127,4 @@ DOCK-01, DOCK-02, DOCK-03, DOCK-04, DOCK-05, DOCK-06
 ---
 
 *Roadmap created: 2026-04-07*
-*Last updated: 2026-04-08 — ScraperProcess class, auto-start on boot, persistent watcher, idle-on-empty queue*
+*Last updated: 2026-04-08 — Phase 1 plans drafted (01-01 migration + types, 01-02 ScraperProcess + ScraperControlRepository)*
