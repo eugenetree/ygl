@@ -25,8 +25,8 @@
 
 ### Plans
 
-- [ ] 01-01-PLAN.md — Migration: Kysely migration creating `scraper_control` (single seeded row) + register `ScraperControlRow`/state union types in `src/db/types.ts`
-- [ ] 01-02-PLAN.md — `ScraperControlRepository` (scraper-side: `setActualState`, `updateHeartbeat`) + `ScraperProcess` (bot-side: `requestStart`, `requestStop`, `requestKill`, `getStatus`); both `@injectable()` via autobind
+- [x] 01-01-PLAN.md — Migration: Kysely migration creating `scraper_control` (single seeded row) + register `ScraperControlRow`/state union types in `src/db/types.ts`
+- [x] 01-02-PLAN.md — `ScraperControlRepository` (scraper-side: `setActualState`, `updateHeartbeat`) + `ScraperProcess` (bot-side: `requestStart`, `requestStop`, `requestKill`, `getStatus`); both `@injectable()` via autobind
 
 ### Requirements covered
 
