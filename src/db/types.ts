@@ -32,6 +32,16 @@ export type ChannelVideosScrapeProcessingStatus =
 
 export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
 
+export type DesiredScraperState = "STOPPED" | "KILLED" | "RUNNING";
+
+export type ActualScraperState =
+  | "IDLE"
+  | "STARTING"
+  | "RUNNING"
+  | "STOPPING"
+  | "STOPPED"
+  | "ERROR";
+
 export interface Database {
   searchChannelQueries: SearchChannelQueriesRow;
   channels: ChannelsRow;
@@ -48,11 +58,20 @@ export interface Database {
   transcriptionJobs: TranscriptionJobsRow;
   channelVideosHealth: ChannelVideoHealthRow;
   scraperConfig: ScraperConfigRow;
+  scraperControl: ScraperControlRow;
 }
 
 export interface ScraperConfigRow {
   scraperName: ScraperName;
   enabled: boolean;
+}
+
+export interface ScraperControlRow {
+  id: Generated<string>;
+  desiredState: DesiredScraperState;
+  actualState: ActualScraperState;
+  heartbeatAt: Date | null;
+  updatedAt: Generated<Date>;
 }
 
 export interface ChannelDiscoveryJobsRow {
@@ -263,6 +282,8 @@ export type UpdateableChannelEntryRow = Updateable<ChannelEntriesRow>;
 export type ElasticCaptionsSyncSelectable = Selectable<ElasticCaptionsSyncRow>;
 export type InsertableElasticCaptionsSyncRow = Insertable<ElasticCaptionsSyncRow>;
 export type UpdateableElasticCaptionsSyncRow = Updateable<ElasticCaptionsSyncRow>;
+
+export type ScraperControlSelectable = Selectable<ScraperControlRow>;
 
 export type VideoEntryRow = Selectable<VideoEntriesRow>;
 export type InsertableVideoEntryRow = Insertable<VideoEntriesRow>;
