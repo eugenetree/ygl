@@ -2,9 +2,10 @@ import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
 import { Logger } from "../_common/logger/logger.js";
-import { ConfigController } from "../scraping/telegram/config.controller.js";
-import { LifecycleController } from "../scraping/telegram/lifecycle.controller.js";
-import { StatsController } from "../scraping/telegram/stats.controller.js";
+import { ConfigController } from "./config.controller.js";
+import { FindController } from "./find.controller.js";
+import { LifecycleController } from "./lifecycle.controller.js";
+import { StatsController } from "./stats.controller.js";
 
 @injectable()
 export class TelegramBot {
@@ -15,6 +16,7 @@ export class TelegramBot {
     private readonly statsController: StatsController,
     private readonly lifecycleController: LifecycleController,
     private readonly configController: ConfigController,
+    private readonly findController: FindController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -50,6 +52,7 @@ export class TelegramBot {
     this.lifecycleController.register(this.bot);
     this.statsController.register(this.bot);
     this.configController.register(this.bot);
+    this.findController.register(this.bot);
   }
 
   public async start(): Promise<void> {

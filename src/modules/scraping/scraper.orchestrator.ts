@@ -10,7 +10,7 @@ import { ChannelsWorker } from "./scrapers/video-discovery/channels.worker.js";
 import { VideoEntriesWorker } from "./scrapers/video/video-entries.worker.js";
 import { ScraperName, WorkerStopCause } from "./constants.js";
 import { ScraperConfigRepository } from "./config/scraper-config.repository.js";
-import { OnScraperStopUseCase } from "./on-scraper-stop.use-case.js";
+import { HandleScraperStopUseCase } from "./lifecycle/handle-scraper-stop.use-case.js";
 
 const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;
@@ -60,7 +60,7 @@ export class ScraperOrchestrator {
     private readonly videoEntriesWorker: VideoEntriesWorker,
     private readonly processScraperFailure: ProcessScraperFailureUseCase,
     private readonly scraperConfigRepository: ScraperConfigRepository,
-    private readonly onScraperStopUseCase: OnScraperStopUseCase,
+    private readonly handleScraperStopUseCase: HandleScraperStopUseCase,
   ) {
     this.scrapersConfig = {
       [ScraperName.CHANNEL_DISCOVERY]: {
@@ -88,6 +88,7 @@ export class ScraperOrchestrator {
         order: 4,
       },
     };
+
     this.logger = logger.child({ context: "ScraperService", category: "scraper" });
   }
 
@@ -140,7 +141,7 @@ export class ScraperOrchestrator {
 
     this.logger.info(`Scraper loop stopped. Reason: ${JSON.stringify(stopReason)}`);
 
-    await this.onScraperStopUseCase.execute(stopReason);
+    await this.handleScraperStopUseCase.execute(stopReason);
   }
 
   private async executeLoop(scrapers: ScraperSessionConfig[]): Promise<StopReason> {

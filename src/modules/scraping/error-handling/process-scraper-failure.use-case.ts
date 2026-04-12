@@ -39,6 +39,6 @@ export class ProcessScraperFailureUseCase {
 
   private formatMessage(scraperName: string, error: BaseError): string {
     const details = JSON.stringify(error, null, 2);
-    return `🚨 Scraper failure: ${scraperName}\n\nError type: ${error.type}\nDetails:\n${details}`;
+    return `Scraper failure: ${scraperName}\n\nError type: ${error.type}\nDetails:\n${details}`;
   }
 }

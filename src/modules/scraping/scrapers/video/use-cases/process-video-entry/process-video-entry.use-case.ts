@@ -122,7 +122,7 @@ export class ProcessVideoEntryUseCase {
       autoCaptions,
       manualCaptions,
     });
-    
+
     if (!createVideoResult.ok) {
       this.logger.error({
         message: `Failed to create video ${video.id}.`,

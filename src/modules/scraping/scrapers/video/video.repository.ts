@@ -14,6 +14,9 @@ export type VideoWithCaptions = {
   manualCaptions: Caption[];
 };
 
+// 7 bound params per caption row (id, startTime, endTime, duration, text, type, videoId)
+const CAPTIONS_CHUNK_SIZE = Math.floor(65535 / 7);
+
 @injectable()
 export class VideoRepository {
   constructor(private readonly logger: Logger) { }
@@ -34,30 +37,19 @@ export class VideoRepository {
           .values(video)
           .execute();
 
-        if (autoCaptions.length > 0) {
-          await trx
-            .insertInto("captions")
-            .values(
-              autoCaptions.map((caption) => ({
-                ...caption,
-                id: crypto.randomUUID(),
-                videoId: video.id,
-              })),
-            )
-            .execute();
-        }
-
-        if (manualCaptions.length > 0) {
-          await trx
-            .insertInto("captions")
-            .values(
-              manualCaptions.map((caption) => ({
-                ...caption,
-                id: crypto.randomUUID(),
-                videoId: video.id,
-              })),
-            )
-            .execute();
+        for (const caption of [autoCaptions, manualCaptions]) {
+          for (let i = 0; i < caption.length; i += CAPTIONS_CHUNK_SIZE) {
+            await trx
+              .insertInto("captions")
+              .values(
+                caption.slice(i, i + CAPTIONS_CHUNK_SIZE).map((c) => ({
+                  ...c,
+                  id: crypto.randomUUID(),
+                  videoId: video.id,
+                })),
+              )
+              .execute();
+          }
         }
       }),
     );

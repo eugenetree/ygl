@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { ScraperConfigRepository } from "../../config/scraper-config.repository.js";
-import { ScraperName } from "../../constants.js";
-import { Failure, Success } from "../../../../types/index.js";
+import { ScraperConfigRepository } from "../config/scraper-config.repository.js";
+import { ScraperName } from "../constants.js";
+import { Failure, Success } from "../../../types/index.js";
 
 @injectable()
 export class ToggleScraperUseCase {
@@ -17,9 +17,9 @@ export class ToggleScraperUseCase {
 
     if (!configResult.value) {
       return Failure({
-        type: "NOT_FOUND" as const,
+        type: "NOT_FOUND",
         message: "Scraper not found",
-      });
+      } as const);
     }
 
     const currentConfig = configResult.value;

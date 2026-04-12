@@ -11,7 +11,10 @@
       "Bash(git mv:*)",
       "Bash(git add:*)",
       "Bash(ls -la /Users/eugene/projects/yg/src/*.ts)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "WebSearch",
+      "WebFetch(domain:martinfowler.com)",
+      "WebFetch(domain:dev.to)"
     ],
     "deny": [],
     "ask": []

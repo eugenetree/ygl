@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
-import { dbClient } from "../../db/client.js";
-import { ProcessingStatus } from "../../db/types.js";
-import { Failure, Result, Success } from "../../types/index.js";
-import { tryCatch } from "../_common/try-catch.js";
-import { Logger } from "../_common/logger/logger.js";
+import { dbClient } from "../../../db/client.js";
+import { ProcessingStatus } from "../../../db/types.js";
+import { Failure, Result, Success } from "../../../types/index.js";
+import { tryCatch } from "../../_common/try-catch.js";
+import { Logger } from "../../_common/logger/logger.js";
 
 type StatusCounts = Record<ProcessingStatus, number>;
 

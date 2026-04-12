@@ -34,3 +34,10 @@ Similarity Score: 77.45%
 Extra Manual Tokens Count: 151
 
 take random videos from youglish and check similarity score, try to understand what is the best threshold
+
+// fix brain
+
+For scraper-status.service.ts it's relatively fine to have db operations right in the service because it's
+pretty simple set of operations and we don't expect it to grow. Even though it's mostly about data access, it's still easier to keep it as service as we have some non persistance related logic (getStatus) that would definitely be non-obvious if class was named as scraper-status.repository.ts. Having it as a .service gives a hint that it may contain some logic that is not only about data access. Create both scraper-status.repository alongside with scraper-status.service would be an overkill in this case, but btw it'd give us better testability (still a question whether a testing is needed)
+
+On the other hand we have classes like channel-entry.repository.ts which is used directly in use-cases. Potentially we could create another channel-entry.service instead and keep all db operations in it and use it in use-cases.

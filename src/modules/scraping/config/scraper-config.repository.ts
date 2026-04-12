@@ -11,7 +11,10 @@ import { ScraperName } from "../constants.js";
 export class ScraperConfigRepository {
   public async findEnabled(): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig").selectAll().where("enabled", "=", true).execute()
+      dbClient.selectFrom("scraperConfig")
+        .selectAll()
+        .where("enabled", "=", true)
+        .execute()
     );
 
     if (!result.ok) {
@@ -23,7 +26,10 @@ export class ScraperConfigRepository {
 
   public async findByName(scraperName: ScraperName): Promise<Result<ScraperConfig | null, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig").selectAll().where("scraperName", "=", scraperName).executeTakeFirst()
+      dbClient.selectFrom("scraperConfig")
+        .selectAll()
+        .where("scraperName", "=", scraperName)
+        .executeTakeFirst()
     );
 
     if (!result.ok) {
@@ -35,7 +41,9 @@ export class ScraperConfigRepository {
 
   public async findAll(): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig").selectAll().execute()
+      dbClient.selectFrom("scraperConfig")
+        .selectAll()
+        .execute()
     );
 
     if (!result.ok) {

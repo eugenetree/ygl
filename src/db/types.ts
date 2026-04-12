@@ -48,11 +48,27 @@ export interface Database {
   transcriptionJobs: TranscriptionJobsRow;
   channelVideosHealth: ChannelVideoHealthRow;
   scraperConfig: ScraperConfigRow;
+  scrapingProcess: ScrapingProcessRow;
 }
 
 export interface ScraperConfigRow {
   scraperName: ScraperName;
   enabled: boolean;
+}
+
+export type ScrapingProcessStatus =
+  | "IDLE"
+  | "RUNNING"
+  | "STOPPED"
+  | "KILLED"
+  | "ERROR";
+
+export interface ScrapingProcessRow {
+  id: 1;
+  actualStatus: ScrapingProcessStatus;
+  requestedStatus: ScrapingProcessStatus;
+  updatedAt: Date | null;
+  lastHeartbeatAt: Date | null;
 }
 
 export interface ChannelDiscoveryJobsRow {
