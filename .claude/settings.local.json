@@ -14,7 +14,11 @@
       "Bash(python3:*)",
       "WebSearch",
       "WebFetch(domain:martinfowler.com)",
-      "WebFetch(domain:dev.to)"
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:youglish.com)",
+      "WebFetch(domain:fr.youglish.com)",
+      "Bash(node -e ':*)",
+      "Bash(python _yt-dlp/yt_dlp/__main__.py --dump-json --no-download --skip-download --no-warnings \"https://youtube.com/watch?v=7dUYfDg3G2A\")"
     ],
     "deny": [],
     "ask": []

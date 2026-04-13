@@ -6,13 +6,13 @@ import { ScraperStatusService, Status } from "../lifecycle/scraper-status.servic
 export class GetStatsUseCase {
   constructor(
     private readonly statsRepository: StatsRepository,
-    private readonly scraperStatusGateway: ScraperStatusService,
+    private readonly scraperStatusService: ScraperStatusService,
   ) { }
 
   async execute() {
     const [statsResult, scrapingStatusResult] = await Promise.all([
       this.statsRepository.getStats(),
-      this.scraperStatusGateway.getStatus(),
+      this.scraperStatusService.getActualStatus(),
     ]);
 
     const result: {

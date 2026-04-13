@@ -3,6 +3,8 @@ import { Failure, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
 import { ElasticSyncService } from "./elastic-captions-sync.service.js";
+import { CaptionsRow } from "../../db/types.js";
+import { Selectable } from "kysely";
 
 @injectable()
 export class SyncDataToElasticUseCase {
@@ -16,68 +18,68 @@ export class SyncDataToElasticUseCase {
 
   async execute() {
     this.logger.info("Starting sync data to elastic");
-    const lastSyncResult = await this.elasticCaptionsSyncRepository.getLastSuccessfulSync();
-    if (!lastSyncResult.ok) {
-      return Failure({
-        type: "ERROR_GETTING_LAST_SYNC",
-        error: lastSyncResult.error,
-      })
+
+    const syncIdResult = await this.elasticCaptionsSyncRepository.create({
+      syncStatus: "IN_PROGRESS",
+      syncStartedAt: new Date(),
+    });
+
+    if (!syncIdResult.ok) {
+      this.logger.error({ message: "Failed to insert sync record", error: syncIdResult.error });
+      return Failure({ type: "DATABASE", error: syncIdResult.error });
     }
 
-    const lastSync = lastSyncResult.value;
-    if (!lastSync) {
-      console.log("No last successful sync found, starting full sync");
-      this.logger.info("No last successful sync found, starting full sync");
-      await this.performFullSync();
-      return;
+    const syncId = syncIdResult.value;
+
+    try {
+      const lastSyncResult = await this.elasticCaptionsSyncRepository.getLastSuccessfulSync();
+      if (!lastSyncResult.ok) {
+        await this.elasticCaptionsSyncRepository.update(syncId, {
+          syncStatus: "FAIL",
+          syncCompletedAt: new Date(),
+          failReason: "ERROR_GETTING_LAST_SYNC",
+        });
+        return Failure({ type: "DATABASE", error: lastSyncResult.error });
+      }
+
+      const lastSync = lastSyncResult.value;
+
+      let captions: Selectable<CaptionsRow>[];
+      if (!lastSync || !lastSync.latestSyncedCaptionId) {
+        this.logger.info("No last successful sync found, starting full sync");
+        const dataResult = await this.elasticCaptionsSyncRepository.getDataToSync();
+        if (!dataResult.ok) {
+          await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "FAIL", syncCompletedAt: new Date(), failReason: "ERROR_GETTING_DATA_TO_SYNC" });
+          return Failure({ type: "ERROR_GETTING_DATA_TO_SYNC", error: dataResult.error });
+        }
+        captions = dataResult.value;
+      } else {
+        const dataResult = await this.elasticCaptionsSyncRepository.getDataToSync(lastSync.latestSyncedCaptionId);
+        if (!dataResult.ok) {
+          await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "FAIL", syncCompletedAt: new Date(), failReason: "ERROR_GETTING_DATA_TO_SYNC" });
+          return Failure({ type: "ERROR_GETTING_DATA_TO_SYNC", error: dataResult.error });
+        }
+        captions = dataResult.value;
+      }
+
+      if (captions.length === 0) {
+        this.logger.info("No new captions to sync");
+        await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "SUCCESS", syncCompletedAt: new Date(), latestSyncedCaptionId: lastSync?.latestSyncedCaptionId ?? null });
+        return Success({ synced: 0 });
+      }
+
+      this.logger.info(`Syncing ${captions.length} captions to Elasticsearch`);
+      await this.elasticSyncService.syncDataToElastic(captions);
+
+      const latestCaptionId = captions[captions.length - 1].id;
+      await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "SUCCESS", syncCompletedAt: new Date(), latestSyncedCaptionId: latestCaptionId });
+
+      this.logger.info(`Sync complete, latest caption ID: ${latestCaptionId}`);
+      return Success({ synced: captions.length });
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "FAIL", syncCompletedAt: new Date(), failReason: reason });
+      throw err;
     }
-
-    const lastSyncedCaptionId = lastSync.latestSyncedCaptionId;
-    if (!lastSyncedCaptionId) {
-      this.logger.error({
-        message: "No last synced caption ID in last successful sync, unexpected state.",
-        context: { lastSync },
-      });
-
-      throw new Error("Should not happen");
-    }
-
-    await this.performIncrementalSync(lastSyncedCaptionId);
-  }
-
-  private async performIncrementalSync(lastSyncedCaptionId: string) {
-    const dataToSyncResult = await this.elasticCaptionsSyncRepository.getDataToSync(lastSyncedCaptionId);
-    if (!dataToSyncResult.ok) {
-      return Failure({
-        type: "ERROR_GETTING_DATA_TO_SYNC",
-        error: dataToSyncResult.error,
-      });
-    }
-
-    const dataToSync = dataToSyncResult.value;
-
-    return Success(dataToSync);
-  }
-
-  private async performFullSync() {
-    this.logger.info("Starting full sync");
-
-    const dataToSyncResult = await this.elasticCaptionsSyncRepository.getDataToSync();
-
-    if (!dataToSyncResult.ok) {
-      console.log("Error getting data to sync", dataToSyncResult.error);
-
-      return Failure({
-        type: "ERROR_GETTING_DATA_TO_SYNC",
-        error: dataToSyncResult.error,
-      });
-    }
-
-
-    console.log("Got data to sync", dataToSyncResult.value.length);
-    const dataToSync = dataToSyncResult.value;
-    await this.elasticSyncService.syncDataToElastic(dataToSync);
-
-    return Success(dataToSync);
   }
 }

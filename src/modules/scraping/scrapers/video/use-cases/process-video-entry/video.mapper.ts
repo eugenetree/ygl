@@ -47,6 +47,9 @@ export class VideoMapper {
         "availability",
         "playableInEmbed",
         "channelIsVerified",
+        "liveStatus",
+        "ageLimit",
+        "mediaType",
       ]),
     };
   }

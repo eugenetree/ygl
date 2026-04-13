@@ -6,7 +6,7 @@ import { Logger } from "../logger/logger.js";
 import { FetchError } from "./errors.js";
 
 type ConfigInput = {
-  requestCooldown?: number;
+  requestCooldown?: number | (() => number);
   proxy?: {
     host: string;
     port: number;
@@ -15,7 +15,7 @@ type ConfigInput = {
 };
 
 type Config = {
-  requestCooldown: number;
+  requestCooldown: number | (() => number);
   proxy?: {
     host: string;
     port: number;
@@ -68,12 +68,15 @@ export class HttpClient {
 
     const requestPromise = globalState.queue.then(async () => {
       const now = Date.now();
+      const cooldown = typeof this.config.requestCooldown === 'function'
+        ? this.config.requestCooldown()
+        : this.config.requestCooldown;
 
       const timeSinceLastRequest = now - globalState.lastRequestEndTime;
       const remainingCooldown =
-        timeSinceLastRequest > this.config.requestCooldown
+        timeSinceLastRequest > cooldown
           ? 0
-          : this.config.requestCooldown - timeSinceLastRequest;
+          : cooldown - timeSinceLastRequest;
 
       this.logger.info(
         `lastRequestEndTime: ${globalState.lastRequestEndTime}, remainingCooldown: ${remainingCooldown}`,
@@ -177,6 +180,6 @@ export const httpClient = new HttpClient(
     context: "http-client",
   }),
   {
-    requestCooldown: 5000
+    requestCooldown: () => 5000 + Math.random() * 5000,
   },
 );

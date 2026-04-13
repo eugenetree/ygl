@@ -47,6 +47,9 @@ const baseVideoDto = {
   availability: null,
   playableInEmbed: null,
   channelIsVerified: null,
+  liveStatus: null,
+  ageLimit: null,
+  mediaType: null,
 };
 
 const autoCaptionSegment = { startTime: 0, endTime: 1, duration: 1, text: "hello" };
@@ -103,6 +106,9 @@ const mappedVideoProps = {
   availability: null,
   playableInEmbed: null,
   channelIsVerified: null,
+  liveStatus: null,
+  ageLimit: null,
+  mediaType: null,
 };
 
 const analysisResult = {

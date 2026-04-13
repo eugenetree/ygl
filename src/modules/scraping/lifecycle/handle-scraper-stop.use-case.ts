@@ -8,18 +8,18 @@ import { ScraperStatusService } from "./scraper-status.service.js";
 export class HandleScraperStopUseCase {
   constructor(
     private readonly logger: Logger,
-    private readonly scraperStatusGateway: ScraperStatusService,
+    private readonly scraperStatusService: ScraperStatusService,
   ) {
     this.logger.setContext(HandleScraperStopUseCase.name);
   }
 
   public async execute(stopReason: StopReason): Promise<void> {
     if (stopReason.type === "GRACEFUL" || stopReason.type === "QUEUE_EXHAUSTED") {
-      await this.scraperStatusGateway.updateStatus({ actual: "STOPPED" });
+      await this.scraperStatusService.updateStatus({ actual: "STOPPED", requested: "STOPPED" });
     }
 
     if (stopReason.type === "ERROR") {
-      await this.scraperStatusGateway.updateStatus({ actual: "ERROR" });
+      await this.scraperStatusService.updateStatus({ actual: "ERROR" });
     }
   }
 }

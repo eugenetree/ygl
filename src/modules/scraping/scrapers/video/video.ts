@@ -46,6 +46,9 @@ export type Video = {
   availability: string | null;
   playableInEmbed: boolean | null;
   channelIsVerified: boolean | null;
+  liveStatus: string | null;
+  ageLimit: number | null;
+  mediaType: string | null;
   createdAt: Date;
   updatedAt: Date;
 };

@@ -177,6 +177,9 @@ export interface VideosRow {
   availability: string | null;
   playableInEmbed: boolean | null;
   channelIsVerified: boolean | null;
+  liveStatus: string | null;
+  ageLimit: number | null;
+  mediaType: string | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

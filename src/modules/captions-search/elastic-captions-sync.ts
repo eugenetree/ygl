@@ -11,4 +11,7 @@ export type ElasticCaptionsSync = {
   updatedAt: Date;
 };
 
-export type ElasticCaptionsSyncProps = Omit<ElasticCaptionsSync, "createdAt" | "updatedAt">;
+export type ElasticCaptionsSyncProps = Omit<
+  ElasticCaptionsSync,
+  "id" | "createdAt" | "updatedAt" | "syncCompletedAt" | "latestSyncedCaptionId" | "failReason"
+>;

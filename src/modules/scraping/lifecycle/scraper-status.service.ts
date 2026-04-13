@@ -50,7 +50,7 @@ export class ScraperStatusService {
     return Success(updateResult.value);
   }
 
-  async getStatus() {
+  async getActualStatus() {
     const result = await tryCatch(
       dbClient.selectFrom("scrapingProcess")
         .select(["actualStatus", "lastHeartbeatAt"])

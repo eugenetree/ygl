@@ -7,11 +7,11 @@ import { Failure } from "../../../types/index.js";
 @injectable()
 export class RequestScraperStartUseCase {
   constructor(
-    private readonly scraperStatusGateway: ScraperStatusService,
+    private readonly scraperStatusService: ScraperStatusService,
   ) { }
 
   async execute() {
-    const currentStatusResult = await this.scraperStatusGateway.getStatus();
+    const currentStatusResult = await this.scraperStatusService.getActualStatus();
     if (!currentStatusResult.ok) {
       return currentStatusResult;
     }
@@ -29,7 +29,7 @@ export class RequestScraperStartUseCase {
       } as const);
     }
 
-    return this.scraperStatusGateway.updateStatus({
+    return this.scraperStatusService.updateStatus({
       requested: "RUNNING"
     });
   }

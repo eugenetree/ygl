@@ -82,6 +82,9 @@ export class YoutubeApiGetVideo {
       availability: ytData.availability ?? null,
       playableInEmbed: ytData.playable_in_embed ?? null,
       channelIsVerified: ytData.channel_is_verified ?? null,
+      liveStatus: ytData.live_status ?? null,
+      ageLimit: ytData.age_limit ?? null,
+      mediaType: ytData.media_type ?? null,
     };
 
     if (!ytData.language) {
@@ -111,7 +114,7 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
+    await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
 
     const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl, type: "auto" });
     if (!autoCaptionsResult.ok) {
@@ -179,12 +182,21 @@ export class YoutubeApiGetVideo {
     // 3. Try base language fallback if language contains dash (e.g. "en" if looking for "en-us")
     if (language.includes("-")) {
       const baseLang = language.split("-")[0];
-      const baseLangMatch = Object.entries(captions).find(([langCode]) => langCode.split("-")[0] === baseLang);
-      if (baseLangMatch) {
-        const url = baseLangMatch[1].find(track => track.ext === "json3")?.url;
-        if (url) {
-          this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${baseLangMatch[0]}`);
-          return url;
+      // Try exact base language first (e.g. "en" before "en-GB")
+      const exactBase = captions[baseLang]?.find(track => track.ext === "json3")?.url;
+      if (exactBase) {
+        this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${baseLang}`);
+        return exactBase;
+      }
+      // Then iterate all entries with the same base language — don't stop at first match
+      // since that entry may not have json3 tracks
+      for (const [langCode, tracks] of Object.entries(captions)) {
+        if (langCode !== baseLang && langCode.split("-")[0] === baseLang) {
+          const url = tracks.find(track => track.ext === "json3")?.url;
+          if (url) {
+            this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${langCode}`);
+            return url;
+          }
         }
       }
     }

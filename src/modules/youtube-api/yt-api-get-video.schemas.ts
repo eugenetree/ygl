@@ -44,5 +44,8 @@ export const inputSchemas = {
     availability: z.string().optional().nullable(),
     playable_in_embed: z.boolean().optional().nullable(),
     channel_is_verified: z.boolean().optional().nullable(),
+    live_status: z.string().optional().nullable(),
+    age_limit: z.number().int().optional().nullable(),
+    media_type: z.string().optional().nullable(),
   }),
 };

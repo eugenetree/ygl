@@ -42,6 +42,9 @@ type VideoBase = {
   availability: string | null;
   playableInEmbed: boolean | null;
   channelIsVerified: boolean | null;
+  liveStatus: string | null;
+  ageLimit: number | null;
+  mediaType: string | null;
 };
 
 export type Video =
