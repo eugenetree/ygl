@@ -13,7 +13,7 @@ services:
       ES_NODE: ${ES_NODE:-http://elasticsearch:9200}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-    stop_grace_period: ${STOP_GRACE_PERIOD}
+    stop_grace_period: 5m
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

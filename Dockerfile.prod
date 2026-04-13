@@ -18,5 +18,6 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /usr/src/app/dist ./dist
 
-CMD ["sleep", "infinity"]
-# CMD ["sh", "-c", "node dist/src/db/scripts/run-migrations.js && node dist/src/modules/scrapers/main.js"]
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
+CMD ["sh", "./entrypoint.sh"]
