@@ -12,3 +12,5 @@ _ytdlp
 db/dump/
 .env
 router_config.ovpn
+entrypoint.scraper.sh
+router_config.ovpn

@@ -1,28 +1,7 @@
 services:
-  app:
-    container_name: saythis-app
-    build:
-      context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-saythis}
-      DB_HOST: ${DB_HOST:-db}
-      DB_PORT: ${DB_PORT:-5432}
-      ES_NODE: ${ES_NODE:-http://elasticsearch:9200}
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-    stop_grace_period: 5m
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - /usr/src/app/dist
-    depends_on:
-      - db
-
+  # ── 1. PostgreSQL Database ──────────────────────────────────────────────────
   db:
-    container_name: saythis-db
+    container_name: db
     image: postgres:18-alpine
     restart: always
     environment:
@@ -34,9 +13,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/18/docker
 
+  # ── 2. Elasticsearch ───────────────────────────────────────────────────────
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
-    container_name: saythis-elasticsearch
+    container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -52,13 +32,65 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.0
-    container_name: saythis-kibana
+    container_name: kibana
     ports:
-    - "5601:5601"
+      - "5601:5601"
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     depends_on:
       - elasticsearch
+
+  # ── 3. Application Services (Shared Image) ──────────────────────────────────
+  bot:
+    container_name: bot
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+    image: saythis-app:latest
+    environment: &app-env
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+      POSTGRES_DB: ${POSTGRES_DB:-saythis}
+      DB_HOST: db
+      DB_PORT: 5432
+      ES_NODE: http://elasticsearch:9200
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    volumes: &app-volumes
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+    command: npm run start:bot
+    depends_on:
+      - db
+
+  sync-elastic:
+    container_name: sync-elastic
+    image: saythis-app:latest
+    environment: *app-env
+    volumes: *app-volumes
+    command: npm run start:elastic
+    depends_on:
+      - db
+      - elasticsearch
+
+  # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
+  scraper:
+    container_name: scraper
+    build:
+      context: .
+      dockerfile: Dockerfile.scraper
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      <<: *app-env
+      VPN_USER: ${VPN_USER}
+      VPN_PASS: ${VPN_PASS}
+      VPN_CONFIG_B64: ${VPN_CONFIG_B64}
+    depends_on:
+      - db
 
 volumes:
   postgres_data:

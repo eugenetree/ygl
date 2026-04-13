@@ -1,0 +1,29 @@
+FROM node:22-alpine AS builder
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+COPY . .
+RUN npx tsc
+
+# ── Runtime stage ─────────────────────────────────────────────────────────────
+FROM node:22-alpine
+WORKDIR /usr/src/app
+
+# Install OpenVPN and dependencies for yt-dlp
+RUN apk add --no-cache curl python3 openvpn iproute2 && \
+    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
+    chmod a+rx /usr/local/bin/yt-dlp
+
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts && \
+    mkdir -p node_modules/ytdlp-nodejs/bin && \
+    ln -s /usr/local/bin/yt-dlp node_modules/ytdlp-nodejs/bin/yt-dlp
+
+COPY --from=builder /usr/src/app/dist ./dist
+
+# entrypoint.scraper.sh handles VPN startup
+COPY entrypoint.scraper.sh ./
+RUN chmod +x entrypoint.scraper.sh
+
+CMD ["sh", "./entrypoint.scraper.sh"]
