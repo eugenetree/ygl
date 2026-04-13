@@ -67,7 +67,7 @@ const autoOnlyVideo: Video = {
   ...baseVideoDto,
   captionStatus: "AUTO_ONLY",
   languageCode: "en",
-  autoCaptions: [autoCaptionSegment],
+  autoCaptions: null,
   manualCaptions: null,
 };
 

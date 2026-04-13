@@ -69,14 +69,14 @@ export class SearchChannelQueriesSeeder {
       );
     }
 
-    const words = Object.keys(wordsResult.value!).slice(0, 50) as string[];
+    const words = Object.keys(wordsResult.value!) as string[];
     const chunkSize = 100;
 
     for (let i = 0; i < words.length; i += chunkSize) {
       const chunk = words.slice(i, i + chunkSize);
       const queryIds = chunk.map(() => crypto.randomUUID());
 
-      this.logger.info(`Seeding ${chunk.length} queries into storage`);
+      this.logger.info(`Seeding ${chunk.length} queries into storage ${i * chunkSize}/${words.length}`);
 
       const dbResult = await tryCatch(
         dbClient
