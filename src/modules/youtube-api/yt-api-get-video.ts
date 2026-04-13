@@ -106,12 +106,27 @@ export class YoutubeApiGetVideo {
     }
 
     const autoUrl = this.getCaptionsUrl(ytData.automatic_captions || {}, language);
-    if (!autoUrl) {
-      return Failure({
-        type: "PARSING_ERROR",
-        message: "No auto captions found",
-        context: { language, availableAuto: Object.keys(ytData.automatic_captions || {}) },
+    const manualUrl = this.getCaptionsUrl(ytData.subtitles || {}, language);
+
+    if (!autoUrl && !manualUrl) {
+      this.logger.info(`No captions found for video ${videoId}.`);
+      return Success({
+        ...videoBase,
+        captionStatus: "NONE",
+        languageCode: language,
+        autoCaptions: null,
+        manualCaptions: null,
       });
+    }
+
+    if (!autoUrl) {
+      this.logger.info(`No auto captions for video ${videoId}, skipping.`);
+      return Success({ ...videoBase, captionStatus: "MANUAL_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
+    }
+
+    if (!manualUrl) {
+      this.logger.info(`No manual captions for video ${videoId}, skipping.`);
+      return Success({ ...videoBase, captionStatus: "AUTO_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
 
     await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
@@ -119,18 +134,6 @@ export class YoutubeApiGetVideo {
     const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl, type: "auto" });
     if (!autoCaptionsResult.ok) {
       return Failure(autoCaptionsResult.error);
-    }
-
-    const manualUrl = this.getCaptionsUrl(ytData.subtitles || {}, language);
-
-    if (!manualUrl) {
-      return Success({
-        ...videoBase,
-        captionStatus: "AUTO_ONLY",
-        languageCode: language,
-        autoCaptions: autoCaptionsResult.value.captions,
-        manualCaptions: null,
-      });
     }
 
     const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl, type: "manual" });

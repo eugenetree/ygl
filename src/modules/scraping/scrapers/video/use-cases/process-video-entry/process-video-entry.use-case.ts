@@ -104,17 +104,14 @@ export class ProcessVideoEntryUseCase {
       ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions, type: "manual" })
       : [];
 
-    if (manualCaptions?.length) {
-      if (!autoCaptions?.length) {
-        return Failure({
-          type: "UNEXPECTED_STATE",
-          context: { videoId: video.id }
-        })
-      }
-    }
-
-    if (autoCaptions?.length && !manualCaptions?.length) {
-      this.logger.info(`Video ${video.id} has only auto captions. They won't be saved.`);
+    if (
+      (manualCaptions?.length && !autoCaptions?.length) ||
+      (!manualCaptions?.length && autoCaptions?.length)
+    ) {
+      return Failure({
+        type: "UNEXPECTED_STATE",
+        context: { videoId: video.id }
+      })
     }
 
     const createVideoResult = await this.videoRepository.createWithCaptions({
