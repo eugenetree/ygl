@@ -11,3 +11,4 @@ _ytdlp
 .vscode
 db/dump/
 .env
+router_config.ovpn
