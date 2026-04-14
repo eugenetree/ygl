@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
-import { Failure, Result, Success } from "../../../../../../types/index.js";
+import { Failure, Success } from "../../../../../../types/index.js";
 import { ProcessVideoEntryUseCase } from "./process-video-entry.use-case.js";
 import { Logger } from "../../../../../_common/logger/logger.js";
 import { VideoMapper } from "./video.mapper.js";
@@ -184,7 +184,7 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
   );
 }
 
-function assertFailure<V, E>(result: Result<V, E>): asserts result is Failure<E> {
+function assertFailure<T extends { ok: boolean }>(result: T): asserts result is T & { ok: false } {
   assert.equal(result.ok, false);
 }
 
