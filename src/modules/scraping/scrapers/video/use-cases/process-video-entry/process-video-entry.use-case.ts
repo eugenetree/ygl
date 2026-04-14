@@ -1,14 +1,9 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../../../_common/logger/logger.js";
-import { DatabaseError } from "../../../../../../db/types.js";
-import { Failure, Result, Success } from "../../../../../../types/index.js";
-import { BaseError } from "../../../../../_common/errors.js";
+import { Failure, Success } from "../../../../../../types/index.js";
 import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
 import { VideoMapper } from "./video.mapper.js";
 import { VideoRepository } from "../../video.repository.js";
-import { ChannelVideoHealthRepository } from "../../channel-video-health.repository.js";
-import { ChannelVideosHealth, ChannelVideosHealthProps } from "../../channel-videos-health.js";
-import { MAX_FAILED_VIDEOS_STREAK } from "../../config.js";
 import { CaptionProps } from "../../caption.js";
 import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
@@ -21,55 +16,14 @@ export class ProcessVideoEntryUseCase {
     private readonly videoMapper: VideoMapper,
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo,
-    private readonly channelVideosHealthRepository: ChannelVideoHealthRepository,
     private readonly transcriptionJobsQueue: TranscriptionJobsQueue,
     private readonly captionAnalysisService: CaptionAnalysisService,
   ) {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute(videoEntry: { id: string; channelId: string }) {
-    this.logger.info(`Processing video entry ${videoEntry.id}...`);
-
-    const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(videoEntry.channelId);
-    if (!healthRecordResult.ok) {
-      return healthRecordResult;
-    }
-
-    const healthRecord = healthRecordResult.value;
-    if (healthRecord && healthRecord.failedVideosStreak >= MAX_FAILED_VIDEOS_STREAK) {
-      return Failure({
-        type: "TOO_MANY_FAILED_VIDEOS" as const,
-        context: {
-          videoId: videoEntry.id,
-          channelId: videoEntry.channelId,
-        }
-      });
-    }
-
-    const processResult = await this.processVideo(videoEntry.id);
-
-    const isMembersOnly = !processResult.ok && processResult.error.type === "MEMBERS_ONLY_VIDEO";
-
-    const syncResult = await this.syncChannelHealth({
-      channelId: videoEntry.channelId,
-      current: healthRecord,
-      isSuccess: processResult.ok || isMembersOnly,
-    });
-
-    if (!syncResult.ok) {
-      return syncResult;
-    }
-
-    if (processResult.ok) {
-      this.logger.info(`Processing video entry ${videoEntry.id} finished`);
-    }
-
-    return processResult;
-  }
-
-  private async processVideo(videoId: string) {
-    this.logger.info(`Fetching video ${videoId}.`);
+  public async execute(videoId: string) {
+    this.logger.info(`Processing video entry ${videoId}...`);
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(videoId);
     if (!videoDtoResult.ok) {
@@ -150,23 +104,4 @@ export class ProcessVideoEntryUseCase {
     return Success(undefined);
   }
 
-  private async syncChannelHealth({
-    channelId,
-    current,
-    isSuccess
-  }: {
-    channelId: string;
-    current: ChannelVideosHealth | null;
-    isSuccess: boolean;
-  }): Promise<Result<void, DatabaseError>> {
-    const nextData: ChannelVideosHealthProps = {
-      channelId,
-      succeededVideosStreak: isSuccess ? (current?.succeededVideosStreak ?? 0) + 1 : 0,
-      failedVideosStreak: isSuccess ? 0 : (current?.failedVideosStreak ?? 0) + 1,
-    };
-
-    return current
-      ? await this.channelVideosHealthRepository.update({ ...current, ...nextData })
-      : await this.channelVideosHealthRepository.create(nextData);
-  }
 }
