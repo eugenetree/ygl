@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { YoutubeApiGetVideo } from "./src/modules/youtube-api/yt-api-get-video.js";
-import { YtDlpClient } from "./src/modules/youtube-api/yt-dlp-client.js";
-import { Logger } from "./src/modules/_common/logger/logger.js";
+import { YoutubeApiGetVideo } from "../../src/modules/youtube-api/yt-api-get-video.js";
+import { YtDlpClient } from "../../src/modules/youtube-api/yt-dlp-client.js";
+import { Logger } from "../../src/modules/_common/logger/logger.js";
 
 const videoId = process.argv[2] ?? "M0pev5yBy-c";
 
