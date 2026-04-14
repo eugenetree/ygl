@@ -66,4 +66,34 @@ describe("YoutubeApiGetVideo.getVideo()", () => {
       `Expected first manual caption to contain "Hello", got: "${video.manualCaptions[0].text}"`,
     );
   });
+
+  it("returns Success(AUTO_ONLY) for video with only auto captions (3IT2Cc_5WxE)", { timeout: 30_000 }, async () => {
+    const result = await service.getVideo("3IT2Cc_5WxE");
+
+    assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
+    assert.equal(result.value.captionStatus, "AUTO_ONLY");
+    assert.equal(result.value.languageCode, "en");
+    assert.equal(result.value.autoCaptions, null);
+    assert.equal(result.value.manualCaptions, null);
+  });
+
+  it("returns Success(MANUAL_ONLY) for video with only manual captions (SFnMTHhKdkw)", { timeout: 30_000 }, async () => {
+    const result = await service.getVideo("SFnMTHhKdkw");
+
+    assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
+    assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+    assert.equal(result.value.languageCode, null);
+    assert.equal(result.value.autoCaptions, null);
+    assert.equal(result.value.manualCaptions, null);
+  });
+
+  it("returns Success(NONE) for video with no captions (7DNz25c6BRg)", { timeout: 30_000 }, async () => {
+    const result = await service.getVideo("7DNz25c6BRg");
+
+    assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
+    assert.equal(result.value.captionStatus, "NONE");
+    assert.equal(result.value.languageCode, null);
+    assert.equal(result.value.autoCaptions, null);
+    assert.equal(result.value.manualCaptions, null);
+  });
 });

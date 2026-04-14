@@ -166,10 +166,13 @@ export class YoutubeApiGetVideo {
     tracks: Record<string, unknown[]>,
     language: string,
   ): boolean {
-    // Exact match
-    if (tracks[language]?.length) return true;
-    // Prefix match (e.g. "en" matches "en-orig", "en-US")
-    return Object.keys(tracks).some(key => key.startsWith(language));
+    const lowerLang = language.toLowerCase();
+
+    return Object.entries(tracks).some(([key, track]) => {
+      if (!track?.length) return false;
+      const lowerKey = key.toLowerCase();
+      return lowerKey === lowerLang || lowerKey.startsWith(lowerLang) || lowerLang.startsWith(lowerKey);
+    });
   }
 
   private async downloadCaptions(
