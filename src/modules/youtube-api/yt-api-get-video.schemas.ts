@@ -5,7 +5,7 @@ export const inputSchemas = {
     id: z.string(),
     title: z.string(),
     duration: z.number().int(),
-    tags: z.array(z.string()).optional().default([]),
+    tags: z.array(z.string()).nullable().optional().default([]),
     channel_id: z.string(),
     view_count: z.number().int().optional().default(0),
     thumbnail: z.string(),
@@ -32,7 +32,7 @@ export const inputSchemas = {
         })
       )
     ).optional(),
-    categories: z.array(z.string()).optional().default([]),
+    categories: z.array(z.string()).nullable().optional().default([]),
     track: z.string().optional().nullable(),
     artist: z.string().optional().nullable(),
     album: z.string().optional().nullable(),
