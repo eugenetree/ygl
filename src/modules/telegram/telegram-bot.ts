@@ -3,6 +3,7 @@ import { Telegraf } from "telegraf";
 
 import { Logger } from "../_common/logger/logger.js";
 import { ConfigController } from "./config.controller.js";
+import { ExportLogsController } from "./export-logs.controller.js";
 import { FindController } from "./find.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { StatsController } from "./stats.controller.js";
@@ -17,6 +18,7 @@ export class TelegramBot {
     private readonly lifecycleController: LifecycleController,
     private readonly configController: ConfigController,
     private readonly findController: FindController,
+    private readonly exportLogsController: ExportLogsController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -53,6 +55,7 @@ export class TelegramBot {
     this.statsController.register(this.bot);
     this.configController.register(this.bot);
     this.findController.register(this.bot);
+    this.exportLogsController.register(this.bot);
   }
 
   public async start(): Promise<void> {
