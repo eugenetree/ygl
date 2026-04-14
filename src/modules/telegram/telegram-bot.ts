@@ -58,7 +58,21 @@ export class TelegramBot {
     this.exportLogsController.register(this.bot);
   }
 
+  private async syncCommands(): Promise<void> {
+    this.logger.info("Syncing Telegram bot commands...");
+    await this.bot.telegram.setMyCommands([
+      { command: "start", description: "Start scrapers" },
+      { command: "stop", description: "Stop scrapers" },
+      { command: "stats", description: "Show scraper stats" },
+      { command: "config", description: "Configure scrapers" },
+      { command: "find", description: "Search in captions" },
+      { command: "logs", description: "Export logs" },
+    ]);
+  }
+
   public async start(): Promise<void> {
+    await this.syncCommands();
+
     this.logger.info("Launching Telegram bot with long polling...");
     await new Promise<void>((resolve) => {
       this.bot.launch({}, resolve);
