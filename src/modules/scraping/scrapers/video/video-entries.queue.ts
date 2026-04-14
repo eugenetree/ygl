@@ -105,4 +105,20 @@ export class VideoEntriesQueue {
 
     return Success(undefined);
   }
+
+  public async markAsMembersOnly(entryId: string): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      dbClient
+        .updateTable("videoJobs")
+        .set({ status: "MEMBERS_ONLY", statusUpdatedAt: new Date() })
+        .where("videoId", "=", entryId)
+        .execute()
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(undefined);
+  }
 }

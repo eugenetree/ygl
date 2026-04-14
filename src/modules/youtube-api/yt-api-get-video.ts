@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
+import { YtDlpClient, YtDlpError, MembersOnlyVideoError } from "./yt-dlp-client.js";
 import { Logger } from "../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../types/index.js";
 import { ParsingError, ValidationError } from "../_common/validation/errors.js";
@@ -28,7 +28,7 @@ export class YoutubeApiGetVideo {
 
   public async getVideo(
     videoId: string
-  ): Promise<Result<Video, YtDlpError | FetchError | ParsingError | ValidationError>> {
+  ): Promise<Result<Video, YtDlpError | MembersOnlyVideoError | FetchError | ParsingError | ValidationError>> {
     this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);

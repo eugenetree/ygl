@@ -1,18 +1,19 @@
 import { injectable } from "inversify";
 
 import { dbClient } from "../../../db/client.js";
-import { ProcessingStatus } from "../../../db/types.js";
+import { ProcessingStatus, VideoJobStatus } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
 
 type StatusCounts = Record<ProcessingStatus, number>;
+type VideoStatusCounts = Record<VideoJobStatus, number>;
 
 export type JobStats = {
   channelDiscovery: StatusCounts;
   channel: StatusCounts;
   videoDiscovery: StatusCounts;
-  video: StatusCounts;
+  video: VideoStatusCounts;
   transcription: StatusCounts;
   videosWithValidManualCaptions: number;
 };
@@ -24,6 +25,14 @@ const emptyStatusCounts = (): StatusCounts => ({
   FAILED: 0,
 });
 
+const emptyVideoStatusCounts = (): VideoStatusCounts => ({
+  PENDING: 0,
+  PROCESSING: 0,
+  SUCCEEDED: 0,
+  FAILED: 0,
+  MEMBERS_ONLY: 0,
+});
+
 @injectable()
 export class StatsRepository {
   constructor(private readonly logger: Logger) {
@@ -31,15 +40,14 @@ export class StatsRepository {
   }
 
   public async getStats(): Promise<Result<JobStats, Error>> {
-    const jobTables = [
+    const nonVideoJobTables = [
       "channelDiscoveryJobs",
       "channelJobs",
       "videoDiscoveryJobs",
-      "videoJobs",
       "transcriptionJobs",
     ] as const;
 
-    const queryJobTable = async (table: (typeof jobTables)[number]) => {
+    const queryJobTable = async (table: (typeof nonVideoJobTables)[number]) => {
       return tryCatch(
         dbClient
           .selectFrom(table)
@@ -58,10 +66,35 @@ export class StatsRepository {
       return counts;
     };
 
-    const results = await Promise.all(jobTables.map(queryJobTable));
+    const toVideoStatusCounts = (rows: { status: VideoJobStatus; count: number }[]): VideoStatusCounts => {
+      const counts = emptyVideoStatusCounts();
+      for (const row of rows) {
+        counts[row.status] = Number(row.count);
+      }
+      return counts;
+    };
+
+    const [nonVideoResults, videoJobsResult, validManualCaptionsResult] = await Promise.all([
+      Promise.all(nonVideoJobTables.map(queryJobTable)),
+      tryCatch(
+        dbClient
+          .selectFrom("videoJobs")
+          .select(["status"])
+          .select((eb) => eb.fn.countAll<number>().as("count"))
+          .groupBy("status")
+          .execute(),
+      ),
+      tryCatch(
+        dbClient
+          .selectFrom("videos")
+          .select((eb) => eb.fn.countAll<number>().as("count"))
+          .where("manualCaptionsStatus", "=", "CAPTIONS_VALID")
+          .executeTakeFirstOrThrow(),
+      ),
+    ]);
 
     const statusCountsList: StatusCounts[] = [];
-    for (const result of results) {
+    for (const result of nonVideoResults) {
       if (!result.ok) {
         this.logger.error({ message: "Failed to query job stats", error: result.error });
         return Failure(result.error);
@@ -69,13 +102,10 @@ export class StatsRepository {
       statusCountsList.push(toStatusCounts(result.value));
     }
 
-    const validManualCaptionsResult = await tryCatch(
-      dbClient
-        .selectFrom("videos")
-        .select((eb) => eb.fn.countAll<number>().as("count"))
-        .where("manualCaptionsStatus", "=", "CAPTIONS_VALID")
-        .executeTakeFirstOrThrow(),
-    );
+    if (!videoJobsResult.ok) {
+      this.logger.error({ message: "Failed to query video job stats", error: videoJobsResult.error });
+      return Failure(videoJobsResult.error);
+    }
 
     if (!validManualCaptionsResult.ok) {
       this.logger.error({ message: "Failed to query valid manual captions count", error: validManualCaptionsResult.error });
@@ -86,8 +116,8 @@ export class StatsRepository {
       channelDiscovery: statusCountsList[0],
       channel: statusCountsList[1],
       videoDiscovery: statusCountsList[2],
-      video: statusCountsList[3],
-      transcription: statusCountsList[4],
+      video: toVideoStatusCounts(videoJobsResult.value),
+      transcription: statusCountsList[3],
       videosWithValidManualCaptions: Number(validManualCaptionsResult.value.count),
     });
   }

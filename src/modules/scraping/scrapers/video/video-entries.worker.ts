@@ -65,6 +65,12 @@ export class VideoEntriesWorker {
       });
 
       if (!result.ok) {
+        if (result.error.type === "MEMBERS_ONLY_VIDEO") {
+          this.logger.info(`Video entry ${entry.id} is members-only, skipping.`);
+          await this.videoEntriesQueue.markAsMembersOnly(entry.id);
+          continue;
+        }
+
         this.logger.error({
           message: `Failed to process video entry ${entry.id}`,
           error: result.error,

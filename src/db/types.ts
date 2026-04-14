@@ -9,6 +9,13 @@ export type ProcessingStatus =
   | "SUCCEEDED"
   | "FAILED";
 
+export type VideoJobStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "SUCCEEDED"
+  | "FAILED"
+  | "MEMBERS_ONLY";
+
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
   | "CAPTIONS_VALID"
@@ -99,7 +106,7 @@ export interface VideoJobsRow {
   id: Generated<string>;
   videoId: string;
   channelId: string;
-  status: ProcessingStatus;
+  status: VideoJobStatus;
   statusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
 }

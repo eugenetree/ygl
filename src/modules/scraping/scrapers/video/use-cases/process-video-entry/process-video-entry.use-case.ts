@@ -28,7 +28,7 @@ export class ProcessVideoEntryUseCase {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute(videoEntry: { id: string; channelId: string }): Promise<Result<void, BaseError>> {
+  public async execute(videoEntry: { id: string; channelId: string }) {
     this.logger.info(`Processing video entry ${videoEntry.id}...`);
 
     const healthRecordResult = await this.channelVideosHealthRepository.getHealthRecord(videoEntry.channelId);
@@ -39,7 +39,7 @@ export class ProcessVideoEntryUseCase {
     const healthRecord = healthRecordResult.value;
     if (healthRecord && healthRecord.failedVideosStreak >= MAX_FAILED_VIDEOS_STREAK) {
       return Failure({
-        type: "TOO_MANY_FAILED_VIDEOS",
+        type: "TOO_MANY_FAILED_VIDEOS" as const,
         context: {
           videoId: videoEntry.id,
           channelId: videoEntry.channelId,
@@ -49,10 +49,12 @@ export class ProcessVideoEntryUseCase {
 
     const processResult = await this.processVideo(videoEntry.id);
 
+    const isMembersOnly = !processResult.ok && processResult.error.type === "MEMBERS_ONLY_VIDEO";
+
     const syncResult = await this.syncChannelHealth({
       channelId: videoEntry.channelId,
       current: healthRecord,
-      isSuccess: processResult.ok
+      isSuccess: processResult.ok || isMembersOnly,
     });
 
     if (!syncResult.ok) {
@@ -66,7 +68,7 @@ export class ProcessVideoEntryUseCase {
     return processResult;
   }
 
-  private async processVideo(videoId: string): Promise<Result<void, BaseError>> {
+  private async processVideo(videoId: string) {
     this.logger.info(`Fetching video ${videoId}.`);
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(videoId);
@@ -109,7 +111,7 @@ export class ProcessVideoEntryUseCase {
       (!manualCaptions?.length && autoCaptions?.length)
     ) {
       return Failure({
-        type: "UNEXPECTED_STATE",
+        type: "UNEXPECTED_STATE" as const,
         context: { videoId: video.id }
       })
     }
