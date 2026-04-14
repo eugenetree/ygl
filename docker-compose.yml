@@ -89,6 +89,7 @@ services:
       VPN_USER: ${VPN_USER}
       VPN_PASS: ${VPN_PASS}
       VPN_CONFIG_B64: ${VPN_CONFIG_B64}
+      YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
     depends_on:
       - db
 

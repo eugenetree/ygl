@@ -1,4 +1,6 @@
 import { injectable } from "inversify";
+import * as fs from "node:fs";
+import * as os from "node:os";
 import * as path from "node:path";
 import { YtDlp as YtDlpWrapper } from "ytdlp-nodejs";
 
@@ -14,15 +16,34 @@ function isMembersOnlyError(message: string): boolean {
   return message.includes(MEMBERS_ONLY_MESSAGE);
 }
 
+function resolveCookiesFile(logger: Logger): string | undefined {
+  const cookiesB64 = process.env["YTDLP_COOKIES_B64"];
+  if (!cookiesB64) return undefined;
+
+  const tmpPath = path.join(os.tmpdir(), "ytdlp-cookies.txt");
+  fs.writeFileSync(tmpPath, Buffer.from(cookiesB64, "base64"));
+  logger.info(`Decoded YTDLP_COOKIES_B64 to temporary cookies file: ${tmpPath}`);
+  return tmpPath;
+}
+
 @injectable()
 export class YtDlpClient {
   private ytdlp: YtDlpWrapper;
+  private readonly cookiesFile: string | undefined;
 
   constructor(private readonly logger: Logger) {
     this.logger.setContext(YtDlpClient.name);
 
     // ytdlp-nodejs will automatically find/download its own version of the binary
     this.ytdlp = new YtDlpWrapper();
+    this.cookiesFile = resolveCookiesFile(this.logger);
+  }
+
+  private buildExec(url: string, remainingArgs: string[]) {
+    const allArgs = this.cookiesFile ? ["--cookies", this.cookiesFile, ...remainingArgs] : remainingArgs;
+    const builder = this.ytdlp.execBuilder(url).addArgs(...allArgs);
+    builder.debugPrint(false);
+    return builder;
   }
 
   /**
@@ -38,11 +59,7 @@ export class YtDlpClient {
       }
 
       // We use the raw execBuilder to have full control over the arguments
-      const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
-
-      // Disable command line printing to stderr to reduce noise
-      builder.debugPrint(false);
-
+      const builder = this.buildExec(url, remainingArgs);
       const result = await builder.exec();
 
       if (result.exitCode !== 0) {
@@ -110,9 +127,7 @@ export class YtDlpClient {
         return Failure({ type: "YT_DLP_ERROR", message: "URL/Query is required as the first argument" });
       }
 
-      const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
-      builder.debugPrint(false);
-
+      const builder = this.buildExec(url, remainingArgs);
       const result = await builder.exec();
 
       if (result.exitCode !== 0) {
@@ -167,8 +182,7 @@ export class YtDlpClient {
         return;
       }
 
-      const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
-      builder.debugPrint(false);
+      const builder = this.buildExec(url, remainingArgs);
 
       let errorResult: YtDlpError | undefined;
       const queue: T[] = [];
