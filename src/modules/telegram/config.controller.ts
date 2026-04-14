@@ -75,7 +75,7 @@ export class ConfigController implements TelegramController {
       await ctx.answerCbQuery();
 
       const state = toggleResult.value.updatedConfig.enabled ? "enabled" : "disabled";
-      await ctx.reply(`${scraperName} ${state}.\nRun /restart to apply changes.`);
+      await ctx.reply(`${scraperName} ${state}.\nRestart scrapers to apply changes.`);
     });
   }
 
