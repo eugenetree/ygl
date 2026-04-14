@@ -1,21 +1,17 @@
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
+import { readFile, readdir, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import * as path from "node:path";
+
 import { YtDlpClient, YtDlpError, MembersOnlyVideoError } from "./yt-dlp-client.js";
 import { Logger } from "../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../types/index.js";
-import { ParsingError, ValidationError } from "../_common/validation/errors.js";
-import { FetchError } from "../_common/http/errors.js";
-import { httpClient } from "../_common/http/index.js";
+import { ValidationError } from "../_common/validation/errors.js";
 import { LanguageCode, isValidLanguageCode } from "../i18n/index.js";
 import { validator } from "../_common/validation/validator.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
 import { Caption, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
-import { writeFileSync } from "fs";
-
-type GetCaptionsParams = {
-  baseUrl: string;
-  type: "manual" | "auto"
-};
 
 @injectable()
 export class YoutubeApiGetVideo {
@@ -28,7 +24,7 @@ export class YoutubeApiGetVideo {
 
   public async getVideo(
     videoId: string
-  ): Promise<Result<Video, YtDlpError | MembersOnlyVideoError | FetchError | ParsingError | ValidationError>> {
+  ): Promise<Result<Video, YtDlpError | MembersOnlyVideoError | ValidationError>> {
     this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
@@ -105,10 +101,10 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const autoUrl = this.getCaptionsUrl(ytData.automatic_captions || {}, language);
-    const manualUrl = this.getCaptionsUrl(ytData.subtitles || {}, language);
+    const hasAutoTracks = this.hasTracksForLanguage(ytData.automatic_captions || {}, language);
+    const hasManualTracks = this.hasTracksForLanguage(ytData.subtitles || {}, language);
 
-    if (!autoUrl && !manualUrl) {
+    if (!hasAutoTracks && !hasManualTracks) {
       this.logger.info(`No captions found for video ${videoId}.`);
       return Success({
         ...videoBase,
@@ -119,34 +115,31 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    if (!autoUrl) {
+    if (!hasAutoTracks) {
       this.logger.info(`No auto captions for video ${videoId}, skipping.`);
       return Success({ ...videoBase, captionStatus: "MANUAL_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
 
-    if (!manualUrl) {
+    if (!hasManualTracks) {
       this.logger.info(`No manual captions for video ${videoId}, skipping.`);
       return Success({ ...videoBase, captionStatus: "AUTO_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
 
+    // Rate-limit before hitting YouTube again
     await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
 
-    const autoCaptionsResult = await this.getCaptions({ baseUrl: autoUrl, type: "auto" });
-    if (!autoCaptionsResult.ok) {
-      return Failure(autoCaptionsResult.error);
-    }
-
-    const manualCaptionsResult = await this.getCaptions({ baseUrl: manualUrl, type: "manual" });
-    if (!manualCaptionsResult.ok) {
-      return Failure(manualCaptionsResult.error);
+    // Download captions via yt-dlp (uses browser impersonation + PO Token)
+    const captionsResult = await this.downloadCaptions(videoId, language);
+    if (!captionsResult.ok) {
+      return Failure(captionsResult.error);
     }
 
     return Success({
       ...videoBase,
       captionStatus: "BOTH",
       languageCode: language,
-      autoCaptions: autoCaptionsResult.value.captions,
-      manualCaptions: manualCaptionsResult.value.captions,
+      autoCaptions: captionsResult.value.autoCaptions,
+      manualCaptions: captionsResult.value.manualCaptions,
     });
   }
 
@@ -169,75 +162,98 @@ export class YoutubeApiGetVideo {
     return null;
   }
 
-  private getCaptionsUrl(
-    captions: Record<string, { ext: string; url: string }[]>,
-    language: string
-  ): string | undefined {
-    // 1. Try exact match
-    const exactMatch = captions[language]?.find(track => track.ext === "json3")?.url;
-    if (exactMatch) return exactMatch;
-
-    // 2. Try prefix match (e.g. "en" if looking for "en-us")
-    const prefixMatch = Object.entries(captions).find(([lang]) => lang.startsWith(language))?.[1]
-      ?.find(track => track.ext === "json3")?.url;
-    if (prefixMatch) return prefixMatch;
-
-    // 3. Try base language fallback if language contains dash (e.g. "en" if looking for "en-us")
-    if (language.includes("-")) {
-      const baseLang = language.split("-")[0];
-      // Try exact base language first (e.g. "en" before "en-GB")
-      const exactBase = captions[baseLang]?.find(track => track.ext === "json3")?.url;
-      if (exactBase) {
-        this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${baseLang}`);
-        return exactBase;
-      }
-      // Then iterate all entries with the same base language — don't stop at first match
-      // since that entry may not have json3 tracks
-      for (const [langCode, tracks] of Object.entries(captions)) {
-        if (langCode !== baseLang && langCode.split("-")[0] === baseLang) {
-          const url = tracks.find(track => track.ext === "json3")?.url;
-          if (url) {
-            this.logger.info(`Captions not found for exact lang ${language}, using fallback lang ${langCode}`);
-            return url;
-          }
-        }
-      }
-    }
-
-    return undefined;
+  private hasTracksForLanguage(
+    tracks: Record<string, unknown[]>,
+    language: string,
+  ): boolean {
+    // Exact match
+    if (tracks[language]?.length) return true;
+    // Prefix match (e.g. "en" matches "en-orig", "en-US")
+    return Object.keys(tracks).some(key => key.startsWith(language));
   }
 
-  private async getCaptions({
-    baseUrl,
-    type,
-  }: GetCaptionsParams): Promise<Result<{ captions: Caption[] }, ParsingError | FetchError | ValidationError>> {
-    // yt-dlp urls are already in json3 format based on our filtering,
-    // but just to be absolutely safe:
-    const finalUrl = baseUrl.replace("fmt=srv1", "fmt=json3").replace("fmt=srv2", "fmt=json3").replace("fmt=srv3", "fmt=json3");
+  private async downloadCaptions(
+    videoId: string,
+    language: string,
+  ): Promise<Result<{ autoCaptions: Caption[]; manualCaptions: Caption[] }, YtDlpError | MembersOnlyVideoError | ValidationError>> {
+    const tmpDir = await mkdtemp(path.join(tmpdir(), "ygl-subs-"));
 
-    const captionsResponseResult = await httpClient.get(finalUrl);
+    try {
+      const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
+      const baseArgs = ["--sub-format", "json3", "--sub-langs", language, "--skip-download", "--no-warnings"];
 
-    if (!captionsResponseResult.ok) {
-      return Failure(captionsResponseResult.error);
+      // Two separate calls: yt-dlp uses the same filename for both auto and manual,
+      // so we download them into separate subdirectories.
+      const autoDir = path.join(tmpDir, "auto");
+      const manualDir = path.join(tmpDir, "manual");
+
+      const autoExec = this.ytDlpClient.exec([
+        url, "--write-auto-subs", ...baseArgs, "-o", path.join(autoDir, "%(id)s"),
+      ]);
+      const manualExec = this.ytDlpClient.exec([
+        url, "--write-subs", ...baseArgs, "-o", path.join(manualDir, "%(id)s"),
+      ]);
+
+      const [autoResult, manualResult] = await Promise.all([autoExec, manualExec]);
+
+      if (!autoResult.ok) return autoResult;
+      if (!manualResult.ok) return manualResult;
+
+      const autoFile = await this.findSubtitleFile(autoDir);
+      const manualFile = await this.findSubtitleFile(manualDir);
+
+      if (!autoFile) {
+        return Failure({ type: "YT_DLP_ERROR", message: "yt-dlp produced no auto subtitle file" });
+      }
+      if (!manualFile) {
+        return Failure({ type: "YT_DLP_ERROR", message: "yt-dlp produced no manual subtitle file" });
+      }
+
+      const autoCaptions = await this.parseCaptionFile(autoFile, "auto");
+      if (!autoCaptions.ok) return autoCaptions;
+
+      const manualCaptions = await this.parseCaptionFile(manualFile, "manual");
+      if (!manualCaptions.ok) return manualCaptions;
+
+      return Success({
+        autoCaptions: autoCaptions.value,
+        manualCaptions: manualCaptions.value,
+      });
+    } finally {
+      await rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+    }
+  }
+
+  private async findSubtitleFile(dir: string): Promise<string | null> {
+    try {
+      const files = await readdir(dir);
+      const json3File = files.find(f => f.endsWith(".json3"));
+      return json3File ? path.join(dir, json3File) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async parseCaptionFile(
+    filePath: string,
+    type: "auto" | "manual",
+  ): Promise<Result<Caption[], ValidationError>> {
+    const content = await readFile(filePath, "utf-8");
+    const json = JSON.parse(content);
+
+    const extractResult = captionsExtractor.extractFromJson({ jsonResponse: json, type });
+    if (!extractResult.ok) {
+      return extractResult;
     }
 
-    const captionsResult = captionsExtractor.extractFromJson({
-      jsonResponse: captionsResponseResult.value,
-      type,
-    });
-
-    if (!captionsResult.ok) {
-      return Failure(captionsResult.error);
-    }
-
-    return Success({
-      captions: captionsResult.value.map((caption) => {
+    return Success(
+      extractResult.value.map((caption) => {
         const { textSegments, ...rest } = caption;
         return {
           ...rest,
           text: textSegments.map((segment) => segment.utf8).join(""),
         };
       }),
-    });
+    );
   }
 }

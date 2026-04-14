@@ -98,6 +98,63 @@ export class YtDlpClient {
   }
 
   /**
+   * Executes yt-dlp with the specified arguments without parsing output.
+   * Useful for commands that write to files (e.g., subtitle downloads).
+   */
+  async exec(args: string[]): Promise<Result<void, YtDlpError | MembersOnlyVideoError>> {
+    try {
+      this.logger.info(`Running yt-dlp via wrapper with args: ${args.join(" ")}`);
+
+      const [url, ...remainingArgs] = args;
+      if (!url) {
+        return Failure({ type: "YT_DLP_ERROR", message: "URL/Query is required as the first argument" });
+      }
+
+      const builder = this.ytdlp.execBuilder(url).addArgs(...remainingArgs);
+      builder.debugPrint(false);
+
+      const result = await builder.exec();
+
+      if (result.exitCode !== 0) {
+        const message = result.stderr || `Exit code ${result.exitCode}`;
+        if (isMembersOnlyError(message)) {
+          return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+        }
+        this.logger.error({
+          message: `yt-dlp execution failed with code ${result.exitCode}`,
+          context: { stderr: result.stderr, command: result.command }
+        });
+        return Failure({ type: "YT_DLP_ERROR", message });
+      }
+
+      return Success(undefined);
+    } catch (error: any) {
+      const errorContext = {
+        name: error?.name,
+        message: error?.message,
+        stack: error?.stack,
+        ...error
+      };
+
+      this.logger.error({
+        message: "Unexpected error during yt-dlp execution",
+        context: errorContext
+      });
+
+      const message = error?.message || "Unexpected error";
+      if (isMembersOnlyError(message)) {
+        return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+      }
+
+      return Failure({
+        type: "YT_DLP_ERROR",
+        message,
+        cause: errorContext
+      });
+    }
+  }
+
+  /**
    * Executes yt-dlp with the specified arguments and yields each line of stdout as a JSON object of type T.
    */
   async *execJsonStream<T>(args: string[]): AsyncGenerator<Result<T, YtDlpError>, void, undefined> {
