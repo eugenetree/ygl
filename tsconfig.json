@@ -100,7 +100,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "_debug",
     "_yt-dlp",
     "_yt-dlp-node"
   ]
