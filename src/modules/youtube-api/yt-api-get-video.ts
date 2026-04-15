@@ -128,8 +128,15 @@ export class YoutubeApiGetVideo {
     // Rate-limit before hitting YouTube again
     await new Promise((resolve) => setTimeout(resolve, 10000 + Math.random() * 10000));
 
+    const autoLang = this.findMatchingKey(ytData.automatic_captions || {}, language);
+    const manualLang = this.findMatchingKey(ytData.subtitles || {}, language);
+
+    if (!autoLang || !manualLang) {
+      return Failure({ type: "YT_DLP_ERROR", message: "Could not resolve caption language keys" });
+    }
+
     // Download captions via yt-dlp (uses browser impersonation + PO Token)
-    const captionsResult = await this.downloadCaptions(videoId, language);
+    const captionsResult = await this.downloadCaptions(videoId, autoLang, manualLang);
     if (!captionsResult.ok) {
       return Failure(captionsResult.error);
     }
@@ -162,6 +169,20 @@ export class YoutubeApiGetVideo {
     return null;
   }
 
+  private findMatchingKey(
+    tracks: Record<string, unknown[]>,
+    language: string,
+  ): string | null {
+    const lowerLang = language.toLowerCase();
+    const matches = Object.entries(tracks).filter(([key, track]) => {
+      if (!track?.length) return false;
+      const lowerKey = key.toLowerCase();
+      return lowerKey === lowerLang || lowerKey.startsWith(lowerLang) || lowerLang.startsWith(lowerKey);
+    });
+    const exact = matches.find(([key]) => key.toLowerCase() === lowerLang);
+    return (exact ?? matches[0])?.[0] ?? null;
+  }
+
   private hasTracksForLanguage(
     tracks: Record<string, unknown[]>,
     language: string,
@@ -177,13 +198,13 @@ export class YoutubeApiGetVideo {
 
   private async downloadCaptions(
     videoId: string,
-    language: string,
+    autoLang: string,
+    manualLang: string,
   ): Promise<Result<{ autoCaptions: Caption[]; manualCaptions: Caption[] }, YtDlpError | MembersOnlyVideoError | ValidationError>> {
     const tmpDir = await mkdtemp(path.join(tmpdir(), "ygl-subs-"));
 
     try {
       const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
-      const baseArgs = ["--sub-format", "json3", "--sub-langs", language, "--skip-download", "--no-warnings"];
 
       // Two separate calls: yt-dlp uses the same filename for both auto and manual,
       // so we download them into separate subdirectories.
@@ -191,13 +212,13 @@ export class YoutubeApiGetVideo {
       const manualDir = path.join(tmpDir, "manual");
 
       const autoResult = await this.ytDlpClient.exec([
-        url, "--write-auto-subs", ...baseArgs, "-o", path.join(autoDir, "%(id)s"),
+        url, "--write-auto-subs", "--sub-format", "json3", "--sub-langs", autoLang, "--skip-download", "--no-warnings", "-o", path.join(autoDir, "%(id)s"),
       ]);
 
       await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
 
       const manualResult = await this.ytDlpClient.exec([
-        url, "--write-subs", ...baseArgs, "-o", path.join(manualDir, "%(id)s"),
+        url, "--write-subs", "--sub-format", "json3", "--sub-langs", manualLang, "--skip-download", "--no-warnings", "-o", path.join(manualDir, "%(id)s"),
       ]);
 
       if (!autoResult.ok) return autoResult;
