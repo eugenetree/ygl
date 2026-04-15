@@ -2,12 +2,14 @@ import { LanguageCode } from "../../../i18n/index.js";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
+  | "CAPTIONS_NOT_FETCHED"
   | "CAPTIONS_VALID"
   | "CAPTIONS_EMPTY"
   | "CAPTIONS_TOO_SHORT";
 
 export type ManualCaptionsStatus =
   | "CAPTIONS_ABSENT"
+  | "CAPTIONS_NOT_FETCHED"
   | "CAPTIONS_VALID"
   | "CAPTIONS_EMPTY"
   | "CAPTIONS_TOO_SHORT"

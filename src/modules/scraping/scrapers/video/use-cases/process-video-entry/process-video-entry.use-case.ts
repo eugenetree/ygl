@@ -43,6 +43,7 @@ export class ProcessVideoEntryUseCase {
     const captionsAnalysisResult = this.captionAnalysisService.analyze({
       autoCaptions: videoDto.autoCaptions,
       manualCaptions: videoDto.manualCaptions,
+      captionStatus: videoDto.captionStatus,
     });
 
     const video: VideoProps = {

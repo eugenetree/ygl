@@ -33,18 +33,22 @@ export class CaptionAnalysisService {
   analyze({
     autoCaptions,
     manualCaptions,
+    captionStatus,
   }: {
     autoCaptions: CaptionSegment[] | null;
     manualCaptions: CaptionSegment[] | null;
+    captionStatus: "NONE" | "MANUAL_ONLY" | "AUTO_ONLY" | "BOTH";
   }): AnalysisResult {
-    let autoCaptionsStatus: AutoCaptionsStatus = "CAPTIONS_ABSENT";
+    let autoCaptionsStatus: AutoCaptionsStatus =
+      captionStatus === "AUTO_ONLY" ? "CAPTIONS_NOT_FETCHED" : "CAPTIONS_ABSENT";
 
     if (autoCaptions) {
       const result = this.autoCaptionsValidator.validate(autoCaptions);
       autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
     }
 
-    let manualCaptionsStatus: ManualCaptionsStatus = "CAPTIONS_ABSENT";
+    let manualCaptionsStatus: ManualCaptionsStatus =
+      captionStatus === "MANUAL_ONLY" ? "CAPTIONS_NOT_FETCHED" : "CAPTIONS_ABSENT";
 
     if (manualCaptions) {
       const result = this.manualCaptionsValidator.validate(manualCaptions);
