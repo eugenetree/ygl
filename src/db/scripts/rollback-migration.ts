@@ -10,7 +10,7 @@ async function rollbackMigration() {
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(import.meta.dirname, "../migrations"),
+      migrationFolder: path.join(__dirname, "../migrations"),
     }),
   });
 

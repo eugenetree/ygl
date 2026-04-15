@@ -56,10 +56,6 @@ services:
       ES_NODE: http://elasticsearch:9200
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-    volumes: &app-volumes
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - /usr/src/app/dist
     command: npm run start:bot
     depends_on:
       - db
@@ -68,7 +64,6 @@ services:
     container_name: sync-elastic
     image: saythis-app:latest
     environment: *app-env
-    volumes: *app-volumes
     command: npm run start:elastic
     depends_on:
       - db

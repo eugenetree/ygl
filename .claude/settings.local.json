@@ -22,7 +22,12 @@
       "Bash(python _yt-dlp/yt_dlp/__main__.py --dump-json --no-download --skip-download --no-warnings \"https://youtube.com/watch?v=PNO_ofQijbY\")",
       "Bash(docker compose:*)",
       "Bash(docker volume:*)",
-      "Bash(git commit -m ':*)"
+      "Bash(git commit -m ':*)",
+      "Bash(make down:*)",
+      "Bash(make up:*)",
+      "Bash(docker exec:*)",
+      "Bash(grep -n \"endsWith\" node_modules/kysely/dist/esm/migration/file-migration-provider.js)",
+      "Bash(grep -n \"endsWith\" node_modules/kysely/dist/cjs/migration/file-migration-provider.js)"
     ],
     "deny": [],
     "ask": []

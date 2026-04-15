@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "npx nodemon",
     "db:migration:run": "npx tsx src/db/scripts/run-migrations.ts",
@@ -30,9 +29,10 @@
     "export:captions": "tsc captions.ts",
     "debug:fetch-captions": "npx tsx _debug/fetch-video-captions.ts",
     "run:reprocess-captions": "npm run clean && tsc && node dist/src/modules/scrapers/video/use-cases/reprocess-captions/bootstrap.js",
-    "start:bot": "npm run db:migration:run && npm run clean && tsc && node dist/src/main-bot.js",
-    "start:scraper": "npm run db:migration:run && npm run clean && tsc && node dist/src/main-scraper.js",
-    "start:elastic": "npm run db:migration:run && npm run clean && tsc && node dist/src/main-elastic.js"
+    "debug:env": "echo '--- node' && node --version && echo '--- tsc' && (npx tsc --version 2>&1 || echo 'tsc not found') && echo '--- tsconfig module:' && grep '\"module\"' tsconfig.json && echo '--- package type:' && (grep '\"type\"' package.json || echo 'no type field') && echo '--- adm-zip dir:' && (ls node_modules/adm-zip/package.json 2>/dev/null && echo 'ok' || echo 'NOT FOUND') && echo '--- @types/adm-zip dir:' && (ls node_modules/@types/adm-zip/index.d.ts 2>/dev/null && echo 'ok' || echo 'NOT FOUND')",
+    "start:bot": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-bot.js",
+    "start:scraper": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-scraper.js",
+    "start:elastic": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-elastic.js"
   },
   "keywords": [],
   "author": "",
@@ -42,7 +42,6 @@
     "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.26.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/adm-zip": "^0.5.8",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
@@ -58,6 +57,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.13.9",
     "@types/pg": "^8.11.6",
+    "@types/adm-zip": "^0.5.8",
     "adm-zip": "^0.5.17",
     "axios": "^1.7.7",
     "compromise": "^14.15.0",
