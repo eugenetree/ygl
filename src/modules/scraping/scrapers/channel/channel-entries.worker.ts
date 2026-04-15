@@ -75,7 +75,7 @@ export class ChannelEntriesWorker {
 
       await this.channelEntriesQueue.markAsSuccess(entry.id);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
     }
 
     return Success(WorkerStopCause.DONE);
