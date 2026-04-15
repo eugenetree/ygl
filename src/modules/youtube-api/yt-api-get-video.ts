@@ -126,7 +126,7 @@ export class YoutubeApiGetVideo {
     }
 
     // Rate-limit before hitting YouTube again
-    await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
+    await new Promise((resolve) => setTimeout(resolve, 10000 + Math.random() * 10000));
 
     // Download captions via yt-dlp (uses browser impersonation + PO Token)
     const captionsResult = await this.downloadCaptions(videoId, language);
@@ -190,14 +190,15 @@ export class YoutubeApiGetVideo {
       const autoDir = path.join(tmpDir, "auto");
       const manualDir = path.join(tmpDir, "manual");
 
-      const autoExec = this.ytDlpClient.exec([
+      const autoResult = await this.ytDlpClient.exec([
         url, "--write-auto-subs", ...baseArgs, "-o", path.join(autoDir, "%(id)s"),
       ]);
-      const manualExec = this.ytDlpClient.exec([
+
+      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
+
+      const manualResult = await this.ytDlpClient.exec([
         url, "--write-subs", ...baseArgs, "-o", path.join(manualDir, "%(id)s"),
       ]);
-
-      const [autoResult, manualResult] = await Promise.all([autoExec, manualExec]);
 
       if (!autoResult.ok) return autoResult;
       if (!manualResult.ok) return manualResult;
