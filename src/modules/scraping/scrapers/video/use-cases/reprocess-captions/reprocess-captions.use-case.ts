@@ -42,6 +42,7 @@ export class ReprocessCaptionsUseCase {
       const analysis = await this.captionAnalysisService.analyze({
         autoCaptions,
         manualCaptions,
+        captionStatus: "BOTH",
       });
 
       const isBothValid =
