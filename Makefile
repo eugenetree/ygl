@@ -41,6 +41,10 @@ run:
 search:
 	docker exec saythis-app npm run find-captions -- $(query)
 
+ssh-logs:
+	mkdir -p _debug/logs
+	scp -r root@178.105.4.165:/opt/ygl/logs/. _debug/logs/
+
 # Rebuild app container (useful after dependency changes)
 rebuild:
 	docker compose down

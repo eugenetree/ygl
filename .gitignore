@@ -10,6 +10,7 @@ _yt-dlp
 _ytdlp
 .vscode
 db/dump/
+_debug/
 .env
 router_config.ovpn
 router_config.ovpn
