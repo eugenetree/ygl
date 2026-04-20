@@ -14,6 +14,8 @@ import { CaptionProps } from "../../caption.js";
 // ---- Fixtures ---------------------------------------------------------------
 
 const videoId = "video-1";
+const channelId = "channel-1";
+const videoInput = { videoId, channelId };
 
 const baseVideoDto = {
   id: "video-1",
@@ -194,7 +196,7 @@ describe("ProcessVideoEntryUseCase", () => {
       const ytError = { type: "YT_DLP_ERROR" as const, message: "yt-dlp died" };
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Failure(ytError)));
 
-      const result = await sut.execute(videoId);
+      const result = await sut.execute(videoInput);
 
       assertFailure(result);
       assert.deepEqual(result.error, ytError);
@@ -206,7 +208,7 @@ describe("ProcessVideoEntryUseCase", () => {
         ({ type }: { type: "auto" | "manual" }) => (type === "auto" ? [] : manualCaptionProps),
       );
 
-      const result = await sut.execute(videoId);
+      const result = await sut.execute(videoInput);
 
       assertFailure(result);
       assert.equal(result.error.type, "UNEXPECTED_STATE");
@@ -215,7 +217,7 @@ describe("ProcessVideoEntryUseCase", () => {
     it("returns failure when createWithCaptions fails", async () => {
       mocks.videoRepository.createWithCaptions.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
 
-      const result = await sut.execute(videoId);
+      const result = await sut.execute(videoInput);
 
       assertFailure(result);
       assert.deepEqual(result.error, dbError);
@@ -224,7 +226,7 @@ describe("ProcessVideoEntryUseCase", () => {
     it("enqueues a transcription job when captionStatus is MANUAL_ONLY", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
 
-      await sut.execute(videoId);
+      await sut.execute(videoInput);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 1);
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0], manualOnlyVideo.id);
@@ -233,13 +235,13 @@ describe("ProcessVideoEntryUseCase", () => {
     it("does not enqueue a transcription job when captionStatus is AUTO_ONLY", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(autoOnlyVideo)));
 
-      await sut.execute(videoId);
+      await sut.execute(videoInput);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
     });
 
     it("does not enqueue a transcription job when captionStatus is BOTH", async () => {
-      await sut.execute(videoId);
+      await sut.execute(videoInput);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
     });
@@ -248,7 +250,7 @@ describe("ProcessVideoEntryUseCase", () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
       mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
 
-      const result = await sut.execute(videoId);
+      const result = await sut.execute(videoInput);
 
       assertFailure(result);
       assert.deepEqual(result.error, dbError);
