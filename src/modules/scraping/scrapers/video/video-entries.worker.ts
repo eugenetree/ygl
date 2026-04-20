@@ -63,7 +63,10 @@ export class VideoEntriesWorker {
         return Success(WorkerStopCause.EMPTY);
       }
 
-      const result = await this.processVideoEntry.execute(entry.id);
+      const result = await this.processVideoEntry.execute({
+        videoId: entry.id,
+        channelId: entry.channelId,
+      });
 
       const isMembersOnly = !result.ok && result.error.type === "MEMBERS_ONLY_VIDEO";
       const healthSyncResult = await this.syncChannelHealth({

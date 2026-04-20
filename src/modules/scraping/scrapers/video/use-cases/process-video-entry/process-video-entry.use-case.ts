@@ -22,7 +22,7 @@ export class ProcessVideoEntryUseCase {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
   }
 
-  public async execute(videoId: string) {
+  public async execute({ videoId, channelId }: { videoId: string, channelId: string }) {
     this.logger.info(`Processing video entry ${videoId}...`);
 
     const videoDtoResult = await this.youtubeApiGetVideo.getVideo(videoId);
@@ -51,6 +51,7 @@ export class ProcessVideoEntryUseCase {
       ...this.videoMapper.mapDtoToVideoProps({
         videoDto,
       }),
+      channelId,
     };
 
     const autoCaptions: CaptionProps[] = videoDto.autoCaptions
