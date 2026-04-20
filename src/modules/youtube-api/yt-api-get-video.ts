@@ -83,60 +83,48 @@ export class YoutubeApiGetVideo {
       mediaType: ytData.media_type ?? null,
     };
 
-    if (!ytData.language) {
-      this.logger.warn(`No language detected for video ${videoId}.`);
-    }
+    this.logger.info(`Language from yt-dlp: ${ytData.language}. Video ID: ${videoId}`);
 
-    const language = ytData.language ? this.detectLanguage(ytData.language) : null;
+    const language = ytData.language
+      ? this.detectLanguage(ytData.language)
+      : null;
 
     if (!language) {
-      const hasManual = ytData.subtitles && Object.keys(ytData.subtitles).length > 0;
-      if (hasManual) this.logger.info(`Video ${videoId} has only manual captions (no detected lang).`);
+      const hasAnyManual = Boolean(Object.keys(ytData.subtitles || {}).length > 0);
+      if (hasAnyManual) this.logger.info(`Video ${videoId} has only manual captions (no detected lang).`);
       return Success({
         ...videoBase,
-        captionStatus: hasManual ? "MANUAL_ONLY" : "NONE",
+        captionStatus: hasAnyManual ? "MANUAL_ONLY" : "NONE",
         languageCode: null,
         autoCaptions: null,
         manualCaptions: null,
       });
     }
 
-    const hasAutoTracks = this.hasTracksForLanguage(ytData.automatic_captions || {}, language);
-    const hasManualTracks = this.hasTracksForLanguage(ytData.subtitles || {}, language);
+    const autoKey = ytData.automatic_captions
+      ? this.findAutoLangKey(ytData.automatic_captions, language)
+      : null;
 
-    if (!hasAutoTracks && !hasManualTracks) {
+    const manualKey = ytData.subtitles
+      ? this.findMatchingKey(ytData.subtitles, language)
+      : null;
+
+    if (!autoKey && !manualKey) {
       this.logger.info(`No captions found for video ${videoId}.`);
-      return Success({
-        ...videoBase,
-        captionStatus: "NONE",
-        languageCode: language,
-        autoCaptions: null,
-        manualCaptions: null,
-      });
+      return Success({ ...videoBase, captionStatus: "NONE", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
-
-    if (!hasAutoTracks) {
+    if (!autoKey) {
       this.logger.info(`No auto captions for video ${videoId}, skipping.`);
       return Success({ ...videoBase, captionStatus: "MANUAL_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
-
-    if (!hasManualTracks) {
+    if (!manualKey) {
       this.logger.info(`No manual captions for video ${videoId}, skipping.`);
       return Success({ ...videoBase, captionStatus: "AUTO_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
 
-    // Rate-limit before hitting YouTube again
     await new Promise((resolve) => setTimeout(resolve, 10000 + Math.random() * 10000));
 
-    const autoLang = this.findMatchingKey(ytData.automatic_captions || {}, language);
-    const manualLang = this.findMatchingKey(ytData.subtitles || {}, language);
-
-    if (!autoLang || !manualLang) {
-      return Failure({ type: "YT_DLP_ERROR", message: "Could not resolve caption language keys" });
-    }
-
-    // Download captions via yt-dlp (uses browser impersonation + PO Token)
-    const captionsResult = await this.downloadCaptions(videoId, autoLang, manualLang);
+    const captionsResult = await this.downloadCaptions(videoId, autoKey, manualKey);
     if (!captionsResult.ok) {
       return Failure(captionsResult.error);
     }
@@ -159,41 +147,60 @@ export class YoutubeApiGetVideo {
       return lang;
     }
 
-    if (lang.includes("-")) {
-      const baseLang = lang.split("-")[0];
-      if (isValidLanguageCode(baseLang)) {
-        return baseLang;
-      }
-    }
+    this.logger.warn(
+      `Language from yt-dlp ${lang} is not found in supported languages.`
+    )
 
     return null;
   }
 
+  /**
+   * For manual captions, find the best match for the given language.
+   * Prefer exact match, then prefix match, then base-language match (e.g. en-us vs en-gb).
+   */
   private findMatchingKey(
     tracks: Record<string, unknown[]>,
     language: string,
   ): string | null {
     const lowerLang = language.toLowerCase();
-    const matches = Object.entries(tracks).filter(([key, track]) => {
-      if (!track?.length) return false;
+
+    const nonEmptyEntries = Object.entries(tracks)
+      .filter(([, formats]) => Boolean(formats?.length));
+
+    const exact = nonEmptyEntries.find(([key]) => key.toLowerCase() === lowerLang);
+    if (exact) return exact[0];
+
+    const prefix = nonEmptyEntries.find(([key]) => {
       const lowerKey = key.toLowerCase();
-      return lowerKey === lowerLang || lowerKey.startsWith(lowerLang) || lowerLang.startsWith(lowerKey);
+      return lowerKey.startsWith(lowerLang) || lowerLang.startsWith(lowerKey);
     });
-    const exact = matches.find(([key]) => key.toLowerCase() === lowerLang);
-    return (exact ?? matches[0])?.[0] ?? null;
+    if (prefix) return prefix[0];
+
+    const baseMatch = nonEmptyEntries.find(
+      ([key]) => key.toLowerCase().split("-")[0] === lowerLang.split("-")[0]
+    );
+    if (baseMatch) {
+      this.logger.warn(`Manual caption key "${baseMatch[0]}" matched language "${language}" by base language only.`);
+      return baseMatch[0];
+    }
+
+    return null;
   }
 
-  private hasTracksForLanguage(
+  /**
+   * For auto captions, only consider real ASR tracks: prefer {baseLang}-orig, then {baseLang}.
+   * Regional variants like en-GB in automatic_captions are machine-translation targets,
+   * not downloadable ASR tracks, so we don't use them.
+   */
+  private findAutoLangKey(
     tracks: Record<string, unknown[]>,
-    language: string,
-  ): boolean {
-    const lowerLang = language.toLowerCase();
-
-    return Object.entries(tracks).some(([key, track]) => {
-      if (!track?.length) return false;
-      const lowerKey = key.toLowerCase();
-      return lowerKey === lowerLang || lowerKey.startsWith(lowerLang) || lowerLang.startsWith(lowerKey);
-    });
+    language: string, // "en-gb", "en"
+  ): string | null {
+    const baseLang = language.split("-")[0];
+    const origKey = `${baseLang}-orig`;
+    if (tracks[origKey]?.length) return origKey; // en-orig
+    if (tracks[baseLang]?.length) return baseLang; // en
+    return null;
   }
 
   private async downloadCaptions(
@@ -214,14 +221,13 @@ export class YoutubeApiGetVideo {
       const autoResult = await this.ytDlpClient.exec([
         url, "--write-auto-subs", "--sub-format", "json3", "--sub-langs", autoLang, "--skip-download", "--no-warnings", "-o", path.join(autoDir, "%(id)s"),
       ]);
+      if (!autoResult.ok) return autoResult;
 
       await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
 
       const manualResult = await this.ytDlpClient.exec([
         url, "--write-subs", "--sub-format", "json3", "--sub-langs", manualLang, "--skip-download", "--no-warnings", "-o", path.join(manualDir, "%(id)s"),
       ]);
-
-      if (!autoResult.ok) return autoResult;
       if (!manualResult.ok) return manualResult;
 
       const autoFile = await this.findSubtitleFile(autoDir);
@@ -245,7 +251,7 @@ export class YoutubeApiGetVideo {
         manualCaptions: manualCaptions.value,
       });
     } finally {
-      await rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+      await rm(tmpDir, { recursive: true, force: true }).catch(() => { });
     }
   }
 

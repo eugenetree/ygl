@@ -56,6 +56,8 @@ services:
       ES_NODE: http://elasticsearch:9200
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    volumes:
+      - /opt/ygl/logs:/app/logs
     command: npm run start:bot
     depends_on:
       - db
@@ -85,6 +87,8 @@ services:
       VPN_PASS: ${VPN_PASS}
       VPN_CONFIG_B64: ${VPN_CONFIG_B64}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
+    volumes:
+      - /opt/ygl/logs:/app/logs
     depends_on:
       - db
 

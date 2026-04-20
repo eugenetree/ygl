@@ -27,9 +27,19 @@
       "Bash(make up:*)",
       "Bash(docker exec:*)",
       "Bash(grep -n \"endsWith\" node_modules/kysely/dist/esm/migration/file-migration-provider.js)",
-      "Bash(grep -n \"endsWith\" node_modules/kysely/dist/cjs/migration/file-migration-provider.js)"
+      "Bash(grep -n \"endsWith\" node_modules/kysely/dist/cjs/migration/file-migration-provider.js)",
+      "Bash(npm test:*)",
+      "Bash(npx tsx:*)",
+      "Read(//c/Users/eugene/.claude/**)",
+      "Bash(node -e \"const d=require\\('./_debug/yt-dlp-dump-iGeXGdYE7UE.json'\\); console.log\\('language:', d.language\\); console.log\\('automatic_captions keys:', Object.keys\\(d.automatic_captions||{}\\).slice\\(0,20\\)\\); console.log\\('subtitles keys:', Object.keys\\(d.subtitles||{}\\).slice\\(0,20\\)\\);\")",
+      "Bash(node -e \"const d=require\\('./_debug/yt-dlp-dump-iGeXGdYE7UE.json'\\); const keys=Object.keys\\(d.automatic_captions||{}\\); console.log\\('total auto keys:', keys.length\\); const enKeys=keys.filter\\(k=>k.startsWith\\('en'\\)\\); console.log\\('en* keys:', enKeys\\);\")",
+      "Bash(node -e \"const d=require\\('./c:/projects/ygl/_debug/yt-dlp-dump-iGeXGdYE7UE.json'\\); console.log\\('language:', d.language\\);\")",
+      "Bash(node -e \"const d=require\\('./_debug/yt-dlp-dump-iGeXGdYE7UE.json'\\); console.log\\('language:', d.language\\);\")"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "c:\\projects\\ygl\\.claude\\skills"
+    ]
   }
 }
