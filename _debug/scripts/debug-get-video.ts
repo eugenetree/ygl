@@ -17,7 +17,7 @@ async function main() {
     const raw = rawResult.value[0];
     console.log("=== RAW YT-DLP CAPTION FIELDS ===");
     console.log("language:", raw.language);
-    console.log("automatic_captions keys:", Object.keys(raw.automatic_captions ?? {}));
+    console.log("automatic_captions keys:", JSON.stringify(Object.keys(raw.automatic_captions ?? {})));
     console.log("subtitles keys:", Object.keys(raw.subtitles ?? {}));
     console.log("=================================\n");
 

@@ -13,4 +13,4 @@ db/dump/
 _debug/
 .env
 router_config.ovpn
-router_config.ovpn
+.claude/settings.local.json
