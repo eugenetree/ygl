@@ -24,6 +24,7 @@ type VideoBase = {
   channelId: string;
   viewCount: number;
   thumbnail: string;
+  languageCodeYtdlp: string | null;
   asr: number | null;
   abr: number | null;
   acodec: string | null;

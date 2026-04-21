@@ -24,6 +24,7 @@ export type Video = {
   viewCount: number;
   thumbnail: string;
   languageCode: LanguageCode | null;
+  languageCodeYtdlp: string | null;
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
   captionsSimilarityScore: number | null;

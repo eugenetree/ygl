@@ -60,6 +60,7 @@ export class YoutubeApiGetVideo {
       channelId: ytData.channel_id,
       viewCount: ytData.view_count ? Math.round(ytData.view_count) : 0,
       thumbnail: ytData.thumbnail,
+      languageCodeYtdlp: ytData.language ?? null,
       asr: ytData.asr ? Math.round(ytData.asr) : null,
       abr: ytData.abr ? Math.round(ytData.abr) : null,
       acodec: ytData.acodec ?? null,

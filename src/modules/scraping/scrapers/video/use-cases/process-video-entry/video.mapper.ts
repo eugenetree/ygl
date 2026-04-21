@@ -29,6 +29,7 @@ export class VideoMapper {
         "viewCount",
         "thumbnail",
         "languageCode",
+        "languageCodeYtdlp",
         "asr",
         "abr",
         "acodec",
