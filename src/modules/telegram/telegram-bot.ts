@@ -5,6 +5,7 @@ import { Logger } from "../_common/logger/logger.js";
 import { ConfigController } from "./config.controller.js";
 import { ExportLogsController } from "./export-logs.controller.js";
 import { FindController } from "./find.controller.js";
+import { LastVideosController } from "./last-videos.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { StatsController } from "./stats.controller.js";
 
@@ -19,6 +20,7 @@ export class TelegramBot {
     private readonly configController: ConfigController,
     private readonly findController: FindController,
     private readonly exportLogsController: ExportLogsController,
+    private readonly lastVideosController: LastVideosController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -56,6 +58,7 @@ export class TelegramBot {
     this.configController.register(this.bot);
     this.findController.register(this.bot);
     this.exportLogsController.register(this.bot);
+    this.lastVideosController.register(this.bot);
   }
 
   private async syncCommands(): Promise<void> {
@@ -67,6 +70,7 @@ export class TelegramBot {
       { command: "config", description: "Configure scrapers" },
       { command: "find", description: "Search in captions" },
       { command: "logs", description: "Export logs" },
+      { command: "last", description: "Show last 10 scraped videos" },
     ]);
   }
 

@@ -121,6 +121,25 @@ export class VideoRepository {
     }
   }
 
+  async getLastScraped(
+    limit: number,
+  ): Promise<Result<Array<Pick<Video, "id" | "languageCode" | "languageCodeYtdlp" | "createdAt">>, DatabaseError>> {
+    const result = await tryCatch(
+      dbClient
+        .selectFrom("videos")
+        .select(["id", "languageCode", "languageCodeYtdlp", "createdAt"])
+        .orderBy("createdAt", "desc")
+        .limit(limit)
+        .execute(),
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(result.value);
+  }
+
   async update(
     videoId: string,
     data: Partial<VideoProps>,
