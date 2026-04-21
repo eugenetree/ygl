@@ -12,6 +12,8 @@ import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import { YtDlpClient } from "./yt-dlp-client.js";
 import { Logger } from "../_common/logger/logger.js";
 
+const TIMEOUT = 60_000;
+
 function createService(): YoutubeApiGetVideo {
   const logger = new Logger({ context: "test", category: "test" });
   const ytDlpClient = new YtDlpClient(logger);
@@ -21,7 +23,7 @@ function createService(): YoutubeApiGetVideo {
 describe("YoutubeApiGetVideo.getVideo()", () => {
   const service = createService();
 
-  it("returns Success(BOTH) with correct video metadata and captions for Wnp_cMw_GxM", { timeout: 30_000 }, async () => {
+  it("returns Success(BOTH) with correct video metadata and captions for Wnp_cMw_GxM", { timeout: TIMEOUT }, async () => {
     const result = await service.getVideo("Wnp_cMw_GxM");
 
     assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
@@ -67,7 +69,7 @@ describe("YoutubeApiGetVideo.getVideo()", () => {
     );
   });
 
-  it("returns Success(AUTO_ONLY) for video with only auto captions (3IT2Cc_5WxE)", { timeout: 30_000 }, async () => {
+  it("returns Success(AUTO_ONLY) for video with only auto captions (3IT2Cc_5WxE)", { timeout: TIMEOUT }, async () => {
     const result = await service.getVideo("3IT2Cc_5WxE");
 
     assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
@@ -77,7 +79,7 @@ describe("YoutubeApiGetVideo.getVideo()", () => {
     assert.equal(result.value.manualCaptions, null);
   });
 
-  it("returns Success(MANUAL_ONLY) for video with only manual captions (SFnMTHhKdkw)", { timeout: 30_000 }, async () => {
+  it("returns Success(MANUAL_ONLY) for video with only manual captions (SFnMTHhKdkw)", { timeout: TIMEOUT }, async () => {
     const result = await service.getVideo("SFnMTHhKdkw");
 
     assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
@@ -87,7 +89,17 @@ describe("YoutubeApiGetVideo.getVideo()", () => {
     assert.equal(result.value.manualCaptions, null);
   });
 
-  it("returns Success(NONE) for video with no captions (7DNz25c6BRg)", { timeout: 30_000 }, async () => {
+  it("detects Thai (th) via th-orig key despite yt-dlp reporting en-US (wda-B3NJSek)", { timeout: TIMEOUT }, async () => {
+    const result = await service.getVideo("wda-B3NJSek");
+
+    assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);
+    assert.equal(result.value.captionStatus, "AUTO_ONLY");
+    assert.equal(result.value.languageCode, "th");
+    assert.equal(result.value.autoCaptions, null);
+    assert.equal(result.value.manualCaptions, null);
+  });
+
+  it("returns Success(NONE) for video with no captions (7DNz25c6BRg)", { timeout: TIMEOUT }, async () => {
     const result = await service.getVideo("7DNz25c6BRg");
 
     assert.ok(result.ok, `Expected success but got failure: ${JSON.stringify(!result.ok && result.error)}`);

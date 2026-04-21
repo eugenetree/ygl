@@ -58,7 +58,6 @@ class MockYtDlpClient {
   async exec(
     args: string[]
   ): Promise<Result<void, YtDlpError | MembersOnlyVideoError>> {
-    // Capture --sub-langs value
     const subLangsIdx = args.indexOf("--sub-langs");
     if (subLangsIdx !== -1) {
       const lang = args[subLangsIdx + 1]!;
@@ -66,10 +65,9 @@ class MockYtDlpClient {
       else this.capturedSubLangs.manual = lang;
     }
 
-    // Write a valid json3 file to the output dir so findSubtitleFile succeeds
     const oIdx = args.indexOf("-o");
     if (oIdx !== -1) {
-      const outTemplate = args[oIdx + 1]!; // e.g. "/tmp/.../auto/%(id)s"
+      const outTemplate = args[oIdx + 1]!;
       const outDir = path.dirname(outTemplate);
       await mkdir(outDir, { recursive: true });
       await writeFile(path.join(outDir, "video.json3"), MINIMAL_JSON3);
@@ -109,32 +107,13 @@ after(() => {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe("YoutubeApiGetVideo - language key selection", () => {
-  describe("auto captions key", () => {
-    it("prefers exact 'en' over en-orig and en-qlPKC2UN_YU", async () => {
+  describe("auto captions key (findOrigTrack)", () => {
+    it("uses en-orig as the auto captions key", async () => {
       const { service, mockClient } = createService(
         baseYtData({
-          language: "en",
           automatic_captions: {
             "en-orig": captionEntry(),
-            "en": captionEntry(),
-            "en-qlPKC2UN_YU": captionEntry(),
-          },
-          subtitles: { "en": captionEntry() },
-        })
-      );
-
-      await service.getVideo("testVideoId");
-
-      assert.equal(mockClient.capturedSubLangs.auto, "en");
-    });
-
-    it("falls back to 'en-orig' when exact 'en' is absent", async () => {
-      const { service, mockClient } = createService(
-        baseYtData({
-          language: "en",
-          automatic_captions: {
-            "en-orig": captionEntry(),
-            "en-qlPKC2UN_YU": captionEntry(),
+            "fr": captionEntry(),
           },
           subtitles: { "en": captionEntry() },
         })
@@ -144,14 +123,44 @@ describe("YoutubeApiGetVideo - language key selection", () => {
 
       assert.equal(mockClient.capturedSubLangs.auto, "en-orig");
     });
-  });
 
-  describe("manual captions key", () => {
-    it("prefers exact 'en' over en-qlPKC2UN_YU", async () => {
+    it("uses th-orig for a Thai video, ignoring non-orig keys", async () => {
       const { service, mockClient } = createService(
         baseYtData({
-          language: "en",
+          automatic_captions: {
+            "th-orig": captionEntry(),
+            "en": captionEntry(), // auto-translated — must be ignored
+          },
+          subtitles: { "th": captionEntry() },
+        })
+      );
+
+      await service.getVideo("testVideoId");
+
+      assert.equal(mockClient.capturedSubLangs.auto, "th-orig");
+    });
+
+    it("returns MANUAL_ONLY when automatic_captions has no *-orig key", async () => {
+      const { service } = createService(
+        baseYtData({
           automatic_captions: { "en": captionEntry() },
+          subtitles: { "en": captionEntry() },
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+      assert.equal(result.value.languageCode, null);
+    });
+  });
+
+  describe("manual captions key (findMatchingKey)", () => {
+    it("prefers exact match over prefix match", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          automatic_captions: { "en-orig": captionEntry() },
           subtitles: {
             "en-qlPKC2UN_YU": captionEntry(),
             "en": captionEntry(),
@@ -164,11 +173,23 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       assert.equal(mockClient.capturedSubLangs.manual, "en");
     });
 
-    it("uses 'en-qlPKC2UN_YU' when that is the only match", async () => {
+    it("falls back to prefix match when no exact key (en-US)", async () => {
       const { service, mockClient } = createService(
         baseYtData({
-          language: "en",
-          automatic_captions: { "en": captionEntry() },
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { "en-US": captionEntry() },
+        })
+      );
+
+      await service.getVideo("testVideoId");
+
+      assert.equal(mockClient.capturedSubLangs.manual, "en-US");
+    });
+
+    it("matches en-qlPKC2UN_YU via prefix when it is the only subtitle", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          automatic_captions: { "en-orig": captionEntry() },
           subtitles: { "en-qlPKC2UN_YU": captionEntry() },
         })
       );
@@ -180,56 +201,10 @@ describe("YoutubeApiGetVideo - language key selection", () => {
   });
 
   describe("captionStatus", () => {
-    it("returns AUTO_ONLY when subtitles has no matching language", async () => {
+    it("returns BOTH when *-orig and matching manual subtitle are present", async () => {
       const { service } = createService(
         baseYtData({
-          language: "en",
-          automatic_captions: { "en": captionEntry() },
-          subtitles: { "fr": captionEntry() },
-        })
-      );
-
-      const result = await service.getVideo("testVideoId");
-
-      assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "AUTO_ONLY");
-    });
-
-    it("returns MANUAL_ONLY when automatic_captions has no matching language", async () => {
-      const { service } = createService(
-        baseYtData({
-          language: "en",
-          automatic_captions: { "fr": captionEntry() },
-          subtitles: { "en": captionEntry() },
-        })
-      );
-
-      const result = await service.getVideo("testVideoId");
-
-      assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
-    });
-
-    it("returns NONE when no captions match the detected language", async () => {
-      const { service } = createService(
-        baseYtData({
-          language: "en",
-          automatic_captions: { "fr": captionEntry() },
-          subtitles: { "de": captionEntry() },
-        })
-      );
-
-      const result = await service.getVideo("testVideoId");
-
-      assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "NONE");
-    });
-
-    it("returns BOTH and captions when both track types match", async () => {
-      const { service } = createService(
-        baseYtData({
-          language: "en",
-          automatic_captions: { "en": captionEntry() },
+          automatic_captions: { "en-orig": captionEntry() },
           subtitles: { "en": captionEntry() },
         })
       );
@@ -241,13 +216,53 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       assert.ok(result.value.autoCaptions!.length > 0);
       assert.ok(result.value.manualCaptions!.length > 0);
     });
-  });
 
-  describe("language detection", () => {
-    it("keeps 'en-us' as-is since it is a valid LanguageCode", async () => {
+    it("returns AUTO_ONLY when *-orig found but no matching manual subtitle", async () => {
       const { service } = createService(
         baseYtData({
-          language: "en-US",
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { "fr": captionEntry() },
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.captionStatus, "AUTO_ONLY");
+    });
+
+    it("returns MANUAL_ONLY when no *-orig key but subtitles exist", async () => {
+      const { service } = createService(
+        baseYtData({
+          automatic_captions: { "en": captionEntry() },
+          subtitles: { "en": captionEntry() },
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+    });
+
+    it("returns MANUAL_ONLY when automatic_captions absent and subtitles exist in another language (fr)", async () => {
+      const { service } = createService(
+        baseYtData({
+          automatic_captions: {},
+          subtitles: { "fr": captionEntry() },
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+      assert.equal(result.value.languageCode, null);
+    });
+
+    it("returns NONE when no *-orig key and no subtitles", async () => {
+      const { service } = createService(
+        baseYtData({
           automatic_captions: { "en": captionEntry() },
           subtitles: {},
         })
@@ -256,16 +271,32 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      // "en-US" lowercases to "en-us" which is a valid LanguageCode — kept as-is
-      assert.equal(result.value.languageCode, "en-us");
-      // "en-us".startsWith("en") so the "en" auto track is still matched
-      assert.equal(result.value.captionStatus, "AUTO_ONLY");
+      assert.equal(result.value.captionStatus, "NONE");
     });
+  });
 
-    it("returns null languageCode when language field is absent", async () => {
+  describe("language detection", () => {
+    it("extracts language code from *-orig key, ignoring yt-dlp language field", async () => {
       const { service } = createService(
         baseYtData({
-          language: null,
+          language: "en-US", // yt-dlp says English — should be ignored
+          automatic_captions: {
+            "th-orig": captionEntry(), // actual spoken language is Thai
+            "en": captionEntry(),
+          },
+          subtitles: {},
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "th");
+    });
+
+    it("returns null languageCode when no *-orig key is present", async () => {
+      const { service } = createService(
+        baseYtData({
           automatic_captions: {},
           subtitles: { "en": captionEntry() },
         })
