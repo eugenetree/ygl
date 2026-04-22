@@ -18,7 +18,10 @@ export class ResyncCaptionsController implements TelegramController {
     bot.command("resync_captions", async (ctx) => {
       this.logger.info("Received /resync_captions command");
 
-      await ctx.reply("Caption resync started. This may take a while...");
+      await ctx.reply(
+        "Caption resync started.\n"
+        + "You will be notified when it's done."
+      );
 
       const result = await this.resyncCaptionsUseCase.execute();
 

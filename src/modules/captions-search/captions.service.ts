@@ -14,7 +14,7 @@ export class CaptionsService {
     this.esClient = new Client({ node: esNode });
   }
 
-  async sync(captions: Caption[]) {
+  async sync(captions: Caption[], batchSize = 2000) {
     const isIndexExists = await this.esClient.indices.exists({ index: "captions" });
 
     if (!isIndexExists) {
@@ -22,13 +22,16 @@ export class CaptionsService {
       await this.createIndex();
     }
 
-    await this.esClient.bulk({
-      index: "captions",
-      operations: captions.flatMap(caption => [
-        { index: { _id: caption.id } },
-        caption,
-      ]),
-    });
+    for (let i = 0; i < captions.length; i += batchSize) {
+      const batch = captions.slice(i, i + batchSize);
+      await this.esClient.bulk({
+        index: "captions",
+        operations: batch.flatMap(caption => [
+          { index: { _id: caption.id } },
+          caption,
+        ]),
+      });
+    }
   }
 
   async search(query: string) {

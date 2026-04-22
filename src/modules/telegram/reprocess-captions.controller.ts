@@ -21,7 +21,10 @@ export class ReprocessCaptionsController implements TelegramController {
     bot.command("reprocess_captions", async (ctx) => {
       this.logger.info("Received /reprocess_captions command");
 
-      await ctx.reply("Captions reprocessing started. This may take a while...");
+      await ctx.reply(
+        "Captions reprocessing started.\n"
+        + "You will be notified when it's done."
+      );
 
       const result = await this.reprocessCaptionsUseCase.execute();
 
