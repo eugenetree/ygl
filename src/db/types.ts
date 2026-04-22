@@ -2,6 +2,7 @@ import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 import { LanguageCode } from "../modules/i18n/index.js";
 import type { ScraperName } from "../modules/scraping/constants.js";
+import type { VideoEntryAvailability } from "../modules/scraping/scrapers/video-discovery/video-entry.js";
 
 export type ProcessingStatus =
   | "PENDING"
@@ -255,7 +256,7 @@ export interface ElasticCaptionsSyncRow {
 export interface VideoEntriesRow {
   id: string;
   channelId: string;
-  availability: string | null;
+  availability: VideoEntryAvailability;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
