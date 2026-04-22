@@ -103,6 +103,7 @@ export class VideoRepository {
           .selectFrom("captions")
           .selectAll()
           .where("videoId", "=", video.id)
+          .orderBy("startTime", "asc")
           .execute(),
       );
 

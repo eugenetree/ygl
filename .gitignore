@@ -10,7 +10,6 @@ _yt-dlp
 _ytdlp
 .vscode
 db/dump/
-_debug/
 .env
 router_config.ovpn
 .claude/settings.local.json
