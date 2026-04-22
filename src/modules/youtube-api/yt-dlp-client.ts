@@ -226,7 +226,11 @@ export class YtDlpClient {
       });
 
       builder.on("error", (error: Error) => {
-        errorResult = { type: "YT_DLP_ERROR", message: error.message, cause: error };
+        errorResult = { 
+            type: "YT_DLP_ERROR", 
+            message: error.message, 
+            cause: { originalError: error, stderr: stderrBuffer } 
+        };
         done = true;
         resolveNext?.();
       });
@@ -242,6 +246,16 @@ export class YtDlpClient {
 
         if (result.exitCode !== 0 && !errorResult) {
           errorResult = { type: "YT_DLP_ERROR", message: result.stderr || `Exit code ${result.exitCode}` };
+        }
+        done = true;
+        resolveNext?.();
+      }).catch((error) => {
+        if (!errorResult) {
+          errorResult = { 
+              type: "YT_DLP_ERROR", 
+              message: error.message || "Unknown error during yt-dlp execution", 
+              cause: { originalError: error, stderr: stderrBuffer } 
+          };
         }
         done = true;
         resolveNext?.();
