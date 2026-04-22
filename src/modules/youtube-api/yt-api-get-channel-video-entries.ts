@@ -8,6 +8,7 @@ import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
 export type ChannelVideoEntry = {
   id: string;
+  availability: "subscriber_only" | null;
 };
 
 type ChannelVideosResultSuccess =
@@ -24,6 +25,7 @@ type ChannelVideosResultSuccess =
 const inputSchemas = {
   video: z.object({
     id: z.string(),
+    availability: z.enum(["subscriber_only"]).nullable(),
   }),
 };
 
@@ -96,7 +98,7 @@ export class YoutubeApiGetChannelVideoEntries {
       yield Success({
         status: "found",
         channelId,
-        chunk: [{ id: videoResult.value.id }],
+        chunk: [{ id: videoResult.value.id, availability: videoResult.value.availability }],
       });
     }
 

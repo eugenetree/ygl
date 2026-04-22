@@ -18,7 +18,8 @@ export type VideoJobStatus =
 
 export type VideoJobSkipCause =
   | "MEMBERS_ONLY"
-  | "GEO_RESTRICTED";
+  | "GEO_RESTRICTED"
+  | "AGE_RESTRICTED";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
@@ -254,6 +255,7 @@ export interface ElasticCaptionsSyncRow {
 export interface VideoEntriesRow {
   id: string;
   channelId: string;
+  availability: string | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
