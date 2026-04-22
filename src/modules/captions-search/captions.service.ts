@@ -4,17 +4,17 @@ import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
 
 @injectable()
-export class ElasticSyncService {
+export class CaptionsService {
   private readonly esClient: Client;
 
   constructor(private readonly logger: Logger) {
-    this.logger.setContext(ElasticSyncService.name);
+    this.logger.setContext(CaptionsService.name);
     // Use elasticsearch service name in Docker, localhost outside Docker
     const esNode = process.env.ES_NODE || "http://elasticsearch:9200";
     this.esClient = new Client({ node: esNode });
   }
 
-  async syncDataToElastic(captions: Caption[]) {
+  async sync(captions: Caption[]) {
     const isIndexExists = await this.esClient.indices.exists({ index: "captions" });
 
     if (!isIndexExists) {
@@ -31,7 +31,32 @@ export class ElasticSyncService {
     });
   }
 
-  async deleteIndex() {
+  async search(query: string) {
+    const response = await this.esClient.search({
+      index: "captions",
+      query: {
+        bool: {
+          must: {
+            match: {
+              text: {
+                query,
+                operator: "and",
+              },
+            },
+          },
+          should: {
+            match_phrase: {
+              text: query,
+            },
+          },
+        },
+      },
+    });
+
+    return response.hits.hits;
+  }
+
+  async clear() {
     const exists = await this.esClient.indices.exists({ index: "captions" });
     if (exists) {
       this.logger.info("Deleting captions index");

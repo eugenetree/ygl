@@ -1,43 +1,19 @@
-import { Client } from "@elastic/elasticsearch";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
-import { ElasticSyncService } from "./elastic-captions-sync.service.js";
+import { CaptionsService } from "./captions.service.js";
 
 @injectable()
 export class FindCaptionsUseCase {
-  private readonly esClient: Client;
-
-  constructor(private readonly logger: Logger, private readonly elasticSyncService: ElasticSyncService) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly captionsService: CaptionsService,
+  ) {
     this.logger.setContext(FindCaptionsUseCase.name);
-    // Use elasticsearch service name in Docker, localhost outside Docker
-    const esNode = process.env.ES_NODE || "http://elasticsearch:9200";
-    this.esClient = new Client({ node: esNode });
   }
 
   async execute(query: string) {
-    const response = await this.esClient.search({
-      index: "captions",
-      query: {
-        bool: {
-          must: {
-            match: {
-              text: {
-                query: query,
-                operator: "and",
-              },
-            },
-          },
-          should: {
-            match_phrase: {
-              text: query,
-            },
-          },
-        },
-      },
-    });
-
-    this.logger.info(`Found ${response.hits.total} captions for query: ${query}`);
-    console.log(JSON.stringify(response.hits.hits, null, 2));
-    return response.hits.hits;
+    const hits = await this.captionsService.search(query);
+    this.logger.info(`Found ${hits.length} captions for query: ${query}`);
+    return hits;
   }
 }

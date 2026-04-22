@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 
 import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
-import { ElasticSyncService } from "./elastic-captions-sync.service.js";
+import { CaptionsService } from "./captions.service.js";
 import { Failure, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 
@@ -9,7 +9,7 @@ import { Logger } from "../_common/logger/logger.js";
 export class ResyncCaptionsUseCase {
   constructor(
     private readonly elasticCaptionsSyncRepository: ElasticCaptionsSyncRepository,
-    private readonly elasticSyncService: ElasticSyncService,
+    private readonly captionsService: CaptionsService,
     private readonly logger: Logger,
   ) {
     this.logger.setContext(ResyncCaptionsUseCase.name);
@@ -32,7 +32,7 @@ export class ResyncCaptionsUseCase {
 
     try {
       this.logger.info("Deleting existing captions index");
-      await this.elasticSyncService.deleteIndex();
+      await this.captionsService.clear();
 
       const dataResult = await this.elasticCaptionsSyncRepository.getDataToSync();
       if (!dataResult.ok) {
@@ -57,7 +57,7 @@ export class ResyncCaptionsUseCase {
       }
 
       this.logger.info(`Resyncing ${captions.length} captions to Elasticsearch`);
-      await this.elasticSyncService.syncDataToElastic(captions);
+      await this.captionsService.sync(captions);
 
       const latestCaptionId = captions[captions.length - 1].id;
       await this.elasticCaptionsSyncRepository.update(syncId, {

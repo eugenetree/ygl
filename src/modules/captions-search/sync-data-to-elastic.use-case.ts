@@ -2,7 +2,7 @@ import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repositor
 import { Failure, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
-import { ElasticSyncService } from "./elastic-captions-sync.service.js";
+import { CaptionsService } from "./captions.service.js";
 import { CaptionsRow } from "../../db/types.js";
 import { Selectable } from "kysely";
 
@@ -11,7 +11,7 @@ export class SyncDataToElasticUseCase {
   constructor(
     private readonly elasticCaptionsSyncRepository: ElasticCaptionsSyncRepository,
     private readonly logger: Logger,
-    private readonly elasticSyncService: ElasticSyncService,
+    private readonly captionsService: CaptionsService,
   ) {
     this.logger.setContext(SyncDataToElasticUseCase.name);
   }
@@ -69,7 +69,7 @@ export class SyncDataToElasticUseCase {
       }
 
       this.logger.info(`Syncing ${captions.length} captions to Elasticsearch`);
-      await this.elasticSyncService.syncDataToElastic(captions);
+      await this.captionsService.sync(captions);
 
       const latestCaptionId = captions[captions.length - 1].id;
       await this.elasticCaptionsSyncRepository.update(syncId, { syncStatus: "SUCCESS", syncCompletedAt: new Date(), latestSyncedCaptionId: latestCaptionId });
