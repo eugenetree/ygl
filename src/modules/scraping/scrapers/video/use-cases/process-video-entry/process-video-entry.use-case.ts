@@ -62,6 +62,8 @@ export class ProcessVideoEntryUseCase {
       ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions, type: "manual" })
       : [];
 
+    // Invariant: yt-api-get-video populates both caption arrays only in the BOTH case;
+    // MANUAL_ONLY / AUTO_ONLY / NONE all yield nulls on both sides.
     if (
       (manualCaptions?.length && !autoCaptions?.length) ||
       (!manualCaptions?.length && autoCaptions?.length)

@@ -10,7 +10,7 @@ export type ManualCaptionsValidationError =
   | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"; }
   | { type: "CAPTIONS_MOSTLY_UPPERCASE"; };
 
-const MIN_CAPTION_SEGMENTS = 10;
+const MIN_CAPTION_SEGMENTS = 40;
 
 @injectable()
 export class ManualCaptionsValidator {
