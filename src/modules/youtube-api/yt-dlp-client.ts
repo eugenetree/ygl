@@ -202,6 +202,11 @@ export class YtDlpClient {
       let done = false;
       let resolveNext: (() => void) | undefined;
 
+      let stderrBuffer = "";
+      builder.on("stderr", (chunk: string) => {
+        stderrBuffer += chunk;
+      });
+
       let buffer = "";
       builder.on("stdout", (chunk: string) => {
         buffer += chunk;
