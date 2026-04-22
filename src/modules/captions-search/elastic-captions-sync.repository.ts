@@ -59,36 +59,22 @@ export class ElasticCaptionsSyncRepository {
   }
 
   async getDataToSync(lastSyncedCaptionId?: string) {
-    console.log("Getting data to sync", lastSyncedCaptionId);
-    if (!lastSyncedCaptionId) {
-      const result = await tryCatch(
-        dbClient.selectFrom("captions")
-          .selectAll()
-          .where("type", "=", "manual")
-          .orderBy("createdAt", "asc")
-          .execute(),
+    let query = dbClient.selectFrom("captions")
+      .innerJoin("videos", "videos.id", "captions.videoId")
+      .where("captions.type", "=", "manual")
+      .where("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID")
+      .where("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID")
+      .where("videos.captionsSimilarityScore", ">=", 0.9)
+      .selectAll("captions")
+      .orderBy("captions.createdAt", "asc");
+
+    if (lastSyncedCaptionId) {
+      query = query.where("captions.createdAt", ">", (qb) =>
+        qb.selectFrom("captions").select("createdAt").where("id", "=", lastSyncedCaptionId)
       );
-
-      if (!result.ok) {
-        return Failure({
-          type: "DATABASE",
-          error: result.error,
-        });
-      }
-
-      return Success(result.value);
     }
 
-    const result = await tryCatch(
-      dbClient.selectFrom("captions")
-        .selectAll()
-        .where("type", "=", "manual")
-        .where("createdAt", ">", (qb) =>
-          qb.selectFrom("captions").select("createdAt").where("id", "=", lastSyncedCaptionId)
-        )
-        .orderBy("createdAt", "asc")
-        .execute(),
-    );
+    const result = await tryCatch(query.execute());
 
     if (!result.ok) {
       return Failure({

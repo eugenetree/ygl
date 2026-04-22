@@ -8,6 +8,7 @@ import { FindController } from "./find.controller.js";
 import { LastVideosController } from "./last-videos.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
+import { ResyncCaptionsController } from "./resync-captions.controller.js";
 import { StatsController } from "./stats.controller.js";
 
 @injectable()
@@ -23,6 +24,7 @@ export class TelegramBot {
     private readonly exportLogsController: ExportLogsController,
     private readonly lastVideosController: LastVideosController,
     private readonly reprocessCaptionsController: ReprocessCaptionsController,
+    private readonly resyncCaptionsController: ResyncCaptionsController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -62,6 +64,7 @@ export class TelegramBot {
     this.exportLogsController.register(this.bot);
     this.lastVideosController.register(this.bot);
     this.reprocessCaptionsController.register(this.bot);
+    this.resyncCaptionsController.register(this.bot);
   }
 
   private async syncCommands(): Promise<void> {
@@ -75,6 +78,7 @@ export class TelegramBot {
       { command: "logs", description: "Export logs" },
       { command: "last", description: "Show last 10 scraped videos" },
       { command: "reprocess_captions", description: "Reprocess captions for all videos" },
+      { command: "resync_captions", description: "Resync captions index in Elasticsearch" },
     ]);
   }
 
