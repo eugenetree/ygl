@@ -40,7 +40,11 @@ export class FindController implements TelegramController {
         return `${source.text}\n${url}`;
       });
 
-      await ctx.reply(lines.join("\n\n"));
+      const header = hits.length > MAX_RESULTS
+        ? `Showing ${MAX_RESULTS} of ${hits.length} results:\n\n`
+        : "";
+
+      await ctx.reply(`${header}${lines.join("\n\n")}`);
     });
   }
 }
