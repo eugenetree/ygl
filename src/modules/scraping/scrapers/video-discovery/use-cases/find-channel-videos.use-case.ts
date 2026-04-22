@@ -5,6 +5,7 @@ import { BaseError } from "../../../../_common/errors.js";
 import { ChannelVideoEntry, YoutubeApiGetChannelVideoEntries } from "../../../../youtube-api/yt-api-get-channel-video-entries.js";
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
+import { VideoEntryAvailability } from "../video-entry.js";
 
 @injectable()
 export class FindChannelVideosUseCase {
@@ -80,10 +81,12 @@ export class FindChannelVideosUseCase {
       return Success(undefined);
     }
 
+    const availability: VideoEntryAvailability = entry.availability === "subscriber_only" ? "MEMBERS_ONLY" : "PUBLIC";
+
     const createEntryResult = await this.videoEntryRepository.create({
       id: entry.id,
       channelId,
-      availability: entry.availability === "subscriber_only" ? "MEMBERS_ONLY" : "PUBLIC",
+      availability,
     });
 
     if (!createEntryResult.ok) {
@@ -97,6 +100,11 @@ export class FindChannelVideosUseCase {
     }
 
     this.logger.info(`Video entry (${entry.id}) created.`);
+
+    if (availability !== "PUBLIC") {
+      this.logger.info(`Video entry (${entry.id}) is ${availability}. Skipping enqueue.`);
+      return Success(undefined);
+    }
 
     const enqueueResult = await this.videoEntriesQueue.enqueue(entry.id, channelId);
     if (!enqueueResult.ok) {
