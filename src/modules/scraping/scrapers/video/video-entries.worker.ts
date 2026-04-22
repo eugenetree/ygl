@@ -7,7 +7,13 @@ import { ChannelVideoHealthRepository } from "./channel-video-health.repository.
 import { ChannelVideosHealthProps } from "./channel-videos-health.js";
 import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
-import { DatabaseError } from "../../../../db/types.js";
+import { DatabaseError, VideoJobSkipCause } from "../../../../db/types.js";
+
+function toSkipCause(errorType: string): VideoJobSkipCause | null {
+  if (errorType === "MEMBERS_ONLY_VIDEO") return "MEMBERS_ONLY";
+  if (errorType === "GEO_RESTRICTED_VIDEO") return "GEO_RESTRICTED";
+  return null;
+}
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
@@ -68,10 +74,10 @@ export class VideoEntriesWorker {
         channelId: entry.channelId,
       });
 
-      const isMembersOnly = !result.ok && result.error.type === "MEMBERS_ONLY_VIDEO";
+      const skipCause = !result.ok ? toSkipCause(result.error.type) : null;
       const healthSyncResult = await this.syncChannelHealth({
         channelId: entry.channelId,
-        isSuccess: result.ok || isMembersOnly,
+        isSuccess: result.ok || skipCause !== null,
       });
 
       if (!healthSyncResult.ok) {
@@ -82,9 +88,9 @@ export class VideoEntriesWorker {
       }
 
       if (!result.ok) {
-        if (isMembersOnly) {
-          this.logger.info(`Video entry ${entry.id} is members-only, skipping.`);
-          await this.videoEntriesQueue.markAsMembersOnly(entry.id);
+        if (skipCause) {
+          this.logger.info(`Video entry ${entry.id} skipped (${skipCause}).`);
+          await this.videoEntriesQueue.markAsSkipped(entry.id, skipCause);
           continue;
         }
 
@@ -93,6 +99,7 @@ export class VideoEntriesWorker {
           error: result.error,
           context: { entryId: entry.id },
         });
+        
         await this.videoEntriesQueue.markAsFailed(entry.id);
         this.isRunning = false;
         await onError(result.error);

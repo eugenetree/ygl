@@ -30,7 +30,7 @@ const emptyVideoStatusCounts = (): VideoStatusCounts => ({
   PROCESSING: 0,
   SUCCEEDED: 0,
   FAILED: 0,
-  MEMBERS_ONLY: 0,
+  SKIPPED: 0,
 });
 
 @injectable()

@@ -14,7 +14,11 @@ export type VideoJobStatus =
   | "PROCESSING"
   | "SUCCEEDED"
   | "FAILED"
-  | "MEMBERS_ONLY";
+  | "SKIPPED";
+
+export type VideoJobSkipCause =
+  | "MEMBERS_ONLY"
+  | "GEO_RESTRICTED";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
@@ -109,6 +113,7 @@ export interface VideoJobsRow {
   videoId: string;
   channelId: string;
   status: VideoJobStatus;
+  skipCause: VideoJobSkipCause | null;
   statusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
 }

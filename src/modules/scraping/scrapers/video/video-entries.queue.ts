@@ -1,7 +1,7 @@
 import { dbClient } from "../../../../db/client.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import { DatabaseError, VideoEntryRow } from "../../../../db/types.js";
+import { DatabaseError, VideoEntryRow, VideoJobSkipCause } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { injectable } from "inversify";
 import { MAX_FAILED_VIDEOS_STREAK } from "./config.js";
@@ -106,11 +106,11 @@ export class VideoEntriesQueue {
     return Success(undefined);
   }
 
-  public async markAsMembersOnly(entryId: string): Promise<Result<void, DatabaseError>> {
+  public async markAsSkipped(entryId: string, cause: VideoJobSkipCause): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
         .updateTable("videoJobs")
-        .set({ status: "MEMBERS_ONLY", statusUpdatedAt: new Date() })
+        .set({ status: "SKIPPED", skipCause: cause, statusUpdatedAt: new Date() })
         .where("videoId", "=", entryId)
         .execute()
     );

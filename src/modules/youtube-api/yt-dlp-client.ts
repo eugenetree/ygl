@@ -9,11 +9,20 @@ import { Failure, Result, Success } from "../../types/index.js";
 
 export type YtDlpError = { type: "YT_DLP_ERROR"; message: string; cause?: unknown };
 export type MembersOnlyVideoError = { type: "MEMBERS_ONLY_VIDEO"; message: string };
+export type GeoRestrictedVideoError = { type: "GEO_RESTRICTED_VIDEO"; message: string };
+export type UnprocessableVideoError = MembersOnlyVideoError | GeoRestrictedVideoError;
 
 const MEMBERS_ONLY_MESSAGE = "Join this channel to get access to members-only content";
+const GEO_RESTRICTED_MESSAGE = "The uploader has not made this video available in your country";
 
-function isMembersOnlyError(message: string): boolean {
-  return message.includes(MEMBERS_ONLY_MESSAGE);
+function classifyUnprocessable(message: string): UnprocessableVideoError | null {
+  if (message.includes(MEMBERS_ONLY_MESSAGE)) {
+    return { type: "MEMBERS_ONLY_VIDEO", message };
+  }
+  if (message.includes(GEO_RESTRICTED_MESSAGE)) {
+    return { type: "GEO_RESTRICTED_VIDEO", message };
+  }
+  return null;
 }
 
 function resolveCookiesFile(logger: Logger): string | undefined {
@@ -49,7 +58,7 @@ export class YtDlpClient {
   /**
    * Executes yt-dlp with the specified arguments and parses each line of stdout as a JSON object of type T.
    */
-  async execJson<T>(args: string[]): Promise<Result<T[], YtDlpError | MembersOnlyVideoError>> {
+  async execJson<T>(args: string[]): Promise<Result<T[], YtDlpError | UnprocessableVideoError>> {
     try {
       this.logger.info(`Running yt-dlp via wrapper with args: ${args.join(" ")}`);
 
@@ -64,8 +73,9 @@ export class YtDlpClient {
 
       if (result.exitCode !== 0) {
         const message = result.stderr || `Exit code ${result.exitCode}`;
-        if (isMembersOnlyError(message)) {
-          return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+        const unprocessable = classifyUnprocessable(message);
+        if (unprocessable) {
+          return Failure(unprocessable);
         }
         this.logger.error({
           message: `yt-dlp execution failed with code ${result.exitCode}`,
@@ -102,8 +112,9 @@ export class YtDlpClient {
       });
 
       const message = error?.message || "Unexpected error";
-      if (isMembersOnlyError(message)) {
-        return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+      const unprocessable = classifyUnprocessable(message);
+      if (unprocessable) {
+        return Failure(unprocessable);
       }
 
       return Failure({
@@ -118,7 +129,7 @@ export class YtDlpClient {
    * Executes yt-dlp with the specified arguments without parsing output.
    * Useful for commands that write to files (e.g., subtitle downloads).
    */
-  async exec(args: string[]): Promise<Result<void, YtDlpError | MembersOnlyVideoError>> {
+  async exec(args: string[]): Promise<Result<void, YtDlpError | UnprocessableVideoError>> {
     try {
       this.logger.info(`Running yt-dlp via wrapper with args: ${args.join(" ")}`);
 
@@ -132,8 +143,9 @@ export class YtDlpClient {
 
       if (result.exitCode !== 0) {
         const message = result.stderr || `Exit code ${result.exitCode}`;
-        if (isMembersOnlyError(message)) {
-          return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+        const unprocessable = classifyUnprocessable(message);
+        if (unprocessable) {
+          return Failure(unprocessable);
         }
         this.logger.error({
           message: `yt-dlp execution failed with code ${result.exitCode}`,
@@ -157,8 +169,9 @@ export class YtDlpClient {
       });
 
       const message = error?.message || "Unexpected error";
-      if (isMembersOnlyError(message)) {
-        return Failure({ type: "MEMBERS_ONLY_VIDEO", message });
+      const unprocessable = classifyUnprocessable(message);
+      if (unprocessable) {
+        return Failure(unprocessable);
       }
 
       return Failure({

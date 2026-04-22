@@ -3,7 +3,7 @@ import { readFile, readdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 
-import { YtDlpClient, YtDlpError, MembersOnlyVideoError } from "./yt-dlp-client.js";
+import { YtDlpClient, YtDlpError, UnprocessableVideoError } from "./yt-dlp-client.js";
 import { Logger } from "../_common/logger/logger.js";
 import { Failure, Result, Success } from "../../types/index.js";
 import { ValidationError } from "../_common/validation/errors.js";
@@ -24,7 +24,7 @@ export class YoutubeApiGetVideo {
 
   public async getVideo(
     videoId: string
-  ): Promise<Result<Video, YtDlpError | MembersOnlyVideoError | ValidationError>> {
+  ): Promise<Result<Video, YtDlpError | UnprocessableVideoError | ValidationError>> {
     this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
@@ -174,7 +174,7 @@ export class YoutubeApiGetVideo {
     videoId: string,
     autoLang: string,
     manualLang: string,
-  ): Promise<Result<{ autoCaptions: Caption[]; manualCaptions: Caption[] }, YtDlpError | MembersOnlyVideoError | ValidationError>> {
+  ): Promise<Result<{ autoCaptions: Caption[]; manualCaptions: Caption[] }, YtDlpError | UnprocessableVideoError | ValidationError>> {
     const tmpDir = await mkdtemp(path.join(tmpdir(), "ygl-subs-"));
 
     try {
