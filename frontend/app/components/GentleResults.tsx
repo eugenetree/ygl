@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EXAMPLE_PHRASES, MOCK_RESULTS } from "../lib/data";
 import {
@@ -12,6 +12,19 @@ import {
   type SpeedFilter,
 } from "./shared";
 
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+function fmt(s: number) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
+
 const MOCKED_QUERY = "test";
 
 export default function GentleResults({ query }: { query: string }) {
@@ -21,7 +34,14 @@ export default function GentleResults({ query }: { query: string }) {
   const [speed, setSpeed] = useState<SpeedFilter>("any");
   const [dark, setDark] = useState(false);
   const [activeId, setActiveId] = useState<string>(MOCK_RESULTS[0].id);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const playerRef = useRef<any>(null);
+  const playerDivRef = useRef<HTMLDivElement>(null);
+  const playerReadyRef = useRef(false);
+  const activeRef = useRef<(typeof MOCK_RESULTS)[0] | undefined>(undefined);
 
   const isMockedQuery = query.trim().toLowerCase() === MOCKED_QUERY;
 
@@ -65,6 +85,73 @@ export default function GentleResults({ query }: { query: string }) {
   function tryPhrase(p: string) {
     router.push(pushQueryPath(p));
   }
+
+  activeRef.current = active;
+
+  useEffect(() => {
+    function createPlayer() {
+      if (!playerDivRef.current || playerRef.current) return;
+      const { videoId, startAt } = activeRef.current!;
+      playerRef.current = new window.YT.Player(playerDivRef.current, {
+        videoId,
+        width: "100%",
+        height: "100%",
+        playerVars: { start: startAt, autoplay: 1, rel: 0 },
+        events: {
+          onReady: () => {
+            playerReadyRef.current = true;
+            setPlaying(true);
+          },
+          onStateChange: (e: any) => {
+            setPlaying(e.data === window.YT.PlayerState.PLAYING);
+          },
+        },
+      });
+    }
+
+    if (window.YT?.Player) {
+      createPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = createPlayer;
+      if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(script);
+      }
+    }
+
+    return () => {
+      playerRef.current?.destroy();
+      playerRef.current = null;
+      playerReadyRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setCurrentTime(0);
+    setDuration(0);
+    if (!active || !playerRef.current || !playerReadyRef.current) return;
+    playerRef.current.loadVideoById({ videoId: active.videoId, startSeconds: active.startAt });
+  }, [activeId]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const p = playerRef.current;
+      if (!p?.getCurrentTime) return;
+      setCurrentTime(p.getCurrentTime());
+      setDuration(p.getDuration());
+    }, 250);
+    return () => clearInterval(id);
+  }, []);
+
+  function togglePlay() {
+    const p = playerRef.current;
+    if (!p) return;
+    if (playing) p.pauseVideo();
+    else p.playVideo();
+  }
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const idx = active ? results.findIndex((r) => r.id === activeId) : -1;
   const atStart = idx <= 0;
@@ -115,14 +202,7 @@ export default function GentleResults({ query }: { query: string }) {
           ) : (
             <section className="g-player">
               <div className="g-player-video">
-                <iframe
-                  className="g-player-iframe"
-                  src="https://www.youtube.com/embed/GS1gK4B_Otk?start=392&autoplay=1"
-                  title={active.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
-                />
+                <div ref={playerDivRef} />
               </div>
               <div className="g-player-meta">
                 <div
@@ -148,7 +228,7 @@ export default function GentleResults({ query }: { query: string }) {
                   >
                     <Icon name="prev" size={18} />
                   </button>
-                  <button className="g-circ big" onClick={() => setPlaying((p) => !p)}>
+                  <button className="g-circ big" onClick={togglePlay}>
                     <Icon name={playing ? "pause" : "play"} size={22} />
                   </button>
                   <button
@@ -165,9 +245,9 @@ export default function GentleResults({ query }: { query: string }) {
                   </div>
                   <div className="g-scrub">
                     <div className="g-scrub-bar">
-                      <div className="g-scrub-fill" style={{ width: "38%" }} />
+                      <div className="g-scrub-fill" style={{ width: `${progress}%` }} />
                     </div>
-                    <div className="g-scrub-time">0:12 / 0:32</div>
+                    <div className="g-scrub-time">{fmt(currentTime)} / {fmt(duration)}</div>
                   </div>
                 </div>
               </div>

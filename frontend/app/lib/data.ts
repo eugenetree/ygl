@@ -3,6 +3,8 @@ export type Speed = "slow" | "normal" | "fast";
 
 export interface MockResult {
   id: string;
+  videoId: string;
+  startAt: number;
   channel: string;
   title: string;
   speaker: string;
@@ -51,6 +53,8 @@ export interface Phrase {
 export const MOCK_RESULTS: MockResult[] = [
   {
     id: "a1",
+    videoId: "GS1gK4B_Otk",
+    startAt: 222,
     channel: "The Morning Desk",
     title: "How we actually spend our weekends — unfiltered",
     speaker: "Nora Albright",
@@ -64,6 +68,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "b2",
+    videoId: "GS1gK4B_Otk",
+    startAt: 58,
     channel: "LingoLab Shorts",
     title: "English idioms you actually hear in conversation",
     speaker: "Daniel Ó Conaill",
@@ -77,6 +83,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "c3",
+    videoId: "GS1gK4B_Otk",
+    startAt: 728,
     channel: "Field Notes",
     title: "A week tracking brush-tailed possums in Tasmania",
     speaker: "Mira Halcombe",
@@ -90,6 +98,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "d4",
+    videoId: "GS1gK4B_Otk",
+    startAt: 441,
     channel: "Dr. Paulo Reyes",
     title: "Why your sleep schedule shifts on weekends",
     speaker: "Paulo Reyes",
@@ -103,6 +113,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "e5",
+    videoId: "GS1gK4B_Otk",
+    startAt: 134,
     channel: "kitchen table",
     title: "my grandmother's coffee ritual",
     speaker: "Anaïs Petit",
@@ -116,6 +128,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "f6",
+    videoId: "GS1gK4B_Otk",
+    startAt: 1113,
     channel: "Built It Twice",
     title: "Rebuilding a 1973 Bedford truck — part 4",
     speaker: "Rhys Llewellyn",
@@ -129,6 +143,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "g7",
+    videoId: "GS1gK4B_Otk",
+    startAt: 1370,
     channel: "Plain Talk Interviews",
     title: "A conversation with novelist Esme Ortega",
     speaker: "Esme Ortega",
@@ -142,6 +158,8 @@ export const MOCK_RESULTS: MockResult[] = [
   },
   {
     id: "h8",
+    videoId: "GS1gK4B_Otk",
+    startAt: 544,
     channel: "Commute Notes",
     title: "Cycling the length of the Thames path",
     speaker: "Harriet Okafor",
