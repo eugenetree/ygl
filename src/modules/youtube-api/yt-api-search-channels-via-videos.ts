@@ -67,9 +67,6 @@ export class YoutubeApiSearchChannelsViaVideos {
       "--flat-playlist",
       "--no-warnings",
       "--lazy-playlist",
-      "--sleep-requests", "20",
-      "--min-sleep-interval", "5",
-      "--max-sleep-interval", "15",
     ];
 
     const stream = this.ytDlpClient.execJsonStream<unknown>(args);

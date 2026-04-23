@@ -118,8 +118,6 @@ export class YoutubeApiGetVideo {
       return Success({ ...videoBase, captionStatus: "AUTO_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 10000));
-
     const captionsResult = await this.downloadCaptions(videoId, autoKey, manualKey);
     if (!captionsResult.ok) {
       return Failure(captionsResult.error);
@@ -189,8 +187,6 @@ export class YoutubeApiGetVideo {
         url, "--write-auto-subs", "--sub-format", "json3", "--sub-langs", autoLang, "--skip-download", "--no-warnings", "-o", path.join(autoDir, "%(id)s"),
       ]);
       if (!autoResult.ok) return autoResult;
-
-      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 10000));
 
       const manualResult = await this.ytDlpClient.exec([
         url, "--write-subs", "--sub-format", "json3", "--sub-langs", manualLang, "--skip-download", "--no-warnings", "-o", path.join(manualDir, "%(id)s"),
