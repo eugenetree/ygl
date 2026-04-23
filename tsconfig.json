@@ -102,6 +102,7 @@
     "dist",
     "_debug",
     "_yt-dlp",
-    "_yt-dlp-node"
+    "_yt-dlp-node",
+    "frontend"
   ]
 }

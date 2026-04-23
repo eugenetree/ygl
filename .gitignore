@@ -11,5 +11,7 @@ _ytdlp
 .vscode
 db/dump/
 .env
+.env.*
+!.env.example
 router_config.ovpn
 .claude/settings.local.json
