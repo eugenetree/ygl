@@ -108,8 +108,6 @@ export class VideoEntriesWorker {
       }
 
       await this.videoEntriesQueue.markAsSuccess(entry.id);
-
-      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 10000));
     }
 
     return Success(WorkerStopCause.DONE);
