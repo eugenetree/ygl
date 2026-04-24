@@ -191,9 +191,9 @@ export const MOCK_PHRASE: Phrase = {
   phrase: "once in a while",
   ipa: "/wʌns ɪn ə ˈwaɪl/",
   tokens: [
-    { word: "once",  syllables: [{ text: "once",  stress: 1 }] },
-    { word: "in",    syllables: [{ text: "in",    stress: 0 }], linkTo: "next" },
-    { word: "a",     syllables: [{ text: "a",     stress: 0 }], linkTo: "next" },
+    { word: "once", syllables: [{ text: "once", stress: 1 }] },
+    { word: "in", syllables: [{ text: "in", stress: 0 }], linkTo: "next" },
+    { word: "a", syllables: [{ text: "a", stress: 0 }], linkTo: "next" },
     { word: "while", syllables: [{ text: "while", stress: 1 }] },
   ],
   partOfSpeech: "adverbial phrase",

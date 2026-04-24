@@ -50,20 +50,14 @@ export default function GentleHome() {
             <div className="g-brand">
               saythis<span>.cc</span>
             </div>
-            <div className="g-header-search">
-              <SearchBar
-                query={query}
-                setQuery={setQuery}
-                onSubmit={onSubmit}
-                inputRef={searchRef}
-              />
+            <div className="g-header-right">
+              <div className="g-kbd-hint" aria-hidden="true">
+                press <kbd>/</kbd> to search
+              </div>
+              <button className="g-theme" onClick={() => setDark(!dark)}>
+                <Icon name={dark ? "sun" : "moon"} size={16} />
+              </button>
             </div>
-            <div className="g-kbd-hint" aria-hidden="true">
-              press <kbd>/</kbd> to search
-            </div>
-            <button className="g-theme" onClick={() => setDark(!dark)}>
-              <Icon name={dark ? "sun" : "moon"} size={16} />
-            </button>
           </div>
         </header>
 
@@ -76,6 +70,15 @@ export default function GentleHome() {
             <h1 className="g-home-lede">
               Hear any phrase <em>actually said</em> by real people.
             </h1>
+            <div className="g-home-search">
+              <SearchBar
+                query={query}
+                setQuery={setQuery}
+                onSubmit={onSubmit}
+                big
+                inputRef={searchRef}
+              />
+            </div>
           </div>
         </section>
 
