@@ -16,7 +16,7 @@ export type UnprocessableVideoError = MembersOnlyVideoError | GeoRestrictedVideo
 
 const MEMBERS_ONLY_MESSAGE = "Join this channel to get access to members-only content";
 const GEO_RESTRICTED_MESSAGE = "The uploader has not made this video available in your country";
-const AGE_RESTRICTED_MESSAGE = "Sign in to confirm your age";
+const AGE_RESTRICTED_MESSAGES = ["Sign in to confirm your age", "Take a few minutes to verify your age"];
 const PREMIERE_MESSAGE = "Premieres in";
 
 function classifyUnprocessable(message: string): UnprocessableVideoError | null {
@@ -26,7 +26,7 @@ function classifyUnprocessable(message: string): UnprocessableVideoError | null 
   if (message.includes(GEO_RESTRICTED_MESSAGE)) {
     return { type: "GEO_RESTRICTED_VIDEO", message };
   }
-  if (message.includes(AGE_RESTRICTED_MESSAGE)) {
+  if (AGE_RESTRICTED_MESSAGES.some((m) => message.includes(m))) {
     return { type: "AGE_RESTRICTED_VIDEO", message };
   }
   if (message.includes(PREMIERE_MESSAGE)) {
