@@ -13,6 +13,7 @@ function toSkipCause(errorType: string): VideoJobSkipCause | null {
   if (errorType === "MEMBERS_ONLY_VIDEO") return "MEMBERS_ONLY";
   if (errorType === "GEO_RESTRICTED_VIDEO") return "GEO_RESTRICTED";
   if (errorType === "AGE_RESTRICTED_VIDEO") return "AGE_RESTRICTED";
+  if (errorType === "PREMIERE_VIDEO") return "PREMIERE";
   return null;
 }
 

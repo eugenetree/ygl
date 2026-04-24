@@ -11,11 +11,13 @@ export type YtDlpError = { type: "YT_DLP_ERROR"; message: string; cause?: unknow
 export type MembersOnlyVideoError = { type: "MEMBERS_ONLY_VIDEO"; message: string };
 export type GeoRestrictedVideoError = { type: "GEO_RESTRICTED_VIDEO"; message: string };
 export type AgeRestrictedVideoError = { type: "AGE_RESTRICTED_VIDEO"; message: string };
-export type UnprocessableVideoError = MembersOnlyVideoError | GeoRestrictedVideoError | AgeRestrictedVideoError;
+export type PremiereVideoError = { type: "PREMIERE_VIDEO"; message: string };
+export type UnprocessableVideoError = MembersOnlyVideoError | GeoRestrictedVideoError | AgeRestrictedVideoError | PremiereVideoError;
 
 const MEMBERS_ONLY_MESSAGE = "Join this channel to get access to members-only content";
 const GEO_RESTRICTED_MESSAGE = "The uploader has not made this video available in your country";
 const AGE_RESTRICTED_MESSAGE = "Sign in to confirm your age";
+const PREMIERE_MESSAGE = "Premieres in";
 
 function classifyUnprocessable(message: string): UnprocessableVideoError | null {
   if (message.includes(MEMBERS_ONLY_MESSAGE)) {
@@ -26,6 +28,9 @@ function classifyUnprocessable(message: string): UnprocessableVideoError | null 
   }
   if (message.includes(AGE_RESTRICTED_MESSAGE)) {
     return { type: "AGE_RESTRICTED_VIDEO", message };
+  }
+  if (message.includes(PREMIERE_MESSAGE)) {
+    return { type: "PREMIERE_VIDEO", message };
   }
   return null;
 }

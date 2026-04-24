@@ -20,7 +20,8 @@ export type VideoJobStatus =
 export type VideoJobSkipCause =
   | "MEMBERS_ONLY"
   | "GEO_RESTRICTED"
-  | "AGE_RESTRICTED";
+  | "AGE_RESTRICTED"
+  | "PREMIERE";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
