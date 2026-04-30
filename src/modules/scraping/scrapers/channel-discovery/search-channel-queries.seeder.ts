@@ -97,21 +97,6 @@ export class SearchChannelQueriesSeeder {
           }),
         );
       }
-
-      const jobResult = await tryCatch(
-        dbClient
-          .insertInto("channelDiscoveryJobs")
-          .values(queryIds.map((id) => ({ searchQueryId: id, status: "PENDING" as const, statusUpdatedAt: new Date() })))
-          .execute(),
-      );
-
-      if (!jobResult.ok) {
-        return Failure(
-          new Error("Failed to insert channel discovery jobs", {
-            cause: jobResult.error,
-          }),
-        );
-      }
     }
 
     return Success(undefined);

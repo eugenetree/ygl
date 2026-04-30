@@ -10,12 +10,8 @@ export type ProcessingStatus =
   | "SUCCEEDED"
   | "FAILED";
 
-export type VideoJobStatus =
-  | "PENDING"
-  | "PROCESSING"
-  | "SUCCEEDED"
-  | "FAILED"
-  | "SKIPPED";
+export type JobStatus = "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED";
+export type TranscriptionJobStatus = JobStatus | "NOT_NEEDED";
 
 export type VideoJobSkipCause =
   | "MEMBERS_ONLY"
@@ -57,11 +53,6 @@ export interface Database {
   elasticCaptionsSync: ElasticCaptionsSyncRow;
   channelEntries: ChannelEntriesRow;
   videoEntries: VideoEntriesRow;
-  channelDiscoveryJobs: ChannelDiscoveryJobsRow;
-  channelJobs: ChannelJobsRow;
-  videoDiscoveryJobs: VideoDiscoveryJobsRow;
-  videoJobs: VideoJobsRow;
-  transcriptionJobs: TranscriptionJobsRow;
   channelVideosHealth: ChannelVideoHealthRow;
   scraperConfig: ScraperConfigRow;
   scrapingProcess: ScrapingProcessRow;
@@ -87,52 +78,12 @@ export interface ScrapingProcessRow {
   lastHeartbeatAt: Date | null;
 }
 
-export interface ChannelDiscoveryJobsRow {
-  id: Generated<string>;
-  searchQueryId: string;
-  status: ProcessingStatus;
-  statusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-}
-
-export interface ChannelJobsRow {
-  id: Generated<string>;
-  channelId: string;
-  status: ProcessingStatus;
-  statusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-}
-
-export interface VideoDiscoveryJobsRow {
-  id: Generated<string>;
-  channelId: string;
-  status: ProcessingStatus;
-  statusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-}
-
-export interface VideoJobsRow {
-  id: Generated<string>;
-  videoId: string;
-  channelId: string;
-  status: VideoJobStatus;
-  skipCause: VideoJobSkipCause | null;
-  statusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-}
-
-export interface TranscriptionJobsRow {
-  id: Generated<string>;
-  videoId: string;
-  status: ProcessingStatus;
-  statusUpdatedAt: Date | null;
-  createdAt: Generated<Date>;
-}
-
-
 export interface SearchChannelQueriesRow {
   id: string;
   query: string;
+  channelDiscoveryStatus: Generated<JobStatus>;
+  channelDiscoveryError: string | null;
+  channelDiscoveryStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -140,6 +91,9 @@ export interface SearchChannelQueriesRow {
 export interface ChannelEntriesRow {
   id: string;
   queryId: string;
+  channelProcessStatus: Generated<JobStatus>;
+  channelProcessError: string | null;
+  channelProcessStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -158,6 +112,9 @@ export interface ChannelsRow {
   username: string;
   isArtist: boolean;
   keywords: string[];
+  videoDiscoveryStatus: Generated<JobStatus>;
+  videoDiscoveryError: string | null;
+  videoDiscoveryStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -198,6 +155,9 @@ export interface VideosRow {
   liveStatus: string | null;
   ageLimit: number | null;
   mediaType: string | null;
+  transcriptionStatus: Generated<TranscriptionJobStatus>;
+  transcriptionError: string | null;
+  transcriptionStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }
@@ -258,6 +218,9 @@ export interface VideoEntriesRow {
   id: string;
   channelId: string;
   availability: VideoEntryAvailability;
+  videoProcessStatus: string | null;
+  videoProcessError: string | null;
+  videoProcessStatusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

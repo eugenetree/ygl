@@ -12,9 +12,9 @@ export class TranscriptionJobsQueue {
   public async enqueue(videoId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .insertInto("transcriptionJobs")
-        .values({ videoId, status: "PENDING", statusUpdatedAt: new Date() })
-        .onConflict((oc) => oc.column("videoId").doNothing())
+        .updateTable("videos")
+        .set({ transcriptionStatus: "PENDING", transcriptionStatusUpdatedAt: new Date() })
+        .where("id", "=", videoId)
         .execute(),
     );
 

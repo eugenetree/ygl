@@ -4,7 +4,6 @@ import { Failure, Result, Success } from "../../../../../types/index.js";
 import { BaseError } from "../../../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entry.repository.js";
-import { ChannelEntriesQueue } from "../../channel/index.js";
 
 @injectable()
 export class FindChannelsUseCase {
@@ -12,7 +11,6 @@ export class FindChannelsUseCase {
     private readonly logger: Logger,
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly channelEntryRepository: ChannelEntryRepository,
-    private readonly channelEntriesQueue: ChannelEntriesQueue,
   ) {
     this.logger.setContext(FindChannelsUseCase.name);
   }
@@ -63,9 +61,7 @@ export class FindChannelsUseCase {
   }) {
     this.logger.info(`Processing channel entry ${channelEntry.id}.`);
 
-    const entryLookupResult = await this.channelEntryRepository.findById(
-      channelEntry.id,
-    );
+    const entryLookupResult = await this.channelEntryRepository.findById(channelEntry.id);
 
     if (!entryLookupResult.ok) {
       this.logger.error({
@@ -78,15 +74,11 @@ export class FindChannelsUseCase {
 
     const existingChannel = entryLookupResult.value;
     if (existingChannel) {
-      this.logger.info(
-        `Channel (${existingChannel.id}) already exists in db. Skipping.`,
-      );
-
+      this.logger.info(`Channel (${existingChannel.id}) already exists in db. Skipping.`);
       return Success(undefined);
     }
 
-    const createChannelEntryResult =
-      await this.channelEntryRepository.create({ id: channelEntry.id, queryId });
+    const createChannelEntryResult = await this.channelEntryRepository.create({ id: channelEntry.id, queryId });
 
     if (!createChannelEntryResult.ok) {
       this.logger.error({
@@ -98,18 +90,6 @@ export class FindChannelsUseCase {
     }
 
     this.logger.info(`Channel entry ${channelEntry.id} created.`);
-
-    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id);
-    if (!enqueueResult.ok) {
-      this.logger.error({
-        error: enqueueResult.error,
-        context: { channelId: channelEntry.id },
-      });
-
-      return Failure(enqueueResult.error);
-    }
-
-    this.logger.info(`Channel entry ${channelEntry.id} enqueued for next step.`);
 
     return Success(undefined);
   }

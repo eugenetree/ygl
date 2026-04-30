@@ -1,4 +1,3 @@
-import { sql } from "kysely";
 import { dbClient } from "../../../../db/client.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
@@ -6,43 +5,34 @@ import { DatabaseError } from "../../../../db/types.js";
 import { SearchChannelQuery } from "./search-channel-query.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { injectable } from "inversify";
+import { sql } from "kysely";
 
 @injectable()
 export class SearchChannelQueriesQueue {
 	constructor(private readonly logger: Logger) { }
 
-	public async getNextQuery(): Promise<Result<
-		SearchChannelQuery | null,
-		DatabaseError
-	>> {
+	public async getNextQuery(): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
 		const result = await tryCatch(
 			dbClient.transaction().execute(async (trx) => {
-				const job = await trx
-					.updateTable("channelDiscoveryJobs")
-					.set({ status: "PROCESSING", statusUpdatedAt: new Date() })
+				const rows = await trx
+					.updateTable("searchChannelQueries")
+					.set({ channelDiscoveryStatus: "RUNNING", channelDiscoveryStatusUpdatedAt: new Date() })
 					.where(
 						"id",
 						"in",
 						(eb) =>
-							eb.selectFrom("channelDiscoveryJobs")
+							eb.selectFrom("searchChannelQueries")
 								.select("id")
-								.where("status", "=", "PENDING")
-								// temporary things to discover more scenarios
+								.where("channelDiscoveryStatus", "=", "PENDING")
 								.orderBy(sql`random()`)
 								.limit(1)
 								.forUpdate()
 								.skipLocked(),
 					)
-					.returning("searchQueryId")
+					.returning(["id", "query", "createdAt", "updatedAt"])
 					.executeTakeFirst();
 
-				if (!job) return null;
-
-				return trx
-					.selectFrom("searchChannelQueries")
-					.selectAll()
-					.where("id", "=", job.searchQueryId)
-					.executeTakeFirst();
+				return rows ?? null;
 			})
 		);
 
@@ -56,9 +46,9 @@ export class SearchChannelQueriesQueue {
 	public async markAsSuccess(queryId: string): Promise<Result<void, DatabaseError>> {
 		const result = await tryCatch(
 			dbClient
-				.updateTable("channelDiscoveryJobs")
-				.set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
-				.where("searchQueryId", "=", queryId)
+				.updateTable("searchChannelQueries")
+				.set({ channelDiscoveryStatus: "SUCCEEDED", channelDiscoveryError: null, channelDiscoveryStatusUpdatedAt: new Date() })
+				.where("id", "=", queryId)
 				.execute()
 		);
 
@@ -69,12 +59,12 @@ export class SearchChannelQueriesQueue {
 		return Success(undefined);
 	}
 
-	public async markAsFailed(queryId: string): Promise<Result<void, DatabaseError>> {
+	public async markAsFailed(queryId: string, error?: string): Promise<Result<void, DatabaseError>> {
 		const result = await tryCatch(
 			dbClient
-				.updateTable("channelDiscoveryJobs")
-				.set({ status: "FAILED", statusUpdatedAt: new Date() })
-				.where("searchQueryId", "=", queryId)
+				.updateTable("searchChannelQueries")
+				.set({ channelDiscoveryStatus: "FAILED", channelDiscoveryError: error ?? null, channelDiscoveryStatusUpdatedAt: new Date() })
+				.where("id", "=", queryId)
 				.execute()
 		);
 

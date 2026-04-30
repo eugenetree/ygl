@@ -1,10 +1,9 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../../_common/logger/logger.js";
-import { Failure, Result, Success } from "../../../../../types/index.js";
+import { Result, Success } from "../../../../../types/index.js";
 import { BaseError } from "../../../../_common/errors.js";
 import { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
 import { ChannelRepository } from "../channel.repository.js";
-import { ChannelsQueue } from "../../video-discovery/index.js";
 
 @injectable()
 export class ProcessChannelEntryUseCase {
@@ -12,7 +11,6 @@ export class ProcessChannelEntryUseCase {
     private readonly logger: Logger,
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
-    private readonly channelsQueue: ChannelsQueue,
   ) {
     this.logger.setContext(ProcessChannelEntryUseCase.name);
   }
@@ -22,9 +20,7 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Fetching channel ${channelEntryId}.`);
 
-    const fullChannelInfoResult = await this.youtubeApiGetChannel.getChannel(
-      channelEntryId,
-    );
+    const fullChannelInfoResult = await this.youtubeApiGetChannel.getChannel(channelEntryId);
 
     if (!fullChannelInfoResult.ok) {
       this.logger.error({
@@ -48,19 +44,6 @@ export class ProcessChannelEntryUseCase {
     }
 
     this.logger.info(`Channel ${channelEntryId} saved into db.`);
-
-    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId);
-    if (!enqueueResult.ok) {
-      this.logger.error({
-        message: `Failed to enqueue channel ${channelEntryId} for video discovery`,
-        error: enqueueResult.error,
-        context: { channelId: channelEntryId },
-      });
-
-      return enqueueResult;
-    }
-
-    this.logger.info(`Channel ${channelEntryId} enqueued for video discovery.`);
 
     return Success(undefined);
   }

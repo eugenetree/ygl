@@ -11,62 +11,40 @@ import { sql } from "kysely";
 export class VideoEntriesQueue {
   constructor(private readonly logger: Logger) { }
 
-  public async enqueue(videoId: string, channelId: string): Promise<Result<void, DatabaseError>> {
-    const result = await tryCatch(
-      dbClient
-        .insertInto("videoJobs")
-        .values({ videoId, channelId, status: "PENDING", statusUpdatedAt: new Date() })
-        .execute(),
-    );
-
-    if (!result.ok) {
-      return Failure({ type: "DATABASE", error: result.error });
-    }
-
-    return Success(undefined);
-  }
-
   public async getNextEntry(): Promise<Result<VideoEntryRow | null, DatabaseError>> {
     const result = await tryCatch(
       dbClient.transaction().execute(async (trx) => {
-        const job = await trx
-          .updateTable("videoJobs")
-          .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
+        const row = await trx
+          .updateTable("videoEntries")
+          .set({ videoProcessStatus: "RUNNING", videoProcessStatusUpdatedAt: new Date() })
           .where(
             "id",
             "in",
             (eb) =>
-              eb.selectFrom("videoJobs")
-                .select("videoJobs.id")
-                .where("status", "=", "PENDING")
-                // TODO: temporary skip as this channel contains too many members only videos.
-                // need check if yt-dlp supports option to skip members only videos during the discovery phase
-                .where("videoJobs.channelId", "!=", "UCPHpx55tgrbm8FrYYCflAHw")
+              eb.selectFrom("videoEntries")
+                .select("videoEntries.id")
+                .where("videoProcessStatus", "=", "PENDING")
+                // TODO: temporary skip as this channel contains too many members only videos
+                .where("videoEntries.channelId", "!=", "UCPHpx55tgrbm8FrYYCflAHw")
                 .where((eb) =>
                   eb.not(
                     eb.exists(
                       eb.selectFrom("channelVideosHealth")
                         .select("id")
-                        .whereRef("channelVideosHealth.channelId", "=", "videoJobs.channelId")
+                        .whereRef("channelVideosHealth.channelId", "=", "videoEntries.channelId")
                         .where("failedVideosStreak", ">=", MAX_FAILED_VIDEOS_STREAK)
                     )
                   )
                 )
-                // temporary things to discover more scenarios
                 .orderBy(sql`random()`)
                 .limit(1)
                 .forUpdate()
                 .skipLocked(),
           )
-          .returning(["videoId", "channelId"])
+          .returningAll()
           .executeTakeFirst();
 
-        if (!job) return null;
-        return trx
-          .selectFrom("videoEntries")
-          .selectAll()
-          .where("id", "=", job.videoId)
-          .executeTakeFirst();
+        return row ?? null;
       })
     );
 
@@ -80,9 +58,9 @@ export class VideoEntriesQueue {
   public async markAsSuccess(entryId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("videoJobs")
-        .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
-        .where("videoId", "=", entryId)
+        .updateTable("videoEntries")
+        .set({ videoProcessStatus: "SUCCEEDED", videoProcessError: null, videoProcessStatusUpdatedAt: new Date() })
+        .where("id", "=", entryId)
         .execute()
     );
 
@@ -93,12 +71,12 @@ export class VideoEntriesQueue {
     return Success(undefined);
   }
 
-  public async markAsFailed(entryId: string): Promise<Result<void, DatabaseError>> {
+  public async markAsFailed(entryId: string, error?: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("videoJobs")
-        .set({ status: "FAILED", statusUpdatedAt: new Date() })
-        .where("videoId", "=", entryId)
+        .updateTable("videoEntries")
+        .set({ videoProcessStatus: "FAILED", videoProcessError: error ?? null, videoProcessStatusUpdatedAt: new Date() })
+        .where("id", "=", entryId)
         .execute()
     );
 
@@ -112,9 +90,9 @@ export class VideoEntriesQueue {
   public async markAsSkipped(entryId: string, cause: VideoJobSkipCause): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       dbClient
-        .updateTable("videoJobs")
-        .set({ status: "SKIPPED", skipCause: cause, statusUpdatedAt: new Date() })
-        .where("videoId", "=", entryId)
+        .updateTable("videoEntries")
+        .set({ videoProcessStatus: "SKIPPED", videoProcessError: cause, videoProcessStatusUpdatedAt: new Date() })
+        .where("id", "=", entryId)
         .execute()
     );
 

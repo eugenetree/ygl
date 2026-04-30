@@ -34,9 +34,10 @@ export class VideoEntryRepository {
 
   async create(
     videoEntry: VideoEntryProps,
+    videoProcessStatus: "PENDING" | null = null,
   ): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
-      dbClient.insertInto("videoEntries").values(videoEntry).execute()
+      dbClient.insertInto("videoEntries").values({ ...videoEntry, videoProcessStatus: videoProcessStatus }).execute()
     );
 
     if (!insertResult.ok) {
