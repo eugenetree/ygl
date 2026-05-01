@@ -12,6 +12,7 @@ import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-statu
 import { StartScraperUseCase } from "./modules/scraping/lifecycle/start-scraper.use-case.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
+import { DatabaseClient } from "./db/client.js";
 
 async function main() {
   const container = new Container({ autobind: true });
@@ -20,6 +21,7 @@ async function main() {
     .toDynamicValue(() => new Logger({ context: "main-scraper", category: "main" }));
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(YtDlpClient).toSelf().inSingletonScope();
+  container.bind(DatabaseClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);

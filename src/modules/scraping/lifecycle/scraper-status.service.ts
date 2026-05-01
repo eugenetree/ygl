@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 
 import { Logger } from "../../_common/logger/logger.js";
-import { dbClient } from "../../../db/client.js";
+import { DatabaseClient } from "../../../db/client.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Failure, Success } from "../../../types/index.js";
 
@@ -18,9 +18,7 @@ const ID = 1;
 export class ScraperStatusService {
   private readonly logger: Logger;
 
-  constructor(
-    logger: Logger,
-  ) {
+  constructor(logger: Logger, private readonly db: DatabaseClient) {
     this.logger = logger.child({ context: ScraperStatusService.name });
   }
 
@@ -32,7 +30,7 @@ export class ScraperStatusService {
     requested?: RequestedStatus
   }) {
     const updateResult = await tryCatch(
-      dbClient.updateTable("scrapingProcess")
+      this.db.updateTable("scrapingProcess")
         .set({
           actualStatus: actual ?? undefined,
           requestedStatus: requested ?? undefined
@@ -52,7 +50,7 @@ export class ScraperStatusService {
 
   async getActualStatus() {
     const result = await tryCatch(
-      dbClient.selectFrom("scrapingProcess")
+      this.db.selectFrom("scrapingProcess")
         .select(["actualStatus", "lastHeartbeatAt"])
         .where("id", "=", ID)
         .executeTakeFirst()
@@ -82,7 +80,7 @@ export class ScraperStatusService {
 
   async getRequestedStatus() {
     const result = await tryCatch(
-      dbClient.selectFrom("scrapingProcess")
+      this.db.selectFrom("scrapingProcess")
         .select(["requestedStatus"])
         .where("id", "=", ID)
         .executeTakeFirst()

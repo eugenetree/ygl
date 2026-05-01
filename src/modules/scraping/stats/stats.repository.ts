@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 
-import { dbClient } from "../../../db/client.js";
+import { DatabaseClient } from "../../../db/client.js";
 import { ProcessingStatus, VideoJobStatus } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
@@ -35,7 +35,10 @@ const emptyVideoStatusCounts = (): VideoStatusCounts => ({
 
 @injectable()
 export class StatsRepository {
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {
     this.logger.setContext(StatsRepository.name);
   }
 
@@ -49,7 +52,7 @@ export class StatsRepository {
 
     const queryJobTable = async (table: (typeof nonVideoJobTables)[number]) => {
       return tryCatch(
-        dbClient
+        this.db
           .selectFrom(table)
           .select(["status"])
           .select((eb) => eb.fn.countAll<number>().as("count"))
@@ -77,7 +80,7 @@ export class StatsRepository {
     const [nonVideoResults, videoJobsResult, validManualCaptionsResult] = await Promise.all([
       Promise.all(nonVideoJobTables.map(queryJobTable)),
       tryCatch(
-        dbClient
+        this.db
           .selectFrom("videoJobs")
           .select(["status"])
           .select((eb) => eb.fn.countAll<number>().as("count"))
@@ -85,7 +88,7 @@ export class StatsRepository {
           .execute(),
       ),
       tryCatch(
-        dbClient
+        this.db
           .selectFrom("videos")
           .select((eb) => eb.fn.countAll<number>().as("count"))
           .where("manualCaptionsStatus", "=", "CAPTIONS_VALID")

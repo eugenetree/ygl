@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { dbClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { DatabaseError } from "../../../../db/types.js";
@@ -9,14 +9,14 @@ import { injectable } from "inversify";
 
 @injectable()
 export class SearchChannelQueriesQueue {
-	constructor(private readonly logger: Logger) { }
+	constructor(
+		private readonly logger: Logger,
+		private readonly db: DatabaseClient,
+	) {}
 
-	public async getNextQuery(): Promise<Result<
-		SearchChannelQuery | null,
-		DatabaseError
-	>> {
+	public async getNextQuery(): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
 		const result = await tryCatch(
-			dbClient.transaction().execute(async (trx) => {
+			this.db.transaction().execute(async (trx) => {
 				const job = await trx
 					.updateTable("channelDiscoveryJobs")
 					.set({ status: "PROCESSING", statusUpdatedAt: new Date() })
@@ -55,7 +55,7 @@ export class SearchChannelQueriesQueue {
 
 	public async markAsSuccess(queryId: string): Promise<Result<void, DatabaseError>> {
 		const result = await tryCatch(
-			dbClient
+			this.db
 				.updateTable("channelDiscoveryJobs")
 				.set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
 				.where("searchQueryId", "=", queryId)
@@ -71,7 +71,7 @@ export class SearchChannelQueriesQueue {
 
 	public async markAsFailed(queryId: string): Promise<Result<void, DatabaseError>> {
 		const result = await tryCatch(
-			dbClient
+			this.db
 				.updateTable("channelDiscoveryJobs")
 				.set({ status: "FAILED", statusUpdatedAt: new Date() })
 				.where("searchQueryId", "=", queryId)

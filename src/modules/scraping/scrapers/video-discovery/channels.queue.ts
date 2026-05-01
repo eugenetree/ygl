@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { dbClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { DatabaseError } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
@@ -8,13 +8,16 @@ import { VIDEOS_PER_CHANNEL_LIMIT, SUPPORTED_COUNTRY_CODES } from "./config.js";
 
 @injectable()
 export class ChannelsQueue {
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {
     this.logger.setContext(ChannelsQueue.name);
   }
 
   public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .insertInto("videoDiscoveryJobs")
         .values({ channelId, status: "PENDING", statusUpdatedAt: new Date() })
         .execute(),
@@ -38,7 +41,7 @@ export class ChannelsQueue {
 
   public async getNextChannels(limit: number): Promise<Result<{ id: string }[], DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("videoDiscoveryJobs")
         .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
         .where(
@@ -70,7 +73,7 @@ export class ChannelsQueue {
 
   public async markAsSuccess(channelId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("videoDiscoveryJobs")
         .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
         .where("channelId", "=", channelId)
@@ -86,7 +89,7 @@ export class ChannelsQueue {
 
   public async markAsFailed(channelId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("videoDiscoveryJobs")
         .set({ status: "FAILED", statusUpdatedAt: new Date() })
         .where("channelId", "=", channelId)

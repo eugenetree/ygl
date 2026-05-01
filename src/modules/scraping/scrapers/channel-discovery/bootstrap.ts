@@ -6,6 +6,7 @@ import { httpClient, HttpClient } from "../../../_common/http/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { SearchChannelQueriesWorker } from "./search-channel-queries.worker.js";
 import { SearchChannelQueriesSeeder } from "./search-channel-queries.seeder.js";
+import { DatabaseClient } from "../../../../db/client.js";
 
 const spawnWorker = async ({
   name,
@@ -24,6 +25,7 @@ const spawnWorker = async ({
   });
 
   container.bind(HttpClient).toConstantValue(httpClient);
+  container.bind(DatabaseClient).toSelf().inSingletonScope();
 
   const worker = container.get(SearchChannelQueriesWorker);
   await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => { } });
@@ -35,7 +37,7 @@ export async function bootstrap() {
     category: "worker-channels-discovery",
   })
 
-  const seeder = new SearchChannelQueriesSeeder(logger);
+  const seeder = new SearchChannelQueriesSeeder(logger, new DatabaseClient());
   const result = await seeder.seedIfNeeded();
 
   if (!result.ok) {

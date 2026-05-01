@@ -1,18 +1,17 @@
-import { dbClient } from "../../../../db/client.js";
-import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { DatabaseError, ChannelEntryRow } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { injectable } from "inversify";
 import { sql } from "kysely";
+import { DatabaseClient } from "../../../../db/client.js";
 
 @injectable()
 export class ChannelEntriesQueue {
-  constructor(private readonly logger: Logger) { }
+  constructor(private readonly db: DatabaseClient) {}
 
   public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .insertInto("channelJobs")
         .values({ channelId, status: "PENDING", statusUpdatedAt: new Date() })
         .execute(),
@@ -27,7 +26,7 @@ export class ChannelEntriesQueue {
 
   public async getNextEntry(): Promise<Result<ChannelEntryRow | null, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.transaction().execute(async (trx) => {
+      this.db.transaction().execute(async (trx) => {
         const job = await trx
           .updateTable("channelJobs")
           .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
@@ -65,7 +64,7 @@ export class ChannelEntriesQueue {
 
   public async markAsSuccess(entryId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("channelJobs")
         .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
         .where("channelId", "=", entryId)
@@ -81,7 +80,7 @@ export class ChannelEntriesQueue {
 
   public async markAsFailed(entryId: string): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("channelJobs")
         .set({ status: "FAILED", statusUpdatedAt: new Date() })
         .where("channelId", "=", entryId)

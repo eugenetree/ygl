@@ -1,12 +1,12 @@
 import fs from "fs/promises";
-import { FileMigrationProvider, Migrator } from "kysely";
+import { FileMigrationProvider, Kysely, Migrator } from "kysely";
 import * as path from "path";
 
 import { dbClient } from "../client.js";
 
 async function migrateToLatest() {
   const migrator = new Migrator({
-    db: dbClient,
+    db: dbClient as unknown as Kysely<any>,
     provider: new FileMigrationProvider({
       fs,
       path,

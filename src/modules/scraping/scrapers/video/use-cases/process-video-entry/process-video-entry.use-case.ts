@@ -105,7 +105,11 @@ export class ProcessVideoEntryUseCase {
       `Video ${video.id} persisted. autoCaptions=${autoCaptions?.length ?? 0}, manualCaptions=${manualCaptions?.length ?? 0}.`
     );
 
-    return Success(undefined);
+    const hasValidCaptions =
+      video.autoCaptionsStatus === "CAPTIONS_VALID" &&
+      video.manualCaptionsStatus === "CAPTIONS_VALID";
+
+    return Success({ hasValidCaptions });
   }
 
 }

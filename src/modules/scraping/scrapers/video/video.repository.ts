@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { dbClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
@@ -19,7 +19,10 @@ const CAPTIONS_CHUNK_SIZE = Math.floor(65535 / 7);
 
 @injectable()
 export class VideoRepository {
-  constructor(private readonly logger: Logger) { }
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {}
 
   async createWithCaptions({
     video,
@@ -31,7 +34,7 @@ export class VideoRepository {
     manualCaptions: CaptionProps[],
   }): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.transaction().execute(async (trx) => {
+      this.db.transaction().execute(async (trx) => {
         await trx
           .insertInto("videos")
           .values(video)
@@ -68,7 +71,7 @@ export class VideoRepository {
     let lastVideoId: string | null = null;
 
     while (true) {
-      let query = dbClient
+      let query = this.db
         .selectFrom("videos")
         .selectAll()
         .where("autoCaptionsStatus", "!=", "CAPTIONS_ABSENT")
@@ -99,7 +102,7 @@ export class VideoRepository {
       lastVideoId = video.id;
 
       const captionsResult = await tryCatch(
-        dbClient
+        this.db
           .selectFrom("captions")
           .selectAll()
           .where("videoId", "=", video.id)
@@ -126,7 +129,7 @@ export class VideoRepository {
     limit: number,
   ): Promise<Result<Array<Pick<Video, "id" | "languageCode" | "languageCodeYtdlp" | "createdAt">>, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .selectFrom("videos")
         .select(["id", "languageCode", "languageCodeYtdlp", "createdAt"])
         .orderBy("createdAt", "desc")
@@ -141,12 +144,9 @@ export class VideoRepository {
     return Success(result.value);
   }
 
-  async update(
-    videoId: string,
-    data: Partial<VideoProps>,
-  ): Promise<Result<void, DatabaseError>> {
+  async update(videoId: string, data: Partial<VideoProps>): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("videos")
         .set(data)
         .where("id", "=", videoId)

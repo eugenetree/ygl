@@ -5,6 +5,7 @@ import { Container } from "inversify";
 import { Logger } from "../../../_common/logger/logger.js";
 import { YtDlpClient } from "../../../youtube-api/yt-dlp-client.js";
 import { ChannelsWorker } from "./channels.worker.js";
+import { DatabaseClient } from "../../../../db/client.js";
 
 const spawnWorker = async ({
   name,
@@ -23,6 +24,7 @@ const spawnWorker = async ({
   });
 
   container.bind(YtDlpClient).toSelf().inSingletonScope();
+  container.bind(DatabaseClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelsWorker);
   await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => {} });

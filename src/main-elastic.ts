@@ -4,12 +4,14 @@ import { Container } from "inversify";
 
 import { Logger } from "./modules/_common/logger/logger.js";
 import { SyncDataToElasticUseCase } from "./modules/captions-search/sync-data-to-elastic.use-case.js";
+import { DatabaseClient } from "./db/client.js";
 
 const SYNC_INTERVAL_MS = 60_000;
 
 async function main() {
   const container = new Container({ autobind: true });
   container.bind(Logger).toDynamicValue(() => new Logger({ context: "main-elastic", category: "main" }));
+  container.bind(DatabaseClient).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);
   const syncUseCase = container.get(SyncDataToElasticUseCase);

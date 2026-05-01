@@ -5,6 +5,7 @@ import { Container } from "inversify";
 import { httpClient, HttpClient } from "../../../_common/http/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { ChannelEntriesWorker } from "./channel-entries.worker.js";
+import { DatabaseClient } from "../../../../db/client.js";
 
 const spawnWorker = async ({
   name,
@@ -23,6 +24,7 @@ const spawnWorker = async ({
   });
 
   container.bind(HttpClient).toConstantValue(httpClient);
+  container.bind(DatabaseClient).toSelf().inSingletonScope();
 
   const worker = container.get(ChannelEntriesWorker);
   await worker.run({ shouldContinue: shouldContinue ?? (() => true), onError: async () => {} });

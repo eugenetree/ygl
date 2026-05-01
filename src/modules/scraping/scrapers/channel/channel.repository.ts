@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 
-import { dbClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { Logger } from "../../../_common/logger/logger.js";
@@ -9,15 +9,16 @@ import { DatabaseError } from "../../../../db/types.js";
 
 @injectable()
 export class ChannelRepository {
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {
     this.logger.setContext(ChannelRepository.name);
   }
 
-  async create(
-    channel: ChannelProps,
-  ): Promise<Result<void, DatabaseError>> {
+  async create(channel: ChannelProps): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
-      dbClient
+      this.db
         .insertInto("channels")
         .values(channel)
         .execute(),

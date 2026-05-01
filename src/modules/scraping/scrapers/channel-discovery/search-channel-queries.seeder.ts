@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 
-import { dbClient } from "../../../../db/index.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { Failure, Success } from "../../../../types/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
@@ -9,13 +9,16 @@ import { injectable } from "inversify";
 
 @injectable()
 export class SearchChannelQueriesSeeder {
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {
     this.logger.setContext(SearchChannelQueriesSeeder.name);
   }
 
   async seedIfNeeded() {
     const anyQueryResult = await tryCatch(
-      dbClient
+      this.db
         .selectFrom("searchChannelQueries")
         .selectAll()
         .executeTakeFirst(),
@@ -79,7 +82,7 @@ export class SearchChannelQueriesSeeder {
       this.logger.info(`Seeding ${chunk.length} queries into storage ${i * chunkSize}/${words.length}`);
 
       const dbResult = await tryCatch(
-        dbClient
+        this.db
           .insertInto("searchChannelQueries")
           .values(
             chunk.map((word: string, index: number) => ({
@@ -99,7 +102,7 @@ export class SearchChannelQueriesSeeder {
       }
 
       const jobResult = await tryCatch(
-        dbClient
+        this.db
           .insertInto("channelDiscoveryJobs")
           .values(queryIds.map((id) => ({ searchQueryId: id, status: "PENDING" as const, statusUpdatedAt: new Date() })))
           .execute(),

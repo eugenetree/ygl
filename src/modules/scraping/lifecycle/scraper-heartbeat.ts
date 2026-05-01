@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 
 import { Logger } from "../../_common/logger/logger.js";
-import { dbClient } from "../../../db/client.js";
+import { DatabaseClient } from "../../../db/client.js";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 
@@ -10,7 +10,7 @@ export class ScraperHeartbeat {
   private interval: NodeJS.Timeout | null = null;
   private readonly logger: Logger;
 
-  constructor(logger: Logger) {
+  constructor(logger: Logger, private readonly db: DatabaseClient) {
     this.logger = logger.child({ context: ScraperHeartbeat.name });
   }
 
@@ -29,7 +29,7 @@ export class ScraperHeartbeat {
   }
 
   private beat(): void {
-    dbClient
+    this.db
       .updateTable("scrapingProcess")
       .set({ lastHeartbeatAt: new Date() })
       .where("id", "=", 1)

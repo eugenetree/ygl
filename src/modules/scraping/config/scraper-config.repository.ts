@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 
-import { dbClient } from "../../../db/client.js";
+import { DatabaseClient } from "../../../db/client.js";
 import { DatabaseError } from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
@@ -9,9 +9,11 @@ import { ScraperName } from "../constants.js";
 
 @injectable()
 export class ScraperConfigRepository {
+  constructor(private readonly db: DatabaseClient) {}
+
   public async findEnabled(): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig")
+      this.db.selectFrom("scraperConfig")
         .selectAll()
         .where("enabled", "=", true)
         .execute()
@@ -26,7 +28,7 @@ export class ScraperConfigRepository {
 
   public async findByName(scraperName: ScraperName): Promise<Result<ScraperConfig | null, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig")
+      this.db.selectFrom("scraperConfig")
         .selectAll()
         .where("scraperName", "=", scraperName)
         .executeTakeFirst()
@@ -41,7 +43,7 @@ export class ScraperConfigRepository {
 
   public async findAll(): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("scraperConfig")
+      this.db.selectFrom("scraperConfig")
         .selectAll()
         .execute()
     );
@@ -55,7 +57,7 @@ export class ScraperConfigRepository {
 
   public async update(config: ScraperConfig): Promise<Result<ScraperConfig, DatabaseError>> {
     const result = await tryCatch(
-      dbClient
+      this.db
         .updateTable("scraperConfig")
         .set(config)
         .where("scraperName", "=", config.scraperName)

@@ -54,7 +54,7 @@ export interface Database {
   videoDiscoveryJobs: VideoDiscoveryJobsRow;
   videoJobs: VideoJobsRow;
   transcriptionJobs: TranscriptionJobsRow;
-  channelVideosHealth: ChannelVideoHealthRow;
+  channelProcessingStats: ChannelProcessingStatsRow;
   scraperConfig: ScraperConfigRow;
   scrapingProcess: ScrapingProcessRow;
 }
@@ -225,11 +225,11 @@ export interface VideoEntriesRow {
   updatedAt: Generated<Date>;
 }
 
-export interface ChannelVideoHealthRow {
+export interface ChannelProcessingStatsRow {
   id: string;
   channelId: string;
-  succeededVideosStreak: number;
-  failedVideosStreak: number;
+  totalProcessedCount: number;
+  validCaptionsCount: number;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

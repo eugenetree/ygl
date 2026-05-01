@@ -3,8 +3,8 @@ import { Failure, Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import { ChannelVideoHealthRepository } from "./channel-video-health.repository.js";
-import { ChannelVideosHealthProps } from "./channel-videos-health.js";
+import { ChannelProcessingStatsRepository } from "./channel-processing-stats.repository.js";
+import { ChannelProcessingStatsProps } from "./channel-processing-stats.js";
 import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
 import { DatabaseError, VideoJobSkipCause } from "../../../../db/types.js";
@@ -30,7 +30,7 @@ export class VideoEntriesWorker {
     logger: Logger,
     private readonly processVideoEntry: ProcessVideoEntryUseCase,
     private readonly videoEntriesQueue: VideoEntriesQueue,
-    private readonly channelVideoHealthRepository: ChannelVideoHealthRepository,
+    private readonly channelProcessingStatsRepository: ChannelProcessingStatsRepository,
   ) {
     this.logger = logger.child({ context: "VideoEntriesWorker", category: "worker-video-fetcher" });
   }
@@ -76,20 +76,8 @@ export class VideoEntriesWorker {
         channelId: entry.channelId,
       });
 
-      const skipCause = !result.ok ? toSkipCause(result.error.type) : null;
-      const healthSyncResult = await this.syncChannelHealth({
-        channelId: entry.channelId,
-        isSuccess: result.ok || skipCause !== null,
-      });
-
-      if (!healthSyncResult.ok) {
-        this.logger.error({ message: "Failed to sync channel health", error: healthSyncResult.error });
-        this.isRunning = false;
-        await onError(healthSyncResult.error);
-        return healthSyncResult;
-      }
-
       if (!result.ok) {
+        const skipCause = toSkipCause(result.error.type);
         if (skipCause) {
           this.logger.info(`Video entry ${entry.id} skipped (${skipCause}).`);
           await this.videoEntriesQueue.markAsSkipped(entry.id, skipCause);
@@ -101,11 +89,23 @@ export class VideoEntriesWorker {
           error: result.error,
           context: { entryId: entry.id },
         });
-        
+
         await this.videoEntriesQueue.markAsFailed(entry.id);
         this.isRunning = false;
         await onError(result.error);
         return result;
+      }
+
+      const statsSyncResult = await this.syncChannelStats({
+        channelId: entry.channelId,
+        hasValidCaptions: result.value.hasValidCaptions,
+      });
+
+      if (!statsSyncResult.ok) {
+        this.logger.error({ message: "Failed to sync channel processing stats", error: statsSyncResult.error });
+        this.isRunning = false;
+        await onError(statsSyncResult.error);
+        return statsSyncResult;
       }
 
       await this.videoEntriesQueue.markAsSuccess(entry.id);
@@ -114,25 +114,27 @@ export class VideoEntriesWorker {
     return Success(WorkerStopCause.DONE);
   }
 
-  private async syncChannelHealth({
+  private async syncChannelStats({
     channelId,
-    isSuccess,
+    hasValidCaptions,
   }: {
     channelId: string;
-    isSuccess: boolean;
+    hasValidCaptions: boolean;
   }): Promise<Result<void, DatabaseError>> {
-    const healthResult = await this.channelVideoHealthRepository.getHealthRecord(channelId);
-    if (!healthResult.ok) return healthResult;
+    const statsResult = await this.channelProcessingStatsRepository.getStats(channelId);
+    if (!statsResult.ok) return statsResult;
 
-    const current = healthResult.value;
-    const nextData: ChannelVideosHealthProps = {
+    const current = statsResult.value;
+    const nextData: ChannelProcessingStatsProps = {
       channelId,
-      succeededVideosStreak: isSuccess ? (current?.succeededVideosStreak ?? 0) + 1 : 0,
-      failedVideosStreak: isSuccess ? 0 : (current?.failedVideosStreak ?? 0) + 1,
+      totalProcessedCount: (current?.totalProcessedCount ?? 0) + 1,
+      validCaptionsCount: hasValidCaptions
+        ? (current?.validCaptionsCount ?? 0) + 1
+        : (current?.validCaptionsCount ?? 0),
     };
 
     return current
-      ? await this.channelVideoHealthRepository.update({ ...current, ...nextData })
-      : await this.channelVideoHealthRepository.create(nextData);
+      ? await this.channelProcessingStatsRepository.update({ ...current, ...nextData })
+      : await this.channelProcessingStatsRepository.create(nextData);
   }
 }

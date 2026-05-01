@@ -1,15 +1,17 @@
 import { injectable } from "inversify";
-import { dbClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { DatabaseError } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import { ChannelVideosHealth, ChannelVideosHealthProps } from "./channel-videos-health.js";
+import { ChannelProcessingStats, ChannelProcessingStatsProps } from "./channel-processing-stats.js";
 
 @injectable()
-export class ChannelVideoHealthRepository {
-  public async getHealthRecord(channelId: string): Promise<Result<ChannelVideosHealth | null, DatabaseError>> {
+export class ChannelProcessingStatsRepository {
+  constructor(private readonly db: DatabaseClient) {}
+
+  public async getStats(channelId: string): Promise<Result<ChannelProcessingStats | null, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.selectFrom("channelVideosHealth")
+      this.db.selectFrom("channelProcessingStats")
         .selectAll()
         .where("channelId", "=", channelId)
         .executeTakeFirst()
@@ -25,11 +27,11 @@ export class ChannelVideoHealthRepository {
     return Success(result.value ?? null);
   }
 
-  public async create(healthRecord: ChannelVideosHealthProps): Promise<Result<void, DatabaseError>> {
+  public async create(stats: ChannelProcessingStatsProps): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.insertInto("channelVideosHealth")
+      this.db.insertInto("channelProcessingStats")
         .values({
-          ...healthRecord,
+          ...stats,
           id: crypto.randomUUID(),
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -47,11 +49,11 @@ export class ChannelVideoHealthRepository {
     return Success(undefined);
   }
 
-  public async update(healthRecord: ChannelVideosHealth): Promise<Result<void, DatabaseError>> {
+  public async update(stats: ChannelProcessingStats): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      dbClient.updateTable("channelVideosHealth")
-        .set(healthRecord)
-        .where("id", "=", healthRecord.id)
+      this.db.updateTable("channelProcessingStats")
+        .set(stats)
+        .where("id", "=", stats.id)
         .execute()
     );
 
