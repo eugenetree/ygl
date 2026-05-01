@@ -27,7 +27,11 @@ export class StartAppUseCase {
     await this.scraperStatusWatcher.start();
     await this.scraperCommandListener.start();
 
-    this.telegramNotifier.sendMessage("App started.");
+    const country = await this.fetchScraperCountry();
+    this.telegramNotifier.sendMessage(
+      "App started.\n"
+      + `Scraper country: ${country}`
+    );
 
     // const configResult = await this.scraperConfigRepository.findEnabled();
     // if (!configResult.ok) {
@@ -40,5 +44,22 @@ export class StartAppUseCase {
 
     // await this.scraperOrchestrator.start(enabledScrapers);
     // this.telegramNotifier.sendMessage(`Scrapers started:\n${enabledScrapers.join("\n")}`);
+  }
+
+  private async fetchScraperCountry(): Promise<string> {
+    try {
+      const response = await fetch("https://ipinfo.io/json");
+      if (!response.ok) {
+        return "unknown";
+      }
+      const data = (await response.json()) as { country?: string };
+      return data.country ?? "unknown";
+    } catch (error) {
+      this.logger.error({
+        message: "Failed to fetch scraper country from ipinfo.io",
+        error: error instanceof Error ? error : new Error(String(error)),
+      });
+      return "unknown";
+    }
   }
 }
