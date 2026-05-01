@@ -4,6 +4,7 @@ import { Container } from "inversify";
 
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
+import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperHeartbeat } from "./modules/scraping/lifecycle/scraper-heartbeat.js";
@@ -21,12 +22,14 @@ async function main() {
   container.bind(YtDlpClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 
+  const logger = container.get(Logger);
   const seeder = container.get(SearchChannelQueriesSeeder);
   const scraperCommandListener = container.get(ScraperCommandListener);
   const scraperOrchestrator = container.get(ScraperOrchestrator);
   const scraperStatusService = container.get(ScraperStatusService);
   const startScraperUseCase = container.get(StartScraperUseCase);
   const scraperHeartbeat = container.get(ScraperHeartbeat);
+  const telegramNotifier = container.get(TelegramNotifier);
 
   const shutdown = async () => {
     scraperHeartbeat.stop();
@@ -60,6 +63,24 @@ async function main() {
   }
 
   await scraperCommandListener.start();
+
+  const country = await fetchScraperCountry(logger);
+  await telegramNotifier.sendMessage(`Scraper container country: ${country}`);
+}
+
+async function fetchScraperCountry(logger: Logger): Promise<string> {
+  try {
+    const response = await fetch("https://ipinfo.io/json", { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) return "unknown";
+    const data = (await response.json()) as { country?: string };
+    return data.country ?? "unknown";
+  } catch (error) {
+    logger.error({
+      message: "Failed to fetch scraper country from ipinfo.io",
+      error: error instanceof Error ? error : new Error(String(error)),
+    });
+    return "unknown";
+  }
 }
 
 main().catch((err) => {

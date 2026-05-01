@@ -12,6 +12,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/18/docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-saythis}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   # ── 2. Elasticsearch ───────────────────────────────────────────────────────
   elasticsearch:
@@ -60,7 +65,8 @@ services:
       - /opt/ygl/logs:/usr/src/app/logs
     command: npm run start:bot
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   sync-elastic:
     container_name: sync-elastic
@@ -68,8 +74,10 @@ services:
     environment: *app-env
     command: npm run start:elastic
     depends_on:
-      - db
-      - elasticsearch
+      db:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
 
   # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
   scraper:
@@ -90,7 +98,8 @@ services:
     volumes:
       - /opt/ygl/logs:/usr/src/app/logs
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:

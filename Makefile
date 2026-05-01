@@ -65,3 +65,9 @@ rebuild:
 	docker compose down
 	docker compose build --no-cache
 	docker compose up -d
+
+# Rebuild all containers and wipe volumes (fresh DB)
+rebuild-fresh:
+	docker compose down -v
+	docker compose build --no-cache
+	docker compose up -d
