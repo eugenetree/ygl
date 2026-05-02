@@ -36,7 +36,7 @@ export class LastVideosController implements TelegramController {
         const url = `https://www.youtube.com/watch?v=${v.id}`;
         const lang = v.languageCode ?? "-";
         const langYtdlp = v.languageCodeYtdlp ?? "-";
-        return `${v.id} | lang=${lang} | ytdlp=${langYtdlp}\n${url}`;
+        return `${v.id} | lang=${lang} | ytdlp=${langYtdlp}\n${url}\n${v.createdAt}`;
       });
 
       await ctx.reply(`Last ${result.value.length} scraped videos:\n\n${lines.join("\n\n")}`);
