@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { EXAMPLE_PHRASES, MOCK_RESULTS } from "../lib/data";
+import { EXAMPLE_PHRASES } from "../lib/data";
+import { searchPhrases } from "../lib/api";
 import {
   Icon,
   SearchBar,
@@ -19,13 +20,18 @@ declare global {
   }
 }
 
+interface Result {
+  id: string;
+  videoId: string;
+  startAt: number; // seconds
+  text: string;
+}
+
 function fmt(s: number) {
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
-
-const MOCKED_QUERY = "test";
 
 export default function GentleResults({ query }: { query: string }) {
   const router = useRouter();
@@ -33,7 +39,9 @@ export default function GentleResults({ query }: { query: string }) {
   const [accent, setAccent] = useState<AccentFilter>("all");
   const [speed, setSpeed] = useState<SpeedFilter>("any");
   const [dark, setDark] = useState(false);
-  const [activeId, setActiveId] = useState<string>(MOCK_RESULTS[0].id);
+  const [results, setResults] = useState<Result[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeId, setActiveId] = useState<string>("");
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -41,30 +49,33 @@ export default function GentleResults({ query }: { query: string }) {
   const playerRef = useRef<any>(null);
   const playerDivRef = useRef<HTMLDivElement>(null);
   const playerReadyRef = useRef(false);
-  const activeRef = useRef<(typeof MOCK_RESULTS)[0] | undefined>(undefined);
+  const activeRef = useRef<Result | undefined>(undefined);
 
-  const isMockedQuery = query.trim().toLowerCase() === MOCKED_QUERY;
+  useEffect(() => {
+    setLoading(true);
+    setResults([]);
+    setActiveId("");
 
-  const allResults = isMockedQuery ? MOCK_RESULTS : [];
-  const results = allResults.filter((r) => {
-    if (accent !== "all" && r.accent !== accent) return false;
-    if (speed !== "any" && r.speed !== speed) return false;
-    return true;
-  });
-  const active = results.find((r) => r.id === activeId) || results[0];
+    searchPhrases(query)
+      .then((hits) => {
+        const mapped: Result[] = hits.map((h) => ({
+          id: `${h.videoId}_${h.startTime}`,
+          videoId: h.videoId,
+          startAt: Math.max(0, h.startTime / 1000 - 1),
+          text: h.text,
+        }));
+        setResults(mapped);
+        setActiveId(mapped[0]?.id ?? "");
+      })
+      .catch(() => setResults([]))
+      .finally(() => setLoading(false));
+  }, [query]);
 
-  const totalMatches = results.reduce((s, r) => s + r.matches, 0);
-  const filtersActive = accent !== "all" || speed !== "any";
-  const emptyReason: EmptyReason =
-    results.length > 0
-      ? null
-      : !isMockedQuery
-        ? "no-phrase"
-        : filtersActive
-          ? "filtered-out"
-          : "no-phrase";
+  const active = results.find((r) => r.id === activeId) ?? results[0];
+  activeRef.current = active;
 
   const isEmpty = results.length === 0;
+  const emptyReason: EmptyReason = !loading && isEmpty ? "no-phrase" : null;
 
   function onSubmit(e?: React.FormEvent) {
     e?.preventDefault();
@@ -86,17 +97,18 @@ export default function GentleResults({ query }: { query: string }) {
     router.push(pushQueryPath(p));
   }
 
-  activeRef.current = active;
-
   useEffect(() => {
+    if (!active) return;
+
     function createPlayer() {
       if (!playerDivRef.current || playerRef.current) return;
-      const { videoId, startAt } = activeRef.current!;
+      const current = activeRef.current;
+      if (!current) return;
       playerRef.current = new window.YT.Player(playerDivRef.current, {
-        videoId,
+        videoId: current.videoId,
         width: "100%",
         height: "100%",
-        playerVars: { start: startAt, autoplay: 1, rel: 0 },
+        playerVars: { start: Math.floor(current.startAt), autoplay: 1, rel: 0 },
         events: {
           onReady: () => {
             playerReadyRef.current = true;
@@ -125,7 +137,7 @@ export default function GentleResults({ query }: { query: string }) {
       playerRef.current = null;
       playerReadyRef.current = false;
     };
-  }, []);
+  }, [!!active]);
 
   useEffect(() => {
     setCurrentTime(0);
@@ -180,11 +192,13 @@ export default function GentleResults({ query }: { query: string }) {
               setSpeed={setSpeed}
             />
             <div className="g-count">
-              {isEmpty ? (
+              {loading ? (
+                <span>searching…</span>
+              ) : isEmpty ? (
                 <span>no clips</span>
               ) : (
                 <span>
-                  <b>{totalMatches}</b> matches in <b>{results.length}</b> clips
+                  <b>{results.length}</b> clips
                 </span>
               )}
             </div>
@@ -192,7 +206,7 @@ export default function GentleResults({ query }: { query: string }) {
         </header>
 
         <main className="g-main">
-          {isEmpty || !active ? (
+          {loading ? null : isEmpty || !active ? (
             <EmptyState
               query={query}
               reason={emptyReason}
@@ -205,19 +219,7 @@ export default function GentleResults({ query }: { query: string }) {
                 <div ref={playerDivRef} />
               </div>
               <div className="g-player-meta">
-                <div
-                  className="g-player-caption"
-                  dangerouslySetInnerHTML={{ __html: active.caption }}
-                />
-                <div className="g-player-sub">
-                  <span className={"g-accent-pill g-accent-" + active.accent}>
-                    {active.accentLabel}
-                  </span>
-                  <span className="g-dot" />
-                  <span>{active.speaker}</span>
-                  <span className="g-dot" />
-                  <span className="g-muted">{active.title}</span>
-                </div>
+                <div className="g-player-caption">{active.text}</div>
                 <div className="g-player-controls">
                   <button
                     className="g-circ"
@@ -338,7 +340,7 @@ function EmptyState({
           <>No clips match your filters</>
         ) : (
           <>
-            Nobody&apos;s saying <em>“{query}”</em> yet
+            Nobody&apos;s saying <em>"{query}"</em> yet
           </>
         )}
       </h2>
@@ -346,7 +348,7 @@ function EmptyState({
         {filtered ? (
           <>
             Loosen the accent or speed and we&apos;ll likely find clips for{" "}
-            <em>“{query}”</em>.
+            <em>"{query}"</em>.
           </>
         ) : (
           <>
@@ -363,7 +365,7 @@ function EmptyState({
             Clear filters
           </button>
         )}
-        <button className="g-empty-btn" onClick={() => tryPhrase(MOCKED_QUERY)}>
+        <button className="g-empty-btn" onClick={() => tryPhrase("once in a while")}>
           <Icon name="sparkle" size={14} />
           Surprise me
         </button>

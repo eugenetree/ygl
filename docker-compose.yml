@@ -79,6 +79,19 @@ services:
       elasticsearch:
         condition: service_started
 
+  api:
+    container_name: api
+    image: saythis-app:latest
+    environment:
+      <<: *app-env
+      IS_API_ENABLED: ${IS_API_ENABLED:-}
+    ports:
+      - "3001:3001"
+    command: npm run start:api
+    depends_on:
+      elasticsearch:
+        condition: service_started
+
   # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
   scraper:
     container_name: scraper

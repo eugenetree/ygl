@@ -7,6 +7,7 @@ import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
 import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
+import { ApiServer } from "./modules/api/api-server.js";
 
 @injectable()
 export class StartAppUseCase {
@@ -19,9 +20,11 @@ export class StartAppUseCase {
     private readonly searchChannelQueriesSeeder: SearchChannelQueriesSeeder,
     private readonly scraperStatusWatcher: ScraperStatusWatcher,
     private readonly scraperCommandListener: ScraperCommandListener,
+    private readonly apiServer: ApiServer,
   ) { }
 
   public async execute() {
+    this.apiServer.start();
     await this.searchChannelQueriesSeeder.seedIfNeeded();
     await this.telegramBot.start();
     await this.scraperStatusWatcher.start();

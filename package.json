@@ -15,7 +15,8 @@
     "build": "npm run clean && tsc",
     "start:bot": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-bot.js",
     "start:scraper": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-scraper.js",
-    "start:elastic": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-elastic.js"
+    "start:elastic": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-elastic.js",
+    "start:api": "node dist/src/main-api.js"
   },
   "keywords": [],
   "author": "",
