@@ -16,10 +16,17 @@ export class ChannelsQueue {
   }
 
   public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
+    const scoreRow = await this.db
+      .selectFrom("channelPriorityScores")
+      .select("score")
+      .where("channelId", "=", channelId)
+      .executeTakeFirst();
+    const priority = scoreRow?.score ?? 0;
+
     const result = await tryCatch(
       this.db
         .insertInto("videoDiscoveryJobs")
-        .values({ channelId, status: "PENDING", statusUpdatedAt: new Date() })
+        .values({ channelId, status: "PENDING", priority, statusUpdatedAt: new Date() })
         .execute(),
     );
 
@@ -54,6 +61,7 @@ export class ChannelsQueue {
               .where("videoDiscoveryJobs.status", "=", "PENDING")
               .where("channels.videoCount", "<", VIDEOS_PER_CHANNEL_LIMIT)
               .where("channels.countryCode", "in", SUPPORTED_COUNTRY_CODES)
+              .orderBy("videoDiscoveryJobs.priority", "desc")
               .orderBy("channels.subscriberCount", "desc")
               .orderBy("videoDiscoveryJobs.createdAt", "asc")
               .limit(limit)

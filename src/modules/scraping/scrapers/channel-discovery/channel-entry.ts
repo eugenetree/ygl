@@ -1,6 +1,6 @@
 export type ChannelEntry = {
   id: string;
-  queryId: string;
+  queryId: string | null;
   createdAt: Date;
   updatedAt: Date;
 };

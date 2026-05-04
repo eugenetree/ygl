@@ -54,9 +54,10 @@ export interface Database {
   videoDiscoveryJobs: VideoDiscoveryJobsRow;
   videoJobs: VideoJobsRow;
   transcriptionJobs: TranscriptionJobsRow;
-  channelProcessingStats: ChannelProcessingStatsRow;
   scraperConfig: ScraperConfigRow;
   scrapingProcess: ScrapingProcessRow;
+  boostedChannels: BoostedChannelsRow;
+  channelPriorityScores: ChannelPriorityScoresRow;
 }
 
 export interface ScraperConfigRow {
@@ -92,6 +93,7 @@ export interface ChannelJobsRow {
   channelId: string;
   status: ProcessingStatus;
   statusUpdatedAt: Date | null;
+  priority: number;
   createdAt: Generated<Date>;
 }
 
@@ -100,6 +102,7 @@ export interface VideoDiscoveryJobsRow {
   channelId: string;
   status: ProcessingStatus;
   statusUpdatedAt: Date | null;
+  priority: number;
   createdAt: Generated<Date>;
 }
 
@@ -110,6 +113,7 @@ export interface VideoJobsRow {
   status: VideoJobStatus;
   skipCause: VideoJobSkipCause | null;
   statusUpdatedAt: Date | null;
+  priority: number;
   createdAt: Generated<Date>;
 }
 
@@ -131,9 +135,22 @@ export interface SearchChannelQueriesRow {
 
 export interface ChannelEntriesRow {
   id: string;
-  queryId: string;
+  queryId: string | null;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
+}
+
+export interface BoostedChannelsRow {
+  channelId: string;
+  createdAt: Generated<Date>;
+}
+
+export interface ChannelPriorityScoresRow {
+  channelId: string;
+  score: number;
+  components: Record<string, unknown>;
+  calculatedAt: Date | null;
+  lastVideoProcessedAt: Date | null;
 }
 
 export interface ChannelsRow {
@@ -221,15 +238,6 @@ export interface VideoEntriesRow {
   id: string;
   channelId: string;
   availability: VideoEntryAvailability;
-  createdAt: Generated<Date>;
-  updatedAt: Generated<Date>;
-}
-
-export interface ChannelProcessingStatsRow {
-  id: string;
-  channelId: string;
-  totalProcessedCount: number;
-  validCaptionsCount: number;
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
 }

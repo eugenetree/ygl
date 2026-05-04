@@ -2,11 +2,11 @@ import { injectable } from "inversify";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { Logger } from "../../../_common/logger/logger.js";
+import { tryCatch } from "../../../_common/try-catch.js";
 import { WorkerStopCause } from "../../constants.js";
-import { ChannelProcessingStatsRepository } from "./channel-processing-stats.repository.js";
-import { ChannelProcessingStatsProps } from "./channel-processing-stats.js";
 import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { DatabaseError, VideoJobSkipCause } from "../../../../db/types.js";
 
 function toSkipCause(errorType: string): VideoJobSkipCause | null {
@@ -30,7 +30,7 @@ export class VideoEntriesWorker {
     logger: Logger,
     private readonly processVideoEntry: ProcessVideoEntryUseCase,
     private readonly videoEntriesQueue: VideoEntriesQueue,
-    private readonly channelProcessingStatsRepository: ChannelProcessingStatsRepository,
+    private readonly db: DatabaseClient,
   ) {
     this.logger = logger.child({ context: "VideoEntriesWorker", category: "worker-video-fetcher" });
   }
@@ -96,16 +96,13 @@ export class VideoEntriesWorker {
         return result;
       }
 
-      const statsSyncResult = await this.syncChannelStats({
-        channelId: entry.channelId,
-        hasValidCaptions: result.value.hasValidCaptions,
-      });
+      const updateResult = await this.updateLastVideoProcessedAt(entry.channelId);
 
-      if (!statsSyncResult.ok) {
-        this.logger.error({ message: "Failed to sync channel processing stats", error: statsSyncResult.error });
+      if (!updateResult.ok) {
+        this.logger.error({ message: "Failed to update lastVideoProcessedAt", error: updateResult.error });
         this.isRunning = false;
-        await onError(statsSyncResult.error);
-        return statsSyncResult;
+        await onError(updateResult.error);
+        return updateResult;
       }
 
       await this.videoEntriesQueue.markAsSuccess(entry.id);
@@ -114,27 +111,24 @@ export class VideoEntriesWorker {
     return Success(WorkerStopCause.DONE);
   }
 
-  private async syncChannelStats({
-    channelId,
-    hasValidCaptions,
-  }: {
-    channelId: string;
-    hasValidCaptions: boolean;
-  }): Promise<Result<void, DatabaseError>> {
-    const statsResult = await this.channelProcessingStatsRepository.getStats(channelId);
-    if (!statsResult.ok) return statsResult;
+  private async updateLastVideoProcessedAt(channelId: string): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .insertInto("channelPriorityScores")
+        .values({
+          channelId,
+          score: 0,
+          components: {} as unknown as Record<string, number>,
+          lastVideoProcessedAt: new Date(),
+        })
+        .onConflict((oc) => oc.column("channelId").doUpdateSet({ lastVideoProcessedAt: new Date() }))
+        .execute(),
+    );
 
-    const current = statsResult.value;
-    const nextData: ChannelProcessingStatsProps = {
-      channelId,
-      totalProcessedCount: (current?.totalProcessedCount ?? 0) + 1,
-      validCaptionsCount: hasValidCaptions
-        ? (current?.validCaptionsCount ?? 0) + 1
-        : (current?.validCaptionsCount ?? 0),
-    };
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
 
-    return current
-      ? await this.channelProcessingStatsRepository.update({ ...current, ...nextData })
-      : await this.channelProcessingStatsRepository.create(nextData);
+    return Success(undefined);
   }
 }

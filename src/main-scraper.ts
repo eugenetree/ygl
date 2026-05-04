@@ -8,6 +8,7 @@ import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperHeartbeat } from "./modules/scraping/lifecycle/scraper-heartbeat.js";
+import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
 import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-status.service.js";
 import { StartScraperUseCase } from "./modules/scraping/lifecycle/start-scraper.use-case.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
@@ -31,10 +32,12 @@ async function main() {
   const scraperStatusService = container.get(ScraperStatusService);
   const startScraperUseCase = container.get(StartScraperUseCase);
   const scraperHeartbeat = container.get(ScraperHeartbeat);
+  const channelPriorityScheduler = container.get(ChannelPriorityScheduler);
   const telegramNotifier = container.get(TelegramNotifier);
 
   const shutdown = async () => {
     scraperHeartbeat.stop();
+    channelPriorityScheduler.stop();
     await scraperOrchestrator.stop();
     await scraperCommandListener.stop();
 
@@ -56,6 +59,7 @@ async function main() {
 
   await seeder.seedIfNeeded();
   scraperHeartbeat.start();
+  channelPriorityScheduler.start();
 
   // Reconcile status on startup — process may have crashed with stale RUNNING state
   await scraperStatusService.updateStatus({ actual: "STOPPED" });
