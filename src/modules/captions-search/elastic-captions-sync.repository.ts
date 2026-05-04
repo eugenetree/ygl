@@ -63,11 +63,13 @@ export class ElasticCaptionsSyncRepository {
   async getDataToSync(lastSyncedCaptionId?: string) {
     let query = this.db.selectFrom("captions")
       .innerJoin("videos", "videos.id", "captions.videoId")
+      .leftJoin("channelPriorityScores", "channelPriorityScores.channelId", "videos.channelId")
       .where("captions.type", "=", "manual")
       .where("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID")
       .where("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID")
       .where("videos.captionsSimilarityScore", ">=", 0.9)
       .selectAll("captions")
+      .select("channelPriorityScores.searchScore as channelSearchScore")
       .orderBy("captions.createdAt", "asc");
 
     if (lastSyncedCaptionId) {

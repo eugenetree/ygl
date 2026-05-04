@@ -73,16 +73,8 @@ async function createTestDb() {
     .addColumn("status", "varchar", c => c.notNull())
     .addColumn("skipCause", "varchar")
     .addColumn("statusUpdatedAt", "timestamp")
+    .addColumn("priority", "float8", c => c.notNull().defaultTo(0))
     .addColumn("createdAt", "timestamp", c => c.defaultTo(sql`now()`))
-    .execute();
-
-  await db.schema.createTable("channelProcessingStats")
-    .addColumn("id", "varchar(36)", c => c.primaryKey())
-    .addColumn("channelId", "varchar(24)", c => c.notNull().unique())
-    .addColumn("totalProcessedCount", "integer", c => c.notNull().defaultTo(0))
-    .addColumn("validCaptionsCount", "integer", c => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
-    .addColumn("updatedAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
     .execute();
 
   return db;
@@ -90,7 +82,7 @@ async function createTestDb() {
 
 // ---- Fixtures ---------------------------------------------------------------
 
-async function seedChannel(db: Kysely<Database>, channelId: string, videoId: string) {
+async function seedChannel(db: Kysely<Database>, channelId: string, videoId: string, priority = 0) {
   await db.insertInto("channels").values({
     id: channelId,
     name: channelId,
@@ -103,18 +95,7 @@ async function seedChannel(db: Kysely<Database>, channelId: string, videoId: str
     keywords: [],
   }).execute();
   await db.insertInto("videoEntries").values({ id: videoId, channelId, availability: "PUBLIC" }).execute();
-  await db.insertInto("videoJobs").values({ id: crypto.randomUUID(), videoId, channelId, status: "PENDING", statusUpdatedAt: new Date() }).execute();
-}
-
-async function seedStats(db: Kysely<Database>, channelId: string, totalProcessedCount: number, validCaptionsCount: number) {
-  await db.insertInto("channelProcessingStats").values({
-    id: crypto.randomUUID(),
-    channelId,
-    totalProcessedCount,
-    validCaptionsCount,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }).execute();
+  await db.insertInto("videoJobs").values({ id: crypto.randomUUID(), videoId, channelId, status: "PENDING", priority, statusUpdatedAt: new Date() }).execute();
 }
 
 // ---- Tests ------------------------------------------------------------------
@@ -129,66 +110,24 @@ describe("VideoEntriesQueue", () => {
   });
 
   describe("getNextEntry()", () => {
-    it("prefers video from channel above the 10% caption rate threshold", async () => {
-      await seedChannel(db, "channel-bad", "video-bad");
-      await seedStats(db, "channel-bad", 100, 5); // 5% — deprioritized
-
-      await seedChannel(db, "channel-good", "video-good");
-      await seedStats(db, "channel-good", 100, 50); // 50% — normal
+    it("returns the job with the highest priority first", async () => {
+      await seedChannel(db, "channel-low", "video-low__", 1);
+      await seedChannel(db, "channel-high", "video-high_", 10);
 
       const result = await queue.getNextEntry();
 
       assert.ok(result.ok);
-      assert.equal(result.value?.channelId, "channel-good");
+      assert.equal(result.value?.channelId, "channel-high");
     });
 
-    it("falls back to deprioritized channel when it is the only option", async () => {
-      await seedChannel(db, "channel-bad", "video-bad");
-      await seedStats(db, "channel-bad", 100, 5); // 5% — deprioritized
+    it("returns any available job when all priorities are equal", async () => {
+      await seedChannel(db, "channel-a", "video-aaaa_", 5);
+      await seedChannel(db, "channel-b", "video-bbbbb", 5);
 
       const result = await queue.getNextEntry();
 
       assert.ok(result.ok);
-      assert.equal(result.value?.channelId, "channel-bad");
-    });
-
-    it("does not deprioritize a channel with fewer than 100 processed videos", async () => {
-      await seedChannel(db, "channel-new", "video-new");
-      await seedStats(db, "channel-new", 50, 1); // 2% rate but only 50 processed — not penalized
-
-      await seedChannel(db, "channel-bad", "video-bad");
-      await seedStats(db, "channel-bad", 100, 5); // 5% rate with 100+ processed — deprioritized
-
-      const result = await queue.getNextEntry();
-
-      assert.ok(result.ok);
-      assert.equal(result.value?.channelId, "channel-new");
-    });
-
-    it("does not deprioritize a channel with no stats record yet", async () => {
-      await seedChannel(db, "channel-no-stats", "vid-no-stat");
-      // no channelProcessingStats row — new channel
-
-      await seedChannel(db, "channel-bad", "video-bad");
-      await seedStats(db, "channel-bad", 100, 5); // deprioritized
-
-      const result = await queue.getNextEntry();
-
-      assert.ok(result.ok);
-      assert.equal(result.value?.channelId, "channel-no-stats");
-    });
-
-    it("does not deprioritize a channel at exactly the 10% threshold", async () => {
-      await seedChannel(db, "channel-threshold", "vid-thresh_");
-      await seedStats(db, "channel-threshold", 100, 10); // exactly 10% — not deprioritized
-
-      await seedChannel(db, "channel-bad", "video-bad");
-      await seedStats(db, "channel-bad", 100, 5); // 5% — deprioritized
-
-      const result = await queue.getNextEntry();
-
-      assert.ok(result.ok);
-      assert.equal(result.value?.channelId, "channel-threshold");
+      assert.ok(result.value !== null);
     });
 
     it("returns null when the queue is empty", async () => {
