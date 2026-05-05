@@ -114,8 +114,43 @@ services:
       db:
         condition: service_healthy
 
+  # ── 5. Accent Recognition (one-shot, not part of normal stack) ─────────────
+  accent-recognition:
+    profiles: [accent]
+    container_name: accent-recognition
+    build:
+      context: .
+      dockerfile: Dockerfile.accent
+    environment:
+      - HF_HOME=/app/_debug/models
+    volumes:
+      # Bind-mount downloads dir so you can put audio files in and read results
+      - ./_debug/downloads:/app/_debug/downloads
+      # Named volume caches the ~1 GB SpeechBrain model between runs
+      - accent_models:/app/_debug/models
+
+  # ── 6. Audio Analysis (one-shot, not part of normal stack) ─────────────
+  audio-analysis:
+    profiles: [audio]
+    container_name: audio-analysis
+    build:
+      context: .
+      dockerfile: Dockerfile.audio-analysis
+    environment:
+      - HF_HOME=/app/_debug/models
+      - TORCH_HOME=/app/_debug/models
+    volumes:
+      # Bind-mount downloads dir so you can put audio files in and read results
+      - ./_debug/downloads:/app/_debug/downloads
+      # Named volume caches the models between runs
+      - audio_models:/app/_debug/models
+
 volumes:
   postgres_data:
     driver: local
   elasticsearch_data:
+    driver: local
+  accent_models:
+    driver: local
+  audio_models:
     driver: local

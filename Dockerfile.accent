@@ -1,0 +1,58 @@
+# ── Accent Recognition Container ───────────────────────────────────────────────
+# Runs debug-accent-recognition.py inside a clean Linux environment.
+# No Windows symlink / privilege issues.
+#
+# Build:
+#   docker compose --profile accent build accent-recognition
+#
+# Run (auto-pick latest file in _debug/downloads/):
+#   docker compose --profile accent run --rm accent-recognition
+#
+# Run with explicit video id (downloads audio first, then classifies):
+#   docker compose --profile accent run --rm accent-recognition dJgoTcyrFZ4
+# ---------------------------------------------------------------------------
+
+FROM python:3.11-slim
+
+# System deps: ffmpeg (pydub/audio conversion) + curl (yt-dlp download)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# yt-dlp binary (same approach as Dockerfile.scraper)
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+        -o /usr/local/bin/yt-dlp \
+    && chmod a+rx /usr/local/bin/yt-dlp
+
+WORKDIR /app
+
+# Python deps — install before copying script so layer is cached
+# torch CPU-only build keeps the image manageable
+# transformers 5.x requires torch >= 2.4; 2.3.1 causes it to silently disable PyTorch
+RUN pip install -q --no-cache-dir \
+        torch==2.4.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu \
+    && pip install -q --no-cache-dir \
+        transformers \
+        speechbrain \
+        requests \
+        pydub \
+        numpy
+
+# Silence warnings and logs to reduce noise during inference
+ENV PYTHONWARNINGS="ignore"
+ENV TRANSFORMERS_VERBOSITY="error"
+ENV HF_HUB_DISABLE_SYMLINKS_WARNING="1"
+
+# Copy only what the script needs
+COPY _debug/scripts/debug-accent-recognition.py ./scripts/debug-accent-recognition.py
+
+# Mount points (supplied via docker-compose volumes):
+#   /app/_debug/downloads  — audio files to classify (bind-mounted from host)
+#   /app/_debug/models     — SpeechBrain model cache (named volume for reuse)
+
+# Entrypoint: download audio (if video ID given) then run classifier
+COPY docker-accent-entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

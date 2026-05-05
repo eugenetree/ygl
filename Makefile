@@ -71,3 +71,27 @@ rebuild-fresh:
 	docker compose down -v
 	docker compose build --no-cache
 	docker compose up -d
+
+# ── Accent Recognition ─────────────────────────────────────────────────────────
+# Build the accent-recognition image (only needed once / after changes)
+accent-build:
+	docker compose --profile accent build accent-recognition
+
+# Classify the latest audio file already in _debug/downloads/
+#   make accent-run
+# Download audio from YouTube and classify it:
+#   make accent-run video=dJgoTcyrFZ4
+#   make accent-run video=https://www.youtube.com/watch?v=dJgoTcyrFZ4
+accent-run:
+	docker compose --profile accent run --rm accent-recognition $(video)
+
+# ── Audio Analysis (Noise & Speaker Count) ───────────────────────────────────
+audio-build:
+	docker compose --profile audio build audio-analysis
+
+# Analyze the latest audio file already in _debug/downloads/
+#   make audio-run
+# Download audio from YouTube and analyze it:
+#   make audio-run video=dJgoTcyrFZ4
+audio-run:
+	docker compose --profile audio run --rm audio-analysis $(video)

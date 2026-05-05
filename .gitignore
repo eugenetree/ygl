@@ -15,3 +15,5 @@ db/dump/
 !.env.example
 router_config.ovpn
 .claude/settings.local.json
+_debug/downloads
+_debug/models
