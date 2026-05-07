@@ -1,3 +1,8 @@
+ifneq (,$(wildcard .env))
+  include .env
+  export
+endif
+
 up:
 	docker compose up -d
 
@@ -22,7 +27,7 @@ db-export:
 
 # Load a SQL dump into the database: make db-load-dump file=dump.sql
 db-load-dump:
-	docker exec -i db pg_restore -U admin -d saythis < $(file)
+	docker exec -i db pg_restore -U admin -d saythis < "$(file)"
 
 file ?= dump.sql
 
@@ -32,7 +37,7 @@ db-restore:
 	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
 	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
 	@echo "Loading dump from $(file)..."
-	docker exec -i db pg_restore -U admin -d saythis < $(file)
+	docker exec -i db pg_restore -U admin -d saythis < "$(file)"
 	@echo "Done."
 
 # make db-create-migration name="table_name"
@@ -65,6 +70,24 @@ rebuild:
 	docker compose down
 	docker compose build --no-cache
 	docker compose up -d
+
+# Download the latest file from R2 bucket folder into db/dump/
+# Requires: R2_* env vars set (see .env.example)
+r2-download-latest:
+	@mkdir -p db/dump && \
+	LATEST=$$(docker run --rm \
+		-e AWS_ACCESS_KEY_ID=$(R2_ACCESS_KEY_ID) \
+		-e AWS_SECRET_ACCESS_KEY=$(R2_SECRET_ACCESS_KEY) \
+		amazon/aws-cli s3 ls s3://saythis/saythis-saythis-trr9pp_db/ \
+		--endpoint-url $(R2_ENDPOINT) | sort | tail -1 | awk '{print $$4}') && \
+	echo "Downloading $$LATEST..." && \
+	docker run --rm \
+		-e AWS_ACCESS_KEY_ID=$(R2_ACCESS_KEY_ID) \
+		-e AWS_SECRET_ACCESS_KEY=$(R2_SECRET_ACCESS_KEY) \
+		-v $(PWD)/db/dump:/data \
+		amazon/aws-cli s3 cp s3://saythis/saythis-saythis-trr9pp_db/$$LATEST /data/$$LATEST \
+		--endpoint-url $(R2_ENDPOINT) && \
+	echo "Saved to db/dump/$$LATEST"
 
 # Rebuild all containers and wipe volumes (fresh DB)
 rebuild-fresh:
