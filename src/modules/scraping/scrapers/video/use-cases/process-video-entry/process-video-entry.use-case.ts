@@ -70,7 +70,7 @@ export class ProcessVideoEntryUseCase {
     ) {
       return Failure({
         type: "UNEXPECTED_STATE" as const,
-        context: { videoId: video.id }
+        context: { videoId: video.id, manualCaptions, autoCaptions }
       })
     }
 
