@@ -6,6 +6,7 @@ import { ChannelVideoEntry, YoutubeApiGetChannelVideoEntries } from "../../../..
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
 import { VideoEntryAvailability } from "../video-entry.js";
+import { DatabaseClient } from "../../../../../db/client.js";
 
 @injectable()
 export class FindChannelVideosUseCase {
@@ -14,12 +15,20 @@ export class FindChannelVideosUseCase {
     private readonly videoEntryRepository: VideoEntryRepository,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
     private readonly videoEntriesQueue: VideoEntriesQueue,
+    private readonly db: DatabaseClient,
   ) {
     this.logger.setContext(FindChannelVideosUseCase.name);
   }
 
   public async execute(channelId: string): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing channel ${channelId}...`);
+
+    const scoreRow = await this.db
+      .selectFrom("channelPriorityScores")
+      .select("scrapingScore")
+      .where("channelId", "=", channelId)
+      .executeTakeFirst();
+    const priority = scoreRow?.scrapingScore ?? 0;
 
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
       channelId,
@@ -44,7 +53,7 @@ export class FindChannelVideosUseCase {
 
       if (chunkResponse.status === "found") {
         for (const videoEntryResponse of chunkResponse.chunk) {
-          const processEntryResult = await this.processVideoEntry(channelId, videoEntryResponse);
+          const processEntryResult = await this.processVideoEntry(channelId, videoEntryResponse, priority);
 
           if (!processEntryResult.ok) {
             return processEntryResult;
@@ -61,6 +70,7 @@ export class FindChannelVideosUseCase {
   private async processVideoEntry(
     channelId: string,
     entry: ChannelVideoEntry,
+    priority: number,
   ): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing video entry ${entry.id} for channel ${channelId}.`);
 
@@ -106,7 +116,7 @@ export class FindChannelVideosUseCase {
       return Success(undefined);
     }
 
-    const enqueueResult = await this.videoEntriesQueue.enqueue(entry.id, channelId);
+    const enqueueResult = await this.videoEntriesQueue.enqueue(entry.id, channelId, priority);
     if (!enqueueResult.ok) {
       this.logger.error({
         message: "Error enqueuing video",
