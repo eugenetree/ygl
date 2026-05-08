@@ -6,6 +6,8 @@ import { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
 import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
+export type ChannelNotFoundError = { type: "CHANNEL_NOT_FOUND"; channelId: string };
+
 export type ChannelVideoEntry = {
   id: string;
   availability: "subscriber_only" | null;
@@ -45,7 +47,7 @@ export class YoutubeApiGetChannelVideoEntries {
   }): AsyncGenerator<
     Result<
       ChannelVideosResultSuccess,
-      YtDlpError | ValidationError
+      YtDlpError | ValidationError | ChannelNotFoundError
     >,
     void,
     undefined
@@ -67,6 +69,12 @@ export class YoutubeApiGetChannelVideoEntries {
 
     for await (const result of stream) {
       if (!result.ok) {
+        if (result.error.type === "YT_DLP_ERROR" && result.error.message.includes("This channel does not exist")) {
+          this.logger.info(`Channel ${channelId} does not exist on YouTube.`);
+          yield Failure({ type: "CHANNEL_NOT_FOUND", channelId });
+          return;
+        }
+
         this.logger.error({
           message: "Error fetching channel video entries via yt-dlp",
           error: result.error,

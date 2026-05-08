@@ -23,6 +23,15 @@ export type VideoJobSkipCause =
   | "AGE_RESTRICTED"
   | "PREMIERE";
 
+export type VideoDiscoveryJobStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "SUCCEEDED"
+  | "FAILED"
+  | "SKIPPED";
+
+export type VideoDiscoveryJobSkipCause = "CHANNEL_NOT_FOUND";
+
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"
   | "CAPTIONS_NOT_FETCHED"
@@ -100,7 +109,8 @@ export interface ChannelJobsRow {
 export interface VideoDiscoveryJobsRow {
   id: Generated<string>;
   channelId: string;
-  status: ProcessingStatus;
+  status: VideoDiscoveryJobStatus;
+  skipCause: VideoDiscoveryJobSkipCause | null;
   statusUpdatedAt: Date | null;
   priority: number;
   createdAt: Generated<Date>;

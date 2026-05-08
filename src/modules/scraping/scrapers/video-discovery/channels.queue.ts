@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { DatabaseClient } from "../../../../db/client.js";
-import { DatabaseError } from "../../../../db/types.js";
+import { DatabaseError, VideoDiscoveryJobSkipCause } from "../../../../db/types.js";
 import { Failure, Result, Success } from "../../../../types/index.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 import { Logger } from "../../../_common/logger/logger.js";
@@ -100,6 +100,22 @@ export class ChannelsQueue {
       this.db
         .updateTable("videoDiscoveryJobs")
         .set({ status: "FAILED", statusUpdatedAt: new Date() })
+        .where("channelId", "=", channelId)
+        .execute()
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(undefined);
+  }
+
+  public async markAsSkipped(channelId: string, cause: VideoDiscoveryJobSkipCause): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .updateTable("videoDiscoveryJobs")
+        .set({ status: "SKIPPED", skipCause: cause, statusUpdatedAt: new Date() })
         .where("channelId", "=", channelId)
         .execute()
     );

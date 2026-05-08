@@ -65,6 +65,12 @@ export class ChannelsWorker {
       const result = await this.findChannelVideos.execute(channel.id);
 
       if (!result.ok) {
+        if (result.error.type === "CHANNEL_NOT_FOUND") {
+          this.logger.info(`Channel ${channel.id} does not exist on YouTube. Skipping.`);
+          await this.channelsQueue.markAsSkipped(channel.id, "CHANNEL_NOT_FOUND");
+          continue;
+        }
+
         await this.channelsQueue.markAsFailed(channel.id);
         this.isRunning = false;
         await onError(result.error);
