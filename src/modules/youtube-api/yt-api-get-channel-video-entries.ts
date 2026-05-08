@@ -25,7 +25,7 @@ type ChannelVideosResultSuccess =
 const inputSchemas = {
   video: z.object({
     id: z.string(),
-    availability: z.enum(["subscriber_only"]).nullable(),
+    availability: z.enum(["subscriber_only"]).nullish(),
   }),
 };
 
@@ -95,7 +95,7 @@ export class YoutubeApiGetChannelVideoEntries {
       yield Success({
         status: "found",
         channelId,
-        chunk: [{ id: videoResult.value.id, availability: videoResult.value.availability }],
+        chunk: [{ id: videoResult.value.id, availability: videoResult.value.availability ?? null }],
       });
     }
 
