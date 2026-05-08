@@ -43,7 +43,7 @@ export class ChannelPriorityService {
             .filterWhere((eb) =>
               eb.and([
                 eb("videoJobs.status", "=", "SUCCEEDED"),
-                eb.or([
+                eb.and([
                   eb("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID"),
                   eb("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID"),
                 ]),
