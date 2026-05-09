@@ -140,7 +140,7 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       assert.equal(mockClient.capturedSubLangs.auto, "th-orig");
     });
 
-    it("returns MANUAL_ONLY when automatic_captions has no *-orig key", async () => {
+    it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when automatic_captions has no *-orig key", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en": captionEntry() },
@@ -151,7 +151,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(result.value.manualCaptions.state, "PRESENT_NOT_FETCHED");
       assert.equal(result.value.languageCode, null);
     });
   });
@@ -200,8 +201,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
     });
   });
 
-  describe("captionStatus", () => {
-    it("returns BOTH when *-orig and matching manual subtitle are present", async () => {
+  describe("caption track states", () => {
+    it("returns both FETCHED when *-orig and matching manual subtitle are present", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
@@ -212,12 +213,13 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "BOTH");
-      assert.ok(result.value.autoCaptions!.length > 0);
-      assert.ok(result.value.manualCaptions!.length > 0);
+      assert.equal(result.value.autoCaptions.state, "FETCHED");
+      assert.equal(result.value.manualCaptions.state, "FETCHED");
+      assert.ok(result.value.autoCaptions.data.length > 0);
+      assert.ok(result.value.manualCaptions.data.length > 0);
     });
 
-    it("returns AUTO_ONLY when *-orig found but no matching manual subtitle", async () => {
+    it("returns auto PRESENT_NOT_FETCHED + manual ABSENT when *-orig found but no matching manual subtitle", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
@@ -228,10 +230,11 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "AUTO_ONLY");
+      assert.equal(result.value.autoCaptions.state, "PRESENT_NOT_FETCHED");
+      assert.equal(result.value.manualCaptions.state, "ABSENT");
     });
 
-    it("returns MANUAL_ONLY when no *-orig key but subtitles exist", async () => {
+    it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when no *-orig key but subtitles exist", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en": captionEntry() },
@@ -242,10 +245,11 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(result.value.manualCaptions.state, "PRESENT_NOT_FETCHED");
     });
 
-    it("returns MANUAL_ONLY when automatic_captions absent and subtitles exist in another language (fr)", async () => {
+    it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when automatic_captions absent and subtitles exist in another language (fr)", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: {},
@@ -256,11 +260,12 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "MANUAL_ONLY");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(result.value.manualCaptions.state, "PRESENT_NOT_FETCHED");
       assert.equal(result.value.languageCode, null);
     });
 
-    it("returns NONE when no *-orig key and no subtitles", async () => {
+    it("returns both ABSENT when no *-orig key and no subtitles", async () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en": captionEntry() },
@@ -271,7 +276,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const result = await service.getVideo("testVideoId");
 
       assert.ok(result.ok);
-      assert.equal(result.value.captionStatus, "NONE");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(result.value.manualCaptions.state, "ABSENT");
     });
   });
 

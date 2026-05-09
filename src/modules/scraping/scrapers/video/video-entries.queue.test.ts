@@ -73,7 +73,7 @@ async function createTestDb() {
     .addColumn("status", "varchar", c => c.notNull())
     .addColumn("skipCause", "varchar")
     .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "float8", c => c.notNull().defaultTo(0))
+    .addColumn("priority", "real", c => c.notNull().defaultTo(0))
     .addColumn("createdAt", "timestamp", c => c.defaultTo(sql`now()`))
     .execute();
 

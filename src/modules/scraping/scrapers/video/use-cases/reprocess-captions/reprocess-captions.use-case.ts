@@ -51,9 +51,8 @@ export class ReprocessCaptionsUseCase {
         video.manualCaptionsStatus === "CAPTIONS_VALID";
 
       const analysis = await this.captionAnalysisService.analyze({
-        autoCaptions,
-        manualCaptions,
-        captionStatus: "BOTH",
+        autoCaptions: { state: "FETCHED", data: autoCaptions },
+        manualCaptions: { state: "FETCHED", data: manualCaptions },
       });
 
       const isBothValid =

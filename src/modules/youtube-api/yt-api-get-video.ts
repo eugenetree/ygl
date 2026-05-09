@@ -99,10 +99,9 @@ export class YoutubeApiGetVideo {
 
       return Success({
         ...videoBase,
-        captionStatus: hasAnyManual ? "MANUAL_ONLY" : "NONE",
         languageCode: null,
-        autoCaptions: null,
-        manualCaptions: null,
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions: hasAnyManual ? { state: "PRESENT_NOT_FETCHED" } : { state: "ABSENT" },
       });
     }
 
@@ -115,7 +114,12 @@ export class YoutubeApiGetVideo {
 
     if (!manualKey) {
       this.logger.info(`No manual captions for video ${videoId}, skipping.`);
-      return Success({ ...videoBase, captionStatus: "AUTO_ONLY", languageCode: language, autoCaptions: null, manualCaptions: null });
+      return Success({
+        ...videoBase,
+        languageCode: language,
+        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+        manualCaptions: { state: "ABSENT" },
+      });
     }
 
     const captionsResult = await this.downloadCaptions(videoId, autoKey, manualKey);
@@ -125,10 +129,9 @@ export class YoutubeApiGetVideo {
 
     return Success({
       ...videoBase,
-      captionStatus: "BOTH",
       languageCode: language,
-      autoCaptions: captionsResult.value.autoCaptions,
-      manualCaptions: captionsResult.value.manualCaptions,
+      autoCaptions: { state: "FETCHED", data: captionsResult.value.autoCaptions },
+      manualCaptions: { state: "FETCHED", data: captionsResult.value.manualCaptions },
     });
   }
 

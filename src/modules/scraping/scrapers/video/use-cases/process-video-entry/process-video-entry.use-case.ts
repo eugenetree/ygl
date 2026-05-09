@@ -36,14 +36,12 @@ export class ProcessVideoEntryUseCase {
     }
 
     const videoDto = videoDtoResult.value;
-    const { captionStatus } = videoDto;
 
     this.logger.info(`Processing and saving video ${videoDto.id}.`);
 
     const captionsAnalysisResult = this.captionAnalysisService.analyze({
       autoCaptions: videoDto.autoCaptions,
       manualCaptions: videoDto.manualCaptions,
-      captionStatus: videoDto.captionStatus,
     });
 
     const video: VideoProps = {
@@ -54,16 +52,16 @@ export class ProcessVideoEntryUseCase {
       channelId,
     };
 
-    const autoCaptions: CaptionProps[] = videoDto.autoCaptions
-      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.autoCaptions, type: "auto" })
+    const autoCaptions: CaptionProps[] = videoDto.autoCaptions.state === "FETCHED"
+      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.autoCaptions.data, type: "auto" })
       : [];
 
-    const manualCaptions: CaptionProps[] = videoDto.manualCaptions
-      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions, type: "manual" })
+    const manualCaptions: CaptionProps[] = videoDto.manualCaptions.state === "FETCHED"
+      ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions.data, type: "manual" })
       : [];
 
-    // Invariant: yt-api-get-video populates both caption arrays only in the BOTH case;
-    // MANUAL_ONLY / AUTO_ONLY / NONE all yield nulls on both sides.
+    // Invariant: yt-api-get-video downloads both tracks together or neither;
+    // any other combination indicates a bug upstream.
     if (
       (manualCaptions?.length && !autoCaptions?.length) ||
       (!manualCaptions?.length && autoCaptions?.length)
@@ -88,9 +86,9 @@ export class ProcessVideoEntryUseCase {
       return createVideoResult;
     }
 
-    if (captionStatus === "MANUAL_ONLY") {
-      // video has only some manual captions, but we need to have auto captions as well
-      // to derive the video language and understand which manual captions to pick
+    // Manual captions exist but we couldn't pair them with auto captions
+    // (no *-orig auto track to derive language) — enqueue transcription.
+    if (videoDto.manualCaptions.state === "PRESENT_NOT_FETCHED" && videoDto.autoCaptions.state === "ABSENT") {
       const enqueueResult = await this.transcriptionJobsQueue.enqueue(videoDto.id);
       if (!enqueueResult.ok) {
         this.logger.error({

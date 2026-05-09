@@ -48,31 +48,16 @@ type VideoBase = {
   mediaType: string | null;
 };
 
-export type Video =
-  | (VideoBase & {
-    captionStatus: "NONE";
-    languageCode: LanguageCode | null;
-    autoCaptions: null;
-    manualCaptions: null;
-  })
-  | (VideoBase & {
-    captionStatus: "MANUAL_ONLY";
-    languageCode: LanguageCode | null;
-    autoCaptions: null;
-    manualCaptions: Caption[] | null;
-  })
-  | (VideoBase & {
-    captionStatus: "AUTO_ONLY";
-    languageCode: LanguageCode;
-    autoCaptions: null;
-    manualCaptions: null;
-  })
-  | (VideoBase & {
-    captionStatus: "BOTH";
-    languageCode: LanguageCode;
-    autoCaptions: Caption[];
-    manualCaptions: Caption[];
-  });
+export type CaptionTrackState =
+  | { state: "FETCHED"; data: Caption[] }
+  | { state: "PRESENT_NOT_FETCHED" }
+  | { state: "ABSENT" };
+
+export type Video = VideoBase & {
+  languageCode: LanguageCode | null;
+  autoCaptions: CaptionTrackState;
+  manualCaptions: CaptionTrackState;
+};
 
 export type Caption = {
   startTime: number;

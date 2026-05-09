@@ -5,6 +5,7 @@ import { ManualCaptionsValidator } from "./manual-captions.validator.js";
 import { AutoCaptionsValidator } from "./auto-captions.validator.js";
 import { CaptionSimilarityService } from "./captions-similarity.service.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
+import { CaptionTrackState } from "../../../../../youtube-api/youtube-api.types.js";
 
 type AnalysisResult = {
   autoCaptionsStatus: AutoCaptionsStatus;
@@ -33,32 +34,17 @@ export class CaptionAnalysisService {
   analyze({
     autoCaptions,
     manualCaptions,
-    captionStatus,
   }: {
-    autoCaptions: CaptionSegment[] | null;
-    manualCaptions: CaptionSegment[] | null;
-    captionStatus: "NONE" | "MANUAL_ONLY" | "AUTO_ONLY" | "BOTH";
+    autoCaptions: CaptionTrackState;
+    manualCaptions: CaptionTrackState;
   }): AnalysisResult {
-    let autoCaptionsStatus: AutoCaptionsStatus =
-      captionStatus === "AUTO_ONLY" ? "CAPTIONS_NOT_FETCHED" : "CAPTIONS_ABSENT";
+    const autoCaptionsStatus: AutoCaptionsStatus = this.resolveAutoStatus(autoCaptions);
+    const manualCaptionsStatus: ManualCaptionsStatus = this.resolveManualStatus(manualCaptions);
 
-    if (autoCaptions) {
-      const result = this.autoCaptionsValidator.validate(autoCaptions);
-      autoCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-    }
-
-    let manualCaptionsStatus: ManualCaptionsStatus =
-      captionStatus === "MANUAL_ONLY" ? "CAPTIONS_NOT_FETCHED" : "CAPTIONS_ABSENT";
-
-    if (manualCaptions) {
-      const result = this.manualCaptionsValidator.validate(manualCaptions);
-      manualCaptionsStatus = result.ok ? "CAPTIONS_VALID" : result.error.type;
-    }
-
-    if (autoCaptions && manualCaptions) {
+    if (autoCaptions.state === "FETCHED" && manualCaptions.state === "FETCHED") {
       const similarityResult = this.captionsSimilarityService.calculateSimilarity({
-        autoCaptions,
-        manualCaptions,
+        autoCaptions: autoCaptions.data,
+        manualCaptions: manualCaptions.data,
       });
 
       return {
@@ -77,5 +63,27 @@ export class CaptionAnalysisService {
       captionsSimilarityScore: null,
       captionsShift: null,
     };
+  }
+
+  private resolveAutoStatus(track: CaptionTrackState): AutoCaptionsStatus {
+    switch (track.state) {
+      case "ABSENT": return "CAPTIONS_ABSENT";
+      case "PRESENT_NOT_FETCHED": return "CAPTIONS_NOT_FETCHED";
+      case "FETCHED": {
+        const result = this.autoCaptionsValidator.validate(track.data);
+        return result.ok ? "CAPTIONS_VALID" : result.error.type;
+      }
+    }
+  }
+
+  private resolveManualStatus(track: CaptionTrackState): ManualCaptionsStatus {
+    switch (track.state) {
+      case "ABSENT": return "CAPTIONS_ABSENT";
+      case "PRESENT_NOT_FETCHED": return "CAPTIONS_NOT_FETCHED";
+      case "FETCHED": {
+        const result = this.manualCaptionsValidator.validate(track.data);
+        return result.ok ? "CAPTIONS_VALID" : result.error.type;
+      }
+    }
   }
 }

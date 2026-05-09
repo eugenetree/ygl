@@ -54,26 +54,23 @@ const manualCaptionSegment = { startTime: 0, endTime: 1, duration: 1, text: "hel
 
 const bothVideo: Video = {
   ...baseVideoDto,
-  captionStatus: "BOTH",
   languageCode: "en",
-  autoCaptions: [autoCaptionSegment],
-  manualCaptions: [manualCaptionSegment],
+  autoCaptions: { state: "FETCHED", data: [autoCaptionSegment] },
+  manualCaptions: { state: "FETCHED", data: [manualCaptionSegment] },
 };
 
 const autoOnlyVideo: Video = {
   ...baseVideoDto,
-  captionStatus: "AUTO_ONLY",
   languageCode: "en",
-  autoCaptions: null,
-  manualCaptions: null,
+  autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+  manualCaptions: { state: "ABSENT" },
 };
 
 const manualOnlyVideo: Video = {
   ...baseVideoDto,
-  captionStatus: "MANUAL_ONLY",
   languageCode: null,
-  autoCaptions: null,
-  manualCaptions: null,
+  autoCaptions: { state: "ABSENT" },
+  manualCaptions: { state: "PRESENT_NOT_FETCHED" },
 };
 
 const mappedVideoProps = {
@@ -225,7 +222,7 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.deepEqual(result.error, dbError);
     });
 
-    it("enqueues a transcription job when captionStatus is MANUAL_ONLY", async () => {
+    it("enqueues a transcription job when only manual captions are present (manual PRESENT_NOT_FETCHED, auto ABSENT)", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
 
       await sut.execute(videoInput);
@@ -234,7 +231,7 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0], manualOnlyVideo.id);
     });
 
-    it("does not enqueue a transcription job when captionStatus is AUTO_ONLY", async () => {
+    it("does not enqueue a transcription job when only auto captions are present", async () => {
       mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(autoOnlyVideo)));
 
       await sut.execute(videoInput);
@@ -242,7 +239,7 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
     });
 
-    it("does not enqueue a transcription job when captionStatus is BOTH", async () => {
+    it("does not enqueue a transcription job when both tracks are FETCHED", async () => {
       await sut.execute(videoInput);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);

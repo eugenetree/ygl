@@ -66,9 +66,9 @@ describe("CaptionAnalysisService", () => {
     sut = buildSut(mocks);
   });
 
-  describe("captionStatus: NONE", () => {
+  describe("both tracks ABSENT", () => {
     it("returns CAPTIONS_ABSENT for both when no captions exist", () => {
-      const result = sut.analyze({ autoCaptions: null, manualCaptions: null, captionStatus: "NONE" });
+      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_ABSENT");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_ABSENT");
@@ -76,17 +76,17 @@ describe("CaptionAnalysisService", () => {
       assert.equal(result.captionsShift, null);
     });
 
-    it("does not call validators when captions are null", () => {
-      sut.analyze({ autoCaptions: null, manualCaptions: null, captionStatus: "NONE" });
+    it("does not call validators when both tracks are ABSENT", () => {
+      sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
 
       assert.equal(mocks.autoCaptionsValidator.validate.mock.callCount(), 0);
       assert.equal(mocks.manualCaptionsValidator.validate.mock.callCount(), 0);
     });
   });
 
-  describe("captionStatus: AUTO_ONLY", () => {
+  describe("auto PRESENT_NOT_FETCHED, manual ABSENT", () => {
     it("returns CAPTIONS_NOT_FETCHED for auto and CAPTIONS_ABSENT for manual", () => {
-      const result = sut.analyze({ autoCaptions: null, manualCaptions: null, captionStatus: "AUTO_ONLY" });
+      const result = sut.analyze({ autoCaptions: { state: "PRESENT_NOT_FETCHED" }, manualCaptions: { state: "ABSENT" } });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_NOT_FETCHED");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_ABSENT");
@@ -95,9 +95,9 @@ describe("CaptionAnalysisService", () => {
     });
   });
 
-  describe("captionStatus: MANUAL_ONLY", () => {
+  describe("auto ABSENT, manual PRESENT_NOT_FETCHED", () => {
     it("returns CAPTIONS_ABSENT for auto and CAPTIONS_NOT_FETCHED for manual", () => {
-      const result = sut.analyze({ autoCaptions: null, manualCaptions: null, captionStatus: "MANUAL_ONLY" });
+      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "PRESENT_NOT_FETCHED" } });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_ABSENT");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_NOT_FETCHED");
@@ -106,9 +106,38 @@ describe("CaptionAnalysisService", () => {
     });
   });
 
-  describe("captionStatus: BOTH", () => {
+  describe("both tracks PRESENT_NOT_FETCHED", () => {
+    it("returns CAPTIONS_NOT_FETCHED for both (e.g. non-EN video with both tracks)", () => {
+      const result = sut.analyze({
+        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+        manualCaptions: { state: "PRESENT_NOT_FETCHED" },
+      });
+
+      assert.equal(result.autoCaptionsStatus, "CAPTIONS_NOT_FETCHED");
+      assert.equal(result.manualCaptionsStatus, "CAPTIONS_NOT_FETCHED");
+      assert.equal(result.captionsSimilarityScore, null);
+      assert.equal(result.captionsShift, null);
+    });
+
+    it("does not call validators when both tracks are PRESENT_NOT_FETCHED", () => {
+      sut.analyze({
+        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+        manualCaptions: { state: "PRESENT_NOT_FETCHED" },
+      });
+
+      assert.equal(mocks.autoCaptionsValidator.validate.mock.callCount(), 0);
+      assert.equal(mocks.manualCaptionsValidator.validate.mock.callCount(), 0);
+    });
+  });
+
+  describe("both tracks FETCHED", () => {
+    const both = {
+      autoCaptions: { state: "FETCHED" as const, data: autoSegs },
+      manualCaptions: { state: "FETCHED" as const, data: manualSegs },
+    };
+
     it("returns CAPTIONS_VALID for both when validators pass", () => {
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_VALID");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_VALID");
@@ -124,14 +153,14 @@ describe("CaptionAnalysisService", () => {
         autoTokenCount: 10,
       }));
 
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.captionsSimilarityScore, 0.85);
       assert.equal(result.captionsShift, 200);
     });
 
     it("passes captions to similarity service", () => {
-      sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      sut.analyze(both);
 
       assert.equal(mocks.captionsSimilarityService.calculateSimilarity.mock.callCount(), 1);
       const args = mocks.captionsSimilarityService.calculateSimilarity.mock.calls[0]!.arguments[0];
@@ -144,7 +173,7 @@ describe("CaptionAnalysisService", () => {
         Failure({ type: "CAPTIONS_TOO_SHORT" }),
       );
 
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_TOO_SHORT");
     });
@@ -154,7 +183,7 @@ describe("CaptionAnalysisService", () => {
         Failure({ type: "CAPTIONS_MOSTLY_UPPERCASE" }),
       );
 
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_MOSTLY_UPPERCASE");
     });
@@ -172,7 +201,7 @@ describe("CaptionAnalysisService", () => {
         autoTokenCount: 5,
       }));
 
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.captionsSimilarityScore, 0.5);
     });
@@ -190,7 +219,7 @@ describe("CaptionAnalysisService", () => {
         autoTokenCount: 5,
       }));
 
-      const result = sut.analyze({ autoCaptions: autoSegs, manualCaptions: manualSegs, captionStatus: "BOTH" });
+      const result = sut.analyze(both);
 
       assert.equal(result.captionsSimilarityScore, 0.3);
     });
@@ -198,7 +227,7 @@ describe("CaptionAnalysisService", () => {
 
   describe("captionsProcessingAlgorithmVersion", () => {
     it("is included in every result", () => {
-      const result = sut.analyze({ autoCaptions: null, manualCaptions: null, captionStatus: "NONE" });
+      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
 
       assert.equal(result.captionsProcessingAlgorithmVersion, CAPTIONS_PROCESSING_ALGORITHM_VERSION);
     });
