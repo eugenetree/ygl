@@ -5,6 +5,7 @@ import { BaseError } from "../../../../_common/errors.js";
 import { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
 import { ChannelRepository } from "../channel.repository.js";
 import { ChannelsQueue } from "../../video-discovery/index.js";
+import { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
 
 @injectable()
 export class ProcessChannelEntryUseCase {
@@ -13,6 +14,7 @@ export class ProcessChannelEntryUseCase {
     private readonly youtubeApiGetChannel: YoutubeApiGetChannel,
     private readonly channelRepository: ChannelRepository,
     private readonly channelsQueue: ChannelsQueue,
+    private readonly channelPriorityService: ChannelPriorityService,
   ) {
     this.logger.setContext(ProcessChannelEntryUseCase.name);
   }
@@ -49,7 +51,18 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Channel ${channelEntryId} saved into db.`);
 
-    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId);
+    const priorityResult = await this.channelPriorityService.getScrapingScore(channelEntryId);
+    if (!priorityResult.ok) {
+      this.logger.error({
+        message: `Failed to fetch priority for channel ${channelEntryId}`,
+        error: priorityResult.error,
+        context: { channelId: channelEntryId },
+      });
+
+      return Failure(priorityResult.error);
+    }
+
+    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId, priorityResult.value);
     if (!enqueueResult.ok) {
       this.logger.error({
         message: `Failed to enqueue channel ${channelEntryId} for video discovery`,

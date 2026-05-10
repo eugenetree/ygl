@@ -15,14 +15,7 @@ export class ChannelsQueue {
     this.logger.setContext(ChannelsQueue.name);
   }
 
-  public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
-    const scoreRow = await this.db
-      .selectFrom("channelPriorityScores")
-      .select("scrapingScore")
-      .where("channelId", "=", channelId)
-      .executeTakeFirst();
-    const priority = scoreRow?.scrapingScore ?? 0;
-
+  public async enqueue(channelId: string, priority: number): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .insertInto("videoDiscoveryJobs")

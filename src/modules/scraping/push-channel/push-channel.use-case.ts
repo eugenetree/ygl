@@ -30,7 +30,10 @@ export class PushChannelUseCase {
       const createResult = await this.channelEntryRepository.create({ id: channelId, queryId: null });
       if (!createResult.ok) return createResult;
 
-      const enqueueResult = await this.channelEntriesQueue.enqueue(channelId);
+      const priorityResult = await this.channelPriorityService.getScrapingScore(channelId);
+      if (!priorityResult.ok) return priorityResult;
+
+      const enqueueResult = await this.channelEntriesQueue.enqueue(channelId, priorityResult.value);
       if (!enqueueResult.ok) return enqueueResult;
 
       const recalcResult = await this.channelPriorityService.recalculate(channelId);

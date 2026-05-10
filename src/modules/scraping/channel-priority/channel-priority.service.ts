@@ -20,6 +20,20 @@ export class ChannelPriorityService {
     return Success(result.value);
   }
 
+  public async getScrapingScore(channelId: string): Promise<Result<number, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .selectFrom("channelPriorityScores")
+        .select("scrapingScore")
+        .where("channelId", "=", channelId)
+        .executeTakeFirst(),
+    );
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+    return Success(result.value?.scrapingScore ?? 0);
+  }
+
   private async doRecalculate(channelId: string): Promise<{ updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }> {
     const [boostedRow, channelRow, videoStatsRow] = await Promise.all([
       this.db

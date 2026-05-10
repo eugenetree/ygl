@@ -6,7 +6,7 @@ import { ChannelVideoEntry, YoutubeApiGetChannelVideoEntries } from "../../../..
 import { VideoEntryRepository } from "../video-entry.repository.js";
 import { VideoEntriesQueue } from "../../video/index.js";
 import { VideoEntryAvailability } from "../video-entry.js";
-import { DatabaseClient } from "../../../../../db/client.js";
+import { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
 
 @injectable()
 export class FindChannelVideosUseCase {
@@ -15,7 +15,7 @@ export class FindChannelVideosUseCase {
     private readonly videoEntryRepository: VideoEntryRepository,
     private readonly youtubeApiGetChannelVideoEntries: YoutubeApiGetChannelVideoEntries,
     private readonly videoEntriesQueue: VideoEntriesQueue,
-    private readonly db: DatabaseClient,
+    private readonly channelPriorityService: ChannelPriorityService,
   ) {
     this.logger.setContext(FindChannelVideosUseCase.name);
   }
@@ -23,12 +23,17 @@ export class FindChannelVideosUseCase {
   public async execute(channelId: string): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing channel ${channelId}...`);
 
-    const scoreRow = await this.db
-      .selectFrom("channelPriorityScores")
-      .select("scrapingScore")
-      .where("channelId", "=", channelId)
-      .executeTakeFirst();
-    const priority = scoreRow?.scrapingScore ?? 0;
+    const priorityResult = await this.channelPriorityService.getScrapingScore(channelId);
+    if (!priorityResult.ok) {
+      this.logger.error({
+        message: "Failed to fetch channel priority score",
+        error: priorityResult.error,
+        context: { channelId },
+      });
+
+      return priorityResult;
+    }
+    const priority = priorityResult.value;
 
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
       channelId,

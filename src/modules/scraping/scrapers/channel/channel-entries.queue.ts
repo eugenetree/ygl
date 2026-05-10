@@ -8,14 +8,7 @@ import { DatabaseClient } from "../../../../db/client.js";
 export class ChannelEntriesQueue {
   constructor(private readonly db: DatabaseClient) {}
 
-  public async enqueue(channelId: string): Promise<Result<void, DatabaseError>> {
-    const scoreRow = await this.db
-      .selectFrom("channelPriorityScores")
-      .select("scrapingScore")
-      .where("channelId", "=", channelId)
-      .executeTakeFirst();
-    const priority = scoreRow?.scrapingScore ?? 0;
-
+  public async enqueue(channelId: string, priority: number): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .insertInto("channelJobs")

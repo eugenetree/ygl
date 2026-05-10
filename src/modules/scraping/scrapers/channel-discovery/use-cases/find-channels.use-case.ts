@@ -5,6 +5,7 @@ import { BaseError } from "../../../../_common/errors.js";
 import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../../youtube-api/yt-api-search-channels-via-videos.js";
 import { ChannelEntryRepository } from "../channel-entry.repository.js";
 import { ChannelEntriesQueue } from "../../channel/index.js";
+import { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
 
 @injectable()
 export class FindChannelsUseCase {
@@ -13,6 +14,7 @@ export class FindChannelsUseCase {
     private readonly youtubeApiSearchChannels: YoutubeApiSearchChannelsViaVideos,
     private readonly channelEntryRepository: ChannelEntryRepository,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
+    private readonly channelPriorityService: ChannelPriorityService,
   ) {
     this.logger.setContext(FindChannelsUseCase.name);
   }
@@ -99,7 +101,17 @@ export class FindChannelsUseCase {
 
     this.logger.info(`Channel entry ${channelEntry.id} created.`);
 
-    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id);
+    const priorityResult = await this.channelPriorityService.getScrapingScore(channelEntry.id);
+    if (!priorityResult.ok) {
+      this.logger.error({
+        error: priorityResult.error,
+        context: { channelId: channelEntry.id },
+      });
+
+      return Failure(priorityResult.error);
+    }
+
+    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id, priorityResult.value);
     if (!enqueueResult.ok) {
       this.logger.error({
         error: enqueueResult.error,
