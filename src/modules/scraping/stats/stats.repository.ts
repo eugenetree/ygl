@@ -1,37 +1,48 @@
 import { injectable } from "inversify";
 
 import { DatabaseClient } from "../../../db/client.js";
-import { ProcessingStatus, VideoJobStatus } from "../../../db/types.js";
+import {
+  Database,
+  ProcessingStatus,
+  VideoDiscoveryJobStatus,
+  VideoJobStatus,
+} from "../../../db/types.js";
 import { Failure, Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import { Logger } from "../../_common/logger/logger.js";
 
-type StatusCounts = Record<ProcessingStatus, number>;
-type VideoStatusCounts = Record<VideoJobStatus, number>;
+type StatusCounts<TStatus extends string> = Record<TStatus, number>;
 
 export type JobStats = {
-  channelDiscovery: StatusCounts;
-  channel: StatusCounts;
-  videoDiscovery: StatusCounts;
-  video: VideoStatusCounts;
-  transcription: StatusCounts;
+  channelDiscovery: StatusCounts<ProcessingStatus>;
+  channel: StatusCounts<ProcessingStatus>;
+  videoDiscovery: StatusCounts<VideoDiscoveryJobStatus>;
+  video: StatusCounts<VideoJobStatus>;
+  transcription: StatusCounts<ProcessingStatus>;
   videosWithValidManualCaptions: number;
 };
 
-const emptyStatusCounts = (): StatusCounts => ({
-  PENDING: 0,
-  PROCESSING: 0,
-  SUCCEEDED: 0,
-  FAILED: 0,
-});
+const PROCESSING_STATUSES = ["PENDING", "PROCESSING", "SUCCEEDED", "FAILED"] as const satisfies readonly ProcessingStatus[];
+const VIDEO_DISCOVERY_JOB_STATUSES = [...PROCESSING_STATUSES, "SKIPPED"] as const satisfies readonly VideoDiscoveryJobStatus[];
+const VIDEO_JOB_STATUSES = [...PROCESSING_STATUSES, "SKIPPED"] as const satisfies readonly VideoJobStatus[];
 
-const emptyVideoStatusCounts = (): VideoStatusCounts => ({
-  PENDING: 0,
-  PROCESSING: 0,
-  SUCCEEDED: 0,
-  FAILED: 0,
-  SKIPPED: 0,
-});
+const buildStatusCounts = <TStatus extends string>(
+  allowedStatuses: readonly TStatus[],
+  rows: { status: string; count: number }[],
+): StatusCounts<TStatus> => {
+  const counts = Object.fromEntries(allowedStatuses.map((status) => [status, 0])) as StatusCounts<TStatus>;
+  for (const row of rows) {
+    if ((allowedStatuses as readonly string[]).includes(row.status)) {
+      counts[row.status as TStatus] = Number(row.count);
+    }
+  }
+  return counts;
+};
+
+type JobTableName = Extract<
+  keyof Database,
+  "channelDiscoveryJobs" | "channelJobs" | "videoDiscoveryJobs" | "videoJobs" | "transcriptionJobs"
+>;
 
 @injectable()
 export class StatsRepository {
@@ -43,15 +54,8 @@ export class StatsRepository {
   }
 
   public async getStats(): Promise<Result<JobStats, Error>> {
-    const nonVideoJobTables = [
-      "channelDiscoveryJobs",
-      "channelJobs",
-      "videoDiscoveryJobs",
-      "transcriptionJobs",
-    ] as const;
-
-    const queryJobTable = async (table: (typeof nonVideoJobTables)[number]) => {
-      return tryCatch(
+    const queryStatusCountsForTable = (table: JobTableName) =>
+      tryCatch(
         this.db
           .selectFrom(table)
           .select(["status"])
@@ -59,34 +63,20 @@ export class StatsRepository {
           .groupBy("status")
           .execute(),
       );
-    };
 
-    const toStatusCounts = (rows: { status: ProcessingStatus; count: number }[]): StatusCounts => {
-      const counts = emptyStatusCounts();
-      for (const row of rows) {
-        counts[row.status] = Number(row.count);
-      }
-      return counts;
-    };
-
-    const toVideoStatusCounts = (rows: { status: VideoJobStatus; count: number }[]): VideoStatusCounts => {
-      const counts = emptyVideoStatusCounts();
-      for (const row of rows) {
-        counts[row.status] = Number(row.count);
-      }
-      return counts;
-    };
-
-    const [nonVideoResults, videoJobsResult, validManualCaptionsResult] = await Promise.all([
-      Promise.all(nonVideoJobTables.map(queryJobTable)),
-      tryCatch(
-        this.db
-          .selectFrom("videoJobs")
-          .select(["status"])
-          .select((eb) => eb.fn.countAll<number>().as("count"))
-          .groupBy("status")
-          .execute(),
-      ),
+    const [
+      channelDiscoveryJobsResult,
+      channelJobsResult,
+      videoDiscoveryJobsResult,
+      videoJobsResult,
+      transcriptionJobsResult,
+      validManualCaptionsResult,
+    ] = await Promise.all([
+      queryStatusCountsForTable("channelDiscoveryJobs"),
+      queryStatusCountsForTable("channelJobs"),
+      queryStatusCountsForTable("videoDiscoveryJobs"),
+      queryStatusCountsForTable("videoJobs"),
+      queryStatusCountsForTable("transcriptionJobs"),
       tryCatch(
         this.db
           .selectFrom("videos")
@@ -96,31 +86,39 @@ export class StatsRepository {
       ),
     ]);
 
-    const statusCountsList: StatusCounts[] = [];
-    for (const result of nonVideoResults) {
+    const allResults = [
+      channelDiscoveryJobsResult,
+      channelJobsResult,
+      videoDiscoveryJobsResult,
+      videoJobsResult,
+      transcriptionJobsResult,
+      validManualCaptionsResult,
+    ];
+    for (const result of allResults) {
       if (!result.ok) {
         this.logger.error({ message: "Failed to query job stats", error: result.error });
         return Failure(result.error);
       }
-      statusCountsList.push(toStatusCounts(result.value));
     }
 
-    if (!videoJobsResult.ok) {
-      this.logger.error({ message: "Failed to query video job stats", error: videoJobsResult.error });
-      return Failure(videoJobsResult.error);
-    }
-
-    if (!validManualCaptionsResult.ok) {
-      this.logger.error({ message: "Failed to query valid manual captions count", error: validManualCaptionsResult.error });
-      return Failure(validManualCaptionsResult.error);
+    if (
+      !channelDiscoveryJobsResult.ok ||
+      !channelJobsResult.ok ||
+      !videoDiscoveryJobsResult.ok ||
+      !videoJobsResult.ok ||
+      !transcriptionJobsResult.ok ||
+      !validManualCaptionsResult.ok
+    ) {
+      // Unreachable: handled above. Required so TS narrows each result to Success<T>.
+      return Failure(new Error("unreachable"));
     }
 
     return Success({
-      channelDiscovery: statusCountsList[0],
-      channel: statusCountsList[1],
-      videoDiscovery: statusCountsList[2],
-      video: toVideoStatusCounts(videoJobsResult.value),
-      transcription: statusCountsList[3],
+      channelDiscovery: buildStatusCounts(PROCESSING_STATUSES, channelDiscoveryJobsResult.value),
+      channel: buildStatusCounts(PROCESSING_STATUSES, channelJobsResult.value),
+      videoDiscovery: buildStatusCounts(VIDEO_DISCOVERY_JOB_STATUSES, videoDiscoveryJobsResult.value),
+      video: buildStatusCounts(VIDEO_JOB_STATUSES, videoJobsResult.value),
+      transcription: buildStatusCounts(PROCESSING_STATUSES, transcriptionJobsResult.value),
       videosWithValidManualCaptions: Number(validManualCaptionsResult.value.count),
     });
   }

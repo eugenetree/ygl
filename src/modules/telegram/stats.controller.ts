@@ -45,6 +45,9 @@ export class StatsController implements TelegramController {
   }
 
   private formatLine(label: string, counts: Record<string, number>) {
-    return `${label}:\npending=${counts.PENDING}\nprocessing=${counts.PROCESSING}\nsucceeded=${counts.SUCCEEDED}\nfailed=${counts.FAILED}`;
+    const entries = Object.entries(counts).map(
+      ([status, count]) => `${status.toLowerCase()}=${count}`,
+    );
+    return `${label}:\n${entries.join("\n")}`;
   }
 }
