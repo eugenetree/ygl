@@ -60,7 +60,7 @@ export class ChannelPriorityScheduler {
     this.logger.info(`Recalculating priority for ${staleChannels.length} channels.`);
 
     for (const { channelId } of staleChannels) {
-      const result = await this.channelPriorityService.recalculate(channelId);
+      const result = await this.channelPriorityService.refreshPriority(channelId);
       if (!result.ok) {
         this.logger.error({
           message: `Failed to recalculate priority for channel ${channelId}`,

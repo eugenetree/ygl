@@ -12,8 +12,8 @@ export class ChannelPriorityService {
     private readonly calculator: ChannelPriorityCalculator,
   ) { }
 
-  public async recalculate(channelId: string): Promise<Result<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }, DatabaseError>> {
-    const result = await tryCatch(this.doRecalculate(channelId));
+  public async refreshPriority(channelId: string): Promise<Result<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }, DatabaseError>> {
+    const result = await tryCatch(this.doRefreshPriority(channelId));
     if (!result.ok) {
       return Failure({ type: "DATABASE", error: result.error });
     }
@@ -34,7 +34,7 @@ export class ChannelPriorityService {
     return Success(result.value?.scrapingScore ?? 0);
   }
 
-  private async doRecalculate(channelId: string): Promise<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }> {
+  private async doRefreshPriority(channelId: string): Promise<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }> {
     const [boostedRow, channelRow, videoStatsRow] = await Promise.all([
       this.db
         .selectFrom("boostedChannels")

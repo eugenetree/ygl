@@ -36,13 +36,13 @@ export class PushChannelUseCase {
       const enqueueResult = await this.channelEntriesQueue.enqueue(channelId, priorityResult.value);
       if (!enqueueResult.ok) return enqueueResult;
 
-      const recalcResult = await this.channelPriorityService.recalculate(channelId);
+      const recalcResult = await this.channelPriorityService.refreshPriority(channelId);
       if (!recalcResult.ok) return recalcResult;
 
       return Success({ status: "ADDED" });
     }
 
-    const recalcResult = await this.channelPriorityService.recalculate(channelId);
+    const recalcResult = await this.channelPriorityService.refreshPriority(channelId);
     if (!recalcResult.ok) return recalcResult;
 
     return Success({ status: "PRIORITIZED", ...recalcResult.value });

@@ -16,14 +16,14 @@ export class RecalculateAllPrioritiesUseCase {
 
   async execute(): Promise<RecalculateAllPrioritiesResult> {
     const rows = await this.db
-      .selectFrom("channelPriorityScores")
-      .select("channelId")
+      .selectFrom("channels")
+      .select("id as channelId")
       .execute();
 
     let failed = 0;
 
     for (const { channelId } of rows) {
-      const result = await this.channelPriorityService.recalculate(channelId);
+      const result = await this.channelPriorityService.refreshPriority(channelId);
       if (!result.ok) failed++;
     }
 
