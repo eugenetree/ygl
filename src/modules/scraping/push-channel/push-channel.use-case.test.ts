@@ -90,7 +90,6 @@ async function createTestDb() {
     .addColumn("searchScore", "double precision", c => c.notNull())
     .addColumn("components", "jsonb", c => c.notNull())
     .addColumn("calculatedAt", "timestamp")
-    .addColumn("lastVideoProcessedAt", "timestamp")
     .execute();
 
   // Only columns accessed by recalculate

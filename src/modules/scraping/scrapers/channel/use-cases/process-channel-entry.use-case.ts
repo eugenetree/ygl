@@ -51,10 +51,10 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Channel ${channelEntryId} saved into db.`);
 
-    const priorityResult = await this.channelPriorityService.getScrapingScore(channelEntryId);
+    const priorityResult = await this.channelPriorityService.recalculate(channelEntryId);
     if (!priorityResult.ok) {
       this.logger.error({
-        message: `Failed to fetch priority for channel ${channelEntryId}`,
+        message: `Failed to recalculate priority for channel ${channelEntryId}`,
         error: priorityResult.error,
         context: { channelId: channelEntryId },
       });
@@ -62,7 +62,7 @@ export class ProcessChannelEntryUseCase {
       return Failure(priorityResult.error);
     }
 
-    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId, priorityResult.value);
+    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId, priorityResult.value.scrapingScore);
     if (!enqueueResult.ok) {
       this.logger.error({
         message: `Failed to enqueue channel ${channelEntryId} for video discovery`,

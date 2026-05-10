@@ -41,12 +41,17 @@ export class ChannelPriorityScheduler {
 
   private async doTick(): Promise<void> {
     const staleChannels = await this.db
-      .selectFrom("channelPriorityScores")
-      .select("channelId")
-      .where(
-        sql<boolean>`"last_video_processed_at" IS NOT NULL AND ("calculated_at" IS NULL OR "last_video_processed_at" > "calculated_at")`,
+      .selectFrom("channelPriorityScores as cps")
+      .select("cps.channelId")
+      .where((eb) =>
+        eb.exists(
+          eb.selectFrom("videos as v")
+            .select(sql<number>`1`.as("one"))
+            .whereRef("v.channelId", "=", "cps.channelId")
+            .where(sql<boolean>`"v"."created_at" > "cps"."calculated_at"`),
+        ),
       )
-      .orderBy("lastVideoProcessedAt", "asc")
+      .orderBy("cps.calculatedAt", sql`asc nulls first`)
       .limit(100)
       .execute();
 

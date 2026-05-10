@@ -31,9 +31,10 @@ Subs, duration, and views use `log10(value + 1) / log10(cap + 1)`, clamped to [0
 
 ## When scores are recalculated
 
-`ChannelPriorityScheduler` runs every 5 minutes and recalculates up to 100 channels whose `lastVideoProcessedAt > calculatedAt` — i.e. channels that had a video processed since the last score calculation.
+Two trigger points:
 
-`lastVideoProcessedAt` is updated by `VideoEntriesWorker` after each successfully processed video.
+- **At channel-create time** — `ProcessChannelEntryUseCase` calls `recalculate()` synchronously right after a new channel row is inserted. This guarantees the very first `videoDiscoveryJob` (and downstream `videoJob`s) carry a meaningful subs-based priority instead of `0`.
+- **`ChannelPriorityScheduler`** runs every 5 minutes and recalculates up to 100 channels that have at least one video newer than the channel's `calculatedAt` (detected via an `EXISTS` probe on `videos.createdAt`). This is the sole mechanism for picking up post-video-processing changes — there is no per-video inline recalc.
 
 When a score is recalculated, all PENDING jobs for that channel across all three queues are updated immediately.
 

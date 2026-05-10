@@ -161,7 +161,6 @@ export interface ChannelPriorityScoresRow {
   searchScore: number;
   components: Record<string, unknown>;
   calculatedAt: Date | null;
-  lastVideoProcessedAt: Date | null;
 }
 
 export interface ChannelsRow {
