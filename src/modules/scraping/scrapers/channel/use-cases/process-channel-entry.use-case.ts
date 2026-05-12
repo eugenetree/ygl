@@ -51,7 +51,7 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Channel ${channelEntryId} saved into db.`);
 
-    const priorityResult = await this.channelPriorityService.refreshPriority(channelEntryId);
+    const priorityResult = await this.channelPriorityService.recalculateScore(channelEntryId);
     if (!priorityResult.ok) {
       this.logger.error({
         message: `Failed to recalculate priority for channel ${channelEntryId}`,

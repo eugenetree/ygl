@@ -23,7 +23,7 @@ export class FindChannelVideosUseCase {
   public async execute(channelId: string): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing channel ${channelId}...`);
 
-    const priorityResult = await this.channelPriorityService.getScrapingScore(channelId);
+    const priorityResult = await this.channelPriorityService.getStoredScrapingScore(channelId);
     if (!priorityResult.ok) {
       this.logger.error({
         message: "Failed to fetch channel priority score",
@@ -33,7 +33,7 @@ export class FindChannelVideosUseCase {
 
       return priorityResult;
     }
-    const priority = priorityResult.value;
+    const priority = priorityResult.value ?? 0;
 
     const entriesGenerator = this.youtubeApiGetChannelVideoEntries.getChannelVideoEntries({
       channelId,

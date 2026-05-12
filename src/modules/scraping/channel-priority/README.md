@@ -31,12 +31,17 @@ Subs, duration, and views use `log10(value + 1) / log10(cap + 1)`, clamped to [0
 
 ## When scores are recalculated
 
+Recalculation and propagation are two separate operations on `ChannelPriorityService`:
+
+- `recalculateScore(channelId)` — recomputes the score from raw inputs and upserts `channelPriorityScores`.
+- `propagatePriorityToPendingJobs(channelId, scrapingScore)` — syncs the denormalized `priority` column on PENDING rows in `channelJobs`, `videoDiscoveryJobs`, and `videoJobs`.
+
 Two trigger points:
 
-- **At channel-create time** — `ProcessChannelEntryUseCase` calls `refreshPriority()` synchronously right after a new channel row is inserted. This guarantees the very first `videoDiscoveryJob` (and downstream `videoJob`s) carry a meaningful subs-based priority instead of `0`.
-- **`ChannelPriorityScheduler`** runs every 5 minutes and refreshes up to 100 channels that have at least one video newer than the channel's `calculatedAt` (detected via an `EXISTS` probe on `videos.createdAt`). This is the sole mechanism for picking up post-video-processing changes — there is no per-video inline refresh.
+- **At channel-create time** — `ProcessChannelEntryUseCase` calls `recalculateScore()` synchronously right after a new channel row is inserted. This guarantees the very first `videoDiscoveryJob` (and downstream `videoJob`s) carry a meaningful subs-based priority instead of `0`. No propagation is needed because no PENDING jobs exist yet for a freshly-created channel.
+- **`ChannelPriorityScheduler`** runs every 5 minutes, picks up to 100 channels that have at least one video newer than the channel's `calculatedAt` (detected via an `EXISTS` probe on `videos.createdAt`), and runs `recalculateScore()` followed by `propagatePriorityToPendingJobs()` for each. This is the sole mechanism for picking up post-video-processing changes — there is no per-video inline refresh.
 
-When a score is recalculated, all PENDING jobs for that channel across all three queues are updated immediately.
+`/push_channel` against an existing channel runs the same recalc-then-propagate pair.
 
 ## Manual boost (`/push_channel`)
 

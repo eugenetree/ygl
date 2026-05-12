@@ -23,8 +23,13 @@ export class RecalculateAllPrioritiesUseCase {
     let failed = 0;
 
     for (const { channelId } of rows) {
-      const result = await this.channelPriorityService.refreshPriority(channelId);
-      if (!result.ok) failed++;
+      const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
+      if (!recalcResult.ok) {
+        failed++;
+        continue;
+      }
+      const propagateResult = await this.channelPriorityService.propagatePriorityToPendingJobs(channelId, recalcResult.value.scrapingScore);
+      if (!propagateResult.ok) failed++;
     }
 
     return { total: rows.length, failed };

@@ -60,11 +60,19 @@ export class ChannelPriorityScheduler {
     this.logger.info(`Recalculating priority for ${staleChannels.length} channels.`);
 
     for (const { channelId } of staleChannels) {
-      const result = await this.channelPriorityService.refreshPriority(channelId);
-      if (!result.ok) {
+      const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
+      if (!recalcResult.ok) {
         this.logger.error({
           message: `Failed to recalculate priority for channel ${channelId}`,
-          error: result.error,
+          error: recalcResult.error,
+        });
+        continue;
+      }
+      const propagateResult = await this.channelPriorityService.propagatePriorityToPendingJobs(channelId, recalcResult.value.scrapingScore);
+      if (!propagateResult.ok) {
+        this.logger.error({
+          message: `Failed to propagate priority for channel ${channelId}`,
+          error: propagateResult.error,
         });
       }
     }

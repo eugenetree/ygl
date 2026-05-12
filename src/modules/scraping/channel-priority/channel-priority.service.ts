@@ -12,15 +12,23 @@ export class ChannelPriorityService {
     private readonly calculator: ChannelPriorityCalculator,
   ) { }
 
-  public async refreshPriority(channelId: string): Promise<Result<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }, DatabaseError>> {
-    const result = await tryCatch(this.doRefreshPriority(channelId));
+  public async recalculateScore(channelId: string): Promise<Result<{ scrapingScore: number; searchScore: number }, DatabaseError>> {
+    const result = await tryCatch(this.doRecalculateScore(channelId));
     if (!result.ok) {
       return Failure({ type: "DATABASE", error: result.error });
     }
     return Success(result.value);
   }
 
-  public async getScrapingScore(channelId: string): Promise<Result<number, DatabaseError>> {
+  public async propagatePriorityToPendingJobs(channelId: string, scrapingScore: number): Promise<Result<{ updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }, DatabaseError>> {
+    const result = await tryCatch(this.doPropagatePriorityToPendingJobs(channelId, scrapingScore));
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+    return Success(result.value);
+  }
+
+  public async getStoredScrapingScore(channelId: string): Promise<Result<number | null, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .selectFrom("channelPriorityScores")
@@ -31,10 +39,10 @@ export class ChannelPriorityService {
     if (!result.ok) {
       return Failure({ type: "DATABASE", error: result.error });
     }
-    return Success(result.value?.scrapingScore ?? 0);
+    return Success(result.value?.scrapingScore ?? null);
   }
 
-  private async doRefreshPriority(channelId: string): Promise<{ scrapingScore: number; searchScore: number; updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }> {
+  private async doRecalculateScore(channelId: string): Promise<{ scrapingScore: number; searchScore: number }> {
     const [boostedRow, channelRow, videoStatsRow] = await Promise.all([
       this.db
         .selectFrom("boostedChannels")
@@ -98,6 +106,10 @@ export class ChannelPriorityService {
       .onConflict((oc) => oc.column("channelId").doUpdateSet({ scrapingScore, searchScore, components: componentsJson, calculatedAt: new Date() }))
       .execute();
 
+    return { scrapingScore, searchScore };
+  }
+
+  private async doPropagatePriorityToPendingJobs(channelId: string, scrapingScore: number): Promise<{ updatedChannelJobs: number; updatedVideoDiscoveryJobs: number; updatedVideoJobs: number }> {
     const [channelJobsResult, videoDiscoveryJobsResult, videoJobsResult] = await Promise.all([
       this.db
         .updateTable("channelJobs")
@@ -120,8 +132,6 @@ export class ChannelPriorityService {
     ]);
 
     return {
-      scrapingScore,
-      searchScore,
       updatedChannelJobs: Number(channelJobsResult[0]?.numUpdatedRows ?? 0),
       updatedVideoDiscoveryJobs: Number(videoDiscoveryJobsResult[0]?.numUpdatedRows ?? 0),
       updatedVideoJobs: Number(videoJobsResult[0]?.numUpdatedRows ?? 0),

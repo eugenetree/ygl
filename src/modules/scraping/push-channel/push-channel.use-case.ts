@@ -30,21 +30,21 @@ export class PushChannelUseCase {
       const createResult = await this.channelEntryRepository.create({ id: channelId, queryId: null });
       if (!createResult.ok) return createResult;
 
-      const priorityResult = await this.channelPriorityService.getScrapingScore(channelId);
-      if (!priorityResult.ok) return priorityResult;
-
-      const enqueueResult = await this.channelEntriesQueue.enqueue(channelId, priorityResult.value);
-      if (!enqueueResult.ok) return enqueueResult;
-
-      const recalcResult = await this.channelPriorityService.refreshPriority(channelId);
+      const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
       if (!recalcResult.ok) return recalcResult;
+
+      const enqueueResult = await this.channelEntriesQueue.enqueue(channelId, recalcResult.value.scrapingScore);
+      if (!enqueueResult.ok) return enqueueResult;
 
       return Success({ status: "ADDED" });
     }
 
-    const recalcResult = await this.channelPriorityService.refreshPriority(channelId);
+    const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
     if (!recalcResult.ok) return recalcResult;
 
-    return Success({ status: "PRIORITIZED", ...recalcResult.value });
+    const propagateResult = await this.channelPriorityService.propagatePriorityToPendingJobs(channelId, recalcResult.value.scrapingScore);
+    if (!propagateResult.ok) return propagateResult;
+
+    return Success({ status: "PRIORITIZED", ...propagateResult.value });
   }
 }
