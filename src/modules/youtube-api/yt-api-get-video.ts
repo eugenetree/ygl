@@ -108,6 +108,21 @@ export class YoutubeApiGetVideo {
     const { language, autoKey } = origTrack;
     this.logger.info(`Detected language: ${language}. Video ID: ${videoId}`);
 
+    if (language !== "en") {
+      const manualKey = ytData.subtitles
+        ? this.findMatchingKey(ytData.subtitles, language)
+        : null;
+
+      this.logger.info(`Skipping caption fetch for non-English video ${videoId}.`);
+
+      return Success({
+        ...videoBase,
+        languageCode: language,
+        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+        manualCaptions: manualKey ? { state: "PRESENT_NOT_FETCHED" } : { state: "ABSENT" },
+      });
+    }
+
     const manualKey = ytData.subtitles
       ? this.findMatchingKey(ytData.subtitles, language)
       : null;

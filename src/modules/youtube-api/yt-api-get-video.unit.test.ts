@@ -124,7 +124,7 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       assert.equal(mockClient.capturedSubLangs.auto, "en-orig");
     });
 
-    it("uses th-orig for a Thai video, ignoring non-orig keys", async () => {
+    it("detects th-orig for a Thai video but skips caption fetch (non-English policy)", async () => {
       const { service, mockClient } = createService(
         baseYtData({
           automatic_captions: {
@@ -135,9 +135,33 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         })
       );
 
-      await service.getVideo("testVideoId");
+      const result = await service.getVideo("testVideoId");
 
-      assert.equal(mockClient.capturedSubLangs.auto, "th-orig");
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "th");
+      assert.equal(result.value.autoCaptions.state, "PRESENT_NOT_FETCHED");
+      assert.equal(result.value.manualCaptions.state, "PRESENT_NOT_FETCHED");
+      // No caption download must be triggered for non-English videos.
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+      assert.equal(mockClient.capturedSubLangs.manual, null);
+    });
+
+    it("returns manual ABSENT when non-English orig has no manual sibling", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          automatic_captions: { "es-orig": captionEntry() },
+          subtitles: {},
+        })
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "es");
+      assert.equal(result.value.autoCaptions.state, "PRESENT_NOT_FETCHED");
+      assert.equal(result.value.manualCaptions.state, "ABSENT");
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+      assert.equal(mockClient.capturedSubLangs.manual, null);
     });
 
     it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when automatic_captions has no *-orig key", async () => {
