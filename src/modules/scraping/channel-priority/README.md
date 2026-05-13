@@ -12,6 +12,7 @@ Two scores are stored per channel:
 | Factor | Weight | Notes |
 |---|---|---|
 | Caption quality | up to +30 / −150 penalty | Gated: only active after 100 processed videos |
+| Language (English) | −150 penalty | Gated: only active after 30 processed videos |
 | Subscriber count | up to +10 | Log-normalized, cap at 1M |
 | Avg video duration | up to +10 | Log-normalized, cap at 1800s |
 | Avg view count | up to +10 | Log-normalized, cap at 100k |
@@ -24,6 +25,16 @@ Only applies once a channel has ≥ 100 processed videos.
 
 - Caption rate ≤ 10% → **−150 penalty** (channel is likely not in English or has no captions)
 - Caption rate > 10% → **0–30 bonus**, scaled linearly from the threshold to 100%
+
+### Language gate
+
+Only applies once a channel has ≥ 30 processed videos.
+
+Non-English rate is computed as `count(videos where languageCode IS NOT NULL AND languageCode != 'en') / totalProcessed`. Videos with no detected language (`languageCode IS NULL`, e.g. no `*-orig` auto-caption track) are **not** counted as non-English — that case is handled by the caption-quality gate.
+
+- Non-English rate ≥ 25% → **−150 penalty**
+
+This penalty stacks with the caption-quality penalty: a channel that fails both gates can reach −300.
 
 ### Log normalization
 

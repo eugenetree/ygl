@@ -72,6 +72,15 @@ export class ChannelPriorityService {
               ])
             )
             .as("validCaptionsCount"),
+          (eb) => eb.fn.count<string>("videoJobs.id")
+            .filterWhere((eb) =>
+              eb.and([
+                eb("videoJobs.status", "=", "SUCCEEDED"),
+                eb("videos.languageCode", "is not", null),
+                eb("videos.languageCode", "!=", "en"),
+              ])
+            )
+            .as("nonEnglishCount"),
           (eb) => eb.fn.avg<number | null>("videos.duration")
             .filterWhere("videoJobs.status", "=", "SUCCEEDED")
             .as("avgDuration"),
@@ -91,6 +100,7 @@ export class ChannelPriorityService {
       subscriberCount: channelRow?.subscriberCount ?? 0,
       totalProcessed: Number(videoStatsRow?.totalProcessedCount ?? 0),
       validCaptions: Number(videoStatsRow?.validCaptionsCount ?? 0),
+      nonEnglishCount: Number(videoStatsRow?.nonEnglishCount ?? 0),
       avgDuration: videoStatsRow?.avgDuration ?? null,
       avgViews: videoStatsRow?.avgViews ?? null,
       avgSimilarity: videoStatsRow?.avgSimilarity ?? null,

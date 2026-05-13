@@ -5,7 +5,9 @@ import {
   PRIORITY_CAPTION_WEIGHT,
   PRIORITY_DURATION_CAP,
   PRIORITY_DURATION_WEIGHT,
+  PRIORITY_LANGUAGE_MIN_VIDEOS,
   PRIORITY_MANUAL_BOOST,
+  PRIORITY_NON_ENGLISH_THRESHOLD,
   PRIORITY_SIMILARITY_WEIGHT,
   PRIORITY_STATS_MIN_VIDEOS,
   PRIORITY_SUBS_CAP,
@@ -19,6 +21,7 @@ export type ChannelStats = {
   subscriberCount: number;
   totalProcessed: number;
   validCaptions: number;
+  nonEnglishCount: number;
   avgDuration: number | null;
   avgViews: number | null;
   avgSimilarity: number | null;
@@ -40,7 +43,7 @@ const round2 = (n: number): number => Math.round(n * 100) / 100;
 @injectable()
 export class ChannelPriorityCalculator {
   calculate(stats: ChannelStats): PriorityScores {
-    const { isBoosted, subscriberCount, totalProcessed, validCaptions, avgDuration, avgViews, avgSimilarity } = stats;
+    const { isBoosted, subscriberCount, totalProcessed, validCaptions, nonEnglishCount, avgDuration, avgViews, avgSimilarity } = stats;
 
     let captionBonus = 0;
     let captionPenalty = 0;
@@ -52,6 +55,13 @@ export class ChannelPriorityCalculator {
         const norm = clamp01((captionRate - PRIORITY_CAPTION_THRESHOLD) / (1 - PRIORITY_CAPTION_THRESHOLD));
         captionBonus = norm * PRIORITY_CAPTION_WEIGHT;
       }
+    }
+
+    let languagePenalty = 0;
+    const languageGateActive = totalProcessed >= PRIORITY_LANGUAGE_MIN_VIDEOS;
+    const nonEnglishRate = totalProcessed > 0 ? nonEnglishCount / totalProcessed : null;
+    if (languageGateActive && nonEnglishRate !== null && nonEnglishRate >= PRIORITY_NON_ENGLISH_THRESHOLD) {
+      languagePenalty = PRIORITY_BAD_CHANNEL_PENALTY;
     }
 
     const subsBonus = logNorm(subscriberCount, PRIORITY_SUBS_CAP) * PRIORITY_SUBS_WEIGHT;
@@ -73,6 +83,16 @@ export class ChannelPriorityCalculator {
         minVideos: PRIORITY_STATS_MIN_VIDEOS,
         gateActive: totalProcessed >= PRIORITY_STATS_MIN_VIDEOS,
         weight: PRIORITY_CAPTION_WEIGHT,
+        penalty: PRIORITY_BAD_CHANNEL_PENALTY,
+      },
+      language: {
+        value: round2(languagePenalty),
+        totalVideos: totalProcessed,
+        nonEnglishVideos: nonEnglishCount,
+        rate: nonEnglishRate != null ? round2(nonEnglishRate) : null,
+        threshold: PRIORITY_NON_ENGLISH_THRESHOLD,
+        minVideos: PRIORITY_LANGUAGE_MIN_VIDEOS,
+        gateActive: languageGateActive,
         penalty: PRIORITY_BAD_CHANNEL_PENALTY,
       },
       subs: {
@@ -105,7 +125,7 @@ export class ChannelPriorityCalculator {
       },
     };
 
-    const scrapingScore = captionValue + subsBonus + durationBonus + viewsBonus + similarityBonus + manualBoost;
+    const scrapingScore = captionValue + languagePenalty + subsBonus + durationBonus + viewsBonus + similarityBonus + manualBoost;
     const searchScore = subsBonus + durationBonus + viewsBonus;
 
     return { scrapingScore, searchScore, components: components as unknown as Record<string, unknown> };

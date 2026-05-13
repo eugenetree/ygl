@@ -6,7 +6,9 @@ import {
   PRIORITY_CAPTION_WEIGHT,
   PRIORITY_DURATION_CAP,
   PRIORITY_DURATION_WEIGHT,
+  PRIORITY_LANGUAGE_MIN_VIDEOS,
   PRIORITY_MANUAL_BOOST,
+  PRIORITY_NON_ENGLISH_THRESHOLD,
   PRIORITY_STATS_MIN_VIDEOS,
   PRIORITY_SUBS_CAP,
   PRIORITY_SUBS_WEIGHT,
@@ -21,6 +23,7 @@ const baseStats: ChannelStats = {
   subscriberCount: 0,
   totalProcessed: 0,
   validCaptions: 0,
+  nonEnglishCount: 0,
   avgDuration: null,
   avgViews: null,
   avgSimilarity: null,
@@ -78,6 +81,60 @@ describe("ChannelPriorityCalculator", () => {
 
       assert.ok(result.scrapingScore > 0);
       assert.ok(result.scrapingScore < PRIORITY_CAPTION_WEIGHT);
+    });
+  });
+
+  describe("language gate", () => {
+    it("does not apply language penalty below min videos threshold", () => {
+      const result = calculator.calculate({
+        ...baseStats,
+        totalProcessed: PRIORITY_LANGUAGE_MIN_VIDEOS - 1,
+        nonEnglishCount: PRIORITY_LANGUAGE_MIN_VIDEOS - 1,
+      });
+
+      assert.equal(result.scrapingScore, 0);
+    });
+
+    it("applies penalty when non-english rate is at the threshold", () => {
+      const result = calculator.calculate({
+        ...baseStats,
+        totalProcessed: PRIORITY_LANGUAGE_MIN_VIDEOS,
+        nonEnglishCount: Math.ceil(PRIORITY_LANGUAGE_MIN_VIDEOS * PRIORITY_NON_ENGLISH_THRESHOLD),
+      });
+
+      assert.equal(result.scrapingScore, PRIORITY_BAD_CHANNEL_PENALTY);
+    });
+
+    it("does not apply penalty when non-english rate is below the threshold", () => {
+      const result = calculator.calculate({
+        ...baseStats,
+        totalProcessed: PRIORITY_LANGUAGE_MIN_VIDEOS,
+        nonEnglishCount: 1,
+      });
+
+      assert.equal(result.scrapingScore, 0);
+    });
+
+    it("treats unresolved language (null languageCode counted as 0 non-english) as non-evidence", () => {
+      // 30 videos, 0 detected non-english => no penalty even if many had null languageCode
+      const result = calculator.calculate({
+        ...baseStats,
+        totalProcessed: PRIORITY_LANGUAGE_MIN_VIDEOS,
+        nonEnglishCount: 0,
+      });
+
+      assert.equal(result.scrapingScore, 0);
+    });
+
+    it("stacks language penalty on top of caption penalty", () => {
+      const result = calculator.calculate({
+        ...baseStats,
+        totalProcessed: PRIORITY_STATS_MIN_VIDEOS,
+        validCaptions: 0,
+        nonEnglishCount: PRIORITY_STATS_MIN_VIDEOS,
+      });
+
+      assert.equal(result.scrapingScore, PRIORITY_BAD_CHANNEL_PENALTY * 2);
     });
   });
 
