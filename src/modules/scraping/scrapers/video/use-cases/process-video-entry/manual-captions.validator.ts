@@ -8,7 +8,8 @@ export type ManualCaptionsValidationError =
   | { type: "CAPTIONS_EMPTY"; }
   | { type: "CAPTIONS_TOO_SHORT"; }
   | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"; }
-  | { type: "CAPTIONS_MOSTLY_UPPERCASE"; };
+  | { type: "CAPTIONS_MOSTLY_UPPERCASE"; }
+  | { type: "CAPTIONS_MISSING_DURATIONS"; };
 
 const MIN_CAPTION_SEGMENTS = 10;
 
@@ -20,6 +21,10 @@ export class ManualCaptionsValidator {
   ) { }
 
   validate(captions: Caption[]): Result<void, ManualCaptionsValidationError> {
+    if (captions.length > 0 && captions.every(c => c.duration === 0)) {
+      return Failure({ type: "CAPTIONS_MISSING_DURATIONS" });
+    }
+
     if (this.hasOverlappingTimestamps(captions)) {
       return Failure({
         type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS",

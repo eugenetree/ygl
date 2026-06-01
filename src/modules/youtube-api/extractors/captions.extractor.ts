@@ -21,7 +21,10 @@ const jsonSchema = z.object({
 
 const eventSchema = z.object({
   tStartMs: z.number(),
-  dDurationMs: z.number(),
+  // Optional: manual tracks uploaded with broken subtitles may omit dDurationMs entirely; those
+  // events are classified downstream as CAPTIONS_MISSING_DURATIONS. Keeping this strict would
+  // silently drop all events, making a broken track indistinguishable from a genuinely empty one.
+  dDurationMs: z.number().optional().default(0),
   segs: z.array(
     z.object({
       utf8: z.string().refine((value) => value !== "\n"),

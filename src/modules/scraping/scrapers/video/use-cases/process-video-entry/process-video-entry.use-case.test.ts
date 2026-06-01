@@ -201,16 +201,41 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.deepEqual(result.error, ytError);
     });
 
-    it("returns UNEXPECTED_STATE when manual captions exist without auto captions", async () => {
-      // mapper returns empty for auto but non-empty for manual
-      mocks.videoMapper.mapDtoToCaptionProps.mock.mockImplementation(
-        ({ type }: { type: "auto" | "manual" }) => (type === "auto" ? [] : manualCaptionProps),
-      );
+    it("persists metadata with empty caption arrays when manual status is CAPTIONS_MISSING_DURATIONS", async () => {
+      mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+        ...analysisResult,
+        autoCaptionsStatus: "CAPTIONS_VALID" as const,
+        manualCaptionsStatus: "CAPTIONS_MISSING_DURATIONS" as const,
+      }));
 
       const result = await sut.execute(videoInput);
 
-      assertFailure(result);
-      assert.equal(result.error.type, "UNEXPECTED_STATE");
+      assert.equal(result.ok, true);
+      assert.equal(mocks.videoRepository.createWithCaptions.mock.callCount(), 1);
+      const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+      assert.deepEqual(call.autoCaptions, []);
+      assert.deepEqual(call.manualCaptions, []);
+      assert.equal(call.video.autoCaptionsStatus, "CAPTIONS_VALID");
+      assert.equal(call.video.manualCaptionsStatus, "CAPTIONS_MISSING_DURATIONS");
+      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
+      if (result.ok) assert.equal(result.value.hasValidCaptions, false);
+    });
+
+    it("persists non-empty caption arrays when both sides are CAPTIONS_TOO_SHORT", async () => {
+      mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+        ...analysisResult,
+        autoCaptionsStatus: "CAPTIONS_TOO_SHORT" as const,
+        manualCaptionsStatus: "CAPTIONS_TOO_SHORT" as const,
+      }));
+
+      const result = await sut.execute(videoInput);
+
+      assert.equal(result.ok, true);
+      assert.equal(mocks.videoRepository.createWithCaptions.mock.callCount(), 1);
+      const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+      assert.deepEqual(call.autoCaptions, autoCaptionProps);
+      assert.deepEqual(call.manualCaptions, manualCaptionProps);
+      if (result.ok) assert.equal(result.value.hasValidCaptions, false);
     });
 
     it("returns failure when createWithCaptions fails", async () => {

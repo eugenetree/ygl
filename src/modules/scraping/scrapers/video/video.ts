@@ -15,6 +15,7 @@ export type ManualCaptionsStatus =
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
   | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
+  | "CAPTIONS_MISSING_DURATIONS"
 
 export type Video = {
   id: string;

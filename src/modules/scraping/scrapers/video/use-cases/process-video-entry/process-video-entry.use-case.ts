@@ -1,13 +1,20 @@
 import { injectable } from "inversify";
 import { Logger } from "../../../../../_common/logger/logger.js";
-import { Failure, Success } from "../../../../../../types/index.js";
+import { Success } from "../../../../../../types/index.js";
 import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
 import { VideoMapper } from "./video.mapper.js";
 import { VideoRepository } from "../../video.repository.js";
 import { CaptionProps } from "../../caption.js";
 import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
-import { VideoProps } from "../../video.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus, VideoProps } from "../../video.js";
+
+const PERSISTABLE_CAPTION_STATUSES = new Set<AutoCaptionsStatus | ManualCaptionsStatus>([
+  "CAPTIONS_VALID",
+  "CAPTIONS_TOO_SHORT",
+  "CAPTIONS_MOSTLY_UPPERCASE",
+  "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS",
+]);
 
 @injectable()
 export class ProcessVideoEntryUseCase {
@@ -52,25 +59,17 @@ export class ProcessVideoEntryUseCase {
       channelId,
     };
 
-    const autoCaptions: CaptionProps[] = videoDto.autoCaptions.state === "FETCHED"
+    const shouldPersistCaptions =
+      PERSISTABLE_CAPTION_STATUSES.has(video.autoCaptionsStatus) &&
+      PERSISTABLE_CAPTION_STATUSES.has(video.manualCaptionsStatus);
+
+    const autoCaptions: CaptionProps[] = shouldPersistCaptions && videoDto.autoCaptions.state === "FETCHED"
       ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.autoCaptions.data, type: "auto" })
       : [];
 
-    const manualCaptions: CaptionProps[] = videoDto.manualCaptions.state === "FETCHED"
+    const manualCaptions: CaptionProps[] = shouldPersistCaptions && videoDto.manualCaptions.state === "FETCHED"
       ? this.videoMapper.mapDtoToCaptionProps({ videoId: videoDto.id, captionsDto: videoDto.manualCaptions.data, type: "manual" })
       : [];
-
-    // Invariant: yt-api-get-video downloads both tracks together or neither;
-    // any other combination indicates a bug upstream.
-    if (
-      (manualCaptions?.length && !autoCaptions?.length) ||
-      (!manualCaptions?.length && autoCaptions?.length)
-    ) {
-      return Failure({
-        type: "UNEXPECTED_STATE" as const,
-        context: { videoId: video.id, manualCaptions, autoCaptions }
-      })
-    }
 
     const createVideoResult = await this.videoRepository.createWithCaptions({
       video,
