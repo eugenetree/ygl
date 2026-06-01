@@ -10,6 +10,7 @@ import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
 import { Video } from "../../../../../youtube-api/youtube-api.types.js";
 import { CaptionProps } from "../../caption.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 
@@ -236,6 +237,95 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.deepEqual(call.autoCaptions, autoCaptionProps);
       assert.deepEqual(call.manualCaptions, manualCaptionProps);
       if (result.ok) assert.equal(result.value.hasValidCaptions, false);
+    });
+
+    describe("caption persistence gate", () => {
+      const autoNonPersistable: AutoCaptionsStatus[] = [
+        "CAPTIONS_ABSENT",
+        "CAPTIONS_NOT_FETCHED",
+        "CAPTIONS_EMPTY",
+      ];
+
+      const manualNonPersistable: ManualCaptionsStatus[] = [
+        "CAPTIONS_ABSENT",
+        "CAPTIONS_NOT_FETCHED",
+        "CAPTIONS_EMPTY",
+        "CAPTIONS_MISSING_DURATIONS",
+      ];
+
+      for (const status of autoNonPersistable) {
+        it(`persists no caption rows when auto status is ${status}`, async () => {
+          mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+            ...analysisResult,
+            autoCaptionsStatus: status,
+          }));
+
+          await sut.execute(videoInput);
+
+          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          assert.deepEqual(call.autoCaptions, []);
+          assert.deepEqual(call.manualCaptions, []);
+        });
+      }
+
+      for (const status of manualNonPersistable) {
+        it(`persists no caption rows when manual status is ${status}`, async () => {
+          mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+            ...analysisResult,
+            manualCaptionsStatus: status,
+          }));
+
+          await sut.execute(videoInput);
+
+          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          assert.deepEqual(call.autoCaptions, []);
+          assert.deepEqual(call.manualCaptions, []);
+        });
+      }
+
+      const autoPersistable: AutoCaptionsStatus[] = [
+        "CAPTIONS_VALID",
+        "CAPTIONS_TOO_SHORT",
+      ];
+
+      const manualPersistable: ManualCaptionsStatus[] = [
+        "CAPTIONS_VALID",
+        "CAPTIONS_TOO_SHORT",
+        "CAPTIONS_MOSTLY_UPPERCASE",
+        "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS",
+      ];
+
+      for (const status of autoPersistable) {
+        it(`stores non-empty caption arrays when auto status is ${status}`, async () => {
+          mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+            ...analysisResult,
+            autoCaptionsStatus: status,
+            manualCaptionsStatus: "CAPTIONS_VALID" as const,
+          }));
+
+          await sut.execute(videoInput);
+
+          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          assert.deepEqual(call.autoCaptions, autoCaptionProps);
+          assert.deepEqual(call.manualCaptions, manualCaptionProps);
+        });
+      }
+
+      for (const status of manualPersistable) {
+        it(`stores non-empty caption arrays when manual status is ${status}`, async () => {
+          mocks.captionAnalysisService.analyze.mock.mockImplementation(() => ({
+            ...analysisResult,
+            autoCaptionsStatus: "CAPTIONS_VALID" as const,
+            manualCaptionsStatus: status,
+          }));
+
+          await sut.execute(videoInput);
+
+          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          assert.deepEqual(call.autoCaptions, autoCaptionProps);
+          assert.deepEqual(call.manualCaptions, manualCaptionProps);
+        });
+      }
     });
 
     it("returns failure when createWithCaptions fails", async () => {
