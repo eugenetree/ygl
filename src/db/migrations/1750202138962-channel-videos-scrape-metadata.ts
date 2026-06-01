@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
@@ -18,16 +18,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("failureReason", "varchar")
     .addColumn("terminationReason", "varchar")
 
-    .addColumn("videosBothCaptionsValid", "integer", (col) =>
-      col.notNull(),
-    )
+    .addColumn("videosBothCaptionsValid", "integer", (col) => col.notNull())
     .addColumn("videosNoCaptionsValid", "integer", (col) => col.notNull())
     .addColumn("videosOnlyManualCaptionsValid", "integer", (col) =>
       col.notNull(),
     )
-    .addColumn("videosOnlyAutoCaptionsValid", "integer", (col) =>
-      col.notNull(),
-    )
+    .addColumn("videosOnlyAutoCaptionsValid", "integer", (col) => col.notNull())
     .addColumn("videosAll", "integer", (col) => col.notNull())
     .addColumn("videosSkippedAlreadyProcessed", "integer", (col) =>
       col.notNull(),

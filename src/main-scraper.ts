@@ -1,25 +1,26 @@
 import "reflect-metadata";
 
 import { Container } from "inversify";
-
+import { DatabaseClient } from "./db/client.js";
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
-import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
-import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
+import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperHeartbeat } from "./modules/scraping/lifecycle/scraper-heartbeat.js";
-import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
 import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-status.service.js";
 import { StartScraperUseCase } from "./modules/scraping/lifecycle/start-scraper.use-case.js";
+import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
+import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
-import { DatabaseClient } from "./db/client.js";
 
 async function main() {
   const container = new Container({ autobind: true });
   container
     .bind(Logger)
-    .toDynamicValue(() => new Logger({ context: "main-scraper", category: "main" }));
+    .toDynamicValue(
+      () => new Logger({ context: "main-scraper", category: "main" }),
+    );
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(YtDlpClient).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
@@ -46,7 +47,9 @@ async function main() {
       process.exit(0);
     }
 
-    const isAlreadyStopped = ["STOPPED", "ERROR", "KILLED"].includes(currentStatus.value);
+    const isAlreadyStopped = ["STOPPED", "ERROR", "KILLED"].includes(
+      currentStatus.value,
+    );
     if (!isAlreadyStopped) {
       await scraperStatusService.updateStatus({ actual: "STOPPED" });
     }
@@ -76,7 +79,9 @@ async function main() {
 
 async function fetchScraperCountry(logger: Logger): Promise<string> {
   try {
-    const response = await fetch("https://ipinfo.io/json", { signal: AbortSignal.timeout(5000) });
+    const response = await fetch("https://ipinfo.io/json", {
+      signal: AbortSignal.timeout(5000),
+    });
     if (!response.ok) return "unknown";
     const data = (await response.json()) as { country?: string };
     return data.country ?? "unknown";

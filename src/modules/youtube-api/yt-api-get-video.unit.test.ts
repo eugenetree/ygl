@@ -5,16 +5,18 @@
  */
 
 import "reflect-metadata";
-import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as path from "node:path";
-
-import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
-import { Logger } from "../_common/logger/logger.js";
-import type { YtDlpClient } from "./yt-dlp-client.js";
+import { after, before, describe, it } from "node:test";
 import type { Result } from "../../types/index.js";
-import type { YtDlpError, MembersOnlyVideoError } from "./yt-dlp-client.js";
+import { Logger } from "../_common/logger/logger.js";
+import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
+import type {
+  MembersOnlyVideoError,
+  YtDlpClient,
+  YtDlpError,
+} from "./yt-dlp-client.js";
 
 // ── Minimal json3 content accepted by captionsExtractor ──────────────────────
 
@@ -50,13 +52,13 @@ class MockYtDlpClient {
   constructor(private readonly ytDlpResponse: unknown) {}
 
   async execJson<T>(
-    _args: string[]
+    _args: string[],
   ): Promise<Result<T[], YtDlpError | MembersOnlyVideoError>> {
     return { ok: true, value: [this.ytDlpResponse as T] };
   }
 
   async exec(
-    args: string[]
+    args: string[],
   ): Promise<Result<void, YtDlpError | MembersOnlyVideoError>> {
     const subLangsIdx = args.indexOf("--sub-langs");
     if (subLangsIdx !== -1) {
@@ -82,7 +84,7 @@ function createService(ytDlpData: unknown) {
   const mockClient = new MockYtDlpClient(ytDlpData);
   const service = new YoutubeApiGetVideo(
     logger,
-    mockClient as unknown as YtDlpClient
+    mockClient as unknown as YtDlpClient,
   );
   return { service, mockClient };
 }
@@ -113,10 +115,10 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         baseYtData({
           automatic_captions: {
             "en-orig": captionEntry(),
-            "fr": captionEntry(),
+            fr: captionEntry(),
           },
-          subtitles: { "en": captionEntry() },
-        })
+          subtitles: { en: captionEntry() },
+        }),
       );
 
       await service.getVideo("testVideoId");
@@ -129,10 +131,10 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         baseYtData({
           automatic_captions: {
             "th-orig": captionEntry(),
-            "en": captionEntry(), // auto-translated — must be ignored
+            en: captionEntry(), // auto-translated — must be ignored
           },
-          subtitles: { "th": captionEntry() },
-        })
+          subtitles: { th: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -151,7 +153,7 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         baseYtData({
           automatic_captions: { "es-orig": captionEntry() },
           subtitles: {},
-        })
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -167,9 +169,9 @@ describe("YoutubeApiGetVideo - language key selection", () => {
     it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when automatic_captions has no *-orig key", async () => {
       const { service } = createService(
         baseYtData({
-          automatic_captions: { "en": captionEntry() },
-          subtitles: { "en": captionEntry() },
-        })
+          automatic_captions: { en: captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -188,9 +190,9 @@ describe("YoutubeApiGetVideo - language key selection", () => {
           automatic_captions: { "en-orig": captionEntry() },
           subtitles: {
             "en-qlPKC2UN_YU": captionEntry(),
-            "en": captionEntry(),
+            en: captionEntry(),
           },
-        })
+        }),
       );
 
       await service.getVideo("testVideoId");
@@ -203,7 +205,7 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
           subtitles: { "en-US": captionEntry() },
-        })
+        }),
       );
 
       await service.getVideo("testVideoId");
@@ -216,7 +218,7 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
           subtitles: { "en-qlPKC2UN_YU": captionEntry() },
-        })
+        }),
       );
 
       await service.getVideo("testVideoId");
@@ -230,8 +232,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
-          subtitles: { "en": captionEntry() },
-        })
+          subtitles: { en: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -247,8 +249,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: { "en-orig": captionEntry() },
-          subtitles: { "fr": captionEntry() },
-        })
+          subtitles: { fr: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -261,9 +263,9 @@ describe("YoutubeApiGetVideo - language key selection", () => {
     it("returns auto ABSENT + manual PRESENT_NOT_FETCHED when no *-orig key but subtitles exist", async () => {
       const { service } = createService(
         baseYtData({
-          automatic_captions: { "en": captionEntry() },
-          subtitles: { "en": captionEntry() },
-        })
+          automatic_captions: { en: captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -277,8 +279,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: {},
-          subtitles: { "fr": captionEntry() },
-        })
+          subtitles: { fr: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -292,9 +294,9 @@ describe("YoutubeApiGetVideo - language key selection", () => {
     it("returns both ABSENT when no *-orig key and no subtitles", async () => {
       const { service } = createService(
         baseYtData({
-          automatic_captions: { "en": captionEntry() },
+          automatic_captions: { en: captionEntry() },
           subtitles: {},
-        })
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -312,10 +314,10 @@ describe("YoutubeApiGetVideo - language key selection", () => {
           language: "en-US", // yt-dlp says English — should be ignored
           automatic_captions: {
             "th-orig": captionEntry(), // actual spoken language is Thai
-            "en": captionEntry(),
+            en: captionEntry(),
           },
           subtitles: {},
-        })
+        }),
       );
 
       const result = await service.getVideo("testVideoId");
@@ -328,8 +330,8 @@ describe("YoutubeApiGetVideo - language key selection", () => {
       const { service } = createService(
         baseYtData({
           automatic_captions: {},
-          subtitles: { "en": captionEntry() },
-        })
+          subtitles: { en: captionEntry() },
+        }),
       );
 
       const result = await service.getVideo("testVideoId");

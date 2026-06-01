@@ -1,10 +1,13 @@
 import { injectable } from "inversify";
-import { Logger } from "../../../../_common/logger/logger.js";
-import { Failure, Result, Success } from "../../../../../types/index.js";
-import { BaseError } from "../../../../_common/errors.js";
-import { SearchChannelEntry as YoutubeSearchChannelEntry, YoutubeApiSearchChannelsViaVideos } from "../../../../youtube-api/yt-api-search-channels-via-videos.js";
-import { ChannelEntryRepository } from "../channel-entry.repository.js";
-import { ChannelEntriesQueue } from "../../channel/index.js";
+import { Failure, type Result, Success } from "../../../../../types/index.js";
+import type { BaseError } from "../../../../_common/errors.js";
+import type { Logger } from "../../../../_common/logger/logger.js";
+import type {
+  YoutubeApiSearchChannelsViaVideos,
+  SearchChannelEntry as YoutubeSearchChannelEntry,
+} from "../../../../youtube-api/yt-api-search-channels-via-videos.js";
+import type { ChannelEntriesQueue } from "../../channel/index.js";
+import type { ChannelEntryRepository } from "../channel-entry.repository.js";
 
 @injectable()
 export class FindChannelsUseCase {
@@ -17,7 +20,13 @@ export class FindChannelsUseCase {
     this.logger.setContext(FindChannelsUseCase.name);
   }
 
-  public async execute({ queryId, queryText }: { queryId: string; queryText: string }): Promise<Result<void, BaseError>> {
+  public async execute({
+    queryId,
+    queryText,
+  }: {
+    queryId: string;
+    queryText: string;
+  }): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing search query ${queryId}...`);
 
     const searchGenerator = this.youtubeApiSearchChannels.searchChannels({
@@ -85,8 +94,10 @@ export class FindChannelsUseCase {
       return Success(undefined);
     }
 
-    const createChannelEntryResult =
-      await this.channelEntryRepository.create({ id: channelEntry.id, queryId });
+    const createChannelEntryResult = await this.channelEntryRepository.create({
+      id: channelEntry.id,
+      queryId,
+    });
 
     if (!createChannelEntryResult.ok) {
       this.logger.error({
@@ -101,7 +112,10 @@ export class FindChannelsUseCase {
 
     // Enqueue with priority 0; ProcessChannelEntryUseCase writes the real score
     // once the channels row exists. No cache row can exist at this point.
-    const enqueueResult = await this.channelEntriesQueue.enqueue(channelEntry.id, 0);
+    const enqueueResult = await this.channelEntriesQueue.enqueue(
+      channelEntry.id,
+      0,
+    );
     if (!enqueueResult.ok) {
       this.logger.error({
         error: enqueueResult.error,
@@ -111,7 +125,9 @@ export class FindChannelsUseCase {
       return Failure(enqueueResult.error);
     }
 
-    this.logger.info(`Channel entry ${channelEntry.id} enqueued for next step.`);
+    this.logger.info(
+      `Channel entry ${channelEntry.id} enqueued for next step.`,
+    );
 
     return Success(undefined);
   }

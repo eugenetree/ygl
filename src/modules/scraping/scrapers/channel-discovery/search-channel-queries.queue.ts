@@ -1,87 +1,91 @@
-import { sql } from "kysely";
-import { DatabaseClient } from "../../../../db/client.js";
-import { Logger } from "../../../_common/logger/logger.js";
-import { tryCatch } from "../../../_common/try-catch.js";
-import { DatabaseError } from "../../../../db/types.js";
-import { SearchChannelQuery } from "./search-channel-query.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
 import { injectable } from "inversify";
+import { sql } from "kysely";
+import type { DatabaseClient } from "../../../../db/client.js";
+import type { DatabaseError } from "../../../../db/types.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { Logger } from "../../../_common/logger/logger.js";
+import { tryCatch } from "../../../_common/try-catch.js";
+import type { SearchChannelQuery } from "./search-channel-query.js";
 
 @injectable()
 export class SearchChannelQueriesQueue {
-	constructor(
-		private readonly logger: Logger,
-		private readonly db: DatabaseClient,
-	) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {}
 
-	public async getNextQuery(): Promise<Result<SearchChannelQuery | null, DatabaseError>> {
-		const result = await tryCatch(
-			this.db.transaction().execute(async (trx) => {
-				const job = await trx
-					.updateTable("channelDiscoveryJobs")
-					.set({ status: "PROCESSING", statusUpdatedAt: new Date() })
-					.where(
-						"id",
-						"in",
-						(eb) =>
-							eb.selectFrom("channelDiscoveryJobs")
-								.select("id")
-								.where("status", "=", "PENDING")
-								// temporary things to discover more scenarios
-								.orderBy(sql`random()`)
-								.limit(1)
-								.forUpdate()
-								.skipLocked(),
-					)
-					.returning("searchQueryId")
-					.executeTakeFirst();
+  public async getNextQuery(): Promise<
+    Result<SearchChannelQuery | null, DatabaseError>
+  > {
+    const result = await tryCatch(
+      this.db.transaction().execute(async (trx) => {
+        const job = await trx
+          .updateTable("channelDiscoveryJobs")
+          .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
+          .where("id", "in", (eb) =>
+            eb
+              .selectFrom("channelDiscoveryJobs")
+              .select("id")
+              .where("status", "=", "PENDING")
+              // temporary things to discover more scenarios
+              .orderBy(sql`random()`)
+              .limit(1)
+              .forUpdate()
+              .skipLocked(),
+          )
+          .returning("searchQueryId")
+          .executeTakeFirst();
 
-				if (!job) return null;
+        if (!job) return null;
 
-				return trx
-					.selectFrom("searchChannelQueries")
-					.selectAll()
-					.where("id", "=", job.searchQueryId)
-					.executeTakeFirst();
-			})
-		);
+        return trx
+          .selectFrom("searchChannelQueries")
+          .selectAll()
+          .where("id", "=", job.searchQueryId)
+          .executeTakeFirst();
+      }),
+    );
 
-		if (!result.ok) {
-			return Failure({ type: "DATABASE", error: result.error });
-		}
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
 
-		return Success(result.value ?? null);
-	}
+    return Success(result.value ?? null);
+  }
 
-	public async markAsSuccess(queryId: string): Promise<Result<void, DatabaseError>> {
-		const result = await tryCatch(
-			this.db
-				.updateTable("channelDiscoveryJobs")
-				.set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
-				.where("searchQueryId", "=", queryId)
-				.execute()
-		);
+  public async markAsSuccess(
+    queryId: string,
+  ): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .updateTable("channelDiscoveryJobs")
+        .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
+        .where("searchQueryId", "=", queryId)
+        .execute(),
+    );
 
-		if (!result.ok) {
-			return Failure({ type: "DATABASE", error: result.error });
-		}
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
 
-		return Success(undefined);
-	}
+    return Success(undefined);
+  }
 
-	public async markAsFailed(queryId: string): Promise<Result<void, DatabaseError>> {
-		const result = await tryCatch(
-			this.db
-				.updateTable("channelDiscoveryJobs")
-				.set({ status: "FAILED", statusUpdatedAt: new Date() })
-				.where("searchQueryId", "=", queryId)
-				.execute()
-		);
+  public async markAsFailed(
+    queryId: string,
+  ): Promise<Result<void, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .updateTable("channelDiscoveryJobs")
+        .set({ status: "FAILED", statusUpdatedAt: new Date() })
+        .where("searchQueryId", "=", queryId)
+        .execute(),
+    );
 
-		if (!result.ok) {
-			return Failure({ type: "DATABASE", error: result.error });
-		}
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
 
-		return Success(undefined);
-	}
+    return Success(undefined);
+  }
 }

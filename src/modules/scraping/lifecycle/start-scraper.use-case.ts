@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import { Logger } from "../../_common/logger/logger.js";
-import { ScraperOrchestrator } from "../scraper.orchestrator.js";
-import { ScraperConfigRepository } from "../config/scraper-config.repository.js";
-import { ScraperStatusService } from "./scraper-status.service.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { ScraperConfigRepository } from "../config/scraper-config.repository.js";
+import type { ScraperOrchestrator } from "../scraper.orchestrator.js";
+import type { ScraperStatusService } from "./scraper-status.service.js";
 
 @injectable()
 export class StartScraperUseCase {
@@ -21,18 +21,23 @@ export class StartScraperUseCase {
     this.logger.info("Executing scraper start due to requested status change.");
 
     if (this.scraperOrchestrator.getIsRunning()) {
-      this.logger.warn("Scraper orchestrator is already running internally. Ignoring restart request.");
+      this.logger.warn(
+        "Scraper orchestrator is already running internally. Ignoring restart request.",
+      );
       await this.scraperStatusService.updateStatus({ actual: "RUNNING" });
       return;
     }
 
     const configResult = await this.scraperConfigRepository.findEnabled();
     if (!configResult.ok) {
-      this.logger.error({ message: "Failed to fetch scraper config for start execution", error: configResult.error });
+      this.logger.error({
+        message: "Failed to fetch scraper config for start execution",
+        error: configResult.error,
+      });
       return;
     }
 
-    const scrapersToRun = configResult.value.map(c => c.scraperName);
+    const scrapersToRun = configResult.value.map((c) => c.scraperName);
 
     if (scrapersToRun.length === 0) {
       this.logger.warn("No scrapers enabled to run.");
@@ -42,11 +47,16 @@ export class StartScraperUseCase {
 
     const result = await this.scraperOrchestrator.start(scrapersToRun);
     if (!result.ok) {
-      this.logger.error({ message: "Failed to start orchestrator", error: result.error });
+      this.logger.error({
+        message: "Failed to start orchestrator",
+        error: result.error,
+      });
       return;
     }
 
     await this.scraperStatusService.updateStatus({ actual: "RUNNING" });
-    this.logger.info(`Scrapers execution successfully started with: ${scrapersToRun.join(", ")}`);
+    this.logger.info(
+      `Scrapers execution successfully started with: ${scrapersToRun.join(", ")}`,
+    );
   }
 }

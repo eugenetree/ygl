@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
-import { ValidationError } from "../../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
+import type { ValidationError } from "../../_common/validation/errors.js";
 
 type GetCaptionsParams = {
   jsonResponse: unknown;
-  type: "manual" | "auto"
+  type: "manual" | "auto";
 };
 
 type Caption = {
@@ -77,7 +77,9 @@ class CaptionsExtractor {
         const nextSeg = segs[i + 1];
 
         const startTime = Math.round(tStartMs + (currentSeg?.tOffsetMs ?? 0));
-        const endTime = Math.round(tStartMs + (nextSeg?.tOffsetMs ?? (tStartMs + dDurationMs)));
+        const endTime = Math.round(
+          tStartMs + (nextSeg?.tOffsetMs ?? tStartMs + dDurationMs),
+        );
 
         const caption: Caption = {
           startTime,
@@ -86,10 +88,12 @@ class CaptionsExtractor {
           textSegments: [
             {
               utf8: currentSeg.utf8,
-              offsetTime: currentSeg.tOffsetMs ? Math.round(currentSeg.tOffsetMs) : 0,
+              offsetTime: currentSeg.tOffsetMs
+                ? Math.round(currentSeg.tOffsetMs)
+                : 0,
             },
           ],
-        }
+        };
 
         resultCaptions.push(caption);
       }

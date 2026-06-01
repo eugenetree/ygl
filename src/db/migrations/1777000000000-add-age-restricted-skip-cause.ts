@@ -1,8 +1,10 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
-  await sql`ALTER TYPE video_job_skip_cause ADD VALUE 'AGE_RESTRICTED'`.execute(db);
+  await sql`ALTER TYPE video_job_skip_cause ADD VALUE 'AGE_RESTRICTED'`.execute(
+    db,
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,5 +24,7 @@ export async function down(db: Kysely<any>): Promise<void> {
   `.execute(db);
 
   await sql`DROP TYPE video_job_skip_cause`.execute(db);
-  await sql`ALTER TYPE video_job_skip_cause_new RENAME TO video_job_skip_cause`.execute(db);
+  await sql`ALTER TYPE video_job_skip_cause_new RENAME TO video_job_skip_cause`.execute(
+    db,
+  );
 }

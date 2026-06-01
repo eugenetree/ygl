@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { BaseError } from "../../../_common/errors.js";
-import { Logger } from "../../../_common/logger/logger.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { BaseError } from "../../../_common/errors.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
-import { ChannelsQueue } from "./channels.queue.js";
+import type { ChannelsQueue } from "./channels.queue.js";
+import type { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
@@ -20,7 +20,10 @@ export class ChannelsWorker {
     private readonly findChannelVideos: FindChannelVideosUseCase,
     private readonly channelsQueue: ChannelsQueue,
   ) {
-    this.logger = logger.child({ context: "ChannelsWorker", category: "worker-channel-videos-discovery" });
+    this.logger = logger.child({
+      context: "ChannelsWorker",
+      category: "worker-channel-videos-discovery",
+    });
   }
 
   private readonly logger: Logger;
@@ -66,8 +69,13 @@ export class ChannelsWorker {
 
       if (!result.ok) {
         if (result.error.type === "CHANNEL_NOT_FOUND") {
-          this.logger.info(`Channel ${channel.id} does not exist on YouTube. Skipping.`);
-          await this.channelsQueue.markAsSkipped(channel.id, "CHANNEL_NOT_FOUND");
+          this.logger.info(
+            `Channel ${channel.id} does not exist on YouTube. Skipping.`,
+          );
+          await this.channelsQueue.markAsSkipped(
+            channel.id,
+            "CHANNEL_NOT_FOUND",
+          );
           continue;
         }
 
@@ -79,7 +87,9 @@ export class ChannelsWorker {
 
       await this.channelsQueue.markAsSuccess(channel.id);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
+      await new Promise((resolve) =>
+        setTimeout(resolve, 5000 + Math.random() * 5000),
+      );
     }
 
     return Success(WorkerStopCause.DONE);

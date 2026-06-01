@@ -1,10 +1,10 @@
-import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
 import fs from "fs";
+import { injectable } from "inversify";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { ExportLogsUseCase } from "../scraping/logs/export-logs.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { ExportLogsUseCase } from "../scraping/logs/export-logs.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class ExportLogsController implements TelegramController {
@@ -22,7 +22,10 @@ export class ExportLogsController implements TelegramController {
       const result = await this.exportLogsUseCase.execute();
 
       if (!result.ok) {
-        this.logger.error({ message: "Failed to export logs", error: result.error });
+        this.logger.error({
+          message: "Failed to export logs",
+          error: result.error,
+        });
         await ctx.reply(result.error.message);
         return;
       }
@@ -33,14 +36,20 @@ export class ExportLogsController implements TelegramController {
         await ctx.replyWithDocument({ source: zipPath, filename: "logs.zip" });
         this.logger.info(`Successfully sent logs zip: ${zipPath}`);
       } catch (error) {
-        this.logger.error({ message: "Failed to send logs via Telegram", error });
+        this.logger.error({
+          message: "Failed to send logs via Telegram",
+          error,
+        });
         await ctx.reply("Failed to send logs via Telegram.");
       } finally {
         if (fs.existsSync(zipPath)) {
           try {
             fs.unlinkSync(zipPath);
           } catch (unlinkError) {
-            this.logger.error({ message: "Failed to delete temporary zip file", error: unlinkError });
+            this.logger.error({
+              message: "Failed to delete temporary zip file",
+              error: unlinkError,
+            });
           }
         }
       }

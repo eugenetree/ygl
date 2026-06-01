@@ -1,12 +1,15 @@
 import { injectable } from "inversify";
 import { z } from "zod";
-import { Failure, Result, Success } from "../../types/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { ValidationError } from "../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
-import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
+import type { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
-export type ChannelNotFoundError = { type: "CHANNEL_NOT_FOUND"; channelId: string };
+export type ChannelNotFoundError = {
+  type: "CHANNEL_NOT_FOUND";
+  channelId: string;
+};
 
 export type ChannelVideoEntry = {
   id: string;
@@ -15,14 +18,14 @@ export type ChannelVideoEntry = {
 
 type ChannelVideosResultSuccess =
   | {
-    status: "found";
-    channelId: string;
-    chunk: ChannelVideoEntry[];
-  }
+      status: "found";
+      channelId: string;
+      chunk: ChannelVideoEntry[];
+    }
   | {
-    status: "done";
-    channelId: string;
-  };
+      status: "done";
+      channelId: string;
+    };
 
 const inputSchemas = {
   video: z.object({
@@ -69,7 +72,10 @@ export class YoutubeApiGetChannelVideoEntries {
 
     for await (const result of stream) {
       if (!result.ok) {
-        if (result.error.type === "YT_DLP_ERROR" && result.error.message.includes("This channel does not exist")) {
+        if (
+          result.error.type === "YT_DLP_ERROR" &&
+          result.error.message.includes("This channel does not exist")
+        ) {
           this.logger.info(`Channel ${channelId} does not exist on YouTube.`);
           yield Failure({ type: "CHANNEL_NOT_FOUND", channelId });
           return;
@@ -103,7 +109,12 @@ export class YoutubeApiGetChannelVideoEntries {
       yield Success({
         status: "found",
         channelId,
-        chunk: [{ id: videoResult.value.id, availability: videoResult.value.availability ?? null }],
+        chunk: [
+          {
+            id: videoResult.value.id,
+            availability: videoResult.value.availability ?? null,
+          },
+        ],
       });
     }
 

@@ -1,39 +1,36 @@
 import { injectable } from "inversify";
-
-import { Logger } from "../_common/logger/logger.js";
-import { BaseError } from "../_common/errors.js";
-import { Result, Success, Failure } from "../../types/index.js";
-import { ProcessScraperFailureUseCase } from "./error-handling/process-scraper-failure.use-case.js";
-import { SearchChannelQueriesWorker } from "./scrapers/channel-discovery/search-channel-queries.worker.js";
-import { ChannelEntriesWorker } from "./scrapers/channel/channel-entries.worker.js";
-import { ChannelsWorker } from "./scrapers/video-discovery/channels.worker.js";
-import { VideoEntriesWorker } from "./scrapers/video/video-entries.worker.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { BaseError } from "../_common/errors.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { ScraperConfigRepository } from "./config/scraper-config.repository.js";
 import { ScraperName, WorkerStopCause } from "./constants.js";
-import { ScraperConfigRepository } from "./config/scraper-config.repository.js";
-import { HandleScraperStopUseCase } from "./lifecycle/handle-scraper-stop.use-case.js";
+import type { ProcessScraperFailureUseCase } from "./error-handling/process-scraper-failure.use-case.js";
+import type { HandleScraperStopUseCase } from "./lifecycle/handle-scraper-stop.use-case.js";
+import type { ChannelEntriesWorker } from "./scrapers/channel/channel-entries.worker.js";
+import type { SearchChannelQueriesWorker } from "./scrapers/channel-discovery/search-channel-queries.worker.js";
+import type { VideoEntriesWorker } from "./scrapers/video/video-entries.worker.js";
+import type { ChannelsWorker } from "./scrapers/video-discovery/channels.worker.js";
 
 const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;
 
 export type StopReason =
   | { type: "GRACEFUL" }
-  | { type: "ERROR", error: unknown }
-  | { type: "QUEUE_EXHAUSTED", scraperName: ScraperName }
+  | { type: "ERROR"; error: unknown }
+  | { type: "QUEUE_EXHAUSTED"; scraperName: ScraperName };
 
-export type ScraperAlreadyRunningError = { type: "ScraperAlreadyRunningError" }
-export type SeederFailedError = { type: "SeederFailedError"; cause: Error }
-export type ScraperNotRunningError = { type: "ScraperNotRunningError" }
+export type ScraperAlreadyRunningError = { type: "ScraperAlreadyRunningError" };
+export type SeederFailedError = { type: "SeederFailedError"; cause: Error };
+export type ScraperNotRunningError = { type: "ScraperNotRunningError" };
 
-type StartError = ScraperAlreadyRunningError
-type StopError = ScraperNotRunningError
+type StartError = ScraperAlreadyRunningError;
+type StopError = ScraperNotRunningError;
 
 type Worker = {
-  run: (
-    params: {
-      shouldContinue: () => boolean;
-      onError: (error: BaseError) => Promise<void>
-    }
-  ) => Promise<Result<WorkerStopCause, BaseError>>;
+  run: (params: {
+    shouldContinue: () => boolean;
+    onError: (error: BaseError) => Promise<void>;
+  }) => Promise<Result<WorkerStopCause, BaseError>>;
 };
 
 type ScraperSessionConfig = {
@@ -89,14 +86,19 @@ export class ScraperOrchestrator {
       },
     };
 
-    this.logger = logger.child({ context: "ScraperService", category: "scraper" });
+    this.logger = logger.child({
+      context: "ScraperService",
+      category: "scraper",
+    });
   }
 
   public getIsRunning(): boolean {
     return this.isRunning;
   }
 
-  public async start(scrapersToRun: ScraperName[]): Promise<Result<void, StartError>> {
+  public async start(
+    scrapersToRun: ScraperName[],
+  ): Promise<Result<void, StartError>> {
     if (this.isRunning) {
       return Failure({ type: "ScraperAlreadyRunningError" });
     }
@@ -119,7 +121,9 @@ export class ScraperOrchestrator {
     }
 
     this.shouldContinueFlag = false;
-    this.logger.info("Graceful stop requested. Waiting for current item to finish...");
+    this.logger.info(
+      "Graceful stop requested. Waiting for current item to finish...",
+    );
 
     await this.loopPromise;
 
@@ -139,14 +143,20 @@ export class ScraperOrchestrator {
     this.isRunning = false;
     this.loopPromise = null;
 
-    this.logger.info(`Scraper loop stopped. Reason: ${JSON.stringify(stopReason)}`);
+    this.logger.info(
+      `Scraper loop stopped. Reason: ${JSON.stringify(stopReason)}`,
+    );
 
     await this.handleScraperStopUseCase.execute(stopReason);
   }
 
-  private async executeLoop(scrapers: ScraperSessionConfig[]): Promise<StopReason> {
+  private async executeLoop(
+    scrapers: ScraperSessionConfig[],
+  ): Promise<StopReason> {
     this.logger.info("Starting scraper loop...");
-    this.logger.info(`Enabled scrapers: ${scrapers.map((s) => s.name).join(", ") || "none"}`);
+    this.logger.info(
+      `Enabled scrapers: ${scrapers.map((s) => s.name).join(", ") || "none"}`,
+    );
 
     while (true) {
       for (const scraper of scrapers) {
@@ -160,30 +170,45 @@ export class ScraperOrchestrator {
 
         const workerShouldContinue = () => {
           if (!this.shouldContinueFlag) return false;
-          return (Date.now() - scraperStartTime) < timeoutMs;
+          return Date.now() - scraperStartTime < timeoutMs;
         };
 
-        this.logger.info(`Starting session for ${scraper.name} scraper (${timeoutMs}ms limit)...`);
+        this.logger.info(
+          `Starting session for ${scraper.name} scraper (${timeoutMs}ms limit)...`,
+        );
 
         try {
           const result = await scraper.worker.run({
             shouldContinue: workerShouldContinue,
-            onError: async (error) => { await this.processScraperFailure.execute({ scraperName: scraper.name, error }); },
+            onError: async (error) => {
+              await this.processScraperFailure.execute({
+                scraperName: scraper.name,
+                error,
+              });
+            },
           });
 
           if (!result.ok) {
-            this.logger.error({ message: `${scraper.name} scraper session failed.`, error: result.error });
+            this.logger.error({
+              message: `${scraper.name} scraper session failed.`,
+              error: result.error,
+            });
             return { type: "ERROR", error: result.error };
           }
 
-          this.logger.info(`${scraper.name} scraper session finished (${result.value}).`);
+          this.logger.info(
+            `${scraper.name} scraper session finished (${result.value}).`,
+          );
 
           if (result.value === WorkerStopCause.EMPTY) {
             this.logger.info(`${scraper.name} exited because queue is empty.`);
             return { type: "QUEUE_EXHAUSTED", scraperName: scraper.name };
           }
         } catch (error) {
-          this.logger.error({ message: `Critical error during ${scraper.name} scraper session`, error });
+          this.logger.error({
+            message: `Critical error during ${scraper.name} scraper session`,
+            error,
+          });
           return { type: "ERROR", error };
         }
       }

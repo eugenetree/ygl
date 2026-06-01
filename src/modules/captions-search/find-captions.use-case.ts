@@ -1,6 +1,6 @@
-import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
-import { CaptionsService } from "./captions.service.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { CaptionsService } from "./captions.service.js";
 
 @injectable()
 export class FindCaptionsUseCase {

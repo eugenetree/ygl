@@ -5,4 +5,7 @@ export type SearchChannelQuery = {
   updatedAt: Date | null;
 };
 
-export type SearchChannelQueryProps = Omit<SearchChannelQuery, "createdAt" | "updatedAt">;
+export type SearchChannelQueryProps = Omit<
+  SearchChannelQuery,
+  "createdAt" | "updatedAt"
+>;

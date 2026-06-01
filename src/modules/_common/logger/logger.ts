@@ -49,7 +49,8 @@ export class Logger {
     context?: Record<string, unknown>;
   }): void {
     const timestamp = this.getTimestamp();
-    const errorMessage = message ?? (error instanceof Error ? error.message : undefined);
+    const errorMessage =
+      message ?? (error instanceof Error ? error.message : undefined);
 
     let log = `${timestamp} [error]\n[${this.context}]\n${errorMessage}`;
 

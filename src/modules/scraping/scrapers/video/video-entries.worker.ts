@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { BaseError } from "../../../_common/errors.js";
-import { Logger } from "../../../_common/logger/logger.js";
+import type { VideoJobSkipCause } from "../../../../db/types.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { BaseError } from "../../../_common/errors.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
-import { VideoEntriesQueue } from "./video-entries.queue.js";
-import { VideoJobSkipCause } from "../../../../db/types.js";
+import type { ProcessVideoEntryUseCase } from "./use-cases/process-video-entry/process-video-entry.use-case.js";
+import type { VideoEntriesQueue } from "./video-entries.queue.js";
 
 function toSkipCause(errorType: string): VideoJobSkipCause | null {
   if (errorType === "MEMBERS_ONLY_VIDEO") return "MEMBERS_ONLY";
@@ -29,7 +29,10 @@ export class VideoEntriesWorker {
     private readonly processVideoEntry: ProcessVideoEntryUseCase,
     private readonly videoEntriesQueue: VideoEntriesQueue,
   ) {
-    this.logger = logger.child({ context: "VideoEntriesWorker", category: "worker-video-fetcher" });
+    this.logger = logger.child({
+      context: "VideoEntriesWorker",
+      category: "worker-video-fetcher",
+    });
   }
 
   private readonly logger: Logger;

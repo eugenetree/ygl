@@ -1,15 +1,15 @@
 import { injectable } from "inversify";
 
-import { DatabaseClient } from "../../../db/client.js";
-import {
+import type { DatabaseClient } from "../../../db/client.js";
+import type {
   Database,
   ProcessingStatus,
   VideoDiscoveryJobStatus,
   VideoJobStatus,
 } from "../../../db/types.js";
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
+import type { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import { Logger } from "../../_common/logger/logger.js";
 
 type StatusCounts<TStatus extends string> = Record<TStatus, number>;
 
@@ -22,15 +22,28 @@ export type JobStats = {
   videosWithValidManualCaptions: number;
 };
 
-const PROCESSING_STATUSES = ["PENDING", "PROCESSING", "SUCCEEDED", "FAILED"] as const satisfies readonly ProcessingStatus[];
-const VIDEO_DISCOVERY_JOB_STATUSES = [...PROCESSING_STATUSES, "SKIPPED"] as const satisfies readonly VideoDiscoveryJobStatus[];
-const VIDEO_JOB_STATUSES = [...PROCESSING_STATUSES, "SKIPPED"] as const satisfies readonly VideoJobStatus[];
+const PROCESSING_STATUSES = [
+  "PENDING",
+  "PROCESSING",
+  "SUCCEEDED",
+  "FAILED",
+] as const satisfies readonly ProcessingStatus[];
+const VIDEO_DISCOVERY_JOB_STATUSES = [
+  ...PROCESSING_STATUSES,
+  "SKIPPED",
+] as const satisfies readonly VideoDiscoveryJobStatus[];
+const VIDEO_JOB_STATUSES = [
+  ...PROCESSING_STATUSES,
+  "SKIPPED",
+] as const satisfies readonly VideoJobStatus[];
 
 const buildStatusCounts = <TStatus extends string>(
   allowedStatuses: readonly TStatus[],
   rows: { status: string; count: number }[],
 ): StatusCounts<TStatus> => {
-  const counts = Object.fromEntries(allowedStatuses.map((status) => [status, 0])) as StatusCounts<TStatus>;
+  const counts = Object.fromEntries(
+    allowedStatuses.map((status) => [status, 0]),
+  ) as StatusCounts<TStatus>;
   for (const row of rows) {
     if ((allowedStatuses as readonly string[]).includes(row.status)) {
       counts[row.status as TStatus] = Number(row.count);
@@ -41,7 +54,11 @@ const buildStatusCounts = <TStatus extends string>(
 
 type JobTableName = Extract<
   keyof Database,
-  "channelDiscoveryJobs" | "channelJobs" | "videoDiscoveryJobs" | "videoJobs" | "transcriptionJobs"
+  | "channelDiscoveryJobs"
+  | "channelJobs"
+  | "videoDiscoveryJobs"
+  | "videoJobs"
+  | "transcriptionJobs"
 >;
 
 @injectable()
@@ -96,7 +113,10 @@ export class StatsRepository {
     ];
     for (const result of allResults) {
       if (!result.ok) {
-        this.logger.error({ message: "Failed to query job stats", error: result.error });
+        this.logger.error({
+          message: "Failed to query job stats",
+          error: result.error,
+        });
         return Failure(result.error);
       }
     }
@@ -114,12 +134,23 @@ export class StatsRepository {
     }
 
     return Success({
-      channelDiscovery: buildStatusCounts(PROCESSING_STATUSES, channelDiscoveryJobsResult.value),
+      channelDiscovery: buildStatusCounts(
+        PROCESSING_STATUSES,
+        channelDiscoveryJobsResult.value,
+      ),
       channel: buildStatusCounts(PROCESSING_STATUSES, channelJobsResult.value),
-      videoDiscovery: buildStatusCounts(VIDEO_DISCOVERY_JOB_STATUSES, videoDiscoveryJobsResult.value),
+      videoDiscovery: buildStatusCounts(
+        VIDEO_DISCOVERY_JOB_STATUSES,
+        videoDiscoveryJobsResult.value,
+      ),
       video: buildStatusCounts(VIDEO_JOB_STATUSES, videoJobsResult.value),
-      transcription: buildStatusCounts(PROCESSING_STATUSES, transcriptionJobsResult.value),
-      videosWithValidManualCaptions: Number(validManualCaptionsResult.value.count),
+      transcription: buildStatusCounts(
+        PROCESSING_STATUSES,
+        transcriptionJobsResult.value,
+      ),
+      videosWithValidManualCaptions: Number(
+        validManualCaptionsResult.value.count,
+      ),
     });
   }
 }

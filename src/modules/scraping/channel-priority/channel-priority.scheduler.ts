@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 import { sql } from "kysely";
-import { DatabaseClient } from "../../../db/client.js";
-import { Logger } from "../../_common/logger/logger.js";
-import { ChannelPriorityService } from "./channel-priority.service.js";
+import type { DatabaseClient } from "../../../db/client.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { ChannelPriorityService } from "./channel-priority.service.js";
 
 const SCHEDULER_INTERVAL_MS = 5 * 60 * 1000;
 
@@ -35,7 +35,10 @@ export class ChannelPriorityScheduler {
 
   private tick(): void {
     this.doTick().catch((error) =>
-      this.logger.error({ message: "Channel priority scheduler tick failed", error }),
+      this.logger.error({
+        message: "Channel priority scheduler tick failed",
+        error,
+      }),
     );
   }
 
@@ -45,7 +48,8 @@ export class ChannelPriorityScheduler {
       .select("cps.channelId")
       .where((eb) =>
         eb.exists(
-          eb.selectFrom("videos as v")
+          eb
+            .selectFrom("videos as v")
             .select(sql<number>`1`.as("one"))
             .whereRef("v.channelId", "=", "cps.channelId")
             .where(sql<boolean>`"v"."created_at" > "cps"."calculated_at"`),
@@ -57,10 +61,13 @@ export class ChannelPriorityScheduler {
 
     if (staleChannels.length === 0) return;
 
-    this.logger.info(`Recalculating priority for ${staleChannels.length} channels.`);
+    this.logger.info(
+      `Recalculating priority for ${staleChannels.length} channels.`,
+    );
 
     for (const { channelId } of staleChannels) {
-      const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
+      const recalcResult =
+        await this.channelPriorityService.recalculateScore(channelId);
       if (!recalcResult.ok) {
         this.logger.error({
           message: `Failed to recalculate priority for channel ${channelId}`,
@@ -68,7 +75,11 @@ export class ChannelPriorityScheduler {
         });
         continue;
       }
-      const propagateResult = await this.channelPriorityService.propagatePriorityToPendingJobs(channelId, recalcResult.value.scrapingScore);
+      const propagateResult =
+        await this.channelPriorityService.propagatePriorityToPendingJobs(
+          channelId,
+          recalcResult.value.scrapingScore,
+        );
       if (!propagateResult.ok) {
         this.logger.error({
           message: `Failed to propagate priority for channel ${channelId}`,

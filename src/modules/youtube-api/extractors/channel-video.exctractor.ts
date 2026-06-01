@@ -1,7 +1,8 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
-import {
+import { Failure, type Result, Success } from "../../../types/index.js";
+import { Logger } from "../../_common/logger/logger.js";
+import type {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
@@ -9,12 +10,13 @@ import { validator } from "../../_common/validation/validator.js";
 import { isValidLanguageCode } from "../../i18n/index.js";
 import { inputSchemas, outputSchemas } from "./channel-video.schemas.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
-import { Logger } from "../../_common/logger/logger.js";
 
 export type OutputVideo = z.infer<typeof outputSchemas.video>;
 
 export class ChannelVideoDetailsExtractor {
-  private readonly logger = new Logger({ context: ChannelVideoDetailsExtractor.name });
+  private readonly logger = new Logger({
+    context: ChannelVideoDetailsExtractor.name,
+  });
 
   extractInnerTubeApiKey(
     html: unknown,
@@ -24,7 +26,7 @@ export class ChannelVideoDetailsExtractor {
         type: "VALIDATION_ERROR",
         message: "Input is not a string",
         context: { html },
-      })
+      });
     }
 
     // https://github.com/jdepoix/youtube-transcript-api
@@ -36,7 +38,7 @@ export class ChannelVideoDetailsExtractor {
         type: "VALIDATION_ERROR",
         message: "INNERTUBE_API_KEY not found",
         context: { html },
-      })
+      });
     }
 
     return Success(apiKey);
@@ -138,7 +140,7 @@ export class ChannelVideoDetailsExtractor {
         type: "VALIDATION_ERROR",
         message: "Input is not a string",
         context: { html },
-      })
+      });
     }
 
     const rawPlayerResponseResult =
@@ -204,7 +206,9 @@ export class ChannelVideoDetailsExtractor {
           captionTrack.name?.runs?.[0]?.text?.includes("DTVCC1");
 
         if (!isLiveBroadcastCaption) {
-          outputCaptionTracksUrls[languageCode].manual = (captionTrack as any).baseUrl;
+          outputCaptionTracksUrls[languageCode].manual = (
+            captionTrack as any
+          ).baseUrl;
         } else {
           this.logger.warn(`Live broadcast caption found: ${captionTrack}`);
         }

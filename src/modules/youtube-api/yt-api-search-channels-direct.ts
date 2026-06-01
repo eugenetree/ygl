@@ -1,10 +1,12 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../types/index.js";
-import { FetchError } from "../_common/http/errors.js";
-import { HttpClient } from "../_common/http/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { ParsingError } from "../_common/validation/errors.js";
-import { ValidationError } from "../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { FetchError } from "../_common/http/errors.js";
+import type { HttpClient } from "../_common/http/index.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type {
+  ParsingError,
+  ValidationError,
+} from "../_common/validation/errors.js";
 import { searchChannelsExtractor } from "./extractors/search-channels-direct.extractor.js";
 
 export type SearchChannelEntry = {
@@ -15,14 +17,14 @@ export type SearchChannelEntry = {
 
 type SearchChannelsResultSuccess =
   | {
-    status: "found";
-    query: string;
-    chunk: SearchChannelEntry[];
-  }
+      status: "found";
+      query: string;
+      chunk: SearchChannelEntry[];
+    }
   | {
-    status: "done";
-    query: string;
-  };
+      status: "done";
+      query: string;
+    };
 
 /**
  * This is no longer a superior method for searching channels.

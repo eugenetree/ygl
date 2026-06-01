@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import {
+import type {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
@@ -11,7 +11,7 @@ import { schemaForType } from "../../_common/validation/types.js";
 import { validator } from "../../_common/validation/validator.js";
 import {
   CountryCode,
-  CountryName,
+  type CountryName,
   countryNameToCodeMap,
 } from "../../i18n/index.js";
 import { abbreviatedNumberParser } from "../parsers/abbreviated-number.parser.js";
@@ -19,7 +19,7 @@ import { channelCreatedDateParser } from "../parsers/channel-created-date.parser
 import { usernameParser } from "../parsers/username.parser.js";
 import { videoCountParser } from "../parsers/video-count.parser.js";
 import { viewCountParser } from "../parsers/view-count.parser.js";
-import { Channel } from "../youtube-api.types.js";
+import type { Channel } from "../youtube-api.types.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
 
 const rawChannelInfoSchema = z.object({
@@ -148,7 +148,7 @@ export class ChannelInfoExtractor {
       if (keywords.length) {
         this.logger.warn(
           "Keywords were presented in response, but could not be parsed" +
-          `\nKeywords: ${keywords}`,
+            `\nKeywords: ${keywords}`,
         );
       }
 

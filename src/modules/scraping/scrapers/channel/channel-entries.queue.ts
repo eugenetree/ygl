@@ -1,18 +1,26 @@
-import { tryCatch } from "../../../_common/try-catch.js";
-import { DatabaseError, ChannelEntryRow } from "../../../../db/types.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
 import { injectable } from "inversify";
-import { DatabaseClient } from "../../../../db/client.js";
+import type { DatabaseClient } from "../../../../db/client.js";
+import type { ChannelEntryRow, DatabaseError } from "../../../../db/types.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import { tryCatch } from "../../../_common/try-catch.js";
 
 @injectable()
 export class ChannelEntriesQueue {
   constructor(private readonly db: DatabaseClient) {}
 
-  public async enqueue(channelId: string, priority: number): Promise<Result<void, DatabaseError>> {
+  public async enqueue(
+    channelId: string,
+    priority: number,
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .insertInto("channelJobs")
-        .values({ channelId, status: "PENDING", priority, statusUpdatedAt: new Date() })
+        .values({
+          channelId,
+          status: "PENDING",
+          priority,
+          statusUpdatedAt: new Date(),
+        })
         .execute(),
     );
 
@@ -23,25 +31,25 @@ export class ChannelEntriesQueue {
     return Success(undefined);
   }
 
-  public async getNextEntry(): Promise<Result<ChannelEntryRow | null, DatabaseError>> {
+  public async getNextEntry(): Promise<
+    Result<ChannelEntryRow | null, DatabaseError>
+  > {
     const result = await tryCatch(
       this.db.transaction().execute(async (trx) => {
         const job = await trx
           .updateTable("channelJobs")
           .set({ status: "PROCESSING", statusUpdatedAt: new Date() })
-          .where(
-            "id",
-            "in",
-            (eb) =>
-              eb.selectFrom("channelJobs")
-                .select("id")
-                .where("status", "=", "PENDING")
-                // temporary things to discover more scenarios
-                .orderBy("priority", "desc")
-                .orderBy("createdAt", "asc")
-                .limit(1)
-                .forUpdate()
-                .skipLocked(),
+          .where("id", "in", (eb) =>
+            eb
+              .selectFrom("channelJobs")
+              .select("id")
+              .where("status", "=", "PENDING")
+              // temporary things to discover more scenarios
+              .orderBy("priority", "desc")
+              .orderBy("createdAt", "asc")
+              .limit(1)
+              .forUpdate()
+              .skipLocked(),
           )
           .returning("channelId")
           .executeTakeFirst();
@@ -52,7 +60,7 @@ export class ChannelEntriesQueue {
           .selectAll()
           .where("id", "=", job.channelId)
           .executeTakeFirst();
-      })
+      }),
     );
 
     if (!result.ok) {
@@ -62,13 +70,15 @@ export class ChannelEntriesQueue {
     return Success(result.value ?? null);
   }
 
-  public async markAsSuccess(entryId: string): Promise<Result<void, DatabaseError>> {
+  public async markAsSuccess(
+    entryId: string,
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .updateTable("channelJobs")
         .set({ status: "SUCCEEDED", statusUpdatedAt: new Date() })
         .where("channelId", "=", entryId)
-        .execute()
+        .execute(),
     );
 
     if (!result.ok) {
@@ -78,13 +88,15 @@ export class ChannelEntriesQueue {
     return Success(undefined);
   }
 
-  public async markAsFailed(entryId: string): Promise<Result<void, DatabaseError>> {
+  public async markAsFailed(
+    entryId: string,
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .updateTable("channelJobs")
         .set({ status: "FAILED", statusUpdatedAt: new Date() })
         .where("channelId", "=", entryId)
-        .execute()
+        .execute(),
     );
 
     if (!result.ok) {

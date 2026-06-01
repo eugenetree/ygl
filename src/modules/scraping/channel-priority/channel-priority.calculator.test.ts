@@ -1,6 +1,9 @@
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { ChannelPriorityCalculator, ChannelStats } from "./channel-priority.calculator.js";
+import { describe, it } from "node:test";
+import {
+  ChannelPriorityCalculator,
+  type ChannelStats,
+} from "./channel-priority.calculator.js";
 import {
   PRIORITY_BAD_CHANNEL_PENALTY,
   PRIORITY_CAPTION_WEIGHT,
@@ -99,7 +102,9 @@ describe("ChannelPriorityCalculator", () => {
       const result = calculator.calculate({
         ...baseStats,
         totalProcessed: PRIORITY_LANGUAGE_MIN_VIDEOS,
-        nonEnglishCount: Math.ceil(PRIORITY_LANGUAGE_MIN_VIDEOS * PRIORITY_NON_ENGLISH_THRESHOLD),
+        nonEnglishCount: Math.ceil(
+          PRIORITY_LANGUAGE_MIN_VIDEOS * PRIORITY_NON_ENGLISH_THRESHOLD,
+        ),
       });
 
       assert.equal(result.scrapingScore, PRIORITY_BAD_CHANNEL_PENALTY);
@@ -153,7 +158,10 @@ describe("ChannelPriorityCalculator", () => {
         validCaptions: 0,
       });
 
-      assert.equal(result.scrapingScore, PRIORITY_MANUAL_BOOST + PRIORITY_BAD_CHANNEL_PENALTY);
+      assert.equal(
+        result.scrapingScore,
+        PRIORITY_MANUAL_BOOST + PRIORITY_BAD_CHANNEL_PENALTY,
+      );
     });
   });
 
@@ -165,7 +173,10 @@ describe("ChannelPriorityCalculator", () => {
     });
 
     it("gives max subs bonus when subscriberCount is at cap", () => {
-      const result = calculator.calculate({ ...baseStats, subscriberCount: PRIORITY_SUBS_CAP });
+      const result = calculator.calculate({
+        ...baseStats,
+        subscriberCount: PRIORITY_SUBS_CAP,
+      });
 
       assert.equal(result.scrapingScore, PRIORITY_SUBS_WEIGHT);
     });
@@ -185,7 +196,10 @@ describe("ChannelPriorityCalculator", () => {
     });
 
     it("treats null avgSimilarity as zero contribution", () => {
-      const result = calculator.calculate({ ...baseStats, avgSimilarity: null });
+      const result = calculator.calculate({
+        ...baseStats,
+        avgSimilarity: null,
+      });
 
       assert.equal(result.scrapingScore, 0);
     });
@@ -211,27 +225,42 @@ describe("ChannelPriorityCalculator", () => {
     });
 
     it("excludes similarity bonus from searchScore", () => {
-      const withSimilarity = calculator.calculate({ ...baseStats, avgSimilarity: 1.0 });
-      const withoutSimilarity = calculator.calculate({ ...baseStats, avgSimilarity: null });
+      const withSimilarity = calculator.calculate({
+        ...baseStats,
+        avgSimilarity: 1.0,
+      });
+      const withoutSimilarity = calculator.calculate({
+        ...baseStats,
+        avgSimilarity: null,
+      });
 
       assert.ok(withSimilarity.scrapingScore > withoutSimilarity.scrapingScore);
       assert.equal(withSimilarity.searchScore, withoutSimilarity.searchScore);
     });
 
     it("includes subs in searchScore", () => {
-      const result = calculator.calculate({ ...baseStats, subscriberCount: PRIORITY_SUBS_CAP });
+      const result = calculator.calculate({
+        ...baseStats,
+        subscriberCount: PRIORITY_SUBS_CAP,
+      });
 
       assert.equal(result.searchScore, PRIORITY_SUBS_WEIGHT);
     });
 
     it("includes duration in searchScore", () => {
-      const result = calculator.calculate({ ...baseStats, avgDuration: PRIORITY_DURATION_CAP });
+      const result = calculator.calculate({
+        ...baseStats,
+        avgDuration: PRIORITY_DURATION_CAP,
+      });
 
       assert.equal(result.searchScore, PRIORITY_DURATION_WEIGHT);
     });
 
     it("includes views in searchScore", () => {
-      const result = calculator.calculate({ ...baseStats, avgViews: PRIORITY_VIEWS_CAP });
+      const result = calculator.calculate({
+        ...baseStats,
+        avgViews: PRIORITY_VIEWS_CAP,
+      });
 
       assert.equal(result.searchScore, PRIORITY_VIEWS_WEIGHT);
     });

@@ -1,19 +1,28 @@
 import { randomUUID } from "crypto";
-import { DatabaseError, UpdateableElasticCaptionsSyncRow } from "../../db/types.js";
-import { ElasticCaptionsSync, ElasticCaptionsSyncProps } from "./elastic-captions-sync.js";
-import { Failure, Result, Success } from "../../types/index.js";
-import { tryCatch } from "../_common/try-catch.js";
-import { DatabaseClient } from "../../db/client.js";
 import { injectable } from "inversify";
+import type { DatabaseClient } from "../../db/client.js";
+import type {
+  DatabaseError,
+  UpdateableElasticCaptionsSyncRow,
+} from "../../db/types.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import { tryCatch } from "../_common/try-catch.js";
+import type {
+  ElasticCaptionsSync,
+  ElasticCaptionsSyncProps,
+} from "./elastic-captions-sync.js";
 
 @injectable()
 export class ElasticCaptionsSyncRepository {
   constructor(private readonly db: DatabaseClient) {}
 
-  async create(values: ElasticCaptionsSyncProps): Promise<Result<string, DatabaseError>> {
+  async create(
+    values: ElasticCaptionsSyncProps,
+  ): Promise<Result<string, DatabaseError>> {
     const id = randomUUID();
     const result = await tryCatch(
-      this.db.insertInto("elasticCaptionsSync")
+      this.db
+        .insertInto("elasticCaptionsSync")
         .values({ ...values, id })
         .execute(),
     );
@@ -25,9 +34,13 @@ export class ElasticCaptionsSyncRepository {
     return Success(id);
   }
 
-  async update(id: string, values: UpdateableElasticCaptionsSyncRow): Promise<Result<void, DatabaseError>> {
+  async update(
+    id: string,
+    values: UpdateableElasticCaptionsSyncRow,
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
-      this.db.updateTable("elasticCaptionsSync")
+      this.db
+        .updateTable("elasticCaptionsSync")
         .set(values)
         .where("id", "=", id)
         .execute(),
@@ -40,9 +53,12 @@ export class ElasticCaptionsSyncRepository {
     return Success(undefined);
   }
 
-  async getLastSuccessfulSync(): Promise<Result<ElasticCaptionsSync | null, DatabaseError>> {
+  async getLastSuccessfulSync(): Promise<
+    Result<ElasticCaptionsSync | null, DatabaseError>
+  > {
     const result = await tryCatch(
-      this.db.selectFrom("elasticCaptionsSync")
+      this.db
+        .selectFrom("elasticCaptionsSync")
         .selectAll()
         .where("syncStatus", "=", "SUCCESS")
         .orderBy("syncCompletedAt", "desc")
@@ -61,9 +77,14 @@ export class ElasticCaptionsSyncRepository {
   }
 
   async getDataToSync(lastSyncedCaptionId?: string) {
-    let query = this.db.selectFrom("captions")
+    let query = this.db
+      .selectFrom("captions")
       .innerJoin("videos", "videos.id", "captions.videoId")
-      .leftJoin("channelPriorityScores", "channelPriorityScores.channelId", "videos.channelId")
+      .leftJoin(
+        "channelPriorityScores",
+        "channelPriorityScores.channelId",
+        "videos.channelId",
+      )
       .where("captions.type", "=", "manual")
       .where("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID")
       .where("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID")
@@ -74,7 +95,10 @@ export class ElasticCaptionsSyncRepository {
 
     if (lastSyncedCaptionId) {
       query = query.where("captions.createdAt", ">", (qb) =>
-        qb.selectFrom("captions").select("createdAt").where("id", "=", lastSyncedCaptionId)
+        qb
+          .selectFrom("captions")
+          .select("createdAt")
+          .where("id", "=", lastSyncedCaptionId),
       );
     }
 

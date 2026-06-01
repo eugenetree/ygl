@@ -1,25 +1,48 @@
-import { injectable } from "inversify";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
+import { injectable } from "inversify";
 import { YtDlp as YtDlpWrapper } from "ytdlp-nodejs";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { Logger } from "../_common/logger/logger.js";
 
-import { Logger } from "../_common/logger/logger.js";
-import { Failure, Result, Success } from "../../types/index.js";
-
-export type YtDlpError = { type: "YT_DLP_ERROR"; message: string; cause?: unknown };
-export type MembersOnlyVideoError = { type: "MEMBERS_ONLY_VIDEO"; message: string };
-export type GeoRestrictedVideoError = { type: "GEO_RESTRICTED_VIDEO"; message: string };
-export type AgeRestrictedVideoError = { type: "AGE_RESTRICTED_VIDEO"; message: string };
+export type YtDlpError = {
+  type: "YT_DLP_ERROR";
+  message: string;
+  cause?: unknown;
+};
+export type MembersOnlyVideoError = {
+  type: "MEMBERS_ONLY_VIDEO";
+  message: string;
+};
+export type GeoRestrictedVideoError = {
+  type: "GEO_RESTRICTED_VIDEO";
+  message: string;
+};
+export type AgeRestrictedVideoError = {
+  type: "AGE_RESTRICTED_VIDEO";
+  message: string;
+};
 export type PremiereVideoError = { type: "PREMIERE_VIDEO"; message: string };
-export type UnprocessableVideoError = MembersOnlyVideoError | GeoRestrictedVideoError | AgeRestrictedVideoError | PremiereVideoError;
+export type UnprocessableVideoError =
+  | MembersOnlyVideoError
+  | GeoRestrictedVideoError
+  | AgeRestrictedVideoError
+  | PremiereVideoError;
 
-const MEMBERS_ONLY_MESSAGE = "Join this channel to get access to members-only content";
-const GEO_RESTRICTED_MESSAGE = "The uploader has not made this video available in your country";
-const AGE_RESTRICTED_MESSAGES = ["Sign in to confirm your age", "Take a few minutes to verify your age"];
+const MEMBERS_ONLY_MESSAGE =
+  "Join this channel to get access to members-only content";
+const GEO_RESTRICTED_MESSAGE =
+  "The uploader has not made this video available in your country";
+const AGE_RESTRICTED_MESSAGES = [
+  "Sign in to confirm your age",
+  "Take a few minutes to verify your age",
+];
 const PREMIERE_MESSAGE = "Premieres in";
 
-function classifyUnprocessable(message: string): UnprocessableVideoError | null {
+function classifyUnprocessable(
+  message: string,
+): UnprocessableVideoError | null {
   if (message.includes(MEMBERS_ONLY_MESSAGE)) {
     return { type: "MEMBERS_ONLY_VIDEO", message };
   }
@@ -41,7 +64,9 @@ function resolveCookiesFile(logger: Logger): string | undefined {
 
   const tmpPath = path.join(os.tmpdir(), "ytdlp-cookies.txt");
   fs.writeFileSync(tmpPath, Buffer.from(cookiesB64, "base64"));
-  logger.info(`Decoded YTDLP_COOKIES_B64 to temporary cookies file: ${tmpPath}`);
+  logger.info(
+    `Decoded YTDLP_COOKIES_B64 to temporary cookies file: ${tmpPath}`,
+  );
   return tmpPath;
 }
 
@@ -59,7 +84,9 @@ export class YtDlpClient {
   }
 
   private buildExec(url: string, remainingArgs: string[]) {
-    const allArgs = this.cookiesFile ? ["--cookies", this.cookiesFile, ...remainingArgs] : remainingArgs;
+    const allArgs = this.cookiesFile
+      ? ["--cookies", this.cookiesFile, ...remainingArgs]
+      : remainingArgs;
     const builder = this.ytdlp.execBuilder(url).addArgs(...allArgs);
     builder.debugPrint(false);
     return builder;
@@ -68,13 +95,20 @@ export class YtDlpClient {
   /**
    * Executes yt-dlp with the specified arguments and parses each line of stdout as a JSON object of type T.
    */
-  async execJson<T>(args: string[]): Promise<Result<T[], YtDlpError | UnprocessableVideoError>> {
+  async execJson<T>(
+    args: string[],
+  ): Promise<Result<T[], YtDlpError | UnprocessableVideoError>> {
     try {
-      this.logger.info(`Running yt-dlp via wrapper with args: ${args.join(" ")}`);
+      this.logger.info(
+        `Running yt-dlp via wrapper with args: ${args.join(" ")}`,
+      );
 
       const [url, ...remainingArgs] = args;
       if (!url) {
-        return Failure({ type: "YT_DLP_ERROR", message: "URL/Query is required as the first argument" });
+        return Failure({
+          type: "YT_DLP_ERROR",
+          message: "URL/Query is required as the first argument",
+        });
       }
 
       // We use the raw execBuilder to have full control over the arguments
@@ -89,7 +123,7 @@ export class YtDlpClient {
         }
         this.logger.error({
           message: `yt-dlp execution failed with code ${result.exitCode}`,
-          context: { stderr: result.stderr, command: result.command }
+          context: { stderr: result.stderr, command: result.command },
         });
         return Failure({ type: "YT_DLP_ERROR", message });
       }
@@ -113,12 +147,12 @@ export class YtDlpClient {
         name: error?.name,
         message: error?.message,
         stack: error?.stack,
-        ...error
+        ...error,
       };
 
       this.logger.error({
         message: "Unexpected error during yt-dlp execution",
-        context: errorContext
+        context: errorContext,
       });
 
       const message = error?.message || "Unexpected error";
@@ -130,7 +164,7 @@ export class YtDlpClient {
       return Failure({
         type: "YT_DLP_ERROR",
         message,
-        cause: errorContext
+        cause: errorContext,
       });
     }
   }
@@ -139,13 +173,20 @@ export class YtDlpClient {
    * Executes yt-dlp with the specified arguments without parsing output.
    * Useful for commands that write to files (e.g., subtitle downloads).
    */
-  async exec(args: string[]): Promise<Result<void, YtDlpError | UnprocessableVideoError>> {
+  async exec(
+    args: string[],
+  ): Promise<Result<void, YtDlpError | UnprocessableVideoError>> {
     try {
-      this.logger.info(`Running yt-dlp via wrapper with args: ${args.join(" ")}`);
+      this.logger.info(
+        `Running yt-dlp via wrapper with args: ${args.join(" ")}`,
+      );
 
       const [url, ...remainingArgs] = args;
       if (!url) {
-        return Failure({ type: "YT_DLP_ERROR", message: "URL/Query is required as the first argument" });
+        return Failure({
+          type: "YT_DLP_ERROR",
+          message: "URL/Query is required as the first argument",
+        });
       }
 
       const builder = this.buildExec(url, remainingArgs);
@@ -159,7 +200,7 @@ export class YtDlpClient {
         }
         this.logger.error({
           message: `yt-dlp execution failed with code ${result.exitCode}`,
-          context: { stderr: result.stderr, command: result.command }
+          context: { stderr: result.stderr, command: result.command },
         });
         return Failure({ type: "YT_DLP_ERROR", message });
       }
@@ -170,12 +211,12 @@ export class YtDlpClient {
         name: error?.name,
         message: error?.message,
         stack: error?.stack,
-        ...error
+        ...error,
       };
 
       this.logger.error({
         message: "Unexpected error during yt-dlp execution",
-        context: errorContext
+        context: errorContext,
       });
 
       const message = error?.message || "Unexpected error";
@@ -187,7 +228,7 @@ export class YtDlpClient {
       return Failure({
         type: "YT_DLP_ERROR",
         message,
-        cause: errorContext
+        cause: errorContext,
       });
     }
   }
@@ -195,13 +236,20 @@ export class YtDlpClient {
   /**
    * Executes yt-dlp with the specified arguments and yields each line of stdout as a JSON object of type T.
    */
-  async *execJsonStream<T>(args: string[]): AsyncGenerator<Result<T, YtDlpError>, void, undefined> {
+  async *execJsonStream<T>(
+    args: string[],
+  ): AsyncGenerator<Result<T, YtDlpError>, void, undefined> {
     try {
-      this.logger.info(`Running yt-dlp via wrapper with args (streaming): ${args.join(" ")}`);
+      this.logger.info(
+        `Running yt-dlp via wrapper with args (streaming): ${args.join(" ")}`,
+      );
 
       const [url, ...remainingArgs] = args;
       if (!url) {
-        yield Failure({ type: "YT_DLP_ERROR", message: "URL/Query is required as the first argument" });
+        yield Failure({
+          type: "YT_DLP_ERROR",
+          message: "URL/Query is required as the first argument",
+        });
         return;
       }
 
@@ -236,40 +284,48 @@ export class YtDlpClient {
       });
 
       builder.on("error", (error: Error) => {
-        errorResult = { 
-            type: "YT_DLP_ERROR", 
-            message: error.message, 
-            cause: { originalError: error, stderr: stderrBuffer } 
+        errorResult = {
+          type: "YT_DLP_ERROR",
+          message: error.message,
+          cause: { originalError: error, stderr: stderrBuffer },
         };
         done = true;
         resolveNext?.();
       });
 
-      const execPromise = builder.exec().then((result) => {
-        if (buffer.trim()) {
-          try {
-            queue.push(JSON.parse(buffer));
-          } catch {
-            this.logger.warn(`Failed to parse final yt-dlp output line: ${buffer}`);
+      const execPromise = builder
+        .exec()
+        .then((result) => {
+          if (buffer.trim()) {
+            try {
+              queue.push(JSON.parse(buffer));
+            } catch {
+              this.logger.warn(
+                `Failed to parse final yt-dlp output line: ${buffer}`,
+              );
+            }
           }
-        }
 
-        if (result.exitCode !== 0 && !errorResult) {
-          errorResult = { type: "YT_DLP_ERROR", message: result.stderr || `Exit code ${result.exitCode}` };
-        }
-        done = true;
-        resolveNext?.();
-      }).catch((error) => {
-        if (!errorResult) {
-          errorResult = { 
-              type: "YT_DLP_ERROR", 
-              message: error.message || "Unknown error during yt-dlp execution", 
-              cause: { originalError: error, stderr: stderrBuffer } 
-          };
-        }
-        done = true;
-        resolveNext?.();
-      });
+          if (result.exitCode !== 0 && !errorResult) {
+            errorResult = {
+              type: "YT_DLP_ERROR",
+              message: result.stderr || `Exit code ${result.exitCode}`,
+            };
+          }
+          done = true;
+          resolveNext?.();
+        })
+        .catch((error) => {
+          if (!errorResult) {
+            errorResult = {
+              type: "YT_DLP_ERROR",
+              message: error.message || "Unknown error during yt-dlp execution",
+              cause: { originalError: error, stderr: stderrBuffer },
+            };
+          }
+          done = true;
+          resolveNext?.();
+        });
 
       while (!done || queue.length > 0) {
         if (queue.length > 0) {
@@ -293,18 +349,17 @@ export class YtDlpClient {
         name: error?.name,
         message: error?.message,
         stack: error?.stack,
-        ...error
+        ...error,
       };
       this.logger.error({
         message: "Unexpected error during yt-dlp streaming execution",
-        context: errorContext
+        context: errorContext,
       });
       yield Failure({
         type: "YT_DLP_ERROR",
         message: error?.message || "Unexpected error",
-        cause: errorContext
+        cause: errorContext,
       });
     }
   }
 }
-

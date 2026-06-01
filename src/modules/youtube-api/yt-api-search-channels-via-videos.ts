@@ -1,12 +1,13 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../types/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { ParsingError } from "../_common/validation/errors.js";
-import { ValidationError } from "../_common/validation/errors.js";
-import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
-
 import { z } from "zod";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type {
+  ParsingError,
+  ValidationError,
+} from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
+import type { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
 export type SearchChannelEntry = {
   id: string;
@@ -15,25 +16,25 @@ export type SearchChannelEntry = {
 const inputSchemas = {
   video: z.object({
     channel_id: z.string().nullable(),
-  })
-}
+  }),
+};
 
 const outputSchemas = {
   channelEntry: z.object({
     id: z.string(),
-  })
-}
+  }),
+};
 
 type SearchChannelsResultSuccess =
   | {
-    status: "found";
-    query: string;
-    chunk: SearchChannelEntry[];
-  }
+      status: "found";
+      query: string;
+      chunk: SearchChannelEntry[];
+    }
   | {
-    status: "done";
-    query: string;
-  };
+      status: "done";
+      query: string;
+    };
 
 @injectable()
 export class YoutubeApiSearchChannelsViaVideos {
@@ -85,10 +86,7 @@ export class YoutubeApiSearchChannelsViaVideos {
         return;
       }
 
-      const videoResult = validator.validate(
-        inputSchemas.video,
-        result.value
-      );
+      const videoResult = validator.validate(inputSchemas.video, result.value);
 
       if (!videoResult.ok) {
         this.logger.error({
@@ -123,7 +121,9 @@ export class YoutubeApiSearchChannelsViaVideos {
     if (!foundAny) {
       this.logger.info(`No channels found for query: ${query}.`);
     } else {
-      this.logger.info(`Finished discovery for query: ${query}. Found ${channelsMap.size} unique channels.`);
+      this.logger.info(
+        `Finished discovery for query: ${query}. Found ${channelsMap.size} unique channels.`,
+      );
     }
 
     yield Success({

@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { RecalculateAllPrioritiesUseCase } from "../scraping/channel-priority/recalculate-all-priorities.use-case.js";
+import type { Telegraf } from "telegraf";
+import type { Logger } from "../_common/logger/logger.js";
+import type { RecalculateAllPrioritiesUseCase } from "../scraping/channel-priority/recalculate-all-priorities.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class RecalculatePriorityController implements TelegramController {

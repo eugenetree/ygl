@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { CaptionSegment } from "./caption-analysis.service.js";
+import type { CaptionSegment } from "./caption-analysis.service.js";
 
 @injectable()
 export class CaptionCleanUpService {
@@ -7,34 +7,37 @@ export class CaptionCleanUpService {
     let text = caption.text;
 
     // Normalize newlines to spaces first
-    text = text.replace(/\n/g, ' ');
+    text = text.replace(/\n/g, " ");
 
     // Remove speaker markers (>>)
-    text = text.replace(/^>>\s*/g, '');
-    text = text.replace(/\s*>>\s*/g, ' ');
+    text = text.replace(/^>>\s*/g, "");
+    text = text.replace(/\s*>>\s*/g, " ");
 
     // Remove speaker labels at start, after spaces, or after punctuation
     // Matches patterns like "Sapnap:", "George:", etc.
     // Only matches at word boundaries to avoid false positives like "3:30" or "http://"
-    text = text.replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1');
+    text = text.replace(
+      /(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g,
+      "$1",
+    );
 
     // Remove sound effects and descriptions in brackets/asterisks
     // Examples: [laughter], [music], *music*, *applause* etc
-    text = text.replace(/\[.*?\]/g, '');
-    text = text.replace(/\*[^*]+\*/g, '');
+    text = text.replace(/\[.*?\]/g, "");
+    text = text.replace(/\*[^*]+\*/g, "");
 
     // Remove special symbols
-    text = text.replace(/[$%^&*@#~`+=|\\<>{}]/g, '');
+    text = text.replace(/[$%^&*@#~`+=|\\<>{}]/g, "");
 
     // Remove multiple spaces
-    text = text.replace(/\s+/g, ' ');
+    text = text.replace(/\s+/g, " ");
 
     // Trim whitespace
     text = text.trim();
 
     return {
       ...caption,
-      text
+      text,
     };
   }
 
@@ -82,12 +85,12 @@ export class CaptionCleanUpService {
         currentWordCount = wordCount;
       } else {
         const combinedWordCount = currentWordCount + wordCount;
-        const combinedDuration: number = caption.endTime - currentCaption.startTime;
+        const combinedDuration: number =
+          caption.endTime - currentCaption.startTime;
 
         // Keep merging until next merge would exceed either limit
         const wouldExceedLimits =
-          combinedWordCount > MAX_WORDS ||
-          combinedDuration > MAX_DURATION_MS;
+          combinedWordCount > MAX_WORDS || combinedDuration > MAX_DURATION_MS;
 
         if (!wouldExceedLimits) {
           // Merge: combine texts and extend timing
@@ -95,7 +98,7 @@ export class CaptionCleanUpService {
             startTime: currentCaption.startTime,
             endTime: caption.endTime,
             duration: combinedDuration,
-            text: this.combineTexts(currentCaption.text, caption.text)
+            text: this.combineTexts(currentCaption.text, caption.text),
           };
 
           currentWordCount = combinedWordCount;
@@ -117,7 +120,10 @@ export class CaptionCleanUpService {
   }
 
   private countWords(text: string): number {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
   }
 
   private combineTexts(text1: string, text2: string): string {

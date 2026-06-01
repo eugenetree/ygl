@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { Status } from "../scraping/lifecycle/scraper-status.service.js";
-import { TelegramNotifier } from "./telegram-notifier.js";
-import { Logger } from "../_common/logger/logger.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { Status } from "../scraping/lifecycle/scraper-status.service.js";
+import type { TelegramNotifier } from "./telegram-notifier.js";
 
 const messageToStatus: Partial<Record<Status, string>> = {
   RUNNING: "Scrapers started.",
@@ -22,25 +22,27 @@ export class OnScraperStatusChangeUseCase {
 
   async execute({
     oldStatus,
-    newStatus
+    newStatus,
   }: {
-    oldStatus: Status,
-    newStatus: Status
+    oldStatus: Status;
+    newStatus: Status;
   }) {
     if (oldStatus === newStatus) {
       this.logger.error({
         message: "Scraper status is the same as before",
         context: {
           oldStatus,
-          newStatus
-        }
-      })
+          newStatus,
+        },
+      });
 
       return;
     }
 
     const message = messageToStatus[newStatus];
-    if (!message) { return }
+    if (!message) {
+      return;
+    }
     await this.telegramNotifier.sendMessage(message);
   }
 }

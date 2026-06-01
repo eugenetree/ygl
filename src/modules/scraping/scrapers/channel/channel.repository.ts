@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 
-import { DatabaseClient } from "../../../../db/client.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
+import type { DatabaseClient } from "../../../../db/client.js";
+import type { DatabaseError } from "../../../../db/types.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import { Logger } from "../../../_common/logger/logger.js";
-import { ChannelProps } from "./channel.js";
-import { DatabaseError } from "../../../../db/types.js";
+import type { ChannelProps } from "./channel.js";
 
 @injectable()
 export class ChannelRepository {
@@ -18,10 +18,7 @@ export class ChannelRepository {
 
   async create(channel: ChannelProps): Promise<Result<void, DatabaseError>> {
     const insertResult = await tryCatch(
-      this.db
-        .insertInto("channels")
-        .values(channel)
-        .execute(),
+      this.db.insertInto("channels").values(channel).execute(),
     );
 
     if (!insertResult.ok) {

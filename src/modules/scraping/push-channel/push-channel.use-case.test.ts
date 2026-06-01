@@ -1,16 +1,16 @@
-import { beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { newDb, DataType } from "pg-mem";
+import { beforeEach, describe, it } from "node:test";
 import { CamelCasePlugin, Kysely, PostgresDialect, sql } from "kysely";
-import { Database } from "../../../db/types.js";
-import { DatabaseClient } from "../../../db/client.js";
-import { PushChannelUseCase } from "./push-channel.use-case.js";
-import { BoostedChannelsRepository } from "./boosted-channels.repository.js";
-import { ChannelPriorityService } from "../channel-priority/channel-priority.service.js";
+import { DataType, newDb } from "pg-mem";
+import type { DatabaseClient } from "../../../db/client.js";
+import type { Database } from "../../../db/types.js";
 import { ChannelPriorityCalculator } from "../channel-priority/channel-priority.calculator.js";
-import { ChannelEntryRepository } from "../scrapers/channel-discovery/channel-entry.repository.js";
-import { ChannelEntriesQueue } from "../scrapers/channel/channel-entries.queue.js";
 import { PRIORITY_MANUAL_BOOST } from "../channel-priority/channel-priority.constants.js";
+import { ChannelPriorityService } from "../channel-priority/channel-priority.service.js";
+import { ChannelEntriesQueue } from "../scrapers/channel/channel-entries.queue.js";
+import { ChannelEntryRepository } from "../scrapers/channel-discovery/channel-entry.repository.js";
+import { BoostedChannelsRepository } from "./boosted-channels.repository.js";
+import { PushChannelUseCase } from "./push-channel.use-case.js";
 
 // ---- In-memory DB setup -----------------------------------------------------
 
@@ -31,77 +31,108 @@ async function createTestDb() {
     const client = await origConnect();
     const origQuery = client.query.bind(client);
     client.query = (config: any, values?: any[]) => {
-      const normalize = (s: string) => s
-        .replace(/\bfor\s+update\s+of\s+"[^"]+"/gi, "for update")
-        .replace(/\bskip\s+locked\b/gi, "");
+      const normalize = (s: string) =>
+        s
+          .replace(/\bfor\s+update\s+of\s+"[^"]+"/gi, "for update")
+          .replace(/\bskip\s+locked\b/gi, "");
       if (typeof config === "string") config = normalize(config);
-      else if (typeof config?.text === "string") config = { ...config, text: normalize(config.text) };
+      else if (typeof config?.text === "string")
+        config = { ...config, text: normalize(config.text) };
       return origQuery(config, values);
     };
     return client;
   };
 
-  const db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }), plugins: [new CamelCasePlugin()] });
+  const db = new Kysely<Database>({
+    dialect: new PostgresDialect({ pool }),
+    plugins: [new CamelCasePlugin()],
+  });
 
-  await db.schema.createTable("boostedChannels")
-    .addColumn("channelId", "varchar", c => c.primaryKey())
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
+  await db.schema
+    .createTable("boostedChannels")
+    .addColumn("channelId", "varchar", (c) => c.primaryKey())
+    .addColumn("createdAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 
-  await db.schema.createTable("channelEntries")
-    .addColumn("id", "varchar", c => c.primaryKey())
+  await db.schema
+    .createTable("channelEntries")
+    .addColumn("id", "varchar", (c) => c.primaryKey())
     .addColumn("queryId", "varchar")
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
-    .addColumn("updatedAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
+    .addColumn("createdAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
+    .addColumn("updatedAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 
-  await db.schema.createTable("channelJobs")
-    .addColumn("id", "uuid", c => c.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn("channelId", "varchar", c => c.notNull())
-    .addColumn("status", "varchar", c => c.notNull())
+  await db.schema
+    .createTable("channelJobs")
+    .addColumn("id", "uuid", (c) =>
+      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
+    )
+    .addColumn("channelId", "varchar", (c) => c.notNull())
+    .addColumn("status", "varchar", (c) => c.notNull())
     .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", c => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
+    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
+    .addColumn("createdAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 
-  await db.schema.createTable("videoDiscoveryJobs")
-    .addColumn("id", "uuid", c => c.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn("channelId", "varchar", c => c.notNull())
-    .addColumn("status", "varchar", c => c.notNull())
+  await db.schema
+    .createTable("videoDiscoveryJobs")
+    .addColumn("id", "uuid", (c) =>
+      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
+    )
+    .addColumn("channelId", "varchar", (c) => c.notNull())
+    .addColumn("status", "varchar", (c) => c.notNull())
     .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", c => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
+    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
+    .addColumn("createdAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 
-  await db.schema.createTable("videoJobs")
-    .addColumn("id", "uuid", c => c.primaryKey().defaultTo(sql`gen_random_uuid()`))
-    .addColumn("videoId", "varchar", c => c.notNull())
-    .addColumn("channelId", "varchar", c => c.notNull())
-    .addColumn("status", "varchar", c => c.notNull())
+  await db.schema
+    .createTable("videoJobs")
+    .addColumn("id", "uuid", (c) =>
+      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
+    )
+    .addColumn("videoId", "varchar", (c) => c.notNull())
+    .addColumn("channelId", "varchar", (c) => c.notNull())
+    .addColumn("status", "varchar", (c) => c.notNull())
     .addColumn("skipCause", "varchar")
     .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", c => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", c => c.notNull().defaultTo(sql`now()`))
+    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
+    .addColumn("createdAt", "timestamp", (c) =>
+      c.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 
-  await db.schema.createTable("channelPriorityScores")
-    .addColumn("channelId", "varchar", c => c.primaryKey())
-    .addColumn("scrapingScore", "double precision", c => c.notNull())
-    .addColumn("searchScore", "double precision", c => c.notNull())
-    .addColumn("components", "jsonb", c => c.notNull())
+  await db.schema
+    .createTable("channelPriorityScores")
+    .addColumn("channelId", "varchar", (c) => c.primaryKey())
+    .addColumn("scrapingScore", "double precision", (c) => c.notNull())
+    .addColumn("searchScore", "double precision", (c) => c.notNull())
+    .addColumn("components", "jsonb", (c) => c.notNull())
     .addColumn("calculatedAt", "timestamp")
     .execute();
 
   // Only columns accessed by recalculate
-  await db.schema.createTable("channels")
-    .addColumn("id", "varchar", c => c.primaryKey())
+  await db.schema
+    .createTable("channels")
+    .addColumn("id", "varchar", (c) => c.primaryKey())
     .addColumn("subscriberCount", "integer")
     .execute();
 
-  await db.schema.createTable("videos")
-    .addColumn("id", "varchar", c => c.primaryKey())
-    .addColumn("autoCaptionsStatus", "varchar", c => c.notNull())
-    .addColumn("manualCaptionsStatus", "varchar", c => c.notNull())
+  await db.schema
+    .createTable("videos")
+    .addColumn("id", "varchar", (c) => c.primaryKey())
+    .addColumn("autoCaptionsStatus", "varchar", (c) => c.notNull())
+    .addColumn("manualCaptionsStatus", "varchar", (c) => c.notNull())
     .addColumn("captionsSimilarityScore", "double precision")
     .addColumn("duration", "integer")
     .addColumn("viewCount", "integer")
@@ -115,29 +146,72 @@ async function createTestDb() {
 function buildSut(db: Kysely<Database>) {
   const dbClient = db as unknown as DatabaseClient;
   const calculator = new ChannelPriorityCalculator();
-  const channelPriorityService = new ChannelPriorityService(dbClient, calculator);
+  const channelPriorityService = new ChannelPriorityService(
+    dbClient,
+    calculator,
+  );
   const channelEntryRepository = new ChannelEntryRepository(dbClient);
   const channelEntriesQueue = new ChannelEntriesQueue(dbClient);
   const boostedChannelsRepository = new BoostedChannelsRepository(dbClient);
-  return new PushChannelUseCase(channelPriorityService, channelEntryRepository, channelEntriesQueue, boostedChannelsRepository);
+  return new PushChannelUseCase(
+    channelPriorityService,
+    channelEntryRepository,
+    channelEntriesQueue,
+    boostedChannelsRepository,
+  );
 }
 
 // ---- Fixtures ---------------------------------------------------------------
 
 async function seedChannelEntry(db: Kysely<Database>, channelId: string) {
-  await db.insertInto("channelEntries").values({ id: channelId, queryId: null }).execute();
+  await db
+    .insertInto("channelEntries")
+    .values({ id: channelId, queryId: null })
+    .execute();
 }
 
-async function seedChannelJob(db: Kysely<Database>, channelId: string, status: "PENDING" | "SUCCEEDED" | "PROCESSING", priority = 0) {
-  await db.insertInto("channelJobs").values({ channelId, status, priority, statusUpdatedAt: new Date() }).execute();
+async function seedChannelJob(
+  db: Kysely<Database>,
+  channelId: string,
+  status: "PENDING" | "SUCCEEDED" | "PROCESSING",
+  priority = 0,
+) {
+  await db
+    .insertInto("channelJobs")
+    .values({ channelId, status, priority, statusUpdatedAt: new Date() })
+    .execute();
 }
 
-async function seedVideoDiscoveryJob(db: Kysely<Database>, channelId: string, status: "PENDING" | "SUCCEEDED" | "PROCESSING", priority = 0) {
-  await db.insertInto("videoDiscoveryJobs").values({ channelId, status, priority, statusUpdatedAt: new Date() }).execute();
+async function seedVideoDiscoveryJob(
+  db: Kysely<Database>,
+  channelId: string,
+  status: "PENDING" | "SUCCEEDED" | "PROCESSING",
+  priority = 0,
+) {
+  await db
+    .insertInto("videoDiscoveryJobs")
+    .values({ channelId, status, priority, statusUpdatedAt: new Date() })
+    .execute();
 }
 
-async function seedVideoJob(db: Kysely<Database>, channelId: string, videoId: string, status: "PENDING" | "SUCCEEDED" | "PROCESSING", priority = 0) {
-  await db.insertInto("videoJobs").values({ id: crypto.randomUUID(), channelId, videoId, status, priority, statusUpdatedAt: new Date() }).execute();
+async function seedVideoJob(
+  db: Kysely<Database>,
+  channelId: string,
+  videoId: string,
+  status: "PENDING" | "SUCCEEDED" | "PROCESSING",
+  priority = 0,
+) {
+  await db
+    .insertInto("videoJobs")
+    .values({
+      id: crypto.randomUUID(),
+      channelId,
+      videoId,
+      status,
+      priority,
+      statusUpdatedAt: new Date(),
+    })
+    .execute();
 }
 
 // ---- Tests ------------------------------------------------------------------
@@ -162,21 +236,33 @@ describe("PushChannelUseCase", () => {
     it("inserts into boostedChannels", async () => {
       await sut.execute("new-channel-1");
 
-      const row = await db.selectFrom("boostedChannels").selectAll().where("channelId", "=", "new-channel-1").executeTakeFirst();
+      const row = await db
+        .selectFrom("boostedChannels")
+        .selectAll()
+        .where("channelId", "=", "new-channel-1")
+        .executeTakeFirst();
       assert.ok(row);
     });
 
     it("inserts into channelEntries", async () => {
       await sut.execute("new-channel-1");
 
-      const row = await db.selectFrom("channelEntries").selectAll().where("id", "=", "new-channel-1").executeTakeFirst();
+      const row = await db
+        .selectFrom("channelEntries")
+        .selectAll()
+        .where("id", "=", "new-channel-1")
+        .executeTakeFirst();
       assert.ok(row);
     });
 
     it("creates a PENDING channelJob boosted to PRIORITY_MANUAL_BOOST", async () => {
       await sut.execute("new-channel-1");
 
-      const job = await db.selectFrom("channelJobs").select(["status", "priority"]).where("channelId", "=", "new-channel-1").executeTakeFirst();
+      const job = await db
+        .selectFrom("channelJobs")
+        .select(["status", "priority"])
+        .where("channelId", "=", "new-channel-1")
+        .executeTakeFirst();
       assert.ok(job);
       assert.equal(job.status, "PENDING");
       assert.equal(job.priority, PRIORITY_MANUAL_BOOST);
@@ -185,7 +271,11 @@ describe("PushChannelUseCase", () => {
     it("writes channelPriorityScores", async () => {
       await sut.execute("new-channel-1");
 
-      const score = await db.selectFrom("channelPriorityScores").select("scrapingScore").where("channelId", "=", "new-channel-1").executeTakeFirst();
+      const score = await db
+        .selectFrom("channelPriorityScores")
+        .select("scrapingScore")
+        .where("channelId", "=", "new-channel-1")
+        .executeTakeFirst();
       assert.ok(score);
       assert.equal(score.scrapingScore, PRIORITY_MANUAL_BOOST);
     });
@@ -210,7 +300,11 @@ describe("PushChannelUseCase", () => {
     it("updates channelJob priority to PRIORITY_MANUAL_BOOST", async () => {
       await sut.execute("channel-1");
 
-      const job = await db.selectFrom("channelJobs").select("priority").where("channelId", "=", "channel-1").executeTakeFirst();
+      const job = await db
+        .selectFrom("channelJobs")
+        .select("priority")
+        .where("channelId", "=", "channel-1")
+        .executeTakeFirst();
       assert.ok(job);
       assert.equal(job.priority, PRIORITY_MANUAL_BOOST);
     });
@@ -236,7 +330,11 @@ describe("PushChannelUseCase", () => {
     it("updates videoDiscoveryJob priority to PRIORITY_MANUAL_BOOST", async () => {
       await sut.execute("channel-1");
 
-      const job = await db.selectFrom("videoDiscoveryJobs").select("priority").where("channelId", "=", "channel-1").executeTakeFirst();
+      const job = await db
+        .selectFrom("videoDiscoveryJobs")
+        .select("priority")
+        .where("channelId", "=", "channel-1")
+        .executeTakeFirst();
       assert.ok(job);
       assert.equal(job.priority, PRIORITY_MANUAL_BOOST);
     });
@@ -265,12 +363,16 @@ describe("PushChannelUseCase", () => {
     it("updates only PENDING videoJob priorities, leaves SUCCEEDED unchanged", async () => {
       await sut.execute("channel-1");
 
-      const jobs = await db.selectFrom("videoJobs").select(["videoId", "status", "priority"]).where("channelId", "=", "channel-1").execute();
-      const pending = jobs.filter(j => j.status === "PENDING");
-      const succeeded = jobs.filter(j => j.status === "SUCCEEDED");
+      const jobs = await db
+        .selectFrom("videoJobs")
+        .select(["videoId", "status", "priority"])
+        .where("channelId", "=", "channel-1")
+        .execute();
+      const pending = jobs.filter((j) => j.status === "PENDING");
+      const succeeded = jobs.filter((j) => j.status === "SUCCEEDED");
 
-      assert.ok(pending.every(j => j.priority === PRIORITY_MANUAL_BOOST));
-      assert.ok(succeeded.every(j => j.priority === 0));
+      assert.ok(pending.every((j) => j.priority === PRIORITY_MANUAL_BOOST));
+      assert.ok(succeeded.every((j) => j.priority === 0));
     });
   });
 
@@ -306,7 +408,11 @@ describe("PushChannelUseCase", () => {
       await sut.execute("new-channel-1");
       await sut.execute("new-channel-1");
 
-      const rows = await db.selectFrom("boostedChannels").selectAll().where("channelId", "=", "new-channel-1").execute();
+      const rows = await db
+        .selectFrom("boostedChannels")
+        .selectAll()
+        .where("channelId", "=", "new-channel-1")
+        .execute();
       assert.equal(rows.length, 1);
     });
   });

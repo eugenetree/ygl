@@ -1,7 +1,7 @@
 import { Client } from "@elastic/elasticsearch";
-import { Caption } from "../scraping/scrapers/video/caption.js";
-import { Logger } from "../_common/logger/logger.js";
 import { injectable } from "inversify";
+import type { Logger } from "../_common/logger/logger.js";
+import type { Caption } from "../scraping/scrapers/video/caption.js";
 
 @injectable()
 export class CaptionsService {
@@ -15,7 +15,9 @@ export class CaptionsService {
   }
 
   async sync(captions: Caption[], batchSize = 2000) {
-    const isIndexExists = await this.esClient.indices.exists({ index: "captions" });
+    const isIndexExists = await this.esClient.indices.exists({
+      index: "captions",
+    });
 
     if (!isIndexExists) {
       this.logger.info("Index does not exist, creating it");
@@ -26,7 +28,7 @@ export class CaptionsService {
       const batch = captions.slice(i, i + batchSize);
       await this.esClient.bulk({
         index: "captions",
-        operations: batch.flatMap(caption => [
+        operations: batch.flatMap((caption) => [
           { index: { _id: caption.id } },
           caption,
         ]),
@@ -74,7 +76,7 @@ export class CaptionsService {
         analysis: {
           analyzer: {
             caption_analyzer: {
-              type: "standard"
+              type: "standard",
             },
           },
         },
@@ -100,6 +102,6 @@ export class CaptionsService {
           channel_name: { type: "text" },
         },
       },
-    })
+    });
   }
 }

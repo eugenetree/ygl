@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 
-import { Failure, Result, Success } from "../../types/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { BaseError } from "../_common/errors.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { BaseError } from "../_common/errors.js";
+import type { Logger } from "../_common/logger/logger.js";
 
 type TelegramNotificationError = BaseError & {
   type: "TELEGRAM_NOTIFICATION_ERROR";

@@ -1,11 +1,14 @@
-import { beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
+import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../../../../types/index.js";
-import { CaptionAnalysisService, CaptionSegment } from "./caption-analysis.service.js";
-import { ManualCaptionsValidator } from "./manual-captions.validator.js";
-import { AutoCaptionsValidator } from "./auto-captions.validator.js";
-import { CaptionSimilarityService } from "./captions-similarity.service.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
+import type { AutoCaptionsValidator } from "./auto-captions.validator.js";
+import {
+  CaptionAnalysisService,
+  type CaptionSegment,
+} from "./caption-analysis.service.js";
+import type { CaptionSimilarityService } from "./captions-similarity.service.js";
+import type { ManualCaptionsValidator } from "./manual-captions.validator.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 
@@ -30,7 +33,8 @@ function createMocks() {
       validate: mock.fn<AutoCaptionsValidator["validate"]>(),
     },
     captionsSimilarityService: {
-      calculateSimilarity: mock.fn<CaptionSimilarityService["calculateSimilarity"]>(),
+      calculateSimilarity:
+        mock.fn<CaptionSimilarityService["calculateSimilarity"]>(),
     },
   };
 }
@@ -52,23 +56,32 @@ describe("CaptionAnalysisService", () => {
   beforeEach(() => {
     mocks = createMocks();
 
-    mocks.autoCaptionsValidator.validate.mock.mockImplementation(() => Success(undefined));
-    mocks.manualCaptionsValidator.validate.mock.mockImplementation(() => Success(undefined));
-    mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(() => ({
-      score: 0.9,
-      shiftMs: 0,
-      missingTokens: [],
-      timingMissTokens: [],
-      manualTokenCount: 5,
-      autoTokenCount: 5,
-    }));
+    mocks.autoCaptionsValidator.validate.mock.mockImplementation(() =>
+      Success(undefined),
+    );
+    mocks.manualCaptionsValidator.validate.mock.mockImplementation(() =>
+      Success(undefined),
+    );
+    mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(
+      () => ({
+        score: 0.9,
+        shiftMs: 0,
+        missingTokens: [],
+        timingMissTokens: [],
+        manualTokenCount: 5,
+        autoTokenCount: 5,
+      }),
+    );
 
     sut = buildSut(mocks);
   });
 
   describe("both tracks ABSENT", () => {
     it("returns CAPTIONS_ABSENT for both when no captions exist", () => {
-      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
+      const result = sut.analyze({
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions: { state: "ABSENT" },
+      });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_ABSENT");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_ABSENT");
@@ -77,7 +90,10 @@ describe("CaptionAnalysisService", () => {
     });
 
     it("does not call validators when both tracks are ABSENT", () => {
-      sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
+      sut.analyze({
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions: { state: "ABSENT" },
+      });
 
       assert.equal(mocks.autoCaptionsValidator.validate.mock.callCount(), 0);
       assert.equal(mocks.manualCaptionsValidator.validate.mock.callCount(), 0);
@@ -86,7 +102,10 @@ describe("CaptionAnalysisService", () => {
 
   describe("auto PRESENT_NOT_FETCHED, manual ABSENT", () => {
     it("returns CAPTIONS_NOT_FETCHED for auto and CAPTIONS_ABSENT for manual", () => {
-      const result = sut.analyze({ autoCaptions: { state: "PRESENT_NOT_FETCHED" }, manualCaptions: { state: "ABSENT" } });
+      const result = sut.analyze({
+        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
+        manualCaptions: { state: "ABSENT" },
+      });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_NOT_FETCHED");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_ABSENT");
@@ -97,7 +116,10 @@ describe("CaptionAnalysisService", () => {
 
   describe("auto ABSENT, manual PRESENT_NOT_FETCHED", () => {
     it("returns CAPTIONS_ABSENT for auto and CAPTIONS_NOT_FETCHED for manual", () => {
-      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "PRESENT_NOT_FETCHED" } });
+      const result = sut.analyze({
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions: { state: "PRESENT_NOT_FETCHED" },
+      });
 
       assert.equal(result.autoCaptionsStatus, "CAPTIONS_ABSENT");
       assert.equal(result.manualCaptionsStatus, "CAPTIONS_NOT_FETCHED");
@@ -144,14 +166,16 @@ describe("CaptionAnalysisService", () => {
     });
 
     it("calculates similarity score when both are valid", () => {
-      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(() => ({
-        score: 0.85,
-        shiftMs: 200,
-        missingTokens: [],
-        timingMissTokens: [],
-        manualTokenCount: 10,
-        autoTokenCount: 10,
-      }));
+      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(
+        () => ({
+          score: 0.85,
+          shiftMs: 200,
+          missingTokens: [],
+          timingMissTokens: [],
+          manualTokenCount: 10,
+          autoTokenCount: 10,
+        }),
+      );
 
       const result = sut.analyze(both);
 
@@ -162,8 +186,13 @@ describe("CaptionAnalysisService", () => {
     it("passes captions to similarity service", () => {
       sut.analyze(both);
 
-      assert.equal(mocks.captionsSimilarityService.calculateSimilarity.mock.callCount(), 1);
-      const args = mocks.captionsSimilarityService.calculateSimilarity.mock.calls[0]!.arguments[0];
+      assert.equal(
+        mocks.captionsSimilarityService.calculateSimilarity.mock.callCount(),
+        1,
+      );
+      const args =
+        mocks.captionsSimilarityService.calculateSimilarity.mock.calls[0]!
+          .arguments[0];
       assert.deepEqual(args.autoCaptions, autoSegs);
       assert.deepEqual(args.manualCaptions, manualSegs);
     });
@@ -192,14 +221,16 @@ describe("CaptionAnalysisService", () => {
       mocks.autoCaptionsValidator.validate.mock.mockImplementation(() =>
         Failure({ type: "CAPTIONS_EMPTY" }),
       );
-      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(() => ({
-        score: 0.5,
-        shiftMs: 0,
-        missingTokens: [],
-        timingMissTokens: [],
-        manualTokenCount: 5,
-        autoTokenCount: 5,
-      }));
+      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(
+        () => ({
+          score: 0.5,
+          shiftMs: 0,
+          missingTokens: [],
+          timingMissTokens: [],
+          manualTokenCount: 5,
+          autoTokenCount: 5,
+        }),
+      );
 
       const result = sut.analyze(both);
 
@@ -210,14 +241,16 @@ describe("CaptionAnalysisService", () => {
       mocks.manualCaptionsValidator.validate.mock.mockImplementation(() =>
         Failure({ type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS" }),
       );
-      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(() => ({
-        score: 0.3,
-        shiftMs: 100,
-        missingTokens: [],
-        timingMissTokens: [],
-        manualTokenCount: 5,
-        autoTokenCount: 5,
-      }));
+      mocks.captionsSimilarityService.calculateSimilarity.mock.mockImplementation(
+        () => ({
+          score: 0.3,
+          shiftMs: 100,
+          missingTokens: [],
+          timingMissTokens: [],
+          manualTokenCount: 5,
+          autoTokenCount: 5,
+        }),
+      );
 
       const result = sut.analyze(both);
 
@@ -227,9 +260,15 @@ describe("CaptionAnalysisService", () => {
 
   describe("captionsProcessingAlgorithmVersion", () => {
     it("is included in every result", () => {
-      const result = sut.analyze({ autoCaptions: { state: "ABSENT" }, manualCaptions: { state: "ABSENT" } });
+      const result = sut.analyze({
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions: { state: "ABSENT" },
+      });
 
-      assert.equal(result.captionsProcessingAlgorithmVersion, CAPTIONS_PROCESSING_ALGORITHM_VERSION);
+      assert.equal(
+        result.captionsProcessingAlgorithmVersion,
+        CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+      );
     });
   });
 });

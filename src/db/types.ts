@@ -1,6 +1,6 @@
-import { Generated, Insertable, Selectable, Updateable } from "kysely";
+import type { Generated, Insertable, Selectable, Updateable } from "kysely";
 
-import { LanguageCode } from "../modules/i18n/index.js";
+import type { LanguageCode } from "../modules/i18n/index.js";
 import type { ScraperName } from "../modules/scraping/constants.js";
 import type { VideoEntryAvailability } from "../modules/scraping/scrapers/video-discovery/video-entry.js";
 
@@ -47,9 +47,13 @@ export type ManualCaptionsStatus =
   | "CAPTIONS_TOO_SHORT"
   | "CAPTIONS_MOSTLY_UPPERCASE"
   | "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"
-  | "CAPTIONS_MISSING_DURATIONS"
+  | "CAPTIONS_MISSING_DURATIONS";
 
-export type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
+export type ElasticCaptionsSyncStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "SUCCESS"
+  | "FAIL";
 
 export interface Database {
   searchChannelQueries: SearchChannelQueriesRow;
@@ -135,7 +139,6 @@ export interface TranscriptionJobsRow {
   statusUpdatedAt: Date | null;
   createdAt: Generated<Date>;
 }
-
 
 export interface SearchChannelQueriesRow {
   id: string;
@@ -266,16 +269,20 @@ export type InsertableCaptionRow = Insertable<CaptionsRow>;
 export type UpdateableCaptionRow = Updateable<CaptionsRow>;
 
 export type SearchChannelQueryRow = Selectable<SearchChannelQueriesRow>;
-export type InsertableSearchChannelQueryRow = Insertable<SearchChannelQueriesRow>;
-export type UpdateableSearchChannelQueryRow = Updateable<SearchChannelQueriesRow>;
+export type InsertableSearchChannelQueryRow =
+  Insertable<SearchChannelQueriesRow>;
+export type UpdateableSearchChannelQueryRow =
+  Updateable<SearchChannelQueriesRow>;
 
 export type ChannelEntryRow = Selectable<ChannelEntriesRow>;
 export type InsertableChannelEntryRow = Insertable<ChannelEntriesRow>;
 export type UpdateableChannelEntryRow = Updateable<ChannelEntriesRow>;
 
 export type ElasticCaptionsSyncSelectable = Selectable<ElasticCaptionsSyncRow>;
-export type InsertableElasticCaptionsSyncRow = Insertable<ElasticCaptionsSyncRow>;
-export type UpdateableElasticCaptionsSyncRow = Updateable<ElasticCaptionsSyncRow>;
+export type InsertableElasticCaptionsSyncRow =
+  Insertable<ElasticCaptionsSyncRow>;
+export type UpdateableElasticCaptionsSyncRow =
+  Updateable<ElasticCaptionsSyncRow>;
 
 export type VideoEntryRow = Selectable<VideoEntriesRow>;
 export type InsertableVideoEntryRow = Insertable<VideoEntriesRow>;
@@ -289,4 +296,4 @@ export type DatabaseError = {
 export type DatabaseNothingToUpdateError = {
   type: "DATABASE_NOTHING_TO_UPDATE";
   id: string;
-}
+};

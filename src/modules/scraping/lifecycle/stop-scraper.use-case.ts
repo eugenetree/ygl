@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { Logger } from "../../_common/logger/logger.js";
-import { ScraperOrchestrator } from "../scraper.orchestrator.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { ScraperOrchestrator } from "../scraper.orchestrator.js";
 
 @injectable()
 export class StopScraperUseCase {
@@ -17,13 +17,18 @@ export class StopScraperUseCase {
     this.logger.info("Executing scraper stop due to requested status change.");
 
     if (!this.scraperOrchestrator.getIsRunning()) {
-      this.logger.warn("Scraper orchestrator is already stopped internally. Ignoring stop request.");
+      this.logger.warn(
+        "Scraper orchestrator is already stopped internally. Ignoring stop request.",
+      );
       return;
     }
 
     const result = await this.scraperOrchestrator.stop();
     if (!result.ok) {
-      this.logger.error({ message: "Failed to stop orchestrator gracefully", error: result.error });
+      this.logger.error({
+        message: "Failed to stop orchestrator gracefully",
+        error: result.error,
+      });
     }
 
     this.logger.info("Scrapers execution successfully stopped.");

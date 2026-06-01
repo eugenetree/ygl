@@ -1,20 +1,25 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import {
+import type {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
 import { validator } from "../../_common/validation/validator.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
-import { inputSchemas, outputSchemas } from "./search-channels-via-videos.schemas.js";
+import {
+  inputSchemas,
+  outputSchemas,
+} from "./search-channels-via-videos.schemas.js";
 
 /**
  * This is not used anymore after migration to yt-dlp.
  */
 class SearchChannelsViaVideosExtractor {
-  private logger = new Logger({ context: SearchChannelsViaVideosExtractor.name });
+  private logger = new Logger({
+    context: SearchChannelsViaVideosExtractor.name,
+  });
 
   extractFromHtml(
     html: unknown,
@@ -171,9 +176,7 @@ class SearchChannelsViaVideosExtractor {
   }
 
   private extractChannelsFromVideo(
-    videoRenderer: z.infer<
-      typeof inputSchemas.videoRenderer
-    >["videoRenderer"],
+    videoRenderer: z.infer<typeof inputSchemas.videoRenderer>["videoRenderer"],
   ): Array<{ id: string; name: string }> {
     // Check if we have the necessary channel data
     if (!videoRenderer.longBylineText) {
@@ -211,4 +214,5 @@ class SearchChannelsViaVideosExtractor {
   }
 }
 
-export const searchChannelsViaVideosExtractor = new SearchChannelsViaVideosExtractor();
+export const searchChannelsViaVideosExtractor =
+  new SearchChannelsViaVideosExtractor();

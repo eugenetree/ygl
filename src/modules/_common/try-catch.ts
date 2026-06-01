@@ -1,4 +1,4 @@
-import { Failure, Result, Success } from "../../types/index.js";
+import { Failure, type Result, Success } from "../../types/index.js";
 
 export async function tryCatch<T, E = Error>(
   promise: Promise<T>,

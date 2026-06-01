@@ -1,17 +1,17 @@
 import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { ConfigController } from "./config.controller.js";
-import { ExportLogsController } from "./export-logs.controller.js";
-import { FindController } from "./find.controller.js";
-import { LastVideosController } from "./last-videos.controller.js";
-import { LifecycleController } from "./lifecycle.controller.js";
-import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
-import { ResyncCaptionsController } from "./resync-captions.controller.js";
-import { PushChannelController } from "./push-channel.controller.js";
-import { RecalculatePriorityController } from "./recalculate-priority.controller.js";
-import { StatsController } from "./stats.controller.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { ConfigController } from "./config.controller.js";
+import type { ExportLogsController } from "./export-logs.controller.js";
+import type { FindController } from "./find.controller.js";
+import type { LastVideosController } from "./last-videos.controller.js";
+import type { LifecycleController } from "./lifecycle.controller.js";
+import type { PushChannelController } from "./push-channel.controller.js";
+import type { RecalculatePriorityController } from "./recalculate-priority.controller.js";
+import type { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
+import type { ResyncCaptionsController } from "./resync-captions.controller.js";
+import type { StatsController } from "./stats.controller.js";
 
 @injectable()
 export class TelegramBot {
@@ -39,7 +39,10 @@ export class TelegramBot {
 
     this.bot = new Telegraf(token);
     this.bot.catch((err, ctx) => {
-      this.logger.error({ message: `Unhandled error processing update ${ctx.update.update_id}`, error: err });
+      this.logger.error({
+        message: `Unhandled error processing update ${ctx.update.update_id}`,
+        error: err,
+      });
     });
     this.setupAuthMiddleware();
     this.registerControllers();
@@ -53,7 +56,9 @@ export class TelegramBot {
 
     this.bot.use(async (ctx, next) => {
       if (String(ctx.chat?.id) !== allowedChatId) {
-        this.logger.warn(`Rejected message from unauthorized chat ${ctx.chat?.id}`);
+        this.logger.warn(
+          `Rejected message from unauthorized chat ${ctx.chat?.id}`,
+        );
         return;
       }
       return next();
@@ -83,10 +88,19 @@ export class TelegramBot {
       { command: "find", description: "Search in captions" },
       { command: "logs", description: "Export logs" },
       { command: "last", description: "Show last 10 scraped videos" },
-      { command: "reprocess_captions", description: "Reprocess captions for all videos" },
-      { command: "resync_captions", description: "Resync captions index in Elasticsearch" },
+      {
+        command: "reprocess_captions",
+        description: "Reprocess captions for all videos",
+      },
+      {
+        command: "resync_captions",
+        description: "Resync captions index in Elasticsearch",
+      },
       { command: "push_channel", description: "Push channel with priority" },
-      { command: "recalculate_priority", description: "Recalculate priority scores for all channels" },
+      {
+        command: "recalculate_priority",
+        description: "Recalculate priority scores for all channels",
+      },
     ]);
   }
 

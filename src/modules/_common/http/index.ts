@@ -1,9 +1,9 @@
+import axios, { type AxiosInstance, isAxiosError } from "axios";
 import { injectable } from "inversify";
-import axios, { AxiosInstance, isAxiosError } from "axios";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../logger/logger.js";
-import { FetchError } from "./errors.js";
+import type { FetchError } from "./errors.js";
 
 type ConfigInput = {
   requestCooldown?: number | (() => number);
@@ -54,9 +54,11 @@ export class HttpClient {
     this.client = axios.create({
       proxy: this.config.proxy,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
       },
     });
   }
@@ -68,15 +70,14 @@ export class HttpClient {
 
     const requestPromise = globalState.queue.then(async () => {
       const now = Date.now();
-      const cooldown = typeof this.config.requestCooldown === 'function'
-        ? this.config.requestCooldown()
-        : this.config.requestCooldown;
+      const cooldown =
+        typeof this.config.requestCooldown === "function"
+          ? this.config.requestCooldown()
+          : this.config.requestCooldown;
 
       const timeSinceLastRequest = now - globalState.lastRequestEndTime;
       const remainingCooldown =
-        timeSinceLastRequest > cooldown
-          ? 0
-          : cooldown - timeSinceLastRequest;
+        timeSinceLastRequest > cooldown ? 0 : cooldown - timeSinceLastRequest;
 
       this.logger.info(
         `lastRequestEndTime: ${globalState.lastRequestEndTime}, remainingCooldown: ${remainingCooldown}`,

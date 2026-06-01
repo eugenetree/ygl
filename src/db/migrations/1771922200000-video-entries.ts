@@ -1,14 +1,20 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("videoEntries")
     .addColumn("id", "varchar(24)", (col) => col.primaryKey())
-    .addColumn("channelId", "varchar(24)", (col) => col.references("channels.id").notNull())
+    .addColumn("channelId", "varchar(24)", (col) =>
+      col.references("channels.id").notNull(),
+    )
 
-    .addColumn("createdAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
-    .addColumn("updatedAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
+    .addColumn("createdAt", "timestamp", (col) =>
+      col.defaultTo(sql`now()`).notNull(),
+    )
+    .addColumn("updatedAt", "timestamp", (col) =>
+      col.defaultTo(sql`now()`).notNull(),
+    )
     .execute();
 }
 

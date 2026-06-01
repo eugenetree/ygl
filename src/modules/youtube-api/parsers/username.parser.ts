@@ -1,6 +1,6 @@
 import { Logger } from "../../../modules/_common/logger/logger.js";
-import { Failure, Result, Success } from "../../../types/index.js";
-import { ParsingError } from "../../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
+import type { ParsingError } from "../../_common/validation/errors.js";
 
 /**
  * "https://www.youtube.com/@eugene_tree" -> "eugene_tree"
@@ -13,12 +13,11 @@ class UsernameParser {
     const match = string.match(/@([^/]+)/);
     return match
       ? Success(match[1].toLowerCase())
-      : Failure(
-        {
+      : Failure({
           type: "PARSING_ERROR",
           message: "Could not parse username",
           context: { string },
-        })
+        });
   }
 }
 

@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { GetLastScrapedVideosUseCase } from "../scraping/scrapers/video/use-cases/get-last-scraped-videos.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { GetLastScrapedVideosUseCase } from "../scraping/scrapers/video/use-cases/get-last-scraped-videos.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 const LIMIT = 10;
 
@@ -39,7 +39,9 @@ export class LastVideosController implements TelegramController {
         return `${v.id} | lang=${lang} | ytdlp=${langYtdlp}\n${url}\n${v.createdAt}`;
       });
 
-      await ctx.reply(`Last ${result.value.length} scraped videos:\n\n${lines.join("\n\n")}`);
+      await ctx.reply(
+        `Last ${result.value.length} scraped videos:\n\n${lines.join("\n\n")}`,
+      );
     });
   }
 }

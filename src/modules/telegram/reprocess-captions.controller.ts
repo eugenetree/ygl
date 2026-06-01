@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { ReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/reprocess-captions.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../scraping/scrapers/video/config.js";
+import type { ReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/reprocess-captions.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 const MAX_IDS_IN_MESSAGE = 50;
 
@@ -22,20 +22,29 @@ export class ReprocessCaptionsController implements TelegramController {
       this.logger.info("Received /reprocess_captions command");
 
       await ctx.reply(
-        "Captions reprocessing started.\n"
-        + "You will be notified when it's done."
+        "Captions reprocessing started.\n" +
+          "You will be notified when it's done.",
       );
 
       const result = await this.reprocessCaptionsUseCase.execute();
 
       if (!result.ok) {
-        this.logger.error({ message: "Reprocessing failed", error: result.error });
+        this.logger.error({
+          message: "Reprocessing failed",
+          error: result.error,
+        });
         await ctx.reply(`Reprocessing failed: ${result.error.message}`);
         return;
       }
 
-      const { processedCount, failedCount, bothValidBefore, bothValidAfter, becameValid, becameInvalid } =
-        result.value;
+      const {
+        processedCount,
+        failedCount,
+        bothValidBefore,
+        bothValidAfter,
+        becameValid,
+        becameInvalid,
+      } = result.value;
 
       if (processedCount === 0 && failedCount === 0) {
         await ctx.reply(
@@ -52,8 +61,16 @@ export class ReprocessCaptionsController implements TelegramController {
         `Became invalid: ${becameInvalid.length}`;
 
       await ctx.reply(summary);
-      await this.replyWithIds((msg) => ctx.reply(msg), "Became valid (invalid → valid)", becameValid);
-      await this.replyWithIds((msg) => ctx.reply(msg), "Became invalid (valid → invalid)", becameInvalid);
+      await this.replyWithIds(
+        (msg) => ctx.reply(msg),
+        "Became valid (invalid → valid)",
+        becameValid,
+      );
+      await this.replyWithIds(
+        (msg) => ctx.reply(msg),
+        "Became invalid (valid → invalid)",
+        becameInvalid,
+      );
     });
   }
 
@@ -66,9 +83,10 @@ export class ReprocessCaptionsController implements TelegramController {
 
     for (let i = 0; i < ids.length; i += MAX_IDS_IN_MESSAGE) {
       const chunk = ids.slice(i, i + MAX_IDS_IN_MESSAGE);
-      const header = ids.length > MAX_IDS_IN_MESSAGE
-        ? `${title} (${i + 1}-${i + chunk.length} of ${ids.length}):`
-        : `${title}:`;
+      const header =
+        ids.length > MAX_IDS_IN_MESSAGE
+          ? `${title} (${i + 1}-${i + chunk.length} of ${ids.length}):`
+          : `${title}:`;
       await reply(`${header}\n${chunk.join("\n")}`);
     }
   }

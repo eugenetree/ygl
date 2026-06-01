@@ -1,15 +1,18 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import {
+import type {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
 import { validator } from "../../_common/validation/validator.js";
 import { abbreviatedNumberParser } from "../parsers/abbreviated-number.parser.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
-import { inputSchemas, outputSchemas } from "./search-channels-direct.schemas.js";
+import {
+  inputSchemas,
+  outputSchemas,
+} from "./search-channels-direct.schemas.js";
 
 class SearchChannelsDirectExtractor {
   private logger = new Logger({ context: SearchChannelsDirectExtractor.name });

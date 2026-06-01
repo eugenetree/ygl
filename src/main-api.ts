@@ -12,7 +12,11 @@ async function main() {
   }
 
   const container = new Container({ autobind: true });
-  container.bind(Logger).toDynamicValue(() => new Logger({ context: "main-api", category: "main" }));
+  container
+    .bind(Logger)
+    .toDynamicValue(
+      () => new Logger({ context: "main-api", category: "main" }),
+    );
 
   const apiServer = container.get(ApiServer);
   apiServer.start();

@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { ResyncCaptionsUseCase } from "../captions-search/resync-captions.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { ResyncCaptionsUseCase } from "../captions-search/resync-captions.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class ResyncCaptionsController implements TelegramController {
@@ -19,8 +19,7 @@ export class ResyncCaptionsController implements TelegramController {
       this.logger.info("Received /resync_captions command");
 
       await ctx.reply(
-        "Caption resync started.\n"
-        + "You will be notified when it's done."
+        "Caption resync started.\n" + "You will be notified when it's done.",
       );
 
       const result = await this.resyncCaptionsUseCase.execute();
@@ -31,7 +30,9 @@ export class ResyncCaptionsController implements TelegramController {
         return;
       }
 
-      await ctx.reply(`Resync complete. Synced ${result.value.synced} captions.`);
+      await ctx.reply(
+        `Resync complete. Synced ${result.value.synced} captions.`,
+      );
     });
   }
 }

@@ -1,10 +1,10 @@
-import { injectable } from "inversify";
-import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { writeFileSync } from "fs";
-import { Logger } from "../../../../../_common/logger/logger.js";
-import { Caption } from "../../../../../youtube-api/youtube-api.types.js";
+import { injectable } from "inversify";
+import type { Logger } from "../../../../../_common/logger/logger.js";
+import type { Caption } from "../../../../../youtube-api/youtube-api.types.js";
 import { CaptionProps } from "../../caption.js";
-import { CaptionSegment } from "./caption-analysis.service.js";
+import type { CaptionSegment } from "./caption-analysis.service.js";
+import type { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 type TokenOccurrence = {
   token: string;
@@ -15,7 +15,7 @@ type TokenOccurrence = {
 type SimilarityResult = {
   score: number;
   shiftMs: number;
-  missingTokens: TokenOccurrence[];   // in manual but absent from auto entirely
+  missingTokens: TokenOccurrence[]; // in manual but absent from auto entirely
   timingMissTokens: TokenOccurrence[]; // in manual, exists in auto but wrong time
   manualTokenCount: number;
   autoTokenCount: number;
@@ -25,8 +25,8 @@ const SHIFT_SCAN_MIN_MS = -3000;
 const SHIFT_SCAN_MAX_MS = 3000;
 const SHIFT_SCAN_STEP_MS = 500;
 const TIME_TOLERANCE_MS = 500;
-const FUZZY_WINDOW_MS = 500;  // ±3s window for fuzzy candidate lookup
-const FUZZY_THRESHOLD = 70;   // Levenshtein ratio (0-100) to count as a match
+const FUZZY_WINDOW_MS = 500; // ±3s window for fuzzy candidate lookup
+const FUZZY_THRESHOLD = 70; // Levenshtein ratio (0-100) to count as a match
 
 // High-frequency words add noise in matching because they appear everywhere.
 const STOP_TOKENS = new Set([
@@ -75,7 +75,8 @@ function levenshteinRatio(a: string, b: string): number {
     dp[0] = j;
     for (let i = 1; i <= n; i++) {
       const tmp = dp[i];
-      dp[i] = a[i - 1] === b[j - 1] ? prev : 1 + Math.min(prev, dp[i], dp[i - 1]);
+      dp[i] =
+        a[i - 1] === b[j - 1] ? prev : 1 + Math.min(prev, dp[i], dp[i - 1]);
       prev = tmp;
     }
   }
@@ -101,7 +102,7 @@ export class CaptionSimilarityService {
   constructor(
     private readonly logger: Logger,
     private readonly captionCleanUpService: CaptionCleanUpService,
-  ) { }
+  ) {}
 
   calculateSimilarity({
     manualCaptions,
@@ -128,7 +129,9 @@ export class CaptionSimilarityService {
     }
 
     const autoTokenTimeIndex = this.buildTokenTimeIndex(autoOccurrences);
-    const autoSorted = [...autoOccurrences].sort((a, b) => a.startTime - b.startTime);
+    const autoSorted = [...autoOccurrences].sort(
+      (a, b) => a.startTime - b.startTime,
+    );
 
     // Find the global time shift that maximises manual→auto recall
     const bestShift = this.findBestShift({
@@ -148,22 +151,32 @@ export class CaptionSimilarityService {
     if (Math.abs(bestShift.shiftMs) > 2000) {
       this.logger.warn(
         "Manual captions appear time-shifted relative to auto captions." +
-        " shiftMs=" + bestShift.shiftMs +
-        ", score=" + details.matchRate.toFixed(3),
+          " shiftMs=" +
+          bestShift.shiftMs +
+          ", score=" +
+          details.matchRate.toFixed(3),
       );
     }
 
-    const topMissing = this.getTopTokenCounts(details.missingOccurrences.map(t => t.token), 5)
-      .map(t => t.token).join(", ");
-    const topTimingMiss = this.getTopTokenCounts(details.timingMissOccurrences.map(t => t.token), 5)
-      .map(t => t.token).join(", ");
+    const topMissing = this.getTopTokenCounts(
+      details.missingOccurrences.map((t) => t.token),
+      5,
+    )
+      .map((t) => t.token)
+      .join(", ");
+    const topTimingMiss = this.getTopTokenCounts(
+      details.timingMissOccurrences.map((t) => t.token),
+      5,
+    )
+      .map((t) => t.token)
+      .join(", ");
 
     this.logger.info(
       `Similarity: ${(details.matchRate * 100).toFixed(1)}%` +
-      `, shiftMs=${bestShift.shiftMs}` +
-      `, manualTokens=${manualOccurrences.length}, autoTokens=${autoOccurrences.length}` +
-      (topMissing ? `, missingInAuto=[${topMissing}]` : "") +
-      (topTimingMiss ? `, timingMiss=[${topTimingMiss}]` : ""),
+        `, shiftMs=${bestShift.shiftMs}` +
+        `, manualTokens=${manualOccurrences.length}, autoTokens=${autoOccurrences.length}` +
+        (topMissing ? `, missingInAuto=[${topMissing}]` : "") +
+        (topTimingMiss ? `, timingMiss=[${topTimingMiss}]` : ""),
     );
 
     return {
@@ -181,7 +194,10 @@ export class CaptionSimilarityService {
     autoTokenTimeIndex,
   }: {
     manualOccurrences: TokenOccurrence[];
-    autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
+    autoTokenTimeIndex: Map<
+      string,
+      Array<{ startTime: number; endTime: number }>
+    >;
   }): { shiftMs: number; score: number } {
     let bestShiftMs = 0;
     let bestScore = -1;
@@ -207,12 +223,15 @@ export class CaptionSimilarityService {
       if (score > bestScore) {
         bestScore = score;
         bestShiftMs = shiftMs;
-      } else if (score === bestScore && Math.abs(shiftMs) < Math.abs(bestShiftMs)) {
+      } else if (
+        score === bestScore &&
+        Math.abs(shiftMs) < Math.abs(bestShiftMs)
+      ) {
         bestShiftMs = shiftMs;
       }
 
-      const zeroScore = scores.find(s => s.shiftMs === 0)?.score!;
-      if ((zeroScore !== bestScore) && bestScore - zeroScore > .05) {
+      const zeroScore = scores.find((s) => s.shiftMs === 0)?.score!;
+      if (zeroScore !== bestScore && bestScore - zeroScore > 0.05) {
         bestScore = bestScore;
       } else {
         bestScore = zeroScore;
@@ -220,7 +239,7 @@ export class CaptionSimilarityService {
       }
     }
 
-    console.log("debug: scores", scores)
+    console.log("debug: scores", scores);
     return { shiftMs: bestShiftMs, score: bestScore };
   }
 
@@ -232,7 +251,10 @@ export class CaptionSimilarityService {
     useFuzzy,
   }: {
     manualOccurrences: TokenOccurrence[];
-    autoTokenTimeIndex: Map<string, Array<{ startTime: number; endTime: number }>>;
+    autoTokenTimeIndex: Map<
+      string,
+      Array<{ startTime: number; endTime: number }>
+    >;
     autoSorted: TokenOccurrence[];
     shiftMs: number;
     useFuzzy: boolean;
@@ -255,7 +277,7 @@ export class CaptionSimilarityService {
 
       if (autoRanges && autoRanges.length > 0) {
         const hasTimeMatch = autoRanges.some(
-          r => r.endTime >= targetStart && r.startTime <= targetEnd,
+          (r) => r.endTime >= targetStart && r.startTime <= targetEnd,
         );
 
         if (hasTimeMatch) {
@@ -273,13 +295,15 @@ export class CaptionSimilarityService {
         const fuzzyStart = manual.startTime + shiftMs - FUZZY_WINDOW_MS;
         const fuzzyEnd = manual.endTime + shiftMs + FUZZY_WINDOW_MS;
 
-        const candidates = this.getOccurrencesInRange(autoSorted, fuzzyStart, fuzzyEnd);
-        const fuzzyMatched = candidates.some(
-          cand => {
-            const ratio = levenshteinRatio(manual.token, cand.token);
-            return ratio >= FUZZY_THRESHOLD;
-          },
+        const candidates = this.getOccurrencesInRange(
+          autoSorted,
+          fuzzyStart,
+          fuzzyEnd,
         );
+        const fuzzyMatched = candidates.some((cand) => {
+          const ratio = levenshteinRatio(manual.token, cand.token);
+          return ratio >= FUZZY_THRESHOLD;
+        });
 
         if (fuzzyMatched) {
           matchedCount++;
@@ -316,7 +340,11 @@ export class CaptionSimilarityService {
     }
 
     const result: TokenOccurrence[] = [];
-    for (let i = lo; i < sorted.length && sorted[i].startTime <= windowEnd; i++) {
+    for (
+      let i = lo;
+      i < sorted.length && sorted[i].startTime <= windowEnd;
+      i++
+    ) {
       result.push(sorted[i]);
     }
     return result;
@@ -339,7 +367,10 @@ export class CaptionSimilarityService {
   private buildTokenTimeIndex(
     tokenOccurrences: TokenOccurrence[],
   ): Map<string, Array<{ startTime: number; endTime: number }>> {
-    const index = new Map<string, Array<{ startTime: number; endTime: number }>>();
+    const index = new Map<
+      string,
+      Array<{ startTime: number; endTime: number }>
+    >();
     for (const occ of tokenOccurrences) {
       const ranges = index.get(occ.token);
       const range = { startTime: occ.startTime, endTime: occ.endTime };
@@ -358,8 +389,8 @@ export class CaptionSimilarityService {
       const normalizedText = this.normalizeText(caption.text);
       const tokens = normalizedText
         .split(" ")
-        .map(token => token.trim())
-        .filter(token => token.length >= 2 && !STOP_TOKENS.has(token));
+        .map((token) => token.trim())
+        .filter((token) => token.length >= 2 && !STOP_TOKENS.has(token));
 
       for (const token of tokens) {
         tokenOccurrences.push({
@@ -375,10 +406,10 @@ export class CaptionSimilarityService {
   private normalizeText(text: string): string {
     let normalizedText = text
       // Remove speaker labels (e.g., "Sapnap:", "George:")
-      .replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, '$1')
+      .replace(/(^|[\s.!?])([A-Za-z][A-Za-z0-9_' -]{0,19}:\s*)/g, "$1")
       // Remove sound effects in brackets/asterisks (e.g., [laughter], *music*)
-      .replace(/\[.*?\]/g, '')
-      .replace(/\*[^*]+\*/g, '')
+      .replace(/\[.*?\]/g, "")
+      .replace(/\*[^*]+\*/g, "")
       .toLowerCase();
 
     for (const replacement of TEXT_REPLACEMENTS) {

@@ -1,9 +1,8 @@
 import { injectable } from "inversify";
-
-import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
-import { CaptionsService } from "./captions.service.js";
 import { Failure, Success } from "../../types/index.js";
-import { Logger } from "../_common/logger/logger.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { CaptionsService } from "./captions.service.js";
+import type { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 
 @injectable()
 export class ResyncCaptionsUseCase {
@@ -24,7 +23,10 @@ export class ResyncCaptionsUseCase {
     });
 
     if (!syncIdResult.ok) {
-      this.logger.error({ message: "Failed to insert sync record", error: syncIdResult.error });
+      this.logger.error({
+        message: "Failed to insert sync record",
+        error: syncIdResult.error,
+      });
       return Failure({ type: "DATABASE", error: syncIdResult.error });
     }
 
@@ -34,14 +36,18 @@ export class ResyncCaptionsUseCase {
       this.logger.info("Deleting existing captions index");
       await this.captionsService.clear();
 
-      const dataResult = await this.elasticCaptionsSyncRepository.getDataToSync();
+      const dataResult =
+        await this.elasticCaptionsSyncRepository.getDataToSync();
       if (!dataResult.ok) {
         await this.elasticCaptionsSyncRepository.update(syncId, {
           syncStatus: "FAIL",
           syncCompletedAt: new Date(),
           failReason: "ERROR_GETTING_DATA_TO_SYNC",
         });
-        return Failure({ type: "ERROR_GETTING_DATA_TO_SYNC", error: dataResult.error });
+        return Failure({
+          type: "ERROR_GETTING_DATA_TO_SYNC",
+          error: dataResult.error,
+        });
       }
 
       const captions = dataResult.value;
@@ -56,7 +62,9 @@ export class ResyncCaptionsUseCase {
         return Success({ synced: 0 });
       }
 
-      this.logger.info(`Resyncing ${captions.length} captions to Elasticsearch`);
+      this.logger.info(
+        `Resyncing ${captions.length} captions to Elasticsearch`,
+      );
       await this.captionsService.sync(captions);
 
       const latestCaptionId = captions[captions.length - 1].id;
@@ -66,7 +74,9 @@ export class ResyncCaptionsUseCase {
         latestSyncedCaptionId: latestCaptionId,
       });
 
-      this.logger.info(`Resync complete, latest caption ID: ${latestCaptionId}`);
+      this.logger.info(
+        `Resync complete, latest caption ID: ${latestCaptionId}`,
+      );
       return Success({ synced: captions.length });
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);

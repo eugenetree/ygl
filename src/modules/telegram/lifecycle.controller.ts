@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { RequestScraperStartUseCase } from "../scraping/lifecycle/request-scraper-start.use-case.js";
-import { RequestScraperStopUseCase } from "../scraping/lifecycle/request-scraper-stop.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { RequestScraperStartUseCase } from "../scraping/lifecycle/request-scraper-start.use-case.js";
+import type { RequestScraperStopUseCase } from "../scraping/lifecycle/request-scraper-stop.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class LifecycleController implements TelegramController {
@@ -35,7 +35,7 @@ export class LifecycleController implements TelegramController {
 
       await ctx.reply(
         "Scrapers start was requested.\n" +
-        "You'll receive notification once scraping process starts."
+          "You'll receive notification once scraping process starts.",
       );
     });
 
@@ -51,7 +51,9 @@ export class LifecycleController implements TelegramController {
             return;
 
           case "SCRAPER_KILLED":
-            await ctx.reply("Scrapers were killed. Please restart them manually.");
+            await ctx.reply(
+              "Scrapers were killed. Please restart them manually.",
+            );
             return;
 
           case "SCRAPER_ALREADY_STOPPED":
@@ -66,7 +68,7 @@ export class LifecycleController implements TelegramController {
 
       await ctx.reply(
         "Scrapers stop was requested.\n" +
-        "You'll receive notification once scraping process stops."
+          "You'll receive notification once scraping process stops.",
       );
     });
   }

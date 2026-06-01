@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import { Logger } from "../../../../_common/logger/logger.js";
-import { Failure, Result, Success } from "../../../../../types/index.js";
-import { BaseError } from "../../../../_common/errors.js";
-import { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
-import { ChannelRepository } from "../channel.repository.js";
-import { ChannelsQueue } from "../../video-discovery/index.js";
-import { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
+import { Failure, type Result, Success } from "../../../../../types/index.js";
+import type { BaseError } from "../../../../_common/errors.js";
+import type { Logger } from "../../../../_common/logger/logger.js";
+import type { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
+import type { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
+import type { ChannelsQueue } from "../../video-discovery/index.js";
+import type { ChannelRepository } from "../channel.repository.js";
 
 @injectable()
 export class ProcessChannelEntryUseCase {
@@ -19,14 +19,15 @@ export class ProcessChannelEntryUseCase {
     this.logger.setContext(ProcessChannelEntryUseCase.name);
   }
 
-  public async execute(channelEntryId: string): Promise<Result<void, BaseError>> {
+  public async execute(
+    channelEntryId: string,
+  ): Promise<Result<void, BaseError>> {
     this.logger.info(`Processing channel entry ${channelEntryId}...`);
 
     this.logger.info(`Fetching channel ${channelEntryId}.`);
 
-    const fullChannelInfoResult = await this.youtubeApiGetChannel.getChannel(
-      channelEntryId,
-    );
+    const fullChannelInfoResult =
+      await this.youtubeApiGetChannel.getChannel(channelEntryId);
 
     if (!fullChannelInfoResult.ok) {
       this.logger.error({
@@ -39,7 +40,8 @@ export class ProcessChannelEntryUseCase {
 
     const fullChannelInfo = fullChannelInfoResult.value;
 
-    const createChannelResult = await this.channelRepository.create(fullChannelInfo);
+    const createChannelResult =
+      await this.channelRepository.create(fullChannelInfo);
     if (!createChannelResult.ok) {
       this.logger.error({
         error: createChannelResult.error,
@@ -51,7 +53,8 @@ export class ProcessChannelEntryUseCase {
 
     this.logger.info(`Channel ${channelEntryId} saved into db.`);
 
-    const priorityResult = await this.channelPriorityService.recalculateScore(channelEntryId);
+    const priorityResult =
+      await this.channelPriorityService.recalculateScore(channelEntryId);
     if (!priorityResult.ok) {
       this.logger.error({
         message: `Failed to recalculate priority for channel ${channelEntryId}`,
@@ -62,7 +65,10 @@ export class ProcessChannelEntryUseCase {
       return Failure(priorityResult.error);
     }
 
-    const enqueueResult = await this.channelsQueue.enqueue(channelEntryId, priorityResult.value.scrapingScore);
+    const enqueueResult = await this.channelsQueue.enqueue(
+      channelEntryId,
+      priorityResult.value.scrapingScore,
+    );
     if (!enqueueResult.ok) {
       this.logger.error({
         message: `Failed to enqueue channel ${channelEntryId} for video discovery`,

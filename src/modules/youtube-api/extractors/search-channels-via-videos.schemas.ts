@@ -49,16 +49,18 @@ const videoRenderer = z.object({
     videoId: z.string(),
     longBylineText: z
       .object({
-        runs: z.tuple([
-          z.object({
-            text: z.string(),
-            // Must have EITHER single channel OR collaborative channels
-            navigationEndpoint: z.union([
-              singleChannelNavigationEndpoint,
-              collaborativeChannelNavigationEndpoint,
-            ]),
-          }),
-        ]).rest(z.unknown()),
+        runs: z
+          .tuple([
+            z.object({
+              text: z.string(),
+              // Must have EITHER single channel OR collaborative channels
+              navigationEndpoint: z.union([
+                singleChannelNavigationEndpoint,
+                collaborativeChannelNavigationEndpoint,
+              ]),
+            }),
+          ])
+          .rest(z.unknown()),
       })
       .optional(),
   }),

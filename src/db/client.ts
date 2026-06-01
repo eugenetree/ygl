@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
 
-import { Database } from "./types.js";
+import type { Database } from "./types.js";
 
 @injectable()
 export class DatabaseClient extends Kysely<Database> {

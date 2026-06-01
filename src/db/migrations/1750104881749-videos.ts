@@ -1,15 +1,19 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("videos")
     .addColumn("id", "varchar(11)", (col) => col.primaryKey())
-    .addColumn("channelId", "varchar(24)", (col) => col.notNull().references("channels.id"))
+    .addColumn("channelId", "varchar(24)", (col) =>
+      col.notNull().references("channels.id"),
+    )
 
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("duration", "integer", (col) => col.notNull())
-    .addColumn("keywords", sql`varchar[]`, (col) => col.notNull().defaultTo(sql`'{}'`))
+    .addColumn("keywords", sql`varchar[]`, (col) =>
+      col.notNull().defaultTo(sql`'{}'`),
+    )
     .addColumn("viewCount", "integer", (col) => col.notNull())
     .addColumn("thumbnail", "varchar", (col) => col.notNull())
     .addColumn("languageCode", "varchar")
@@ -17,8 +21,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("manualCaptionsStatus", "varchar", (col) => col.notNull())
     .addColumn("captionsSimilarityScore", "real")
 
-    .addColumn("createdAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
-    .addColumn("updatedAt", "timestamp", (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn("createdAt", "timestamp", (col) =>
+      col.notNull().defaultTo(sql`now()`),
+    )
+    .addColumn("updatedAt", "timestamp", (col) =>
+      col.notNull().defaultTo(sql`now()`),
+    )
     .execute();
 }
 

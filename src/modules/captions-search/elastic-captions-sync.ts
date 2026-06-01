@@ -1,4 +1,8 @@
-type ElasticCaptionsSyncStatus = "NOT_STARTED" | "IN_PROGRESS" | "SUCCESS" | "FAIL";
+type ElasticCaptionsSyncStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "SUCCESS"
+  | "FAIL";
 
 export type ElasticCaptionsSync = {
   id: string;
@@ -13,5 +17,10 @@ export type ElasticCaptionsSync = {
 
 export type ElasticCaptionsSyncProps = Omit<
   ElasticCaptionsSync,
-  "id" | "createdAt" | "updatedAt" | "syncCompletedAt" | "latestSyncedCaptionId" | "failReason"
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "syncCompletedAt"
+  | "latestSyncedCaptionId"
+  | "failReason"
 >;

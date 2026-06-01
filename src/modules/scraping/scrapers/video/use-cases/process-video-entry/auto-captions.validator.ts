@@ -1,14 +1,20 @@
-import { Failure, Result, Success } from "../../../../../../types/index.js";
-import { Logger } from "../../../../../_common/logger/logger.js";
-import { CaptionSegment } from "./caption-analysis.service.js";
-import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 import { injectable } from "inversify";
+import {
+  Failure,
+  type Result,
+  Success,
+} from "../../../../../../types/index.js";
+import type { Logger } from "../../../../../_common/logger/logger.js";
+import type { CaptionSegment } from "./caption-analysis.service.js";
+import type { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
-export type AutoCaptionsValidationError = {
-  type: "CAPTIONS_EMPTY"
-} | {
-  type: "CAPTIONS_TOO_SHORT";
-};
+export type AutoCaptionsValidationError =
+  | {
+      type: "CAPTIONS_EMPTY";
+    }
+  | {
+      type: "CAPTIONS_TOO_SHORT";
+    };
 
 const MIN_TOTAL_WORDS = 20;
 
@@ -17,9 +23,11 @@ export class AutoCaptionsValidator {
   constructor(
     private readonly logger: Logger,
     private readonly captionCleanUpService: CaptionCleanUpService,
-  ) { }
+  ) {}
 
-  validate(captions: CaptionSegment[]): Result<void, AutoCaptionsValidationError> {
+  validate(
+    captions: CaptionSegment[],
+  ): Result<void, AutoCaptionsValidationError> {
     let resultCaptions: CaptionSegment[] = captions;
 
     if (resultCaptions.length === 0) {
@@ -29,12 +37,12 @@ export class AutoCaptionsValidator {
     }
 
     resultCaptions = resultCaptions.map(
-      this.captionCleanUpService.normalizeCaption
+      this.captionCleanUpService.normalizeCaption,
     );
 
     const totalWords = resultCaptions.reduce(
-      (acc, c) => acc + c.text.split(' ').length,
-      0
+      (acc, c) => acc + c.text.split(" ").length,
+      0,
     );
 
     if (totalWords < MIN_TOTAL_WORDS) {

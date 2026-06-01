@@ -1,5 +1,5 @@
-import { Failure, Result, Success } from "../../../types/index.js";
-import { ParsingError } from "../../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
+import type { ParsingError } from "../../_common/validation/errors.js";
 
 class JsonFromHtmlExtractor {
   getInitialData(html: unknown): Result<unknown, ParsingError> {
@@ -8,7 +8,7 @@ class JsonFromHtmlExtractor {
         type: "PARSING_ERROR",
         message: "Input is not a string",
         context: { html },
-      })
+      });
     }
 
     const pattern =
@@ -22,7 +22,7 @@ class JsonFromHtmlExtractor {
         type: "PARSING_ERROR",
         message: "Could not find JSON data in the HTML",
         context: { html, jsonString },
-      })
+      });
     }
 
     try {
@@ -33,7 +33,7 @@ class JsonFromHtmlExtractor {
         message: "Could not parse JSON data",
         cause: error,
         context: { jsonString },
-      })
+      });
     }
   }
 
@@ -43,7 +43,7 @@ class JsonFromHtmlExtractor {
         type: "PARSING_ERROR",
         message: "Input is not a string",
         context: { html },
-      })
+      });
     }
 
     const pattern =
@@ -57,7 +57,7 @@ class JsonFromHtmlExtractor {
         type: "PARSING_ERROR",
         message: "Could not find JSON data in the HTML",
         context: { html, jsonString },
-      })
+      });
     }
 
     try {
@@ -68,7 +68,7 @@ class JsonFromHtmlExtractor {
         message: "Could not parse JSON data",
         cause: error,
         context: { jsonString },
-      })
+      });
     }
   }
 }

@@ -1,4 +1,4 @@
-import { AxiosHeaders } from "axios";
+import type { AxiosHeaders } from "axios";
 
 export enum FetchErrorType {
   HTTP = "http",
@@ -23,21 +23,24 @@ type ConstructorParams =
       cause: unknown;
     };
 
-export type FetchError = {
-  type: "FETCH_ERROR";
-  kind: "HTTP";
-  status: number;
-  statusText: string;
-  data: unknown;
-} | {
-  type: "FETCH_ERROR";
-  kind: "NETWORK";
-  cause: unknown;
-} | {
-  type: "FETCH_ERROR";
-  kind: "UNKNOWN";
-  cause: unknown;
-}
+export type FetchError =
+  | {
+      type: "FETCH_ERROR";
+      kind: "HTTP";
+      status: number;
+      statusText: string;
+      data: unknown;
+    }
+  | {
+      type: "FETCH_ERROR";
+      kind: "NETWORK";
+      cause: unknown;
+    }
+  | {
+      type: "FETCH_ERROR";
+      kind: "UNKNOWN";
+      cause: unknown;
+    };
 
 // export class FetchError extends Error {
 //   public readonly name = FetchError.name;

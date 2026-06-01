@@ -16,22 +16,26 @@ export const inputSchemas = {
     audio_channels: z.number().int().optional().nullable(),
     audio_quality: z.string().optional().nullable(),
     is_drc: z.boolean().optional().nullable(),
-    subtitles: z.record(
-      z.array(
-        z.object({
-          ext: z.string(),
-          url: z.string(),
-        })
+    subtitles: z
+      .record(
+        z.array(
+          z.object({
+            ext: z.string(),
+            url: z.string(),
+          }),
+        ),
       )
-    ).optional(),
-    automatic_captions: z.record(
-      z.array(
-        z.object({
-          ext: z.string(),
-          url: z.string(),
-        })
+      .optional(),
+    automatic_captions: z
+      .record(
+        z.array(
+          z.object({
+            ext: z.string(),
+            url: z.string(),
+          }),
+        ),
       )
-    ).optional(),
+      .optional(),
     categories: z.array(z.string()).nullable().optional().default([]),
     track: z.string().optional().nullable(),
     artist: z.string().optional().nullable(),

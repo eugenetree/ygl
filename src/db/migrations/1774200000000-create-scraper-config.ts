@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 import { ScraperName } from "../../modules/scraping/constants.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,12 +9,15 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("enabled", "boolean", (col) => col.notNull().defaultTo(true))
     .execute();
 
-  await db.insertInto("scraperConfig").values([
-    { scraperName: ScraperName.CHANNEL_DISCOVERY, enabled: true },
-    { scraperName: ScraperName.CHANNEL, enabled: true },
-    { scraperName: ScraperName.VIDEO_DISCOVERY, enabled: true },
-    { scraperName: ScraperName.VIDEO, enabled: true },
-  ]).execute();
+  await db
+    .insertInto("scraperConfig")
+    .values([
+      { scraperName: ScraperName.CHANNEL_DISCOVERY, enabled: true },
+      { scraperName: ScraperName.CHANNEL, enabled: true },
+      { scraperName: ScraperName.VIDEO_DISCOVERY, enabled: true },
+      { scraperName: ScraperName.VIDEO, enabled: true },
+    ])
+    .execute();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { JobStats } from "../scraping/stats/stats.repository.js";
-import { TelegramController } from "./telegram-controller.js";
-import { GetStatsUseCase } from "../scraping/stats/get-stats.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
 import { Status } from "../scraping/lifecycle/scraper-status.service.js";
+import type { GetStatsUseCase } from "../scraping/stats/get-stats.use-case.js";
+import { JobStats } from "../scraping/stats/stats.repository.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class StatsController implements TelegramController {
@@ -25,8 +25,8 @@ export class StatsController implements TelegramController {
       if (!stats || !scrapingStatus) {
         await ctx.reply(
           `Issue with fetching stats.\n` +
-          `Scraper state: ${scrapingStatus}\n` +
-          `Stats: ${JSON.stringify(stats, null, 2)}`
+            `Scraper state: ${scrapingStatus}\n` +
+            `Stats: ${JSON.stringify(stats, null, 2)}`,
         );
         return;
       }

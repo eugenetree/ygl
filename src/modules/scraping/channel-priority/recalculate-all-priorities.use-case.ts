@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { DatabaseClient } from "../../../db/client.js";
-import { ChannelPriorityService } from "./channel-priority.service.js";
+import type { DatabaseClient } from "../../../db/client.js";
+import type { ChannelPriorityService } from "./channel-priority.service.js";
 
 export type RecalculateAllPrioritiesResult = {
   total: number;
@@ -23,12 +23,17 @@ export class RecalculateAllPrioritiesUseCase {
     let failed = 0;
 
     for (const { channelId } of rows) {
-      const recalcResult = await this.channelPriorityService.recalculateScore(channelId);
+      const recalcResult =
+        await this.channelPriorityService.recalculateScore(channelId);
       if (!recalcResult.ok) {
         failed++;
         continue;
       }
-      const propagateResult = await this.channelPriorityService.propagatePriorityToPendingJobs(channelId, recalcResult.value.scrapingScore);
+      const propagateResult =
+        await this.channelPriorityService.propagatePriorityToPendingJobs(
+          channelId,
+          recalcResult.value.scrapingScore,
+        );
       if (!propagateResult.ok) failed++;
     }
 

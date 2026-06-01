@@ -1,11 +1,10 @@
 import { readFile } from "fs/promises";
-import path from "path";
-
-import { DatabaseClient } from "../../../../db/client.js";
-import { Failure, Success } from "../../../../types/index.js";
-import { Logger } from "../../../_common/logger/logger.js";
-import { tryCatch } from "../../../_common/try-catch.js";
 import { injectable } from "inversify";
+import path from "path";
+import type { DatabaseClient } from "../../../../db/client.js";
+import { Failure, Success } from "../../../../types/index.js";
+import type { Logger } from "../../../_common/logger/logger.js";
+import { tryCatch } from "../../../_common/try-catch.js";
 
 @injectable()
 export class SearchChannelQueriesSeeder {
@@ -18,10 +17,7 @@ export class SearchChannelQueriesSeeder {
 
   async seedIfNeeded() {
     const anyQueryResult = await tryCatch(
-      this.db
-        .selectFrom("searchChannelQueries")
-        .selectAll()
-        .executeTakeFirst(),
+      this.db.selectFrom("searchChannelQueries").selectAll().executeTakeFirst(),
     );
 
     if (!anyQueryResult.ok) {
@@ -51,9 +47,7 @@ export class SearchChannelQueriesSeeder {
 
   private async seedQueriesIntoStorage() {
     const wordsFilePath = path.join(process.cwd(), "words_dictionary.json");
-    const wordsJsonResult = await tryCatch(
-      readFile(wordsFilePath, "utf-8"),
-    );
+    const wordsJsonResult = await tryCatch(readFile(wordsFilePath, "utf-8"));
 
     if (!wordsJsonResult.ok) {
       return Failure(
@@ -68,7 +62,9 @@ export class SearchChannelQueriesSeeder {
 
     if (!wordsResult.ok) {
       return Failure(
-        new Error("Failed to parse words_dictionary.json", { cause: wordsResult.error }),
+        new Error("Failed to parse words_dictionary.json", {
+          cause: wordsResult.error,
+        }),
       );
     }
 
@@ -79,7 +75,9 @@ export class SearchChannelQueriesSeeder {
       const chunk = words.slice(i, i + chunkSize);
       const queryIds = chunk.map(() => crypto.randomUUID());
 
-      this.logger.info(`Seeding ${chunk.length} queries into storage ${i * chunkSize}/${words.length}`);
+      this.logger.info(
+        `Seeding ${chunk.length} queries into storage ${i * chunkSize}/${words.length}`,
+      );
 
       const dbResult = await tryCatch(
         this.db
@@ -104,7 +102,13 @@ export class SearchChannelQueriesSeeder {
       const jobResult = await tryCatch(
         this.db
           .insertInto("channelDiscoveryJobs")
-          .values(queryIds.map((id) => ({ searchQueryId: id, status: "PENDING" as const, statusUpdatedAt: new Date() })))
+          .values(
+            queryIds.map((id) => ({
+              searchQueryId: id,
+              status: "PENDING" as const,
+              statusUpdatedAt: new Date(),
+            })),
+          )
           .execute(),
       );
 

@@ -1,13 +1,12 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
-
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { ScraperName } from "../scraping/constants.js";
-import { ScraperConfigRepository } from "../scraping/config/scraper-config.repository.js";
+import type { Telegraf } from "telegraf";
 import type { ScraperConfigRow } from "../../db/types.js";
-import { GetConfigUseCase } from "../scraping/config/get-config.use-case.js";
-import { ToggleScraperUseCase } from "../scraping/config/toggle-scraper.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { GetConfigUseCase } from "../scraping/config/get-config.use-case.js";
+import type { ScraperConfigRepository } from "../scraping/config/scraper-config.repository.js";
+import type { ToggleScraperUseCase } from "../scraping/config/toggle-scraper.use-case.js";
+import { ScraperName } from "../scraping/constants.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 const SCRAPER_NAMES = [
   ScraperName.CHANNEL_DISCOVERY,
@@ -20,7 +19,12 @@ function buildKeyboard(rows: ScraperConfigRow[]) {
   const configMap = new Map(rows.map((r) => [r.scraperName, r.enabled]));
   return SCRAPER_NAMES.map((name) => {
     const enabled = configMap.get(name) ?? true;
-    return [{ text: `[${enabled ? "on" : "off"}] ${name}`, callback_data: `toggle_${name}` }];
+    return [
+      {
+        text: `[${enabled ? "on" : "off"}] ${name}`,
+        callback_data: `toggle_${name}`,
+      },
+    ];
   });
 }
 
@@ -71,15 +75,21 @@ export class ConfigController implements TelegramController {
         }
       }
 
-      await ctx.editMessageReplyMarkup({ inline_keyboard: buildKeyboard(toggleResult.value.allConfigs) });
+      await ctx.editMessageReplyMarkup({
+        inline_keyboard: buildKeyboard(toggleResult.value.allConfigs),
+      });
       await ctx.answerCbQuery();
 
-      const state = toggleResult.value.updatedConfig.enabled ? "enabled" : "disabled";
+      const state = toggleResult.value.updatedConfig.enabled
+        ? "enabled"
+        : "disabled";
       await ctx.reply(`${scraperName} ${state}.`);
     });
   }
 
   private isScraperName(scraperName: string): scraperName is ScraperName {
-    return SCRAPER_NAMES.includes(scraperName as typeof SCRAPER_NAMES[number]);
+    return SCRAPER_NAMES.includes(
+      scraperName as (typeof SCRAPER_NAMES)[number],
+    );
   }
 }

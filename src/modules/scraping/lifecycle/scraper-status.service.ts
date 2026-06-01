@@ -1,9 +1,8 @@
 import { injectable } from "inversify";
-
-import { Logger } from "../../_common/logger/logger.js";
-import { DatabaseClient } from "../../../db/client.js";
-import { tryCatch } from "../../_common/try-catch.js";
+import type { DatabaseClient } from "../../../db/client.js";
 import { Failure, Success } from "../../../types/index.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import { tryCatch } from "../../_common/try-catch.js";
 
 export type Status = ActualStatus | "PROCESS_DOWN";
 
@@ -18,31 +17,36 @@ const ID = 1;
 export class ScraperStatusService {
   private readonly logger: Logger;
 
-  constructor(logger: Logger, private readonly db: DatabaseClient) {
+  constructor(
+    logger: Logger,
+    private readonly db: DatabaseClient,
+  ) {
     this.logger = logger.child({ context: ScraperStatusService.name });
   }
 
   async updateStatus({
     actual,
-    requested
+    requested,
   }: {
-    actual?: ActualStatus,
-    requested?: RequestedStatus
+    actual?: ActualStatus;
+    requested?: RequestedStatus;
   }) {
     const updateResult = await tryCatch(
-      this.db.updateTable("scrapingProcess")
+      this.db
+        .updateTable("scrapingProcess")
         .set({
           actualStatus: actual ?? undefined,
-          requestedStatus: requested ?? undefined
+          requestedStatus: requested ?? undefined,
         })
         .where("id", "=", ID)
-        .execute());
+        .execute(),
+    );
 
     if (!updateResult.ok) {
       return Failure({
         type: "DATABASE",
-        error: updateResult.error
-      } as const)
+        error: updateResult.error,
+      } as const);
     }
 
     return Success(updateResult.value);
@@ -50,54 +54,56 @@ export class ScraperStatusService {
 
   async getActualStatus() {
     const result = await tryCatch(
-      this.db.selectFrom("scrapingProcess")
+      this.db
+        .selectFrom("scrapingProcess")
         .select(["actualStatus", "lastHeartbeatAt"])
         .where("id", "=", ID)
-        .executeTakeFirst()
+        .executeTakeFirst(),
     );
 
     if (!result.ok) {
       return Failure({
         type: "DATABASE",
-        error: result.error
-      } as const)
+        error: result.error,
+      } as const);
     }
 
     if (!result.value) {
       return Failure({
         type: "DATABASE",
-        error: new Error("Scraper process not found")
-      } as const)
+        error: new Error("Scraper process not found"),
+      } as const);
     }
 
     const { actualStatus, lastHeartbeatAt } = result.value;
     const isAlive =
       lastHeartbeatAt !== null &&
-      (Date.now() - lastHeartbeatAt.getTime()) < HEARTBEAT_TIMEOUT_MS;
+      Date.now() - lastHeartbeatAt.getTime() < HEARTBEAT_TIMEOUT_MS;
 
-    return Success(isAlive ? actualStatus : "PROCESS_DOWN" as const);
+    return Success(isAlive ? actualStatus : ("PROCESS_DOWN" as const));
   }
 
   async getRequestedStatus() {
     const result = await tryCatch(
-      this.db.selectFrom("scrapingProcess")
+      this.db
+        .selectFrom("scrapingProcess")
         .select(["requestedStatus"])
         .where("id", "=", ID)
-        .executeTakeFirst()
+        .executeTakeFirst(),
     );
 
     if (!result.ok) {
       return Failure({
         type: "DATABASE",
-        error: result.error
-      } as const)
+        error: result.error,
+      } as const);
     }
 
     if (!result.value) {
       return Failure({
         type: "DATABASE",
-        error: new Error("Scraper process not found")
-      } as const)
+        error: new Error("Scraper process not found"),
+      } as const);
     }
 
     const { requestedStatus } = result.value;

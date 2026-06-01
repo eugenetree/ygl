@@ -40,7 +40,6 @@ const playerResponse = z.object({
       thumbnails: thumbnailsSchema,
     }),
   }),
-
 });
 
 const video = z.object({

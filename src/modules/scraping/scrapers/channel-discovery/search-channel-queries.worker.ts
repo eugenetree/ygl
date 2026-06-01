@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { BaseError } from "../../../_common/errors.js";
-import { Logger } from "../../../_common/logger/logger.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { BaseError } from "../../../_common/errors.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import { FindChannelsUseCase } from "./use-cases/find-channels.use-case.js";
-import { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
+import type { SearchChannelQueriesQueue } from "./search-channel-queries.queue.js";
+import type { FindChannelsUseCase } from "./use-cases/find-channels.use-case.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
@@ -20,7 +20,10 @@ export class SearchChannelQueriesWorker {
     private readonly findChannels: FindChannelsUseCase,
     private readonly searchChannelQueriesQueue: SearchChannelQueriesQueue,
   ) {
-    this.logger = logger.child({ context: "SearchChannelQueriesWorker", category: "worker-channels-discovery" });
+    this.logger = logger.child({
+      context: "SearchChannelQueriesWorker",
+      category: "worker-channels-discovery",
+    });
   }
 
   private readonly logger: Logger;
@@ -78,7 +81,9 @@ export class SearchChannelQueriesWorker {
 
       await this.searchChannelQueriesQueue.markAsSuccess(query.id);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
+      await new Promise((resolve) =>
+        setTimeout(resolve, 5000 + Math.random() * 5000),
+      );
     }
 
     return Success(WorkerStopCause.DONE);

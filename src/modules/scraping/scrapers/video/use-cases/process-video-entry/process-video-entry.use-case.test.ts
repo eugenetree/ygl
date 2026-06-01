@@ -1,16 +1,16 @@
-import { beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
+import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../../../../types/index.js";
+import type { Logger } from "../../../../../_common/logger/logger.js";
+import type { Video } from "../../../../../youtube-api/youtube-api.types.js";
+import type { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
+import type { CaptionProps } from "../../caption.js";
+import type { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
+import type { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
+import type { VideoRepository } from "../../video.repository.js";
+import type { CaptionAnalysisService } from "./caption-analysis.service.js";
 import { ProcessVideoEntryUseCase } from "./process-video-entry.use-case.js";
-import { Logger } from "../../../../../_common/logger/logger.js";
-import { VideoMapper } from "./video.mapper.js";
-import { VideoRepository } from "../../video.repository.js";
-import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
-import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
-import { CaptionAnalysisService } from "./caption-analysis.service.js";
-import { Video } from "../../../../../youtube-api/youtube-api.types.js";
-import { CaptionProps } from "../../caption.js";
-import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
+import type { VideoMapper } from "./video.mapper.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 
@@ -50,8 +50,18 @@ const baseVideoDto = {
   mediaType: null,
 };
 
-const autoCaptionSegment = { startTime: 0, endTime: 1, duration: 1, text: "hello" };
-const manualCaptionSegment = { startTime: 0, endTime: 1, duration: 1, text: "hello" };
+const autoCaptionSegment = {
+  startTime: 0,
+  endTime: 1,
+  duration: 1,
+  text: "hello",
+};
+const manualCaptionSegment = {
+  startTime: 0,
+  endTime: 1,
+  duration: 1,
+  text: "hello",
+};
 
 const bothVideo: Video = {
   ...baseVideoDto,
@@ -116,11 +126,25 @@ const analysisResult = {
 };
 
 const autoCaptionProps: CaptionProps[] = [
-  { startTime: 0, endTime: 1, duration: 1, text: "hello", type: "auto", videoId: "video-1" },
+  {
+    startTime: 0,
+    endTime: 1,
+    duration: 1,
+    text: "hello",
+    type: "auto",
+    videoId: "video-1",
+  },
 ];
 
 const manualCaptionProps: CaptionProps[] = [
-  { startTime: 0, endTime: 1, duration: 1, text: "hello", type: "manual", videoId: "video-1" },
+  {
+    startTime: 0,
+    endTime: 1,
+    duration: 1,
+    text: "hello",
+    type: "manual",
+    videoId: "video-1",
+  },
 ];
 
 const dbError = { type: "DATABASE" as const, error: new Error("db failure") };
@@ -165,7 +189,9 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
   );
 }
 
-function assertFailure<T extends { ok: boolean }>(result: T): asserts result is T & { ok: false } {
+function assertFailure<T extends { ok: boolean }>(
+  result: T,
+): asserts result is T & { ok: false } {
   assert.equal(result.ok, false);
 }
 
@@ -179,14 +205,25 @@ describe("ProcessVideoEntryUseCase", () => {
     mocks = createMocks();
 
     // Happy-path defaults — individual tests override the one thing they care about
-    mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(bothVideo)));
-    mocks.videoMapper.mapDtoToVideoProps.mock.mockImplementation(() => mappedVideoProps);
-    mocks.videoMapper.mapDtoToCaptionProps.mock.mockImplementation(
-      ({ type }: { type: "auto" | "manual" }) => (type === "auto" ? autoCaptionProps : manualCaptionProps),
+    mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
+      Promise.resolve(Success(bothVideo)),
     );
-    mocks.captionAnalysisService.analyze.mock.mockImplementation(() => analysisResult);
-    mocks.videoRepository.createWithCaptions.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
-    mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() => Promise.resolve(Success(undefined)));
+    mocks.videoMapper.mapDtoToVideoProps.mock.mockImplementation(
+      () => mappedVideoProps,
+    );
+    mocks.videoMapper.mapDtoToCaptionProps.mock.mockImplementation(
+      ({ type }: { type: "auto" | "manual" }) =>
+        type === "auto" ? autoCaptionProps : manualCaptionProps,
+    );
+    mocks.captionAnalysisService.analyze.mock.mockImplementation(
+      () => analysisResult,
+    );
+    mocks.videoRepository.createWithCaptions.mock.mockImplementation(() =>
+      Promise.resolve(Success(undefined)),
+    );
+    mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() =>
+      Promise.resolve(Success(undefined)),
+    );
 
     sut = buildSut(mocks);
   });
@@ -194,7 +231,9 @@ describe("ProcessVideoEntryUseCase", () => {
   describe("processVideo()", () => {
     it("returns failure when getVideo API fails", async () => {
       const ytError = { type: "YT_DLP_ERROR" as const, message: "yt-dlp died" };
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Failure(ytError)));
+      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
+        Promise.resolve(Failure(ytError)),
+      );
 
       const result = await sut.execute(videoInput);
 
@@ -212,12 +251,19 @@ describe("ProcessVideoEntryUseCase", () => {
       const result = await sut.execute(videoInput);
 
       assert.equal(result.ok, true);
-      assert.equal(mocks.videoRepository.createWithCaptions.mock.callCount(), 1);
-      const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+      assert.equal(
+        mocks.videoRepository.createWithCaptions.mock.callCount(),
+        1,
+      );
+      const call =
+        mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
       assert.deepEqual(call.autoCaptions, []);
       assert.deepEqual(call.manualCaptions, []);
       assert.equal(call.video.autoCaptionsStatus, "CAPTIONS_VALID");
-      assert.equal(call.video.manualCaptionsStatus, "CAPTIONS_MISSING_DURATIONS");
+      assert.equal(
+        call.video.manualCaptionsStatus,
+        "CAPTIONS_MISSING_DURATIONS",
+      );
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
       if (result.ok) assert.equal(result.value.hasValidCaptions, false);
     });
@@ -232,8 +278,12 @@ describe("ProcessVideoEntryUseCase", () => {
       const result = await sut.execute(videoInput);
 
       assert.equal(result.ok, true);
-      assert.equal(mocks.videoRepository.createWithCaptions.mock.callCount(), 1);
-      const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+      assert.equal(
+        mocks.videoRepository.createWithCaptions.mock.callCount(),
+        1,
+      );
+      const call =
+        mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
       assert.deepEqual(call.autoCaptions, autoCaptionProps);
       assert.deepEqual(call.manualCaptions, manualCaptionProps);
       if (result.ok) assert.equal(result.value.hasValidCaptions, false);
@@ -262,7 +312,9 @@ describe("ProcessVideoEntryUseCase", () => {
 
           await sut.execute(videoInput);
 
-          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          const call =
+            mocks.videoRepository.createWithCaptions.mock.calls[0]!
+              .arguments[0];
           assert.deepEqual(call.autoCaptions, []);
           assert.deepEqual(call.manualCaptions, []);
         });
@@ -277,7 +329,9 @@ describe("ProcessVideoEntryUseCase", () => {
 
           await sut.execute(videoInput);
 
-          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          const call =
+            mocks.videoRepository.createWithCaptions.mock.calls[0]!
+              .arguments[0];
           assert.deepEqual(call.autoCaptions, []);
           assert.deepEqual(call.manualCaptions, []);
         });
@@ -305,7 +359,9 @@ describe("ProcessVideoEntryUseCase", () => {
 
           await sut.execute(videoInput);
 
-          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          const call =
+            mocks.videoRepository.createWithCaptions.mock.calls[0]!
+              .arguments[0];
           assert.deepEqual(call.autoCaptions, autoCaptionProps);
           assert.deepEqual(call.manualCaptions, manualCaptionProps);
         });
@@ -321,7 +377,9 @@ describe("ProcessVideoEntryUseCase", () => {
 
           await sut.execute(videoInput);
 
-          const call = mocks.videoRepository.createWithCaptions.mock.calls[0]!.arguments[0];
+          const call =
+            mocks.videoRepository.createWithCaptions.mock.calls[0]!
+              .arguments[0];
           assert.deepEqual(call.autoCaptions, autoCaptionProps);
           assert.deepEqual(call.manualCaptions, manualCaptionProps);
         });
@@ -329,7 +387,9 @@ describe("ProcessVideoEntryUseCase", () => {
     });
 
     it("returns failure when createWithCaptions fails", async () => {
-      mocks.videoRepository.createWithCaptions.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
+      mocks.videoRepository.createWithCaptions.mock.mockImplementation(() =>
+        Promise.resolve(Failure(dbError)),
+      );
 
       const result = await sut.execute(videoInput);
 
@@ -338,16 +398,23 @@ describe("ProcessVideoEntryUseCase", () => {
     });
 
     it("enqueues a transcription job when only manual captions are present (manual PRESENT_NOT_FETCHED, auto ABSENT)", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
+      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
+        Promise.resolve(Success(manualOnlyVideo)),
+      );
 
       await sut.execute(videoInput);
 
       assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 1);
-      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0], manualOnlyVideo.id);
+      assert.equal(
+        mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0],
+        manualOnlyVideo.id,
+      );
     });
 
     it("does not enqueue a transcription job when only auto captions are present", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(autoOnlyVideo)));
+      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
+        Promise.resolve(Success(autoOnlyVideo)),
+      );
 
       await sut.execute(videoInput);
 
@@ -361,8 +428,12 @@ describe("ProcessVideoEntryUseCase", () => {
     });
 
     it("returns failure when transcription enqueue fails", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() => Promise.resolve(Success(manualOnlyVideo)));
-      mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() => Promise.resolve(Failure(dbError)));
+      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
+        Promise.resolve(Success(manualOnlyVideo)),
+      );
+      mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() =>
+        Promise.resolve(Failure(dbError)),
+      );
 
       const result = await sut.execute(videoInput);
 
@@ -370,5 +441,4 @@ describe("ProcessVideoEntryUseCase", () => {
       assert.deepEqual(result.error, dbError);
     });
   });
-
 });

@@ -1,8 +1,11 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { PushChannelResult, PushChannelUseCase } from "../scraping/push-channel/push-channel.use-case.js";
+import type { Telegraf } from "telegraf";
+import type { Logger } from "../_common/logger/logger.js";
+import type {
+  PushChannelResult,
+  PushChannelUseCase,
+} from "../scraping/push-channel/push-channel.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class PushChannelController implements TelegramController {
@@ -28,7 +31,10 @@ export class PushChannelController implements TelegramController {
       const result = await this.pushChannelUseCase.execute(channelId);
 
       if (!result.ok) {
-        this.logger.error({ message: "Push channel failed", error: result.error });
+        this.logger.error({
+          message: "Push channel failed",
+          error: result.error,
+        });
         await ctx.reply(`Failed: ${result.error.error.message}`);
         return;
       }
@@ -43,9 +49,14 @@ export class PushChannelController implements TelegramController {
     }
 
     const updated: string[] = [];
-    if (result.updatedChannelJobs > 0) updated.push(`${result.updatedChannelJobs} channel job(s)`);
-    if (result.updatedVideoDiscoveryJobs > 0) updated.push(`${result.updatedVideoDiscoveryJobs} video discovery job(s)`);
-    if (result.updatedVideoJobs > 0) updated.push(`${result.updatedVideoJobs} video job(s)`);
+    if (result.updatedChannelJobs > 0)
+      updated.push(`${result.updatedChannelJobs} channel job(s)`);
+    if (result.updatedVideoDiscoveryJobs > 0)
+      updated.push(
+        `${result.updatedVideoDiscoveryJobs} video discovery job(s)`,
+      );
+    if (result.updatedVideoJobs > 0)
+      updated.push(`${result.updatedVideoJobs} video job(s)`);
 
     if (updated.length === 0) {
       return `Channel ${channelId} is fully processed — no pending jobs to prioritize.`;

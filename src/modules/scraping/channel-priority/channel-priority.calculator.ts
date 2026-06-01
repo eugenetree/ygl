@@ -43,7 +43,16 @@ const round2 = (n: number): number => Math.round(n * 100) / 100;
 @injectable()
 export class ChannelPriorityCalculator {
   calculate(stats: ChannelStats): PriorityScores {
-    const { isBoosted, subscriberCount, totalProcessed, validCaptions, nonEnglishCount, avgDuration, avgViews, avgSimilarity } = stats;
+    const {
+      isBoosted,
+      subscriberCount,
+      totalProcessed,
+      validCaptions,
+      nonEnglishCount,
+      avgDuration,
+      avgViews,
+      avgSimilarity,
+    } = stats;
 
     let captionBonus = 0;
     let captionPenalty = 0;
@@ -52,25 +61,44 @@ export class ChannelPriorityCalculator {
       if (captionRate <= PRIORITY_CAPTION_THRESHOLD) {
         captionPenalty = PRIORITY_BAD_CHANNEL_PENALTY;
       } else {
-        const norm = clamp01((captionRate - PRIORITY_CAPTION_THRESHOLD) / (1 - PRIORITY_CAPTION_THRESHOLD));
+        const norm = clamp01(
+          (captionRate - PRIORITY_CAPTION_THRESHOLD) /
+            (1 - PRIORITY_CAPTION_THRESHOLD),
+        );
         captionBonus = norm * PRIORITY_CAPTION_WEIGHT;
       }
     }
 
     let languagePenalty = 0;
     const languageGateActive = totalProcessed >= PRIORITY_LANGUAGE_MIN_VIDEOS;
-    const nonEnglishRate = totalProcessed > 0 ? nonEnglishCount / totalProcessed : null;
-    if (languageGateActive && nonEnglishRate !== null && nonEnglishRate >= PRIORITY_NON_ENGLISH_THRESHOLD) {
+    const nonEnglishRate =
+      totalProcessed > 0 ? nonEnglishCount / totalProcessed : null;
+    if (
+      languageGateActive &&
+      nonEnglishRate !== null &&
+      nonEnglishRate >= PRIORITY_NON_ENGLISH_THRESHOLD
+    ) {
       languagePenalty = PRIORITY_BAD_CHANNEL_PENALTY;
     }
 
-    const subsBonus = logNorm(subscriberCount, PRIORITY_SUBS_CAP) * PRIORITY_SUBS_WEIGHT;
-    const durationBonus = avgDuration != null ? logNorm(avgDuration, PRIORITY_DURATION_CAP) * PRIORITY_DURATION_WEIGHT : 0;
-    const viewsBonus = avgViews != null ? logNorm(avgViews, PRIORITY_VIEWS_CAP) * PRIORITY_VIEWS_WEIGHT : 0;
-    const similarityBonus = avgSimilarity != null ? clamp01(avgSimilarity) * PRIORITY_SIMILARITY_WEIGHT : 0;
+    const subsBonus =
+      logNorm(subscriberCount, PRIORITY_SUBS_CAP) * PRIORITY_SUBS_WEIGHT;
+    const durationBonus =
+      avgDuration != null
+        ? logNorm(avgDuration, PRIORITY_DURATION_CAP) * PRIORITY_DURATION_WEIGHT
+        : 0;
+    const viewsBonus =
+      avgViews != null
+        ? logNorm(avgViews, PRIORITY_VIEWS_CAP) * PRIORITY_VIEWS_WEIGHT
+        : 0;
+    const similarityBonus =
+      avgSimilarity != null
+        ? clamp01(avgSimilarity) * PRIORITY_SIMILARITY_WEIGHT
+        : 0;
     const manualBoost = isBoosted ? PRIORITY_MANUAL_BOOST : 0;
 
-    const captionRate = totalProcessed > 0 ? validCaptions / totalProcessed : null;
+    const captionRate =
+      totalProcessed > 0 ? validCaptions / totalProcessed : null;
     const captionValue = captionBonus + captionPenalty;
 
     const components = {
@@ -125,9 +153,20 @@ export class ChannelPriorityCalculator {
       },
     };
 
-    const scrapingScore = captionValue + languagePenalty + subsBonus + durationBonus + viewsBonus + similarityBonus + manualBoost;
+    const scrapingScore =
+      captionValue +
+      languagePenalty +
+      subsBonus +
+      durationBonus +
+      viewsBonus +
+      similarityBonus +
+      manualBoost;
     const searchScore = subsBonus + durationBonus + viewsBonus;
 
-    return { scrapingScore, searchScore, components: components as unknown as Record<string, unknown> };
+    return {
+      scrapingScore,
+      searchScore,
+      components: components as unknown as Record<string, unknown>,
+    };
   }
 }

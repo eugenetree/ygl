@@ -1,8 +1,8 @@
-import { ZodError, ZodType } from "zod";
+import { ZodError, type ZodType } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../logger/logger.js";
-import { ValidationError } from "./errors.js";
+import type { ValidationError } from "./errors.js";
 
 /**
  * Validator class for handling Zod schema validation with enhanced error reporting
@@ -29,12 +29,10 @@ export class Validator {
         return Failure(enhancedError);
       }
 
-      return Failure(
-        {
-          type: "VALIDATION_ERROR",
-          cause: error,
-        },
-      );
+      return Failure({
+        type: "VALIDATION_ERROR",
+        cause: error,
+      });
     }
   }
 

@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { BaseError } from "../../../_common/errors.js";
-import { Logger } from "../../../_common/logger/logger.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { BaseError } from "../../../_common/errors.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
-import { ChannelEntriesQueue } from "./channel-entries.queue.js";
+import type { ChannelEntriesQueue } from "./channel-entries.queue.js";
+import type { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
@@ -20,7 +20,10 @@ export class ChannelEntriesWorker {
     private readonly processChannelEntry: ProcessChannelEntryUseCase,
     private readonly channelEntriesQueue: ChannelEntriesQueue,
   ) {
-    this.logger = logger.child({ context: "ChannelEntriesWorker", category: "worker-channel-fetcher" });
+    this.logger = logger.child({
+      context: "ChannelEntriesWorker",
+      category: "worker-channel-fetcher",
+    });
   }
 
   private readonly logger: Logger;
@@ -75,7 +78,9 @@ export class ChannelEntriesWorker {
 
       await this.channelEntriesQueue.markAsSuccess(entry.id);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000 + Math.random() * 5000));
+      await new Promise((resolve) =>
+        setTimeout(resolve, 5000 + Math.random() * 5000),
+      );
     }
 
     return Success(WorkerStopCause.DONE);

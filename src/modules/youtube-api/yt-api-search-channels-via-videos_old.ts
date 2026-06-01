@@ -1,10 +1,12 @@
 import { injectable } from "inversify";
-import { Failure, Result, Success } from "../../types/index.js";
-import { FetchError } from "../_common/http/errors.js";
-import { HttpClient } from "../_common/http/index.js";
-import { Logger } from "../_common/logger/logger.js";
-import { ParsingError } from "../_common/validation/errors.js";
-import { ValidationError } from "../_common/validation/errors.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { FetchError } from "../_common/http/errors.js";
+import type { HttpClient } from "../_common/http/index.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type {
+  ParsingError,
+  ValidationError,
+} from "../_common/validation/errors.js";
 import { searchChannelsViaVideosExtractor } from "./extractors/search-channels-via-videos.extractor.js";
 
 export type SearchChannelEntry = {
@@ -15,14 +17,14 @@ export type SearchChannelEntry = {
 
 type SearchChannelsResultSuccess =
   | {
-    status: "found";
-    query: string;
-    chunk: SearchChannelEntry[];
-  }
+      status: "found";
+      query: string;
+      chunk: SearchChannelEntry[];
+    }
   | {
-    status: "done";
-    query: string;
-  };
+      status: "done";
+      query: string;
+    };
 
 /**
  * This is not used anymore after migration to yt-dlp.
@@ -128,7 +130,7 @@ export class YoutubeApiSearchChannelsViaVideosOld {
 
   private async searchChannelsInitial(query: string) {
     const url = encodeURI(
-      `https://www.youtube.com/results?search_query=${query}&sp=EgQQASgB`
+      `https://www.youtube.com/results?search_query=${query}&sp=EgQQASgB`,
     );
 
     const responseResult = await this.httpClient.get(url);

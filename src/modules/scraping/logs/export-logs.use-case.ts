@@ -1,12 +1,11 @@
-import { injectable, inject } from "inversify";
-import path from "path";
-import fs from "fs";
 import AdmZip from "adm-zip";
-
-import { Logger } from "../../_common/logger/logger.js";
+import fs from "fs";
+import { inject, injectable } from "inversify";
+import path from "path";
 import { Failure, Success } from "../../../types/index.js";
+import { Logger } from "../../_common/logger/logger.js";
 
-type ExportLogsError = 
+type ExportLogsError =
   | { type: "LOGS_DIR_MISSING"; message: string }
   | { type: "LOGS_DIR_EMPTY"; message: string }
   | { type: "EXPORT_FAILED"; message: string; error: unknown };

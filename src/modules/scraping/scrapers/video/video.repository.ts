@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
-import { DatabaseClient } from "../../../../db/client.js";
-import { Failure, Result, Success } from "../../../../types/index.js";
-import { Logger } from "../../../_common/logger/logger.js";
+import type { DatabaseClient } from "../../../../db/client.js";
+import type { DatabaseError } from "../../../../db/types.js";
+import { Failure, type Result, Success } from "../../../../types/index.js";
+import type { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import { Caption, CaptionProps } from "./caption.js";
-import { Video, VideoProps } from "./video.js";
+import type { Caption, CaptionProps } from "./caption.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "./config.js";
-import { DatabaseError } from "../../../../db/types.js";
+import type { Video, VideoProps } from "./video.js";
 
 export type VideoWithCaptions = {
   video: Video;
@@ -29,16 +29,13 @@ export class VideoRepository {
     autoCaptions,
     manualCaptions,
   }: {
-    video: VideoProps,
-    autoCaptions: CaptionProps[],
-    manualCaptions: CaptionProps[],
+    video: VideoProps;
+    autoCaptions: CaptionProps[];
+    manualCaptions: CaptionProps[];
   }): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db.transaction().execute(async (trx) => {
-        await trx
-          .insertInto("videos")
-          .values(video)
-          .execute();
+        await trx.insertInto("videos").values(video).execute();
 
         for (const caption of [autoCaptions, manualCaptions]) {
           for (let i = 0; i < caption.length; i += CAPTIONS_CHUNK_SIZE) {
@@ -67,7 +64,9 @@ export class VideoRepository {
     return Success(undefined);
   }
 
-  async *getVideosForReprocessing(): AsyncGenerator<Result<VideoWithCaptions, DatabaseError>> {
+  async *getVideosForReprocessing(): AsyncGenerator<
+    Result<VideoWithCaptions, DatabaseError>
+  > {
     let lastVideoId: string | null = null;
 
     while (true) {
@@ -79,7 +78,11 @@ export class VideoRepository {
         .where((eb) =>
           eb.or([
             eb("captionsProcessingAlgorithmVersion", "is", null),
-            eb("captionsProcessingAlgorithmVersion", "!=", CAPTIONS_PROCESSING_ALGORITHM_VERSION),
+            eb(
+              "captionsProcessingAlgorithmVersion",
+              "!=",
+              CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+            ),
           ]),
         );
 
@@ -127,7 +130,14 @@ export class VideoRepository {
 
   async getLastScraped(
     limit: number,
-  ): Promise<Result<Array<Pick<Video, "id" | "languageCode" | "languageCodeYtdlp" | "createdAt">>, DatabaseError>> {
+  ): Promise<
+    Result<
+      Array<
+        Pick<Video, "id" | "languageCode" | "languageCodeYtdlp" | "createdAt">
+      >,
+      DatabaseError
+    >
+  > {
     const result = await tryCatch(
       this.db
         .selectFrom("videos")
@@ -144,7 +154,10 @@ export class VideoRepository {
     return Success(result.value);
   }
 
-  async update(videoId: string, data: Partial<VideoProps>): Promise<Result<void, DatabaseError>> {
+  async update(
+    videoId: string,
+    data: Partial<VideoProps>,
+  ): Promise<Result<void, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .updateTable("videos")

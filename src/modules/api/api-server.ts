@@ -1,8 +1,8 @@
 import http from "node:http";
 import { injectable } from "inversify";
 
-import { Logger } from "../_common/logger/logger.js";
-import { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
 
 @injectable()
 export class ApiServer {
@@ -38,8 +38,16 @@ export class ApiServer {
         try {
           const hits = await this.findCaptionsUseCase.execute(q);
           const results = hits.map((hit) => {
-            const source = hit._source as { videoId: string; startTime: number; text: string };
-            return { videoId: source.videoId, startTime: source.startTime, text: source.text };
+            const source = hit._source as {
+              videoId: string;
+              startTime: number;
+              text: string;
+            };
+            return {
+              videoId: source.videoId,
+              startTime: source.startTime,
+              text: source.text,
+            };
           });
           res.writeHead(200);
           res.end(JSON.stringify({ results }));

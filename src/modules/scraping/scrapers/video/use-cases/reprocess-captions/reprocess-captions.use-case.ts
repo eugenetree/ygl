@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { Logger } from "../../../../../_common/logger/logger.js";
-import { Result, Success } from "../../../../../../types/index.js";
-import { BaseError } from "../../../../../_common/errors.js";
-import { VideoRepository } from "../../video.repository.js";
+import { type Result, Success } from "../../../../../../types/index.js";
+import type { BaseError } from "../../../../../_common/errors.js";
+import type { Logger } from "../../../../../_common/logger/logger.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
-import { CaptionAnalysisService } from "../process-video-entry/caption-analysis.service.js";
+import type { VideoRepository } from "../../video.repository.js";
+import type { CaptionAnalysisService } from "../process-video-entry/caption-analysis.service.js";
 
 export type ReprocessCaptionsResult = {
   processedCount: number;
@@ -26,7 +26,9 @@ export class ReprocessCaptionsUseCase {
   }
 
   async execute(): Promise<Result<ReprocessCaptionsResult, BaseError>> {
-    this.logger.info(`Starting captions reprocessing to version ${CAPTIONS_PROCESSING_ALGORITHM_VERSION}.`);
+    this.logger.info(
+      `Starting captions reprocessing to version ${CAPTIONS_PROCESSING_ALGORITHM_VERSION}.`,
+    );
 
     let processedCount = 0;
     let failedCount = 0;
@@ -64,7 +66,8 @@ export class ReprocessCaptionsUseCase {
 
       const updateResult = await this.videoRepository.update(video.id, {
         ...analysis,
-        captionsProcessingAlgorithmVersion: CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+        captionsProcessingAlgorithmVersion:
+          CAPTIONS_PROCESSING_ALGORITHM_VERSION,
       });
 
       if (!updateResult.ok) {

@@ -4,15 +4,17 @@ import { Container } from "inversify";
 
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
-import { TelegramBot } from "./modules/telegram/telegram-bot.js";
 import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
+import { TelegramBot } from "./modules/telegram/telegram-bot.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 
 async function main() {
   const container = new Container({ autobind: true });
   container
     .bind(Logger)
-    .toDynamicValue(() => new Logger({ context: "main-bot", category: "main" }));
+    .toDynamicValue(
+      () => new Logger({ context: "main-bot", category: "main" }),
+    );
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(TelegramBot).toSelf().inSingletonScope();
 

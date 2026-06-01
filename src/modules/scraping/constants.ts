@@ -13,4 +13,5 @@ export const WorkerStopCause = {
   STOPPED: "STOPPED",
 } as const;
 
-export type WorkerStopCause = (typeof WorkerStopCause)[keyof typeof WorkerStopCause];
+export type WorkerStopCause =
+  (typeof WorkerStopCause)[keyof typeof WorkerStopCause];

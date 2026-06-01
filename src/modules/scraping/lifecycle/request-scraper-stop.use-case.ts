@@ -1,16 +1,15 @@
 import { injectable } from "inversify";
-import { ScraperOrchestrator } from "../scraper.orchestrator.js";
-import { ScraperStatusService } from "./scraper-status.service.js";
 import { Failure } from "../../../types/index.js";
+import { ScraperOrchestrator } from "../scraper.orchestrator.js";
+import type { ScraperStatusService } from "./scraper-status.service.js";
 
 @injectable()
 export class RequestScraperStopUseCase {
-  constructor(
-    private readonly scraperStatusService: ScraperStatusService,
-  ) { }
+  constructor(private readonly scraperStatusService: ScraperStatusService) {}
 
   async execute() {
-    const currentStatusResult = await this.scraperStatusService.getActualStatus();
+    const currentStatusResult =
+      await this.scraperStatusService.getActualStatus();
     if (!currentStatusResult.ok) {
       return currentStatusResult;
     }
@@ -35,7 +34,7 @@ export class RequestScraperStopUseCase {
     }
 
     return this.scraperStatusService.updateStatus({
-      requested: "STOPPED"
+      requested: "STOPPED",
     });
   }
 }

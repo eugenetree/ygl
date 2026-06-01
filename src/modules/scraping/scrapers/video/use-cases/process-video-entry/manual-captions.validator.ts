@@ -1,15 +1,19 @@
 import { injectable } from "inversify";
-import { Logger } from "../../../../../_common/logger/logger.js";
-import { Caption } from "../../../../../youtube-api/youtube-api.types.js";
-import { Failure, Result, Success } from "../../../../../../types/index.js";
-import { CaptionCleanUpService } from "./caption-clean-up.service.js";
+import {
+  Failure,
+  type Result,
+  Success,
+} from "../../../../../../types/index.js";
+import type { Logger } from "../../../../../_common/logger/logger.js";
+import type { Caption } from "../../../../../youtube-api/youtube-api.types.js";
+import type { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 export type ManualCaptionsValidationError =
-  | { type: "CAPTIONS_EMPTY"; }
-  | { type: "CAPTIONS_TOO_SHORT"; }
-  | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS"; }
-  | { type: "CAPTIONS_MOSTLY_UPPERCASE"; }
-  | { type: "CAPTIONS_MISSING_DURATIONS"; };
+  | { type: "CAPTIONS_EMPTY" }
+  | { type: "CAPTIONS_TOO_SHORT" }
+  | { type: "CAPTIONS_HAS_OVERLAPPING_TIMESTAMPS" }
+  | { type: "CAPTIONS_MOSTLY_UPPERCASE" }
+  | { type: "CAPTIONS_MISSING_DURATIONS" };
 
 const MIN_CAPTION_SEGMENTS = 10;
 
@@ -18,10 +22,10 @@ export class ManualCaptionsValidator {
   constructor(
     private readonly logger: Logger,
     private readonly captionCleanUpService: CaptionCleanUpService,
-  ) { }
+  ) {}
 
   validate(captions: Caption[]): Result<void, ManualCaptionsValidationError> {
-    if (captions.length > 0 && captions.every(c => c.duration === 0)) {
+    if (captions.length > 0 && captions.every((c) => c.duration === 0)) {
       return Failure({ type: "CAPTIONS_MISSING_DURATIONS" });
     }
 
@@ -31,7 +35,7 @@ export class ManualCaptionsValidator {
       });
     }
 
-    let resultCaptions: Caption[] = captions;
+    const resultCaptions: Caption[] = captions;
 
     // Normalize individual captions (remove noise, but keep all captions)
     // resultCaptions = resultCaptions.map(caption => this.captionCleanUpService.normalizeCaption(caption));
@@ -81,15 +85,15 @@ export class ManualCaptionsValidator {
   // This usually happens to captions coming from TV
   // We want to skip such videos
   private isMostlyUppercase(captions: Caption[]): boolean {
-    const uppercaseSegments = captions.filter(caption => {
+    const uppercaseSegments = captions.filter((caption) => {
       // strip all non-alphabetic characters
       const letters = caption.text.replace(/[^a-zA-Z]/g, "");
       if (letters.length === 0) return false;
       // strip all non-uppercase characters
       const upperLetters = letters.replace(/[^A-Z]/g, "");
-      return upperLetters.length / letters.length > .9;
+      return upperLetters.length / letters.length > 0.9;
     });
 
-    return uppercaseSegments.length / captions.length > .9;
+    return uppercaseSegments.length / captions.length > 0.9;
   }
 }

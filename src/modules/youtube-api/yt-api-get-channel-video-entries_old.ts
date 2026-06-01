@@ -1,8 +1,11 @@
-import { Failure, Result, Success } from "../../types/index.js";
-import { FetchError } from "../_common/http/errors.js";
+import { Failure, type Result, Success } from "../../types/index.js";
+import type { FetchError } from "../_common/http/errors.js";
 import { httpClient } from "../_common/http/index.js";
 import { Logger } from "../_common/logger/logger.js";
-import { ParsingError, ValidationError } from "../_common/validation/errors.js";
+import type {
+  ParsingError,
+  ValidationError,
+} from "../_common/validation/errors.js";
 import { channelVideosExtractor } from "./extractors/channel-videos.extractor.js";
 
 export type ChannelVideoEntry = {
@@ -15,14 +18,14 @@ export type ChannelVideoEntry = {
 
 type ChannelVideosResultSuccess =
   | {
-    status: "found";
-    channelId: string;
-    chunk: ChannelVideoEntry[];
-  }
+      status: "found";
+      channelId: string;
+      chunk: ChannelVideoEntry[];
+    }
   | {
-    status: "done";
-    channelId: string;
-  };
+      status: "done";
+      channelId: string;
+    };
 
 /**
  * This is not used anymore after migration to yt-dlp.

@@ -1,8 +1,8 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import {
+import type {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
@@ -18,7 +18,7 @@ type ChannelVideo = {
   title: string;
   duration: number;
   viewCount: number;
-}
+};
 
 type Token = string | undefined;
 
@@ -84,7 +84,7 @@ export class ChannelVideosExtractor {
         if (!videoRenderer.viewCountText?.simpleText) {
           this.logger.info(
             `Video ${videoRenderer.videoId} is missing view count. ` +
-            `Most likely it only for sponsors.`,
+              `Most likely it only for sponsors.`,
           );
 
           continue;
@@ -111,7 +111,9 @@ export class ChannelVideosExtractor {
     return Success({ videos: outputVideos, token: outputToken });
   }
 
-  extractFromJson(json: unknown): Result<
+  extractFromJson(
+    json: unknown,
+  ): Result<
     z.infer<typeof outputSchemas.result>,
     ValidationError | ParsingError
   > {
@@ -138,7 +140,7 @@ export class ChannelVideosExtractor {
         if (!videoRenderer.viewCountText?.simpleText) {
           this.logger.info(
             `Video ${videoRenderer.videoId} is missing view count. ` +
-            `Most likely it only for sponsors.`,
+              `Most likely it only for sponsors.`,
           );
 
           continue;
@@ -172,8 +174,11 @@ export class ChannelVideosExtractor {
         type: "VALIDATION_ERROR",
         message: "Could not parse output result",
         cause: outputResult.error,
-        context: { outputVideos, outputContinuationToken: outputContinuationToken! },
-      })
+        context: {
+          outputVideos,
+          outputContinuationToken: outputContinuationToken!,
+        },
+      });
     }
 
     return Success(outputResult.data);

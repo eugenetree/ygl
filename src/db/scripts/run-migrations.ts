@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { FileMigrationProvider, Kysely, Migrator } from "kysely";
+import { FileMigrationProvider, type Kysely, Migrator } from "kysely";
 import * as path from "path";
 
 import { dbClient } from "../client.js";

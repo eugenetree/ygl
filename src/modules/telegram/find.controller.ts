@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 
-import { Logger } from "../_common/logger/logger.js";
-import { TelegramController } from "./telegram-controller.js";
-import { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import type { Logger } from "../_common/logger/logger.js";
+import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import type { TelegramController } from "./telegram-controller.js";
 
 const MAX_RESULTS = 10;
 
@@ -35,14 +35,19 @@ export class FindController implements TelegramController {
       }
 
       const lines = hits.slice(0, MAX_RESULTS).map((hit) => {
-        const source = hit._source as { videoId: string; startTime: number; text: string };
+        const source = hit._source as {
+          videoId: string;
+          startTime: number;
+          text: string;
+        };
         const url = `https://www.youtube.com/watch?v=${source.videoId}&t=${Math.floor((source.startTime - 1000) / 1000)}s`;
         return `${source.text}\n${url}`;
       });
 
-      const header = hits.length > MAX_RESULTS
-        ? `Showing ${MAX_RESULTS} of ${hits.length} results:\n\n`
-        : "";
+      const header =
+        hits.length > MAX_RESULTS
+          ? `Showing ${MAX_RESULTS} of ${hits.length} results:\n\n`
+          : "";
 
       await ctx.reply(`${header}${lines.join("\n\n")}`);
     });

@@ -1,9 +1,9 @@
-import { beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
+import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../types/index.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { TelegramNotifier } from "../../telegram/telegram-notifier.js";
 import { ProcessScraperFailureUseCase } from "./process-scraper-failure.use-case.js";
-import { Logger } from "../../_common/logger/logger.js";
-import { TelegramNotifier } from "../../telegram/telegram-notifier.js";
 
 // ---- Factory ----------------------------------------------------------------
 
@@ -47,15 +47,24 @@ describe("ProcessScraperFailureUseCase", () => {
 
     await sut.execute({ scraperName: "VIDEO", error });
 
-    assert.equal(mocks.telegramNotificationService.sendMessage.mock.callCount(), 1);
-    const message = mocks.telegramNotificationService.sendMessage.mock.calls[0]!.arguments[0];
+    assert.equal(
+      mocks.telegramNotificationService.sendMessage.mock.callCount(),
+      1,
+    );
+    const message =
+      mocks.telegramNotificationService.sendMessage.mock.calls[0]!.arguments[0];
     assert.ok(message.includes("VIDEO"));
     assert.ok(message.includes("DATABASE"));
   });
 
   it("returns Success even when Telegram delivery fails", async () => {
     mocks.telegramNotificationService.sendMessage.mock.mockImplementation(() =>
-      Promise.resolve(Failure({ type: "TELEGRAM_NOTIFICATION_ERROR" as const, cause: "timeout" })),
+      Promise.resolve(
+        Failure({
+          type: "TELEGRAM_NOTIFICATION_ERROR" as const,
+          cause: "timeout",
+        }),
+      ),
     );
 
     const error = { type: "FETCH_ERROR" as const, kind: "NETWORK" };
@@ -66,7 +75,12 @@ describe("ProcessScraperFailureUseCase", () => {
 
   it("logs a warning when Telegram delivery fails", async () => {
     mocks.telegramNotificationService.sendMessage.mock.mockImplementation(() =>
-      Promise.resolve(Failure({ type: "TELEGRAM_NOTIFICATION_ERROR" as const, cause: "timeout" })),
+      Promise.resolve(
+        Failure({
+          type: "TELEGRAM_NOTIFICATION_ERROR" as const,
+          cause: "timeout",
+        }),
+      ),
     );
 
     const error = { type: "FETCH_ERROR" as const, kind: "NETWORK" };
@@ -76,9 +90,9 @@ describe("ProcessScraperFailureUseCase", () => {
     const loggedMessage = mocks.logger.error.mock.calls[0]!.arguments[0];
     assert.ok(
       typeof loggedMessage === "object" &&
-      "message" in loggedMessage &&
-      typeof loggedMessage.message === "string" &&
-      loggedMessage.message.includes("Telegram"),
+        "message" in loggedMessage &&
+        typeof loggedMessage.message === "string" &&
+        loggedMessage.message.includes("Telegram"),
     );
   });
 });

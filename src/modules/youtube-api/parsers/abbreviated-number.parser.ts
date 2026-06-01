@@ -1,6 +1,6 @@
-import { Failure, Result, Success } from "../../../types/index.js";
+import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import { ParsingError } from "../../_common/validation/errors.js";
+import type { ParsingError } from "../../_common/validation/errors.js";
 
 /*
   Parses abbreviated numbers like "1.2K subscribers" to 1200
@@ -20,12 +20,11 @@ export class AbbreviatedNumberParser {
     const tokenWithNumber = tokens[0];
 
     if (tokenWithNumber === undefined || isNaN(parseFloat(tokenWithNumber))) {
-      return Failure(
-        {
-          type: "PARSING_ERROR",
-          message: "Input does not contain a number",
-          context: { string },
-        })
+      return Failure({
+        type: "PARSING_ERROR",
+        message: "Input does not contain a number",
+        context: { string },
+      });
     }
 
     let multiplier = 1;

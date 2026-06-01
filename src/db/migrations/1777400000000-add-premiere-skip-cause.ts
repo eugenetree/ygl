@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
@@ -22,5 +22,7 @@ export async function down(db: Kysely<any>): Promise<void> {
   `.execute(db);
 
   await sql`DROP TYPE video_job_skip_cause`.execute(db);
-  await sql`ALTER TYPE video_job_skip_cause_new RENAME TO video_job_skip_cause`.execute(db);
+  await sql`ALTER TYPE video_job_skip_cause_new RENAME TO video_job_skip_cause`.execute(
+    db,
+  );
 }

@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 
-import { Logger } from "../../_common/logger/logger.js";
-import { StopReason } from "../scraper.orchestrator.js";
-import { ScraperStatusService } from "./scraper-status.service.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { StopReason } from "../scraper.orchestrator.js";
+import type { ScraperStatusService } from "./scraper-status.service.js";
 
 @injectable()
 export class HandleScraperStopUseCase {
@@ -14,8 +14,14 @@ export class HandleScraperStopUseCase {
   }
 
   public async execute(stopReason: StopReason): Promise<void> {
-    if (stopReason.type === "GRACEFUL" || stopReason.type === "QUEUE_EXHAUSTED") {
-      await this.scraperStatusService.updateStatus({ actual: "STOPPED", requested: "STOPPED" });
+    if (
+      stopReason.type === "GRACEFUL" ||
+      stopReason.type === "QUEUE_EXHAUSTED"
+    ) {
+      await this.scraperStatusService.updateStatus({
+        actual: "STOPPED",
+        requested: "STOPPED",
+      });
     }
 
     if (stopReason.type === "ERROR") {

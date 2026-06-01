@@ -1,10 +1,9 @@
 import { injectable } from "inversify";
 import pg from "pg";
-
-import { Logger } from "../../_common/logger/logger.js";
-import { StartScraperUseCase } from "./start-scraper.use-case.js";
-import { StopScraperUseCase } from "./stop-scraper.use-case.js";
 import type { ScrapingProcessStatus } from "../../../db/types.js";
+import type { Logger } from "../../_common/logger/logger.js";
+import type { StartScraperUseCase } from "./start-scraper.use-case.js";
+import type { StopScraperUseCase } from "./stop-scraper.use-case.js";
 
 const CHANNEL = "scraper_requested_status_changed";
 
@@ -46,12 +45,18 @@ export class ScraperCommandListener {
         const payload: StatusChangePayload = JSON.parse(msg.payload);
         this.onRequestedStatusChange(payload);
       } catch (error) {
-        this.logger.error({ message: "Failed to parse requested status change payload", error });
+        this.logger.error({
+          message: "Failed to parse requested status change payload",
+          error,
+        });
       }
     });
 
     this.client.on("error", (error) => {
-      this.logger.error({ message: "PG listener connection error in command listener", error });
+      this.logger.error({
+        message: "PG listener connection error in command listener",
+        error,
+      });
     });
 
     this.logger.info(`Listening for ${CHANNEL} commands.`);
@@ -65,9 +70,13 @@ export class ScraperCommandListener {
     }
   }
 
-  private async onRequestedStatusChange(payload: StatusChangePayload): Promise<void> {
+  private async onRequestedStatusChange(
+    payload: StatusChangePayload,
+  ): Promise<void> {
     const { new_status } = payload;
-    this.logger.info(`Received command payload: requested_status changed to ${new_status}`);
+    this.logger.info(
+      `Received command payload: requested_status changed to ${new_status}`,
+    );
 
     if (new_status === "RUNNING") {
       await this.startScraperUseCase.execute();

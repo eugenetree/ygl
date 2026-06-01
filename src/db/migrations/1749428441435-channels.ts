@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { type Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
@@ -17,11 +17,17 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("channelCreatedAt", "timestamp", (col) => col.notNull())
     .addColumn("username", "varchar", (col) => col.notNull())
     .addColumn("isArtist", "boolean", (col) => col.notNull())
-    .addColumn("videosDiscoveryStatus", sql`processing_status`, (col) => col.notNull())
+    .addColumn("videosDiscoveryStatus", sql`processing_status`, (col) =>
+      col.notNull(),
+    )
     .addColumn("videosDiscoveryStatusUpdatedAt", "timestamp")
 
-    .addColumn("createdAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
-    .addColumn("updatedAt", "timestamp", (col) => col.defaultTo(sql`now()`).notNull())
+    .addColumn("createdAt", "timestamp", (col) =>
+      col.defaultTo(sql`now()`).notNull(),
+    )
+    .addColumn("updatedAt", "timestamp", (col) =>
+      col.defaultTo(sql`now()`).notNull(),
+    )
     .execute();
 }
 
