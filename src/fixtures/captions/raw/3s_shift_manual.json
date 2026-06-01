@@ -1,0 +1,419 @@
+{
+	"wireMagic": "pb3",
+	"pens": [
+		{}
+	],
+	"wsWinStyles": [
+		{}
+	],
+	"wpWinPositions": [
+		{}
+	],
+	"events": [
+		{
+			"tStartMs": 102,
+			"dDurationMs": 3158,
+			"segs": [
+				{
+					"utf8": "Hey, it's Candus and this week's,\nQuickBooks tips and tricks"
+				}
+			]
+		},
+		{
+			"tStartMs": 3343,
+			"dDurationMs": 2092,
+			"segs": [
+				{
+					"utf8": "is inspired by one of my clients."
+				}
+			]
+		},
+		{
+			"tStartMs": 5944,
+			"dDurationMs": 1980,
+			"segs": [
+				{
+					"utf8": "So this last week,\nI was working with the client,"
+				}
+			]
+		},
+		{
+			"tStartMs": 8795,
+			"dDurationMs": 1411,
+			"segs": [
+				{
+					"utf8": "showing them some stuff on their computer, "
+				}
+			]
+		},
+		{
+			"tStartMs": 10206,
+			"dDurationMs": 2387,
+			"segs": [
+				{
+					"utf8": "and I hit the close button,\nSave and Close."
+				}
+			]
+		},
+		{
+			"tStartMs": 12949,
+			"dDurationMs": 1594,
+			"segs": [
+				{
+					"utf8": "And I said, oops, I hit the wrong button."
+				}
+			]
+		},
+		{
+			"tStartMs": 14829,
+			"dDurationMs": 1678,
+			"segs": [
+				{
+					"utf8": "And she looked at me and she was like, oh,"
+				}
+			]
+		},
+		{
+			"tStartMs": 16895,
+			"dDurationMs": 2852,
+			"segs": [
+				{
+					"utf8": "you even hit the wrong buttons,\nand it made me laugh."
+				}
+			]
+		},
+		{
+			"tStartMs": 19747,
+			"dDurationMs": 830,
+			"segs": [
+				{
+					"utf8": "And I think,"
+				}
+			]
+		},
+		{
+			"tStartMs": 20844,
+			"dDurationMs": 1286,
+			"segs": [
+				{
+					"utf8": "you know, people think if you're"
+				}
+			]
+		},
+		{
+			"tStartMs": 22240,
+			"dDurationMs": 576,
+			"segs": [
+				{
+					"utf8": "expert,"
+				}
+			]
+		},
+		{
+			"tStartMs": 22816,
+			"dDurationMs": 2680,
+			"segs": [
+				{
+					"utf8": "or somebody who knows something,\nthat you never make mistakes,"
+				}
+			]
+		},
+		{
+			"tStartMs": 25496,
+			"dDurationMs": 1328,
+			"segs": [
+				{
+					"utf8": "and that is so not true."
+				}
+			]
+		},
+		{
+			"tStartMs": 27256,
+			"dDurationMs": 1180,
+			"segs": [
+				{
+					"utf8": "Yes, I make mistakes."
+				}
+			]
+		},
+		{
+			"tStartMs": 28602,
+			"dDurationMs": 2297,
+			"segs": [
+				{
+					"utf8": "I do things wrong here and there,\neven in QuickBooks."
+				}
+			]
+		},
+		{
+			"tStartMs": 31388,
+			"dDurationMs": 2144,
+			"segs": [
+				{
+					"utf8": "And I say that with you,\nbecause we're all human."
+				}
+			]
+		},
+		{
+			"tStartMs": 33755,
+			"dDurationMs": 2252,
+			"segs": [
+				{
+					"utf8": "And that, you know,\nwhen I'm learning new technology,"
+				}
+			]
+		},
+		{
+			"tStartMs": 36268,
+			"dDurationMs": 589,
+			"segs": [
+				{
+					"utf8": "whether it's"
+				}
+			]
+		},
+		{
+			"tStartMs": 37029,
+			"dDurationMs": 1075,
+			"segs": [
+				{
+					"utf8": "website stuff,"
+				}
+			]
+		},
+		{
+			"tStartMs": 38104,
+			"dDurationMs": 2502,
+			"segs": [
+				{
+					"utf8": "the video stuff to create\nthese videos for you guys,"
+				}
+			]
+		},
+		{
+			"tStartMs": 41591,
+			"dDurationMs": 1111,
+			"segs": [
+				{
+					"utf8": "emails, whatever,"
+				}
+			]
+		},
+		{
+			"tStartMs": 42759,
+			"dDurationMs": 3861,
+			"segs": [
+				{
+					"utf8": "it's all-new learning for me as well\nand I have to remind myself,"
+				}
+			]
+		},
+		{
+			"tStartMs": 47086,
+			"dDurationMs": 1449,
+			"segs": [
+				{
+					"utf8": "to not be so hard on myself."
+				}
+			]
+		},
+		{
+			"tStartMs": 48535,
+			"dDurationMs": 2078,
+			"segs": [
+				{
+					"utf8": "And so that's my tip for you today, which is"
+				}
+			]
+		},
+		{
+			"tStartMs": 50944,
+			"dDurationMs": 2287,
+			"segs": [
+				{
+					"utf8": "to be patient with yourself while\nyou're learning QuickBooks."
+				}
+			]
+		},
+		{
+			"tStartMs": 53739,
+			"dDurationMs": 888,
+			"segs": [
+				{
+					"utf8": "And to know,"
+				}
+			]
+		},
+		{
+			"tStartMs": 55118,
+			"dDurationMs": 3289,
+			"segs": [
+				{
+					"utf8": "even somebody who uses it every day,\nwho teaches people"
+				}
+			]
+		},
+		{
+			"tStartMs": 58534,
+			"dDurationMs": 1652,
+			"segs": [
+				{
+					"utf8": "can make a mistake and close it"
+				}
+			]
+		},
+		{
+			"tStartMs": 60469,
+			"dDurationMs": 1072,
+			"segs": [
+				{
+					"utf8": "or use the wrong buttons."
+				}
+			]
+		},
+		{
+			"tStartMs": 61776,
+			"dDurationMs": 500,
+			"segs": [
+				{
+					"utf8": "So,"
+				}
+			]
+		},
+		{
+			"tStartMs": 62589,
+			"dDurationMs": 3461,
+			"segs": [
+				{
+					"utf8": "just be patient with yourself\nknow that QuickBooks is easily fixable."
+				}
+			]
+		},
+		{
+			"tStartMs": 66677,
+			"dDurationMs": 2024,
+			"segs": [
+				{
+					"utf8": "And if you've been struggling with QuickBooks,"
+				}
+			]
+		},
+		{
+			"tStartMs": 68701,
+			"dDurationMs": 1748,
+			"segs": [
+				{
+					"utf8": "or having a hard time with it, and"
+				}
+			]
+		},
+		{
+			"tStartMs": 70449,
+			"dDurationMs": 1464,
+			"segs": [
+				{
+					"utf8": "we'd like to get some help,"
+				}
+			]
+		},
+		{
+			"tStartMs": 72282,
+			"dDurationMs": 1635,
+			"segs": [
+				{
+					"utf8": "please make sure that you reach out to me"
+				}
+			]
+		},
+		{
+			"tStartMs": 73917,
+			"dDurationMs": 2209,
+			"segs": [
+				{
+					"utf8": "and message me and\nI'll see if there's some help,"
+				}
+			]
+		},
+		{
+			"tStartMs": 76255,
+			"dDurationMs": 870,
+			"segs": [
+				{
+					"utf8": "I can give you."
+				}
+			]
+		},
+		{
+			"tStartMs": 77633,
+			"dDurationMs": 1732,
+			"segs": [
+				{
+					"utf8": "If you know somebody who\ncould benefit from this tip,"
+				}
+			]
+		},
+		{
+			"tStartMs": 79441,
+			"dDurationMs": 685,
+			"segs": [
+				{
+					"utf8": "please SHARE it"
+				}
+			]
+		},
+		{
+			"tStartMs": 80514,
+			"dDurationMs": 2140,
+			"segs": [
+				{
+					"utf8": "and don't forget to SUBSCRIBE"
+				}
+			]
+		},
+		{
+			"tStartMs": 82733,
+			"dDurationMs": 2561,
+			"segs": [
+				{
+					"utf8": "and you'll get these videos\nsent directly to you."
+				}
+			]
+		},
+		{
+			"tStartMs": 85675,
+			"dDurationMs": 1117,
+			"segs": [
+				{
+					"utf8": "So have an amazing day."
+				}
+			]
+		},
+		{
+			"tStartMs": 86843,
+			"dDurationMs": 1155,
+			"segs": [
+				{
+					"utf8": "I'll talk to you soon."
+				}
+			]
+		},
+		{
+			"tStartMs": 87998,
+			"dDurationMs": 558,
+			"segs": [
+				{
+					"utf8": "Take care"
+				}
+			]
+		},
+		{
+			"tStartMs": 88588,
+			"dDurationMs": 500,
+			"segs": [
+				{
+					"utf8": "Bye."
+				}
+			]
+		}
+	]
+}

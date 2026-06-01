@@ -1,0 +1,806 @@
+{
+	"wireMagic": "pb3",
+	"pens": [
+		{}
+	],
+	"wsWinStyles": [
+		{}
+	],
+	"wpWinPositions": [
+		{}
+	],
+	"events": [
+		{
+			"tStartMs": 1360,
+			"dDurationMs": 1840,
+			"segs": [
+				{
+					"utf8": "I'm willing to bet that literally"
+				}
+			]
+		},
+		{
+			"tStartMs": 3200,
+			"dDurationMs": 4240,
+			"segs": [
+				{
+					"utf8": "no one ever climbed out of a Rimac Nevera"
+				}
+			]
+		},
+		{
+			"tStartMs": 7440,
+			"dDurationMs": 2440,
+			"segs": [
+				{
+					"utf8": "and thought, \"Oh dear, that needs more power.\""
+				}
+			]
+		},
+		{
+			"tStartMs": 9880,
+			"dDurationMs": 3360,
+			"segs": [
+				{
+					"utf8": "And, \"I wish it was faster\nround my local racetrack.\""
+				}
+			]
+		},
+		{
+			"tStartMs": 13440,
+			"dDurationMs": 4200,
+			"segs": [
+				{
+					"utf8": "But Mate Rimac can't sit still,\nand some of the hypercar market"
+				}
+			]
+		},
+		{
+			"tStartMs": 17640,
+			"dDurationMs": 1680,
+			"segs": [
+				{
+					"utf8": "is not convinced by EVs."
+				}
+			]
+		},
+		{
+			"tStartMs": 19320,
+			"dDurationMs": 4600,
+			"segs": [
+				{
+					"utf8": "So this is how Rimac answers back\nwith the Nevera R."
+				}
+			]
+		},
+		{
+			"tStartMs": 28840,
+			"dDurationMs": 2840,
+			"segs": [
+				{
+					"utf8": "Now I'll talk you around all\nthe visual tweaks in a moment,"
+				}
+			]
+		},
+		{
+			"tStartMs": 31680,
+			"dDurationMs": 2560,
+			"segs": [
+				{
+					"utf8": "but let's just get straight to the power."
+				}
+			]
+		},
+		{
+			"tStartMs": 34480,
+			"dDurationMs": 6560,
+			"segs": [
+				{
+					"utf8": "OK. Rimac's Nevera – 1,888bhp."
+				}
+			]
+		},
+		{
+			"tStartMs": 41040,
+			"dDurationMs": 5040,
+			"segs": [
+				{
+					"utf8": "Nevera R – 2,078bhp."
+				}
+			]
+		},
+		{
+			"tStartMs": 46840,
+			"dDurationMs": 2560,
+			"segs": [
+				{
+					"utf8": "Now, let's just lay some context\non those numbers."
+				}
+			]
+		},
+		{
+			"tStartMs": 49640,
+			"dDurationMs": 6200,
+			"segs": [
+				{
+					"utf8": "The fastest Ferrari ever around the\nFiorano test track is the SF90 XX –"
+				}
+			]
+		},
+		{
+			"tStartMs": 56280,
+			"dDurationMs": 4120,
+			"segs": [
+				{
+					"utf8": "and this has more power than two of them."
+				}
+			]
+		},
+		{
+			"tStartMs": 60400,
+			"dDurationMs": 4000,
+			"segs": [
+				{
+					"utf8": "And that makes for acceleration numbers\nthat just defy belief."
+				}
+			]
+		},
+		{
+			"tStartMs": 64440,
+			"dDurationMs": 2280,
+			"segs": [
+				{
+					"utf8": "All your reference points are just blown away."
+				}
+			]
+		},
+		{
+			"tStartMs": 67040,
+			"dDurationMs": 2880,
+			"segs": [
+				{
+					"utf8": "0-62 is the same as the standard car"
+				}
+			]
+		},
+		{
+			"tStartMs": 69960,
+			"dDurationMs": 3080,
+			"segs": [
+				{
+					"utf8": "because it's limited by\nwhat tyres can put on the road."
+				}
+			]
+		},
+		{
+			"tStartMs": 73200,
+			"dDurationMs": 3000,
+			"segs": [
+				{
+					"utf8": "But it's still 1.81 seconds."
+				}
+			]
+		},
+		{
+			"tStartMs": 76480,
+			"dDurationMs": 5600,
+			"segs": [
+				{
+					"utf8": "But this thing gets from 0-186mph, or 300kph,"
+				}
+			]
+		},
+		{
+			"tStartMs": 82200,
+			"dDurationMs": 3960,
+			"segs": [
+				{
+					"utf8": "0.6 seconds quicker than that one."
+				}
+			]
+		},
+		{
+			"tStartMs": 86160,
+			"dDurationMs": 5080,
+			"segs": [
+				{
+					"utf8": "It's also 3.5 seconds faster than \na Bugatti Chiron Super Sport,"
+				}
+			]
+		},
+		{
+			"tStartMs": 91240,
+			"dDurationMs": 3960,
+			"segs": [
+				{
+					"utf8": "1.5 seconds quicker than a Koenigsegg Jesko."
+				}
+			]
+		},
+		{
+			"tStartMs": 95280,
+			"dDurationMs": 3200,
+			"segs": [
+				{
+					"utf8": "We're used to EVs that blow your mind\nleaving the line,"
+				}
+			]
+		},
+		{
+			"tStartMs": 98480,
+			"dDurationMs": 2440,
+			"segs": [
+				{
+					"utf8": "but normally they tail off into three figures."
+				}
+			]
+		},
+		{
+			"tStartMs": 101640,
+			"dDurationMs": 1320,
+			"segs": [
+				{
+					"utf8": "Not this one."
+				}
+			]
+		},
+		{
+			"tStartMs": 104760,
+			"dDurationMs": 1680,
+			"segs": [
+				{
+					"utf8": "So, how have they done it?"
+				}
+			]
+		},
+		{
+			"tStartMs": 106440,
+			"dDurationMs": 1920,
+			"segs": [
+				{
+					"utf8": "Well, because it's an EV,"
+				}
+			]
+		},
+		{
+			"tStartMs": 108360,
+			"dDurationMs": 2760,
+			"segs": [
+				{
+					"utf8": "I can't just open the bonnet and show you."
+				}
+			]
+		},
+		{
+			"tStartMs": 111320,
+			"dDurationMs": 5080,
+			"segs": [
+				{
+					"utf8": "But it has got four new motors,\nwhich are not just more powerful than that car's,"
+				}
+			]
+		},
+		{
+			"tStartMs": 116400,
+			"dDurationMs": 2960,
+			"segs": [
+				{
+					"utf8": "they've also got the latest, greatest, cleverer version"
+				}
+			]
+		},
+		{
+			"tStartMs": 119360,
+			"dDurationMs": 3240,
+			"segs": [
+				{
+					"utf8": "of that Rimac torque vectoring technology"
+				}
+			]
+		},
+		{
+			"tStartMs": 122600,
+			"dDurationMs": 3960,
+			"segs": [
+				{
+					"utf8": "to share and shuffle the torque \nbetween all four corners."
+				}
+			]
+		},
+		{
+			"tStartMs": 128000,
+			"dDurationMs": 3640,
+			"segs": [
+				{
+					"utf8": "And the battery powering those motors\nhas also been upgraded."
+				}
+			]
+		},
+		{
+			"tStartMs": 131640,
+			"dDurationMs": 4480,
+			"segs": [
+				{
+					"utf8": "Capacity is 108kWh,\nbut the chemistry's been changed."
+				}
+			]
+		},
+		{
+			"tStartMs": 136200,
+			"dDurationMs": 4720,
+			"segs": [
+				{
+					"utf8": "It's lighter, but it's more about giving you\nthat higher sustained performance."
+				}
+			]
+		},
+		{
+			"tStartMs": 141000,
+			"dDurationMs": 3640,
+			"segs": [
+				{
+					"utf8": "So, you bring it to a racetrack,\nyou can go flat out for longer,"
+				}
+			]
+		},
+		{
+			"tStartMs": 145240,
+			"dDurationMs": 3960,
+			"segs": [
+				{
+					"utf8": "which explains why the bodywork has\nhad these upgrades as well."
+				}
+			]
+		},
+		{
+			"tStartMs": 150080,
+			"dDurationMs": 2800,
+			"segs": [
+				{
+					"utf8": "So how do you tell someone's got a Nevera R?"
+				}
+			]
+		},
+		{
+			"tStartMs": 153200,
+			"dDurationMs": 1160,
+			"segs": [
+				{
+					"utf8": "Here's the details."
+				}
+			]
+		},
+		{
+			"tStartMs": 154360,
+			"dDurationMs": 4280,
+			"segs": [
+				{
+					"utf8": "You'll see at the front that that kind\nof nose cone off the old car is gone."
+				}
+			]
+		},
+		{
+			"tStartMs": 158640,
+			"dDurationMs": 4440,
+			"segs": [
+				{
+					"utf8": "You've now got this sort of angry\ngecko face. New front splitter,"
+				}
+			]
+		},
+		{
+			"tStartMs": 163080,
+			"dDurationMs": 3080,
+			"segs": [
+				{
+					"utf8": "entirely different air management\naround this section of the car,"
+				}
+			]
+		},
+		{
+			"tStartMs": 166160,
+			"dDurationMs": 1520,
+			"segs": [
+				{
+					"utf8": "brakes have been upgraded,"
+				}
+			]
+		},
+		{
+			"tStartMs": 167680,
+			"dDurationMs": 4880,
+			"segs": [
+				{
+					"utf8": "a new silicon layer on your ceramic discs\nto improve stopping performance,"
+				}
+			]
+		},
+		{
+			"tStartMs": 172920,
+			"dDurationMs": 3640,
+			"segs": [
+				{
+					"utf8": "great big carbon fibre exposed \nsection in the door here -"
+				}
+			]
+		},
+		{
+			"tStartMs": 176560,
+			"dDurationMs": 3680,
+			"segs": [
+				{
+					"utf8": "looks great – and wider side skirt."
+				}
+			]
+		},
+		{
+			"tStartMs": 180240,
+			"dDurationMs": 2840,
+			"segs": [
+				{
+					"utf8": "And then you come round to the headline act."
+				}
+			]
+		},
+		{
+			"tStartMs": 183080,
+			"dDurationMs": 4160,
+			"segs": [
+				{
+					"utf8": "Yes, where your standard Nevera\ngot a modest rear wing,"
+				}
+			]
+		},
+		{
+			"tStartMs": 187240,
+			"dDurationMs": 5640,
+			"segs": [
+				{
+					"utf8": "this one has a monster. Fully exposed\ncarbon fibre, triple supports,"
+				}
+			]
+		},
+		{
+			"tStartMs": 192880,
+			"dDurationMs": 2840,
+			"segs": [
+				{
+					"utf8": "kind of looks like an Aventador SVJ."
+				}
+			]
+		},
+		{
+			"tStartMs": 195720,
+			"dDurationMs": 5680,
+			"segs": [
+				{
+					"utf8": "And the numbers are geeky.\n15% more downforce overall,"
+				}
+			]
+		},
+		{
+			"tStartMs": 201400,
+			"dDurationMs": 4480,
+			"segs": [
+				{
+					"utf8": "10% better aero efficiency, 10% less understeer,"
+				}
+			]
+		},
+		{
+			"tStartMs": 206040,
+			"dDurationMs": 7040,
+			"segs": [
+				{
+					"utf8": "and 3.8 seconds saved on\na lap of the Nardò test track."
+				}
+			]
+		},
+		{
+			"tStartMs": 213480,
+			"dDurationMs": 2040,
+			"segs": [
+				{
+					"utf8": "Now, that is terribly impressive,"
+				}
+			]
+		},
+		{
+			"tStartMs": 215520,
+			"dDurationMs": 2960,
+			"segs": [
+				{
+					"utf8": "except, well, Nardò is a private test track."
+				}
+			]
+		},
+		{
+			"tStartMs": 218520,
+			"dDurationMs": 1680,
+			"segs": [
+				{
+					"utf8": "It's closed to the public."
+				}
+			]
+		},
+		{
+			"tStartMs": 220200,
+			"dDurationMs": 2280,
+			"segs": [
+				{
+					"utf8": "We can't go and see a car go round there."
+				}
+			]
+		},
+		{
+			"tStartMs": 222480,
+			"dDurationMs": 2960,
+			"segs": [
+				{
+					"utf8": "That kind of begs the question,\nI wonder how fast one of these would go"
+				}
+			]
+		},
+		{
+			"tStartMs": 225480,
+			"dDurationMs": 3400,
+			"segs": [
+				{
+					"utf8": "round Silverstone or Laguna Seca"
+				}
+			]
+		},
+		{
+			"tStartMs": 228880,
+			"dDurationMs": 1640,
+			"segs": [
+				{
+					"utf8": "or the Nürburgring."
+				}
+			]
+		},
+		{
+			"tStartMs": 237040,
+			"dDurationMs": 2920,
+			"segs": [
+				{
+					"utf8": "Hopefully, one day we will find out,\nbecause after all,"
+				}
+			]
+		},
+		{
+			"tStartMs": 239960,
+			"dDurationMs": 2480,
+			"segs": [
+				{
+					"utf8": "the whole point of the Nevera R"
+				}
+			]
+		},
+		{
+			"tStartMs": 242440,
+			"dDurationMs": 2480,
+			"segs": [
+				{
+					"utf8": "is kind of a response from Mate Rimac"
+				}
+			]
+		},
+		{
+			"tStartMs": 244920,
+			"dDurationMs": 1680,
+			"segs": [
+				{
+					"utf8": "to his customers who were saying,"
+				}
+			]
+		},
+		{
+			"tStartMs": 246600,
+			"dDurationMs": 6840,
+			"segs": [
+				{
+					"utf8": "\"Yeah, we appreciate that the normal Nevera\nis a great sort of GT everyday hypercar,"
+				}
+			]
+		},
+		{
+			"tStartMs": 253440,
+			"dDurationMs": 2000,
+			"segs": [
+				{
+					"utf8": "but we'd actually kind of like something"
+				}
+			]
+		},
+		{
+			"tStartMs": 255440,
+			"dDurationMs": 3280,
+			"segs": [
+				{
+					"utf8": "that was a bit more of a ripper around a racetrack.\""
+				}
+			]
+		},
+		{
+			"tStartMs": 258960,
+			"dDurationMs": 1880,
+			"segs": [
+				{
+					"utf8": "I have to say though, it really doesn't feel"
+				}
+			]
+		},
+		{
+			"tStartMs": 260840,
+			"dDurationMs": 4560,
+			"segs": [
+				{
+					"utf8": "kind of stripped out and spartan,\nracetrack-ready in here."
+				}
+			]
+		},
+		{
+			"tStartMs": 265400,
+			"dDurationMs": 1880,
+			"segs": [
+				{
+					"utf8": "It's still very nicely appointed."
+				}
+			]
+		},
+		{
+			"tStartMs": 267280,
+			"dDurationMs": 4120,
+			"segs": [
+				{
+					"utf8": "There's a lot more kind of \nAlcantara trim instead of leather –"
+				}
+			]
+		},
+		{
+			"tStartMs": 272080,
+			"dDurationMs": 3280,
+			"segs": [
+				{
+					"utf8": "and they've painted the exposed \ncarbon on the dashboard here"
+				}
+			]
+		},
+		{
+			"tStartMs": 275360,
+			"dDurationMs": 3480,
+			"segs": [
+				{
+					"utf8": "to match the paintwork.\nBut otherwise, seats are comfortable,"
+				}
+			]
+		},
+		{
+			"tStartMs": 278840,
+			"dDurationMs": 2600,
+			"segs": [
+				{
+					"utf8": "there's lots of screens, lots of equipment."
+				}
+			]
+		},
+		{
+			"tStartMs": 281440,
+			"dDurationMs": 4400,
+			"segs": [
+				{
+					"utf8": "And don't just think it's a kind \nof soulless lap time king either,"
+				}
+			]
+		},
+		{
+			"tStartMs": 285840,
+			"dDurationMs": 3960,
+			"segs": [
+				{
+					"utf8": "because you can still twizzle\nthis knob here, select Drift mode"
+				}
+			]
+		},
+		{
+			"tStartMs": 289800,
+			"dDurationMs": 6080,
+			"segs": [
+				{
+					"utf8": "and tell all 2,078bhp\nto send you sideways."
+				}
+			]
+		},
+		{
+			"tStartMs": 296200,
+			"dDurationMs": 1160,
+			"segs": [
+				{
+					"utf8": "Madness."
+				}
+			]
+		},
+		{
+			"tStartMs": 302480,
+			"dDurationMs": 3200,
+			"segs": [
+				{
+					"utf8": "Only 40 Nevera Rs are going to be built,"
+				}
+			]
+		},
+		{
+			"tStartMs": 305680,
+			"dDurationMs": 5400,
+			"segs": [
+				{
+					"utf8": "each costing just shy of £2 million,\nand I have no doubts that it will happily"
+				}
+			]
+		},
+		{
+			"tStartMs": 311080,
+			"dDurationMs": 4360,
+			"segs": [
+				{
+					"utf8": "smash lap records and rupture internal organs."
+				}
+			]
+		},
+		{
+			"tStartMs": 316000,
+			"dDurationMs": 920,
+			"segs": [
+				{
+					"utf8": "It's just funny, though, isn't it?"
+				}
+			]
+		},
+		{
+			"tStartMs": 316920,
+			"dDurationMs": 3440,
+			"segs": [
+				{
+					"utf8": "Even Mate Rimac himself \nhas said that EV hypercars"
+				}
+			]
+		},
+		{
+			"tStartMs": 320360,
+			"dDurationMs": 3520,
+			"segs": [
+				{
+					"utf8": "aren't selling like V12 or V16 ones are."
+				}
+			]
+		},
+		{
+			"tStartMs": 323880,
+			"dDurationMs": 880,
+			"segs": [
+				{
+					"utf8": "Seems crazy, doesn't it?"
+				}
+			]
+		},
+		{
+			"tStartMs": 324760,
+			"dDurationMs": 3880,
+			"segs": [
+				{
+					"utf8": "A machine this wild, numbers this amazing –"
+				}
+			]
+		},
+		{
+			"tStartMs": 329320,
+			"dDurationMs": 3240,
+			"segs": [
+				{
+					"utf8": "but will it be the future of the hypercar after all?"
+				}
+			]
+		}
+	]
+}

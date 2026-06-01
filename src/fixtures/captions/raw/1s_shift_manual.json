@@ -1,0 +1,284 @@
+{
+    "wireMagic": "pb3",
+    "pens": [
+        {}
+    ],
+    "wsWinStyles": [
+        {}
+    ],
+    "wpWinPositions": [
+        {}
+    ],
+    "events": [
+        {
+            "tStartMs": 0,
+            "dDurationMs": 4643,
+            "segs": [
+                {
+                    "utf8": "I was diagnosed with stage 4, \nHER2-positive, invasive ductal"
+                }
+            ]
+        },
+        {
+            "tStartMs": 4643,
+            "dDurationMs": 2036,
+            "segs": [
+                {
+                    "utf8": "carcinoma of the left breast."
+                }
+            ]
+        },
+        {
+            "tStartMs": 11480,
+            "dDurationMs": 4003,
+            "segs": [
+                {
+                    "utf8": "HER2-positive breast cancer is \na subtype of breast cancer that"
+                }
+            ]
+        },
+        {
+            "tStartMs": 15483,
+            "dDurationMs": 1640,
+            "segs": [
+                {
+                    "utf8": "we've learned is \nvery different."
+                }
+            ]
+        },
+        {
+            "tStartMs": 17123,
+            "dDurationMs": 2480,
+            "segs": [
+                {
+                    "utf8": "They do tend to grow \na little quicker."
+                }
+            ]
+        },
+        {
+            "tStartMs": 19603,
+            "dDurationMs": 1877,
+            "segs": [
+                {
+                    "utf8": "They do tend to recur more."
+                }
+            ]
+        },
+        {
+            "tStartMs": 21480,
+            "dDurationMs": 1123,
+            "segs": [
+                {
+                    "utf8": "I was devastated."
+                }
+            ]
+        },
+        {
+            "tStartMs": 22603,
+            "dDurationMs": 2480,
+            "segs": [
+                {
+                    "utf8": "I didn't know what\nthat meant for my future."
+                }
+            ]
+        },
+        {
+            "tStartMs": 25083,
+            "dDurationMs": 4320,
+            "segs": [
+                {
+                    "utf8": "I was scared that it was going \nto change the dreams that I had"
+                }
+            ]
+        },
+        {
+            "tStartMs": 29403,
+            "dDurationMs": 1357,
+            "segs": [
+                {
+                    "utf8": "for my life."
+                }
+            ]
+        },
+        {
+            "tStartMs": 30760,
+            "dDurationMs": 3003,
+            "segs": [
+                {
+                    "utf8": "Decades ago, before we had the \nvery specific treatments for"
+                }
+            ]
+        },
+        {
+            "tStartMs": 33763,
+            "dDurationMs": 1520,
+            "segs": [
+                {
+                    "utf8": "HER2 breast cancers,"
+                }
+            ]
+        },
+        {
+            "tStartMs": 35283,
+            "dDurationMs": 1920,
+            "segs": [
+                {
+                    "utf8": "women did not do well."
+                }
+            ]
+        },
+        {
+            "tStartMs": 37203,
+            "dDurationMs": 3040,
+            "segs": [
+                {
+                    "utf8": "But now we've been able to \ndevelop medications that"
+                }
+            ]
+        },
+        {
+            "tStartMs": 40243,
+            "dDurationMs": 1277,
+            "segs": [
+                {
+                    "utf8": "are very targeted."
+                }
+            ]
+        },
+        {
+            "tStartMs": 46799,
+            "dDurationMs": 2564,
+            "segs": [
+                {
+                    "utf8": "Being a speaker at\nthe Cancer Survivors event,"
+                }
+            ]
+        },
+        {
+            "tStartMs": 49363,
+            "dDurationMs": 3800,
+            "segs": [
+                {
+                    "utf8": "I was able to connect\nwith a lot of amazing people,"
+                }
+            ]
+        },
+        {
+            "tStartMs": 53163,
+            "dDurationMs": 3000,
+            "segs": [
+                {
+                    "utf8": "who I've been able to \ngain friendships with."
+                }
+            ]
+        },
+        {
+            "tStartMs": 56163,
+            "dDurationMs": 3680,
+            "segs": [
+                {
+                    "utf8": "So I'm very honored and blessed \nto have had the team that I"
+                }
+            ]
+        },
+        {
+            "tStartMs": 59843,
+            "dDurationMs": 880,
+            "segs": [
+                {
+                    "utf8": "had at Sharp."
+                }
+            ]
+        },
+        {
+            "tStartMs": 60723,
+            "dDurationMs": 2480,
+            "segs": [
+                {
+                    "utf8": "Havyne's just \na real inspiration."
+                }
+            ]
+        },
+        {
+            "tStartMs": 63203,
+            "dDurationMs": 1520,
+            "segs": [
+                {
+                    "utf8": "She's just amazing."
+                }
+            ]
+        },
+        {
+            "tStartMs": 64723,
+            "dDurationMs": 3400,
+            "segs": [
+                {
+                    "utf8": "I think the most important \nthing that was so special about"
+                }
+            ]
+        },
+        {
+            "tStartMs": 68123,
+            "dDurationMs": 3720,
+            "segs": [
+                {
+                    "utf8": "her was maintaining a \nreal positive attitude."
+                }
+            ]
+        },
+        {
+            "tStartMs": 71843,
+            "dDurationMs": 3440,
+            "segs": [
+                {
+                    "utf8": "I don't want people to think \nthat because you have a cancer"
+                }
+            ]
+        },
+        {
+            "tStartMs": 75283,
+            "dDurationMs": 2000,
+            "segs": [
+                {
+                    "utf8": "diagnosis that your life \nis over,"
+                }
+            ]
+        },
+        {
+            "tStartMs": 77283,
+            "dDurationMs": 1320,
+            "segs": [
+                {
+                    "utf8": "that joy is gone,"
+                }
+            ]
+        },
+        {
+            "tStartMs": 78603,
+            "dDurationMs": 1640,
+            "segs": [
+                {
+                    "utf8": "and that you can't \nhave fun anymore."
+                }
+            ]
+        },
+        {
+            "tStartMs": 80243,
+            "dDurationMs": 2160,
+            "segs": [
+                {
+                    "utf8": "That is the absolute opposite."
+                }
+            ]
+        },
+        {
+            "tStartMs": 82403,
+            "dDurationMs": 4277,
+            "segs": [
+                {
+                    "utf8": "So fun and joy\nand positivity saved my life."
+                }
+            ]
+        }
+    ]
+}
