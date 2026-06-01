@@ -1,8 +1,8 @@
-import type { z } from "zod";
+import { z } from "zod";
 
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import type {
+import {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";

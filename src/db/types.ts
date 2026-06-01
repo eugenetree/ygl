@@ -1,8 +1,8 @@
-import type { Generated, Insertable, Selectable, Updateable } from "kysely";
+import { Generated, Insertable, Selectable, Updateable } from "kysely";
 
-import type { LanguageCode } from "../modules/i18n/index.js";
-import type { ScraperName } from "../modules/scraping/constants.js";
-import type { VideoEntryAvailability } from "../modules/scraping/scrapers/video-discovery/video-entry.js";
+import { LanguageCode } from "../modules/i18n/index.js";
+import { ScraperName } from "../modules/scraping/constants.js";
+import { VideoEntryAvailability } from "../modules/scraping/scrapers/video-discovery/video-entry.js";
 
 export type ProcessingStatus =
   | "PENDING"

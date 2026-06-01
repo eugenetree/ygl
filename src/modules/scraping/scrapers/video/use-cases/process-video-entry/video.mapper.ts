@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { pick } from "lodash-es";
-import type {
+import {
   Caption as CaptionDto,
   Video as VideoDto,
 } from "../../../../../youtube-api/youtube-api.types.js";
-import type { CaptionProps } from "../../caption.js";
-import type { VideoProps } from "../../video.js";
+import { CaptionProps } from "../../caption.js";
+import { VideoProps } from "../../video.js";
 
 @injectable()
 export class VideoMapper {

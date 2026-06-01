@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 
-import type { Logger } from "../../_common/logger/logger.js";
-import type { StopReason } from "../scraper.orchestrator.js";
-import type { ScraperStatusService } from "./scraper-status.service.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { StopReason } from "../scraper.orchestrator.js";
+import { ScraperStatusService } from "./scraper-status.service.js";
 
 @injectable()
 export class HandleScraperStopUseCase {

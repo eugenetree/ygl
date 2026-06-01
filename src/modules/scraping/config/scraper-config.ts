@@ -1,4 +1,4 @@
-import type { ScraperName } from "../constants.js";
+import { ScraperName } from "../constants.js";
 
 export type ScraperConfig = {
   scraperName: ScraperName;

@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
+import { Logger } from "../_common/logger/logger.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../scraping/scrapers/video/config.js";
-import type { ReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/reprocess-captions.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { ReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/reprocess-captions.use-case.js";
+import { TelegramController } from "./telegram-controller.js";
 
 const MAX_IDS_IN_MESSAGE = 50;
 

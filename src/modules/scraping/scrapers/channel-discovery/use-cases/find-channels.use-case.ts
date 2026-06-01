@@ -1,13 +1,13 @@
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../../../../types/index.js";
-import type { BaseError } from "../../../../_common/errors.js";
-import type { Logger } from "../../../../_common/logger/logger.js";
-import type {
+import { BaseError } from "../../../../_common/errors.js";
+import { Logger } from "../../../../_common/logger/logger.js";
+import {
   YoutubeApiSearchChannelsViaVideos,
   SearchChannelEntry as YoutubeSearchChannelEntry,
 } from "../../../../youtube-api/yt-api-search-channels-via-videos.js";
-import type { ChannelEntriesQueue } from "../../channel/index.js";
-import type { ChannelEntryRepository } from "../channel-entry.repository.js";
+import { ChannelEntriesQueue } from "../../channel/index.js";
+import { ChannelEntryRepository } from "../channel-entry.repository.js";
 
 @injectable()
 export class FindChannelsUseCase {

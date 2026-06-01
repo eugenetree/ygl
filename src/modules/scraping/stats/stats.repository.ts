@@ -1,14 +1,14 @@
 import { injectable } from "inversify";
 
-import type { DatabaseClient } from "../../../db/client.js";
-import type {
+import { DatabaseClient } from "../../../db/client.js";
+import {
   Database,
   ProcessingStatus,
   VideoDiscoveryJobStatus,
   VideoJobStatus,
 } from "../../../db/types.js";
 import { Failure, type Result, Success } from "../../../types/index.js";
-import type { Logger } from "../../_common/logger/logger.js";
+import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
 
 type StatusCounts<TStatus extends string> = Record<TStatus, number>;

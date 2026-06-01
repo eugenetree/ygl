@@ -1,10 +1,10 @@
 import fs from "fs";
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { ExportLogsUseCase } from "../scraping/logs/export-logs.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ExportLogsUseCase } from "../scraping/logs/export-logs.use-case.js";
+import { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class ExportLogsController implements TelegramController {

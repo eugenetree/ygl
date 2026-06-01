@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import pg from "pg";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { Status } from "../scraping/lifecycle/scraper-status.service.js";
-import type { OnScraperStatusChangeUseCase } from "./on-scraper-status-change.use-case.js";
+import { Logger } from "../_common/logger/logger.js";
+import { Status } from "../scraping/lifecycle/scraper-status.service.js";
+import { OnScraperStatusChangeUseCase } from "./on-scraper-status-change.use-case.js";
 
 const CHANNEL = "scraper_actual_status_changed";
 

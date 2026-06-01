@@ -1,17 +1,17 @@
 import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { ConfigController } from "./config.controller.js";
-import type { ExportLogsController } from "./export-logs.controller.js";
-import type { FindController } from "./find.controller.js";
-import type { LastVideosController } from "./last-videos.controller.js";
-import type { LifecycleController } from "./lifecycle.controller.js";
-import type { PushChannelController } from "./push-channel.controller.js";
-import type { RecalculatePriorityController } from "./recalculate-priority.controller.js";
-import type { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
-import type { ResyncCaptionsController } from "./resync-captions.controller.js";
-import type { StatsController } from "./stats.controller.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ConfigController } from "./config.controller.js";
+import { ExportLogsController } from "./export-logs.controller.js";
+import { FindController } from "./find.controller.js";
+import { LastVideosController } from "./last-videos.controller.js";
+import { LifecycleController } from "./lifecycle.controller.js";
+import { PushChannelController } from "./push-channel.controller.js";
+import { RecalculatePriorityController } from "./recalculate-priority.controller.js";
+import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
+import { ResyncCaptionsController } from "./resync-captions.controller.js";
+import { StatsController } from "./stats.controller.js";
 
 @injectable()
 export class TelegramBot {

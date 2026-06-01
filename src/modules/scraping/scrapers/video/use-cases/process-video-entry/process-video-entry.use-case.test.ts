@@ -1,16 +1,16 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../../../../types/index.js";
-import type { Logger } from "../../../../../_common/logger/logger.js";
-import type { Video } from "../../../../../youtube-api/youtube-api.types.js";
-import type { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
-import type { CaptionProps } from "../../caption.js";
-import type { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
-import type { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
-import type { VideoRepository } from "../../video.repository.js";
-import type { CaptionAnalysisService } from "./caption-analysis.service.js";
+import { Logger } from "../../../../../_common/logger/logger.js";
+import { Video } from "../../../../../youtube-api/youtube-api.types.js";
+import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
+import { CaptionProps } from "../../caption.js";
+import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
+import { VideoRepository } from "../../video.repository.js";
+import { CaptionAnalysisService } from "./caption-analysis.service.js";
 import { ProcessVideoEntryUseCase } from "./process-video-entry.use-case.js";
-import type { VideoMapper } from "./video.mapper.js";
+import { VideoMapper } from "./video.mapper.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 

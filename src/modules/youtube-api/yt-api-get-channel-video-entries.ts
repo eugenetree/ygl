@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type { ValidationError } from "../_common/validation/errors.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
-import type { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
+import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
 export type ChannelNotFoundError = {
   type: "CHANNEL_NOT_FOUND";

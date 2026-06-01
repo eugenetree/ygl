@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../../db/client.js";
-import type { ChannelPriorityService } from "./channel-priority.service.js";
+import { DatabaseClient } from "../../../db/client.js";
+import { ChannelPriorityService } from "./channel-priority.service.js";
 
 export type RecalculateAllPrioritiesResult = {
   total: number;

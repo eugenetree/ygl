@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Failure, Success } from "../../../types/index.js";
-import type { ScraperConfigRepository } from "../config/scraper-config.repository.js";
-import type { ScraperName } from "../constants.js";
+import { ScraperConfigRepository } from "../config/scraper-config.repository.js";
+import { ScraperName } from "../constants.js";
 
 @injectable()
 export class ToggleScraperUseCase {

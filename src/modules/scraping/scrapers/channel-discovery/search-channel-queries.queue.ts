@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { sql } from "kysely";
-import type { DatabaseClient } from "../../../../db/client.js";
-import type { DatabaseError } from "../../../../db/types.js";
+import { DatabaseClient } from "../../../../db/client.js";
+import { DatabaseError } from "../../../../db/types.js";
 import { Failure, type Result, Success } from "../../../../types/index.js";
-import type { Logger } from "../../../_common/logger/logger.js";
+import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import type { SearchChannelQuery } from "./search-channel-query.js";
+import { SearchChannelQuery } from "./search-channel-query.js";
 
 @injectable()
 export class SearchChannelQueriesQueue {

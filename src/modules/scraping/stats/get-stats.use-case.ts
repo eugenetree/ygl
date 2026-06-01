@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import type {
+import {
   ScraperStatusService,
   Status,
 } from "../lifecycle/scraper-status.service.js";
-import type { JobStats, StatsRepository } from "./stats.repository.js";
+import { JobStats, StatsRepository } from "./stats.repository.js";
 
 @injectable()
 export class GetStatsUseCase {

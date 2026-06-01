@@ -4,9 +4,9 @@ import {
   type Result,
   Success,
 } from "../../../../../../types/index.js";
-import type { Logger } from "../../../../../_common/logger/logger.js";
-import type { CaptionSegment } from "./caption-analysis.service.js";
-import type { CaptionCleanUpService } from "./caption-clean-up.service.js";
+import { Logger } from "../../../../../_common/logger/logger.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
+import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 export type AutoCaptionsValidationError =
   | {

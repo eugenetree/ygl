@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import type { Logger } from "../../_common/logger/logger.js";
-import type { ScraperOrchestrator } from "../scraper.orchestrator.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { ScraperOrchestrator } from "../scraper.orchestrator.js";
 
 @injectable()
 export class StopScraperUseCase {

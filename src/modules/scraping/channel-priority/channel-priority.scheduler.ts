@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 import { sql } from "kysely";
-import type { DatabaseClient } from "../../../db/client.js";
-import type { Logger } from "../../_common/logger/logger.js";
-import type { ChannelPriorityService } from "./channel-priority.service.js";
+import { DatabaseClient } from "../../../db/client.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { ChannelPriorityService } from "./channel-priority.service.js";
 
 const SCHEDULER_INTERVAL_MS = 5 * 60 * 1000;
 

@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import type { ScraperConfigRepository } from "../config/scraper-config.repository.js";
+import { ScraperConfigRepository } from "../config/scraper-config.repository.js";
 
 @injectable()
 export class GetConfigUseCase {

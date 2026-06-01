@@ -1,6 +1,6 @@
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import type { ParsingError } from "../../_common/validation/errors.js";
+import { ParsingError } from "../../_common/validation/errors.js";
 
 /*
   Parses abbreviated numbers like "1.2K subscribers" to 1200

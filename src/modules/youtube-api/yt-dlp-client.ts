@@ -4,7 +4,7 @@ import * as path from "node:path";
 import { injectable } from "inversify";
 import { YtDlp as YtDlpWrapper } from "ytdlp-nodejs";
 import { Failure, type Result, Success } from "../../types/index.js";
-import type { Logger } from "../_common/logger/logger.js";
+import { Logger } from "../_common/logger/logger.js";
 
 export type YtDlpError = {
   type: "YT_DLP_ERROR";

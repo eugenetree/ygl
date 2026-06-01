@@ -1,7 +1,7 @@
 import { Client } from "@elastic/elasticsearch";
 import { injectable } from "inversify";
-import type { Logger } from "../_common/logger/logger.js";
-import type { Caption } from "../scraping/scrapers/video/caption.js";
+import { Logger } from "../_common/logger/logger.js";
+import { Caption } from "../scraping/scrapers/video/caption.js";
 
 @injectable()
 export class CaptionsService {

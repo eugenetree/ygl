@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { GetLastScrapedVideosUseCase } from "../scraping/scrapers/video/use-cases/get-last-scraped-videos.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { Logger } from "../_common/logger/logger.js";
+import { GetLastScrapedVideosUseCase } from "../scraping/scrapers/video/use-cases/get-last-scraped-videos.use-case.js";
+import { TelegramController } from "./telegram-controller.js";
 
 const LIMIT = 10;
 

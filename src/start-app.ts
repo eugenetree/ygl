@@ -1,13 +1,13 @@
 import { injectable } from "inversify";
-import type { Logger } from "./modules/_common/logger/logger.js";
-import type { ApiServer } from "./modules/api/api-server.js";
-import type { ScraperConfigRepository } from "./modules/scraping/config/scraper-config.repository.js";
-import type { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
-import type { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
-import type { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
-import type { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
-import type { TelegramBot } from "./modules/telegram/telegram-bot.js";
-import type { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
+import { Logger } from "./modules/_common/logger/logger.js";
+import { ApiServer } from "./modules/api/api-server.js";
+import { ScraperConfigRepository } from "./modules/scraping/config/scraper-config.repository.js";
+import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
+import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
+import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
+import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
+import { TelegramBot } from "./modules/telegram/telegram-bot.js";
+import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 
 @injectable()
 export class StartAppUseCase {

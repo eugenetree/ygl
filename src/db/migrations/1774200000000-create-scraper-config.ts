@@ -1,4 +1,4 @@
-import type { Kysely } from "kysely";
+import { Kysely } from "kysely";
 import { ScraperName } from "../../modules/scraping/constants.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

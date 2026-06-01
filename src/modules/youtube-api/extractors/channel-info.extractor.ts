@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../../_common/logger/logger.js";
-import type {
+import {
   ParsingError,
   ValidationError,
 } from "../../_common/validation/errors.js";
@@ -19,7 +19,7 @@ import { channelCreatedDateParser } from "../parsers/channel-created-date.parser
 import { usernameParser } from "../parsers/username.parser.js";
 import { videoCountParser } from "../parsers/video-count.parser.js";
 import { viewCountParser } from "../parsers/view-count.parser.js";
-import type { Channel } from "../youtube-api.types.js";
+import { Channel } from "../youtube-api.types.js";
 import { jsonFromHtmlExtractor } from "./json-from-html.extractor.js";
 
 const rawChannelInfoSchema = z.object({

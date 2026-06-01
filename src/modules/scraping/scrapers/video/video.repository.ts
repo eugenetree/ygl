@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../../../db/client.js";
-import type { DatabaseError } from "../../../../db/types.js";
+import { DatabaseClient } from "../../../../db/client.js";
+import { DatabaseError } from "../../../../db/types.js";
 import { Failure, type Result, Success } from "../../../../types/index.js";
-import type { Logger } from "../../../_common/logger/logger.js";
+import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
-import type { Caption, CaptionProps } from "./caption.js";
+import { Caption, CaptionProps } from "./caption.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "./config.js";
-import type { Video, VideoProps } from "./video.js";
+import { Video, VideoProps } from "./video.js";
 
 export type VideoWithCaptions = {
   video: Video;

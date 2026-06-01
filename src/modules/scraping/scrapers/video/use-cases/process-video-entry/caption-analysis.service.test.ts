@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../../../../types/index.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
-import type { AutoCaptionsValidator } from "./auto-captions.validator.js";
+import { AutoCaptionsValidator } from "./auto-captions.validator.js";
 import {
   CaptionAnalysisService,
   type CaptionSegment,
 } from "./caption-analysis.service.js";
-import type { CaptionSimilarityService } from "./captions-similarity.service.js";
-import type { ManualCaptionsValidator } from "./manual-captions.validator.js";
+import { CaptionSimilarityService } from "./captions-similarity.service.js";
+import { ManualCaptionsValidator } from "./manual-captions.validator.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 

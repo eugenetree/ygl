@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
+import { Logger } from "../_common/logger/logger.js";
 import { Status } from "../scraping/lifecycle/scraper-status.service.js";
-import type { GetStatsUseCase } from "../scraping/stats/get-stats.use-case.js";
+import { GetStatsUseCase } from "../scraping/stats/get-stats.use-case.js";
 import { JobStats } from "../scraping/stats/stats.repository.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class StatsController implements TelegramController {

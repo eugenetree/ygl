@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it, mock } from "node:test";
 import { Failure, Success } from "../../../types/index.js";
-import type { Logger } from "../../_common/logger/logger.js";
-import type { TelegramNotifier } from "../../telegram/telegram-notifier.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { TelegramNotifier } from "../../telegram/telegram-notifier.js";
 import { ProcessScraperFailureUseCase } from "./process-scraper-failure.use-case.js";
 
 // ---- Factory ----------------------------------------------------------------

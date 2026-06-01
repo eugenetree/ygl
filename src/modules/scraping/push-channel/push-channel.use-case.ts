@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import type { DatabaseError } from "../../../db/types.js";
-import { type Result, Success } from "../../../types/index.js";
-import type { ChannelPriorityService } from "../channel-priority/channel-priority.service.js";
-import type { ChannelEntriesQueue } from "../scrapers/channel/channel-entries.queue.js";
-import type { ChannelEntryRepository } from "../scrapers/channel-discovery/channel-entry.repository.js";
-import type { BoostedChannelsRepository } from "./boosted-channels.repository.js";
+import { DatabaseError } from "../../../db/types.js";
+import { Result, Success } from "../../../types/index.js";
+import { ChannelPriorityService } from "../channel-priority/channel-priority.service.js";
+import { ChannelEntriesQueue } from "../scrapers/channel/channel-entries.queue.js";
+import { ChannelEntryRepository } from "../scrapers/channel-discovery/channel-entry.repository.js";
+import { BoostedChannelsRepository } from "./boosted-channels.repository.js";
 
 export type PushChannelResult =
   | { status: "ADDED" }

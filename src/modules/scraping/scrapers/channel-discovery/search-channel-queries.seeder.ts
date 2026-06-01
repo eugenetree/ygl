@@ -1,9 +1,9 @@
 import { readFile } from "fs/promises";
 import { injectable } from "inversify";
 import path from "path";
-import type { DatabaseClient } from "../../../../db/client.js";
+import { DatabaseClient } from "../../../../db/client.js";
 import { Failure, Success } from "../../../../types/index.js";
-import type { Logger } from "../../../_common/logger/logger.js";
+import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 
 @injectable()

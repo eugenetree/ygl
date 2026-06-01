@@ -1,6 +1,6 @@
 import { Logger } from "../../../modules/_common/logger/logger.js";
 import { Failure, type Result, Success } from "../../../types/index.js";
-import type { ParsingError } from "../../_common/validation/errors.js";
+import { ParsingError } from "../../_common/validation/errors.js";
 
 /**
  * "https://www.youtube.com/@eugene_tree" -> "eugene_tree"

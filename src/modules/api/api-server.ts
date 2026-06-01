@@ -1,8 +1,8 @@
 import http from "node:http";
 import { injectable } from "inversify";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import { Logger } from "../_common/logger/logger.js";
+import { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
 
 @injectable()
 export class ApiServer {

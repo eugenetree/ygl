@@ -1,5 +1,5 @@
 import { Failure, type Result, Success } from "../../../types/index.js";
-import type { ParsingError } from "../../_common/validation/errors.js";
+import { ParsingError } from "../../_common/validation/errors.js";
 
 /**
  * Turns a string like "02:02" into 122 (02 * 60 + 02)

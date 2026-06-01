@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import type { Logger } from "../_common/logger/logger.js";
-import type { Status } from "../scraping/lifecycle/scraper-status.service.js";
-import type { TelegramNotifier } from "./telegram-notifier.js";
+import { Logger } from "../_common/logger/logger.js";
+import { Status } from "../scraping/lifecycle/scraper-status.service.js";
+import { TelegramNotifier } from "./telegram-notifier.js";
 
 const messageToStatus: Partial<Record<Status, string>> = {
   RUNNING: "Scrapers started.",

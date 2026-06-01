@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../../../db/client.js";
-import type {
+import { DatabaseClient } from "../../../../db/client.js";
+import {
   DatabaseError,
   VideoEntryRow,
   VideoJobSkipCause,

@@ -1,17 +1,17 @@
 import { injectable } from "inversify";
 import { Success } from "../../../../../../types/index.js";
-import type { Logger } from "../../../../../_common/logger/logger.js";
-import type { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
-import type { CaptionProps } from "../../caption.js";
-import type { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
-import type {
+import { Logger } from "../../../../../_common/logger/logger.js";
+import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
+import { CaptionProps } from "../../caption.js";
+import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
+import {
   AutoCaptionsStatus,
   ManualCaptionsStatus,
   VideoProps,
 } from "../../video.js";
-import type { VideoRepository } from "../../video.repository.js";
-import type { CaptionAnalysisService } from "./caption-analysis.service.js";
-import type { VideoMapper } from "./video.mapper.js";
+import { VideoRepository } from "../../video.repository.js";
+import { CaptionAnalysisService } from "./caption-analysis.service.js";
+import { VideoMapper } from "./video.mapper.js";
 
 const PERSISTABLE_CAPTION_STATUSES = new Set<
   AutoCaptionsStatus | ManualCaptionsStatus

@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
-import type { ScraperConfigRow } from "../../db/types.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type { GetConfigUseCase } from "../scraping/config/get-config.use-case.js";
-import type { ScraperConfigRepository } from "../scraping/config/scraper-config.repository.js";
-import type { ToggleScraperUseCase } from "../scraping/config/toggle-scraper.use-case.js";
+import { Telegraf } from "telegraf";
+import { ScraperConfigRow } from "../../db/types.js";
+import { Logger } from "../_common/logger/logger.js";
+import { GetConfigUseCase } from "../scraping/config/get-config.use-case.js";
+import { ScraperConfigRepository } from "../scraping/config/scraper-config.repository.js";
+import { ToggleScraperUseCase } from "../scraping/config/toggle-scraper.use-case.js";
 import { ScraperName } from "../scraping/constants.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { TelegramController } from "./telegram-controller.js";
 
 const SCRAPER_NAMES = [
   ScraperName.CHANNEL_DISCOVERY,

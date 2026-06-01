@@ -1,15 +1,15 @@
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../types/index.js";
-import type { BaseError } from "../_common/errors.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type { ScraperConfigRepository } from "./config/scraper-config.repository.js";
+import { BaseError } from "../_common/errors.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ScraperConfigRepository } from "./config/scraper-config.repository.js";
 import { ScraperName, WorkerStopCause } from "./constants.js";
-import type { ProcessScraperFailureUseCase } from "./error-handling/process-scraper-failure.use-case.js";
-import type { HandleScraperStopUseCase } from "./lifecycle/handle-scraper-stop.use-case.js";
-import type { ChannelEntriesWorker } from "./scrapers/channel/channel-entries.worker.js";
-import type { SearchChannelQueriesWorker } from "./scrapers/channel-discovery/search-channel-queries.worker.js";
-import type { VideoEntriesWorker } from "./scrapers/video/video-entries.worker.js";
-import type { ChannelsWorker } from "./scrapers/video-discovery/channels.worker.js";
+import { ProcessScraperFailureUseCase } from "./error-handling/process-scraper-failure.use-case.js";
+import { HandleScraperStopUseCase } from "./lifecycle/handle-scraper-stop.use-case.js";
+import { ChannelEntriesWorker } from "./scrapers/channel/channel-entries.worker.js";
+import { SearchChannelQueriesWorker } from "./scrapers/channel-discovery/search-channel-queries.worker.js";
+import { VideoEntriesWorker } from "./scrapers/video/video-entries.worker.js";
+import { ChannelsWorker } from "./scrapers/video-discovery/channels.worker.js";
 
 const MINUTE_MS = 1000 * 60;
 const HOUR_MS = MINUTE_MS * 60;

@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import type { Selectable } from "kysely";
-import type { CaptionsRow } from "../../db/types.js";
+import { Selectable } from "kysely";
+import { CaptionsRow } from "../../db/types.js";
 import { Failure, Success } from "../../types/index.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type { CaptionsService } from "./captions.service.js";
-import type { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
+import { Logger } from "../_common/logger/logger.js";
+import { CaptionsService } from "./captions.service.js";
+import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 
 @injectable()
 export class SyncDataToElasticUseCase {

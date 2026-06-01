@@ -1,4 +1,4 @@
-import type { AxiosHeaders } from "axios";
+import { AxiosHeaders } from "axios";
 
 export enum FetchErrorType {
   HTTP = "http",

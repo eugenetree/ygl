@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import type { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
-import type { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
-import type { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
-import type { TelegramBot } from "./modules/telegram/telegram-bot.js";
-import type { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
+import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
+import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
+import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
+import { TelegramBot } from "./modules/telegram/telegram-bot.js";
+import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 
 @injectable()
 export class StopAppUseCase {

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../../db/client.js";
-import type { Logger } from "../../_common/logger/logger.js";
+import { DatabaseClient } from "../../../db/client.js";
+import { Logger } from "../../_common/logger/logger.js";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 

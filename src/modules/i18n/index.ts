@@ -1,5 +1,5 @@
 // country-related constants
-import type { ValueOf } from "../../types/index.js";
+import { ValueOf } from "../../types/index.js";
 
 export type CountryCode = ValueOf<typeof CountryCode>;
 export const CountryCode = {

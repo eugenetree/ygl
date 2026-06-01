@@ -1,4 +1,4 @@
-import type { CountryCode, LanguageCode } from "../i18n/index.js";
+import { CountryCode, LanguageCode } from "../i18n/index.js";
 
 export type Channel = {
   id: string;

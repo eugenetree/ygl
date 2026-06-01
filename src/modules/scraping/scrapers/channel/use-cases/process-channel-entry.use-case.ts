@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../../../../types/index.js";
-import type { BaseError } from "../../../../_common/errors.js";
-import type { Logger } from "../../../../_common/logger/logger.js";
-import type { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
-import type { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
-import type { ChannelsQueue } from "../../video-discovery/index.js";
-import type { ChannelRepository } from "../channel.repository.js";
+import { BaseError } from "../../../../_common/errors.js";
+import { Logger } from "../../../../_common/logger/logger.js";
+import { YoutubeApiGetChannel } from "../../../../youtube-api/yt-api-get-channel.js";
+import { ChannelPriorityService } from "../../../channel-priority/channel-priority.service.js";
+import { ChannelsQueue } from "../../video-discovery/index.js";
+import { ChannelRepository } from "../channel.repository.js";
 
 @injectable()
 export class ProcessChannelEntryUseCase {

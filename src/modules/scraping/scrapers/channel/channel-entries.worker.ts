@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../../../types/index.js";
-import type { BaseError } from "../../../_common/errors.js";
-import type { Logger } from "../../../_common/logger/logger.js";
+import { BaseError } from "../../../_common/errors.js";
+import { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
-import type { ChannelEntriesQueue } from "./channel-entries.queue.js";
-import type { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
+import { ChannelEntriesQueue } from "./channel-entries.queue.js";
+import { ProcessChannelEntryUseCase } from "./use-cases/process-channel-entry.use-case.js";
 
 type WorkerOptions = {
   shouldContinue: () => boolean;

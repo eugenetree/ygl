@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../../db/client.js";
+import { DatabaseClient } from "../../../db/client.js";
 import { Failure, Success } from "../../../types/index.js";
-import type { Logger } from "../../_common/logger/logger.js";
+import { Logger } from "../../_common/logger/logger.js";
 import { tryCatch } from "../../_common/try-catch.js";
 
 export type Status = ActualStatus | "PROCESS_DOWN";

@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../types/index.js";
-import type { FetchError } from "../_common/http/errors.js";
-import type { HttpClient } from "../_common/http/index.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type {
+import { FetchError } from "../_common/http/errors.js";
+import { HttpClient } from "../_common/http/index.js";
+import { Logger } from "../_common/logger/logger.js";
+import {
   ParsingError,
   ValidationError,
 } from "../_common/validation/errors.js";

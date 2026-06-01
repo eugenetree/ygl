@@ -9,10 +9,10 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { after, before, describe, it } from "node:test";
-import type { Result } from "../../types/index.js";
+import { Result } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
-import type {
+import {
   MembersOnlyVideoError,
   YtDlpClient,
   YtDlpError,

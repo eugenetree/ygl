@@ -3,14 +3,14 @@ import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../types/index.js";
-import type { Logger } from "../_common/logger/logger.js";
-import type { ValidationError } from "../_common/validation/errors.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
 import { isValidLanguageCode, type LanguageCode } from "../i18n/index.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
-import type { Caption, Video } from "./youtube-api.types.js";
+import { Caption, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
-import type {
+import {
   UnprocessableVideoError,
   YtDlpClient,
   YtDlpError,

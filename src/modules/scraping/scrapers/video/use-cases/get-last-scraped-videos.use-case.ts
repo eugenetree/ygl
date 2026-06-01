@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 
-import type { VideoRepository } from "../video.repository.js";
+import { VideoRepository } from "../video.repository.js";
 
 @injectable()
 export class GetLastScrapedVideosUseCase {

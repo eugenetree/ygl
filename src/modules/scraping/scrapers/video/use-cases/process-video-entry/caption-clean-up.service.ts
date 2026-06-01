@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import type { CaptionSegment } from "./caption-analysis.service.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
 
 @injectable()
 export class CaptionCleanUpService {

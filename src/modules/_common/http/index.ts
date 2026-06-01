@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { Logger } from "../logger/logger.js";
-import type { FetchError } from "./errors.js";
+import { FetchError } from "./errors.js";
 
 type ConfigInput = {
   requestCooldown?: number | (() => number);

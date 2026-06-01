@@ -1,4 +1,4 @@
-import { type Kysely, sql } from "kysely";
+import { Kysely, sql } from "kysely";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {

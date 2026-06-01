@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { CountryCode } from "../i18n/index.js";
+import { CountryCode } from "../i18n/index.js";
 
 export type VideoInfo = {
   id: string;

@@ -1,13 +1,13 @@
 import { randomUUID } from "crypto";
 import { injectable } from "inversify";
-import type { DatabaseClient } from "../../db/client.js";
-import type {
+import { DatabaseClient } from "../../db/client.js";
+import {
   DatabaseError,
   UpdateableElasticCaptionsSyncRow,
 } from "../../db/types.js";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { tryCatch } from "../_common/try-catch.js";
-import type {
+import {
   ElasticCaptionsSync,
   ElasticCaptionsSyncProps,
 } from "./elastic-captions-sync.js";

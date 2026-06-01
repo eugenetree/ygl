@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import type { CaptionTrackState } from "../../../../../youtube-api/youtube-api.types.js";
+import { CaptionTrackState } from "../../../../../youtube-api/youtube-api.types.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
-import type { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
-import type { AutoCaptionsValidator } from "./auto-captions.validator.js";
-import type { CaptionSimilarityService } from "./captions-similarity.service.js";
-import type { ManualCaptionsValidator } from "./manual-captions.validator.js";
+import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
+import { AutoCaptionsValidator } from "./auto-captions.validator.js";
+import { CaptionSimilarityService } from "./captions-similarity.service.js";
+import { ManualCaptionsValidator } from "./manual-captions.validator.js";
 
 type AnalysisResult = {
   autoCaptionsStatus: AutoCaptionsStatus;

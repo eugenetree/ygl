@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import pg from "pg";
-import type { ScrapingProcessStatus } from "../../../db/types.js";
-import type { Logger } from "../../_common/logger/logger.js";
-import type { StartScraperUseCase } from "./start-scraper.use-case.js";
-import type { StopScraperUseCase } from "./stop-scraper.use-case.js";
+import { ScrapingProcessStatus } from "../../../db/types.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { StartScraperUseCase } from "./start-scraper.use-case.js";
+import { StopScraperUseCase } from "./stop-scraper.use-case.js";
 
 const CHANNEL = "scraper_requested_status_changed";
 

@@ -1,5 +1,5 @@
 import { Failure, type Result, Success } from "../../../types/index.js";
-import type { ParsingError } from "../../_common/validation/errors.js";
+import { ParsingError } from "../../_common/validation/errors.js";
 
 class VideoCountParser {
   parse(string: string): Result<number, ParsingError> {

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 
-import type { DatabaseClient } from "../../../db/client.js";
-import type { DatabaseError } from "../../../db/types.js";
+import { DatabaseClient } from "../../../db/client.js";
+import { DatabaseError } from "../../../db/types.js";
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
-import type { ScraperName } from "../constants.js";
-import type { ScraperConfig } from "./scraper-config.js";
+import { ScraperName } from "../constants.js";
+import { ScraperConfig } from "./scraper-config.js";
 
 @injectable()
 export class ScraperConfigRepository {

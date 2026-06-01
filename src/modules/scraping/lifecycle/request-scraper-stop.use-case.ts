@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Failure } from "../../../types/index.js";
 import { ScraperOrchestrator } from "../scraper.orchestrator.js";
-import type { ScraperStatusService } from "./scraper-status.service.js";
+import { ScraperStatusService } from "./scraper-status.service.js";
 
 @injectable()
 export class RequestScraperStopUseCase {

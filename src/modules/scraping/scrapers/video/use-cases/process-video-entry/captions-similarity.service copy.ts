@@ -1,10 +1,10 @@
 import { writeFileSync } from "fs";
 import { injectable } from "inversify";
-import type { Logger } from "../../../../../_common/logger/logger.js";
-import type { Caption } from "../../../../../youtube-api/youtube-api.types.js";
+import { Logger } from "../../../../../_common/logger/logger.js";
+import { Caption } from "../../../../../youtube-api/youtube-api.types.js";
 import { CaptionProps } from "../../caption.js";
-import type { CaptionSegment } from "./caption-analysis.service.js";
-import type { CaptionCleanUpService } from "./caption-clean-up.service.js";
+import { CaptionSegment } from "./caption-analysis.service.js";
+import { CaptionCleanUpService } from "./caption-clean-up.service.js";
 
 type TokenOccurrence = {
   token: string;

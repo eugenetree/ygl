@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { type Result, Success } from "../../../../../../types/index.js";
-import type { BaseError } from "../../../../../_common/errors.js";
-import type { Logger } from "../../../../../_common/logger/logger.js";
+import { Result, Success } from "../../../../../../types/index.js";
+import { BaseError } from "../../../../../_common/errors.js";
+import { Logger } from "../../../../../_common/logger/logger.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
-import type { VideoRepository } from "../../video.repository.js";
-import type { CaptionAnalysisService } from "../process-video-entry/caption-analysis.service.js";
+import { VideoRepository } from "../../video.repository.js";
+import { CaptionAnalysisService } from "../process-video-entry/caption-analysis.service.js";
 
 export type ReprocessCaptionsResult = {
   processedCount: number;

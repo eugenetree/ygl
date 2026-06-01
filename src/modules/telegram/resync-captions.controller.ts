@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { ResyncCaptionsUseCase } from "../captions-search/resync-captions.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { Logger } from "../_common/logger/logger.js";
+import { ResyncCaptionsUseCase } from "../captions-search/resync-captions.use-case.js";
+import { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class ResyncCaptionsController implements TelegramController {

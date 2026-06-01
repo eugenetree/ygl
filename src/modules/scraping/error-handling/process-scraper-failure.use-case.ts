@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
-import { type Result, Success } from "../../../types/index.js";
-import type { BaseError } from "../../_common/errors.js";
-import type { Logger } from "../../_common/logger/logger.js";
-import type { TelegramNotifier } from "../../telegram/telegram-notifier.js";
-import type { ScraperName } from "../constants.js";
+import { Result, Success } from "../../../types/index.js";
+import { BaseError } from "../../_common/errors.js";
+import { Logger } from "../../_common/logger/logger.js";
+import { TelegramNotifier } from "../../telegram/telegram-notifier.js";
+import { ScraperName } from "../constants.js";
 
 @injectable()
 export class ProcessScraperFailureUseCase {

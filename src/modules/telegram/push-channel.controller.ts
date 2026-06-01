@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
-import type { Logger } from "../_common/logger/logger.js";
-import type {
+import { Telegraf } from "telegraf";
+import { Logger } from "../_common/logger/logger.js";
+import {
   PushChannelResult,
   PushChannelUseCase,
 } from "../scraping/push-channel/push-channel.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { TelegramController } from "./telegram-controller.js";
 
 @injectable()
 export class PushChannelController implements TelegramController {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { Failure, type Result, Success } from "../../../types/index.js";
-import type { ValidationError } from "../../_common/validation/errors.js";
+import { ValidationError } from "../../_common/validation/errors.js";
 
 type GetCaptionsParams = {
   jsonResponse: unknown;

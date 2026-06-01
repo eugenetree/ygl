@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import type { Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 
-import type { Logger } from "../_common/logger/logger.js";
-import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
-import type { TelegramController } from "./telegram-controller.js";
+import { Logger } from "../_common/logger/logger.js";
+import { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import { TelegramController } from "./telegram-controller.js";
 
 const MAX_RESULTS = 10;
 

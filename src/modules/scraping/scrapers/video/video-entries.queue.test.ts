@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import { CamelCasePlugin, Kysely, PostgresDialect, sql } from "kysely";
 import { DataType, newDb } from "pg-mem";
-import type { DatabaseClient } from "../../../../db/client.js";
-import type { Database } from "../../../../db/types.js";
+import { DatabaseClient } from "../../../../db/client.js";
+import { Database } from "../../../../db/types.js";
 import { VideoEntriesQueue } from "./video-entries.queue.js";
 
 // ---- In-memory DB setup -----------------------------------------------------
