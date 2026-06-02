@@ -229,17 +229,19 @@ export class CaptionSimilarityService {
       ) {
         bestShiftMs = shiftMs;
       }
-
-      const zeroScore = scores.find((s) => s.shiftMs === 0)?.score!;
-      if (zeroScore !== bestScore && bestScore - zeroScore > 0.05) {
-        bestScore = bestScore;
-      } else {
-        bestScore = zeroScore;
-        bestShiftMs = 0;
-      }
     }
 
-    console.log("debug: scores", scores);
+    const zeroScore = scores.find((s) => s.shiftMs === 0)?.score;
+    if (
+      zeroScore !== undefined &&
+      (zeroScore === bestScore || bestScore - zeroScore <= 0.04)
+    ) {
+      bestScore = zeroScore;
+      bestShiftMs = 0;
+    }
+
+    console.log(scores);
+
     return { shiftMs: bestShiftMs, score: bestScore };
   }
 
