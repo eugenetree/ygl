@@ -7,6 +7,7 @@ import { ScraperStatusService } from "./scraper-status.service.js";
 @injectable()
 export class StartScraperUseCase {
   private readonly logger: Logger;
+  private readonly instanceId: string;
 
   constructor(
     logger: Logger,
@@ -15,6 +16,7 @@ export class StartScraperUseCase {
     private readonly scraperStatusService: ScraperStatusService,
   ) {
     this.logger = logger.child({ context: StartScraperUseCase.name });
+    this.instanceId = process.env.SCRAPER_INSTANCE_ID ?? "";
   }
 
   async execute() {
@@ -28,7 +30,9 @@ export class StartScraperUseCase {
       return;
     }
 
-    const configResult = await this.scraperConfigRepository.findEnabled();
+    const configResult = await this.scraperConfigRepository.findEnabled(
+      this.instanceId,
+    );
     if (!configResult.ok) {
       this.logger.error({
         message: "Failed to fetch scraper config for start execution",

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
-import { ScraperConfigRow } from "../../db/types.js";
 import { Logger } from "../_common/logger/logger.js";
 import { GetConfigUseCase } from "../scraping/config/get-config.use-case.js";
-import { ScraperConfigRepository } from "../scraping/config/scraper-config.repository.js";
+import { ScraperConfig } from "../scraping/config/scraper-config.js";
 import { ToggleScraperUseCase } from "../scraping/config/toggle-scraper.use-case.js";
 import { ScraperName } from "../scraping/constants.js";
+import { InstanceRegistry } from "../scraping/instance-registry/instance-registry.js";
 import { TelegramController } from "./telegram-controller.js";
 
 const SCRAPER_NAMES = [
@@ -15,14 +15,14 @@ const SCRAPER_NAMES = [
   ScraperName.VIDEO,
 ] as const;
 
-function buildKeyboard(rows: ScraperConfigRow[]) {
+function buildConfigKeyboard(instanceId: string, rows: ScraperConfig[]) {
   const configMap = new Map(rows.map((r) => [r.scraperName, r.enabled]));
   return SCRAPER_NAMES.map((name) => {
-    const enabled = configMap.get(name) ?? true;
+    const enabled = configMap.get(name) ?? false;
     return [
       {
         text: `[${enabled ? "on" : "off"}] ${name}`,
-        callback_data: `toggle_${name}`,
+        callback_data: `toggle_${instanceId}_${name}`,
       },
     ];
   });
@@ -32,7 +32,7 @@ function buildKeyboard(rows: ScraperConfigRow[]) {
 export class ConfigController implements TelegramController {
   constructor(
     private readonly logger: Logger,
-    private readonly scraperConfigRepository: ScraperConfigRepository,
+    private readonly instanceRegistry: InstanceRegistry,
     private readonly toggleScraperUseCase: ToggleScraperUseCase,
     private readonly getConfigUseCase: GetConfigUseCase,
   ) {
@@ -43,26 +43,59 @@ export class ConfigController implements TelegramController {
     bot.command("config", async (ctx) => {
       this.logger.info("Received /config command");
 
-      const result = await this.getConfigUseCase.execute();
+      const listResult = await this.instanceRegistry.list();
+      if (!listResult.ok) {
+        await ctx.reply("Failed to load instances.");
+        return;
+      }
+
+      if (listResult.value.length === 0) {
+        await ctx.reply("No scraper instances registered.");
+        return;
+      }
+
+      await ctx.reply("Select instance to configure:", {
+        reply_markup: {
+          inline_keyboard: listResult.value.map((instance) => [
+            {
+              text: instance.instanceId,
+              callback_data: `config_instance_${instance.instanceId}`,
+            },
+          ]),
+        },
+      });
+    });
+
+    bot.action(/^config_instance_(.+)$/, async (ctx) => {
+      const instanceId = ctx.match[1];
+      await ctx.answerCbQuery();
+
+      const result = await this.getConfigUseCase.execute(instanceId);
       if (!result.ok) {
         await ctx.reply("Failed to load scraper config.");
         return;
       }
 
-      await ctx.reply("Scraper Config", {
-        reply_markup: { inline_keyboard: buildKeyboard(result.value) },
+      await ctx.reply(`Scraper Config — ${instanceId}`, {
+        reply_markup: {
+          inline_keyboard: buildConfigKeyboard(instanceId, result.value),
+        },
       });
     });
 
-    bot.action(/^toggle_(.+)$/, async (ctx) => {
-      const scraperName = ctx.match[1];
+    bot.action(/^toggle_([^_]+)_(.+)$/, async (ctx) => {
+      const instanceId = ctx.match[1];
+      const scraperName = ctx.match[2];
 
       if (!this.isScraperName(scraperName)) {
         await ctx.answerCbQuery("Unknown scraper.");
         return;
       }
 
-      const toggleResult = await this.toggleScraperUseCase.execute(scraperName);
+      const toggleResult = await this.toggleScraperUseCase.execute(
+        instanceId,
+        scraperName,
+      );
       if (!toggleResult.ok) {
         switch (toggleResult.error.type) {
           case "NOT_FOUND":
@@ -76,14 +109,17 @@ export class ConfigController implements TelegramController {
       }
 
       await ctx.editMessageReplyMarkup({
-        inline_keyboard: buildKeyboard(toggleResult.value.allConfigs),
+        inline_keyboard: buildConfigKeyboard(
+          instanceId,
+          toggleResult.value.allConfigs,
+        ),
       });
       await ctx.answerCbQuery();
 
       const state = toggleResult.value.updatedConfig.enabled
         ? "enabled"
         : "disabled";
-      await ctx.reply(`${scraperName} ${state}.`);
+      await ctx.reply(`[${instanceId}] ${scraperName} ${state}.`);
     });
   }
 

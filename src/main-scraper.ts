@@ -5,6 +5,8 @@ import { DatabaseClient } from "./db/client.js";
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
 import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
+import { InstanceRegistry } from "./modules/scraping/instance-registry/instance-registry.js";
+import { RegisterInstanceUseCase } from "./modules/scraping/instance-registry/register-instance.use-case.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperHeartbeat } from "./modules/scraping/lifecycle/scraper-heartbeat.js";
 import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-status.service.js";
@@ -15,6 +17,12 @@ import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
 
 async function main() {
+  const instanceId = process.env.SCRAPER_INSTANCE_ID;
+  if (!instanceId) {
+    console.error("SCRAPER_INSTANCE_ID environment variable is required");
+    process.exit(1);
+  }
+
   const container = new Container({ autobind: true });
   container
     .bind(Logger)
@@ -24,6 +32,7 @@ async function main() {
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(YtDlpClient).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
+  container.bind(InstanceRegistry).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);
@@ -35,6 +44,7 @@ async function main() {
   const scraperHeartbeat = container.get(ScraperHeartbeat);
   const channelPriorityScheduler = container.get(ChannelPriorityScheduler);
   const telegramNotifier = container.get(TelegramNotifier);
+  const registerInstanceUseCase = container.get(RegisterInstanceUseCase);
 
   const shutdown = async () => {
     scraperHeartbeat.stop();
@@ -60,6 +70,22 @@ async function main() {
   process.on("SIGTERM", () => shutdown());
   process.on("SIGINT", () => shutdown());
 
+  const country = await fetchScraperCountry(logger);
+
+  // Register instance on boot; announces + seeds disabled config if first time
+  const registerResult = await registerInstanceUseCase.execute(
+    instanceId,
+    country,
+  );
+
+  if (!registerResult.ok) {
+    logger.error({
+      message: "Failed to register scraper instance",
+      error: registerResult.error,
+    });
+    process.exit(1);
+  }
+
   await seeder.seedIfNeeded();
   scraperHeartbeat.start();
   channelPriorityScheduler.start();
@@ -73,8 +99,9 @@ async function main() {
 
   await scraperCommandListener.start();
 
-  const country = await fetchScraperCountry(logger);
-  await telegramNotifier.sendMessage(`Scraper container country: ${country}`);
+  await telegramNotifier.sendMessage(
+    `[${instanceId}] Scraper container started (country: ${country})`,
+  );
 }
 
 async function fetchScraperCountry(logger: Logger): Promise<string> {

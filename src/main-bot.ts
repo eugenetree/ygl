@@ -4,6 +4,7 @@ import { Container } from "inversify";
 
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
+import { InstanceRegistry } from "./modules/scraping/instance-registry/instance-registry.js";
 import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
 import { TelegramBot } from "./modules/telegram/telegram-bot.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
@@ -17,6 +18,7 @@ async function main() {
     );
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(TelegramBot).toSelf().inSingletonScope();
+  container.bind(InstanceRegistry).toSelf().inSingletonScope();
 
   const telegramBot = container.get(TelegramBot);
   const scraperStatusWatcher = container.get(ScraperStatusWatcher);

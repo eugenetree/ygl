@@ -11,11 +11,14 @@ import { ScraperConfig } from "./scraper-config.js";
 export class ScraperConfigRepository {
   constructor(private readonly db: DatabaseClient) {}
 
-  public async findEnabled(): Promise<Result<ScraperConfig[], DatabaseError>> {
+  public async findEnabled(
+    instanceId: string,
+  ): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
       this.db
         .selectFrom("scraperConfig")
         .selectAll()
+        .where("instanceId", "=", instanceId)
         .where("enabled", "=", true)
         .execute(),
     );
@@ -28,12 +31,14 @@ export class ScraperConfigRepository {
   }
 
   public async findByName(
+    instanceId: string,
     scraperName: ScraperName,
   ): Promise<Result<ScraperConfig | null, DatabaseError>> {
     const result = await tryCatch(
       this.db
         .selectFrom("scraperConfig")
         .selectAll()
+        .where("instanceId", "=", instanceId)
         .where("scraperName", "=", scraperName)
         .executeTakeFirst(),
     );
@@ -45,9 +50,15 @@ export class ScraperConfigRepository {
     return Success(result.value ?? null);
   }
 
-  public async findAll(): Promise<Result<ScraperConfig[], DatabaseError>> {
+  public async findAll(
+    instanceId: string,
+  ): Promise<Result<ScraperConfig[], DatabaseError>> {
     const result = await tryCatch(
-      this.db.selectFrom("scraperConfig").selectAll().execute(),
+      this.db
+        .selectFrom("scraperConfig")
+        .selectAll()
+        .where("instanceId", "=", instanceId)
+        .execute(),
     );
 
     if (!result.ok) {
@@ -63,7 +74,8 @@ export class ScraperConfigRepository {
     const result = await tryCatch(
       this.db
         .updateTable("scraperConfig")
-        .set(config)
+        .set({ enabled: config.enabled })
+        .where("instanceId", "=", config.instanceId)
         .where("scraperName", "=", config.scraperName)
         .returningAll()
         .executeTakeFirstOrThrow(),

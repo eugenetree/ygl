@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { DatabaseClient } from "../../../db/client.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { InstanceRegistry } from "../instance-registry/instance-registry.js";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 
@@ -8,12 +8,14 @@ const HEARTBEAT_INTERVAL_MS = 10_000;
 export class ScraperHeartbeat {
   private interval: NodeJS.Timeout | null = null;
   private readonly logger: Logger;
+  private readonly instanceId: string;
 
   constructor(
     logger: Logger,
-    private readonly db: DatabaseClient,
+    private readonly instanceRegistry: InstanceRegistry,
   ) {
     this.logger = logger.child({ context: ScraperHeartbeat.name });
+    this.instanceId = process.env.SCRAPER_INSTANCE_ID ?? "";
   }
 
   start(): void {
@@ -31,11 +33,8 @@ export class ScraperHeartbeat {
   }
 
   private beat(): void {
-    this.db
-      .updateTable("scrapingProcess")
-      .set({ lastHeartbeatAt: new Date() })
-      .where("id", "=", 1)
-      .execute()
+    this.instanceRegistry
+      .recordHeartbeat(this.instanceId)
       .catch((error) =>
         this.logger.error({ message: "Failed to write heartbeat", error }),
       );

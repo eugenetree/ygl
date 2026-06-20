@@ -1,21 +1,23 @@
 import { injectable } from "inversify";
-import pg from "pg";
 import { ScrapingProcessStatus } from "../../../db/types.js";
 import { Logger } from "../../_common/logger/logger.js";
+import { PgNotificationListener } from "./pg-notification-listener.js";
 import { StartScraperUseCase } from "./start-scraper.use-case.js";
 import { StopScraperUseCase } from "./stop-scraper.use-case.js";
 
 const CHANNEL = "scraper_requested_status_changed";
 
 type StatusChangePayload = {
+  instance_id: string;
   old_status: ScrapingProcessStatus;
   new_status: ScrapingProcessStatus;
 };
 
 @injectable()
 export class ScraperCommandListener {
-  private client: pg.Client | null = null;
+  private listener: PgNotificationListener | null = null;
   private readonly logger: Logger;
+  private readonly instanceId: string;
 
   constructor(
     logger: Logger,
@@ -23,59 +25,34 @@ export class ScraperCommandListener {
     private readonly stopScraperUseCase: StopScraperUseCase,
   ) {
     this.logger = logger.child({ context: ScraperCommandListener.name });
+    this.instanceId = process.env.SCRAPER_INSTANCE_ID ?? "";
   }
 
   public async start(): Promise<void> {
-    this.client = new pg.Client({
-      database: process.env.POSTGRES_DB,
-      host: process.env.DB_HOST,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      port: Number(process.env.DB_PORT),
-    });
-
-    await this.client.connect();
-    await this.client.query(`LISTEN ${CHANNEL}`);
-
-    this.client.on("notification", (msg) => {
-      this.logger.info(`Received notification: ${msg.payload}`);
-      if (msg.channel !== CHANNEL || !msg.payload) return;
-
-      try {
-        const payload: StatusChangePayload = JSON.parse(msg.payload);
-        this.onRequestedStatusChange(payload);
-      } catch (error) {
-        this.logger.error({
-          message: "Failed to parse requested status change payload",
-          error,
-        });
-      }
-    });
-
-    this.client.on("error", (error) => {
-      this.logger.error({
-        message: "PG listener connection error in command listener",
-        error,
-      });
-    });
-
-    this.logger.info(`Listening for ${CHANNEL} commands.`);
+    this.listener = new PgNotificationListener(this.logger, CHANNEL, (raw) =>
+      this.onNotification(raw),
+    );
+    await this.listener.start();
   }
 
   public async stop(): Promise<void> {
-    if (this.client) {
-      await this.client.end();
-      this.client = null;
-      this.logger.info("Stopped listening for commands.");
-    }
+    await this.listener?.stop();
+    this.listener = null;
   }
 
-  private async onRequestedStatusChange(
-    payload: StatusChangePayload,
-  ): Promise<void> {
+  private async onNotification(raw: unknown): Promise<void> {
+    const payload = raw as StatusChangePayload;
+
+    if (payload.instance_id !== this.instanceId) {
+      this.logger.info(
+        `Ignoring command for instance ${payload.instance_id} (ours: ${this.instanceId})`,
+      );
+      return;
+    }
+
     const { new_status } = payload;
     this.logger.info(
-      `Received command payload: requested_status changed to ${new_status}`,
+      `Received command: requestedStatus → ${new_status} for ${this.instanceId}`,
     );
 
     if (new_status === "RUNNING") {

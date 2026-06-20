@@ -1,12 +1,7 @@
 import { ScraperName } from "../constants.js";
 
 export type ScraperConfig = {
+  instanceId: string;
   scraperName: ScraperName;
   enabled: boolean;
-};
-
-export type ScrapersConfig = {
-  [key in ScraperName]: {
-    enabled: boolean;
-  };
 };

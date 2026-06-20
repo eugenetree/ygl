@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
 import { Logger } from "../_common/logger/logger.js";
+import { InstanceRegistry } from "../scraping/instance-registry/instance-registry.js";
 import { RequestScraperStartUseCase } from "../scraping/lifecycle/request-scraper-start.use-case.js";
 import { RequestScraperStopUseCase } from "../scraping/lifecycle/request-scraper-stop.use-case.js";
 import { TelegramController } from "./telegram-controller.js";
@@ -10,6 +11,7 @@ import { TelegramController } from "./telegram-controller.js";
 export class LifecycleController implements TelegramController {
   constructor(
     private readonly logger: Logger,
+    private readonly instanceRegistry: InstanceRegistry,
     private readonly requestScraperStartUseCase: RequestScraperStartUseCase,
     private readonly requestScraperStopUseCase: RequestScraperStopUseCase,
   ) {
@@ -20,11 +22,44 @@ export class LifecycleController implements TelegramController {
     bot.command("start", async (ctx) => {
       this.logger.info("Received /start command");
 
-      const result = await this.requestScraperStartUseCase.execute();
+      const listResult = await this.instanceRegistry.list();
+      if (!listResult.ok) {
+        await ctx.reply("Failed to load instances.");
+        return;
+      }
+
+      if (listResult.value.length === 0) {
+        await ctx.reply("No scraper instances registered.");
+        return;
+      }
+
+      await ctx.reply("Select instance to start:", {
+        reply_markup: {
+          inline_keyboard: listResult.value.map((instance) => [
+            {
+              text: instance.instanceId,
+              callback_data: `start_instance_${instance.instanceId}`,
+            },
+          ]),
+        },
+      });
+    });
+
+    bot.action(/^start_instance_(.+)$/, async (ctx) => {
+      const instanceId = ctx.match[1];
+      await ctx.answerCbQuery();
+
+      const result = await this.requestScraperStartUseCase.execute(instanceId);
       if (!result.ok) {
         switch (result.error.type) {
           case "SCRAPER_ALREADY_RUNNING":
-            await ctx.reply("Scrapers are already running.");
+            await ctx.reply(`${instanceId} is already running.`);
+            return;
+
+          case "SCRAPER_KILLED":
+            await ctx.reply(
+              `${instanceId} was killed. Please restart it manually.`,
+            );
             return;
 
           case "DATABASE":
@@ -34,30 +69,56 @@ export class LifecycleController implements TelegramController {
       }
 
       await ctx.reply(
-        "Scrapers start was requested.\n" +
-          "You'll receive notification once scraping process starts.",
+        `${instanceId}: start requested.\n` +
+          "You'll receive a notification once scraping starts.",
       );
     });
 
     bot.command("stop", async (ctx) => {
       this.logger.info("Received /stop command");
 
-      const result = await this.requestScraperStopUseCase.execute();
+      const listResult = await this.instanceRegistry.list();
+      if (!listResult.ok) {
+        await ctx.reply("Failed to load instances.");
+        return;
+      }
 
+      if (listResult.value.length === 0) {
+        await ctx.reply("No scraper instances registered.");
+        return;
+      }
+
+      await ctx.reply("Select instance to stop:", {
+        reply_markup: {
+          inline_keyboard: listResult.value.map((instance) => [
+            {
+              text: instance.instanceId,
+              callback_data: `stop_instance_${instance.instanceId}`,
+            },
+          ]),
+        },
+      });
+    });
+
+    bot.action(/^stop_instance_(.+)$/, async (ctx) => {
+      const instanceId = ctx.match[1];
+      await ctx.answerCbQuery();
+
+      const result = await this.requestScraperStopUseCase.execute(instanceId);
       if (!result.ok) {
         switch (result.error.type) {
           case "SCRAPER_IDLE":
-            await ctx.reply("Scrapers are not running.");
+            await ctx.reply(`${instanceId} is not running.`);
             return;
 
           case "SCRAPER_KILLED":
             await ctx.reply(
-              "Scrapers were killed. Please restart them manually.",
+              `${instanceId} was killed. Please restart it manually.`,
             );
             return;
 
           case "SCRAPER_ALREADY_STOPPED":
-            await ctx.reply("Scrapers are already stopped.");
+            await ctx.reply(`${instanceId} is already stopped.`);
             return;
 
           case "DATABASE":
@@ -67,8 +128,8 @@ export class LifecycleController implements TelegramController {
       }
 
       await ctx.reply(
-        "Scrapers stop was requested.\n" +
-          "You'll receive notification once scraping process stops.",
+        `${instanceId}: stop requested.\n` +
+          "You'll receive a notification once scraping stops.",
       );
     });
   }

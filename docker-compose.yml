@@ -92,27 +92,49 @@ services:
       elasticsearch:
         condition: service_started
 
-  # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
-  scraper:
-    container_name: scraper
+  # ── 4. VPN Scrapers (Special Image, one per region) ────────────────────────
+  scraper-us:
+    container_name: scraper-us
     build:
       context: .
       dockerfile: Dockerfile.scraper
+    image: saythis-app-scraper:latest
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun
     environment:
       <<: *app-env
-      VPN_USER: ${VPN_USER}
-      VPN_PASS: ${VPN_PASS}
-      VPN_CONFIG_B64: ${VPN_CONFIG_B64}
-      YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
+      SCRAPER_INSTANCE_ID: us
+      VPN_USER: ${VPN_USER_US}
+      VPN_PASS: ${VPN_PASS_US}
+      VPN_CONFIG_B64: ${VPN_CONFIG_B64_US}
+      YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64_US:-}
     volumes:
       - /opt/ygl/logs:/usr/src/app/logs
     depends_on:
       db:
         condition: service_healthy
+
+  # scraper-gb:
+  #   container_name: scraper-gb
+  #   image: saythis-app-scraper:latest
+  #   cap_add:
+  #     - NET_ADMIN
+  #   devices:
+  #     - /dev/net/tun
+  #   environment:
+  #     <<: *app-env
+  #     SCRAPER_INSTANCE_ID: gb
+  #     VPN_USER: ${VPN_USER_GB}
+  #     VPN_PASS: ${VPN_PASS_GB}
+  #     VPN_CONFIG_B64: ${VPN_CONFIG_B64_GB}
+  #     YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64_GB:-}
+  #   volumes:
+  #     - /opt/ygl/logs:/usr/src/app/logs
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
 volumes:
   postgres_data:

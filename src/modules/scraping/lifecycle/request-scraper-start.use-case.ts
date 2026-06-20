@@ -1,34 +1,28 @@
 import { injectable } from "inversify";
 import { Failure } from "../../../types/index.js";
-import { ScraperConfigRepository } from "../config/scraper-config.repository.js";
-import { ScraperOrchestrator } from "../scraper.orchestrator.js";
-import { ScraperStatusService } from "./scraper-status.service.js";
+import { InstanceRegistry } from "../instance-registry/instance-registry.js";
 
 @injectable()
 export class RequestScraperStartUseCase {
-  constructor(private readonly scraperStatusService: ScraperStatusService) {}
+  constructor(private readonly instanceRegistry: InstanceRegistry) {}
 
-  async execute() {
+  async execute(instanceId: string) {
     const currentStatusResult =
-      await this.scraperStatusService.getActualStatus();
+      await this.instanceRegistry.getActualStatus(instanceId);
     if (!currentStatusResult.ok) {
       return currentStatusResult;
     }
 
     const currentStatus = currentStatusResult.value;
     if (currentStatus === "RUNNING") {
-      return Failure({
-        type: "SCRAPER_ALREADY_RUNNING",
-      } as const);
+      return Failure({ type: "SCRAPER_ALREADY_RUNNING" } as const);
     }
 
     if (currentStatus === "KILLED") {
-      return Failure({
-        type: "SCRAPER_KILLED",
-      } as const);
+      return Failure({ type: "SCRAPER_KILLED" } as const);
     }
 
-    return this.scraperStatusService.updateStatus({
+    return this.instanceRegistry.updateStatus(instanceId, {
       requested: "RUNNING",
     });
   }

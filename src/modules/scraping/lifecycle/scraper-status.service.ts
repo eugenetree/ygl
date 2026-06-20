@@ -1,112 +1,30 @@
 import { injectable } from "inversify";
-import { DatabaseClient } from "../../../db/client.js";
-import { Failure, Success } from "../../../types/index.js";
-import { Logger } from "../../_common/logger/logger.js";
-import { tryCatch } from "../../_common/try-catch.js";
+import {
+  ActualStatus,
+  InstanceRegistry,
+  RequestedStatus,
+  Status,
+} from "../instance-registry/instance-registry.js";
 
-export type Status = ActualStatus | "PROCESS_DOWN";
-
-type ActualStatus = "IDLE" | "RUNNING" | "STOPPED" | "KILLED" | "ERROR";
-type RequestedStatus = "RUNNING" | "STOPPED" | "KILLED";
-
-const HEARTBEAT_TIMEOUT_MS = 30_000;
-
-const ID = 1;
+export type { Status };
 
 @injectable()
 export class ScraperStatusService {
-  private readonly logger: Logger;
+  private readonly instanceId: string;
 
-  constructor(
-    logger: Logger,
-    private readonly db: DatabaseClient,
-  ) {
-    this.logger = logger.child({ context: ScraperStatusService.name });
+  constructor(private readonly instanceRegistry: InstanceRegistry) {
+    this.instanceId = process.env.SCRAPER_INSTANCE_ID ?? "";
   }
 
-  async updateStatus({
-    actual,
-    requested,
-  }: {
-    actual?: ActualStatus;
-    requested?: RequestedStatus;
-  }) {
-    const updateResult = await tryCatch(
-      this.db
-        .updateTable("scrapingProcess")
-        .set({
-          actualStatus: actual ?? undefined,
-          requestedStatus: requested ?? undefined,
-        })
-        .where("id", "=", ID)
-        .execute(),
-    );
-
-    if (!updateResult.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: updateResult.error,
-      } as const);
-    }
-
-    return Success(updateResult.value);
+  updateStatus(update: { actual?: ActualStatus; requested?: RequestedStatus }) {
+    return this.instanceRegistry.updateStatus(this.instanceId, update);
   }
 
-  async getActualStatus() {
-    const result = await tryCatch(
-      this.db
-        .selectFrom("scrapingProcess")
-        .select(["actualStatus", "lastHeartbeatAt"])
-        .where("id", "=", ID)
-        .executeTakeFirst(),
-    );
-
-    if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-      } as const);
-    }
-
-    if (!result.value) {
-      return Failure({
-        type: "DATABASE",
-        error: new Error("Scraper process not found"),
-      } as const);
-    }
-
-    const { actualStatus, lastHeartbeatAt } = result.value;
-    const isAlive =
-      lastHeartbeatAt !== null &&
-      Date.now() - lastHeartbeatAt.getTime() < HEARTBEAT_TIMEOUT_MS;
-
-    return Success(isAlive ? actualStatus : ("PROCESS_DOWN" as const));
+  getActualStatus() {
+    return this.instanceRegistry.getActualStatus(this.instanceId);
   }
 
-  async getRequestedStatus() {
-    const result = await tryCatch(
-      this.db
-        .selectFrom("scrapingProcess")
-        .select(["requestedStatus"])
-        .where("id", "=", ID)
-        .executeTakeFirst(),
-    );
-
-    if (!result.ok) {
-      return Failure({
-        type: "DATABASE",
-        error: result.error,
-      } as const);
-    }
-
-    if (!result.value) {
-      return Failure({
-        type: "DATABASE",
-        error: new Error("Scraper process not found"),
-      } as const);
-    }
-
-    const { requestedStatus } = result.value;
-    return Success(requestedStatus);
+  getRequestedStatus() {
+    return this.instanceRegistry.getRequestedStatus(this.instanceId);
   }
 }

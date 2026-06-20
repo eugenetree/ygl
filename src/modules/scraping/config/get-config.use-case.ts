@@ -7,7 +7,7 @@ export class GetConfigUseCase {
     private readonly scraperConfigRepository: ScraperConfigRepository,
   ) {}
 
-  async execute() {
-    return this.scraperConfigRepository.findAll();
+  async execute(instanceId: string) {
+    return this.scraperConfigRepository.findAll(instanceId);
   }
 }

@@ -1,7 +1,9 @@
 import { injectable } from "inversify";
+import { ScrapingProcessStatus } from "../../db/types.js";
 import { Logger } from "../_common/logger/logger.js";
-import { Status } from "../scraping/lifecycle/scraper-status.service.js";
 import { TelegramNotifier } from "./telegram-notifier.js";
+
+type Status = ScrapingProcessStatus | "PROCESS_DOWN";
 
 const messageToStatus: Partial<Record<Status, string>> = {
   RUNNING: "Scrapers started.",
@@ -21,21 +23,19 @@ export class OnScraperStatusChangeUseCase {
   }
 
   async execute({
+    instanceId,
     oldStatus,
     newStatus,
   }: {
+    instanceId: string;
     oldStatus: Status;
     newStatus: Status;
   }) {
     if (oldStatus === newStatus) {
       this.logger.error({
         message: "Scraper status is the same as before",
-        context: {
-          oldStatus,
-          newStatus,
-        },
+        context: { instanceId, oldStatus, newStatus },
       });
-
       return;
     }
 
@@ -43,6 +43,6 @@ export class OnScraperStatusChangeUseCase {
     if (!message) {
       return;
     }
-    await this.telegramNotifier.sendMessage(message);
+    await this.telegramNotifier.sendMessage(`[${instanceId}] ${message}`);
   }
 }

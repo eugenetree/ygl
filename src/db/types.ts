@@ -75,6 +75,7 @@ export interface Database {
 }
 
 export interface ScraperConfigRow {
+  instanceId: string;
   scraperName: ScraperName;
   enabled: boolean;
 }
@@ -87,7 +88,7 @@ export type ScrapingProcessStatus =
   | "ERROR";
 
 export interface ScrapingProcessRow {
-  id: 1;
+  instanceId: string;
   actualStatus: ScrapingProcessStatus;
   requestedStatus: ScrapingProcessStatus;
   updatedAt: Date | null;

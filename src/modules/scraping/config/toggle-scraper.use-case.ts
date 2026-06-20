@@ -9,9 +9,11 @@ export class ToggleScraperUseCase {
     private readonly scraperConfigRepository: ScraperConfigRepository,
   ) {}
 
-  async execute(scraperName: ScraperName) {
-    const configResult =
-      await this.scraperConfigRepository.findByName(scraperName);
+  async execute(instanceId: string, scraperName: ScraperName) {
+    const configResult = await this.scraperConfigRepository.findByName(
+      instanceId,
+      scraperName,
+    );
     if (!configResult.ok) {
       return configResult;
     }
@@ -32,7 +34,8 @@ export class ToggleScraperUseCase {
       return updateResult;
     }
 
-    const allConfigsResult = await this.scraperConfigRepository.findAll();
+    const allConfigsResult =
+      await this.scraperConfigRepository.findAll(instanceId);
     if (!allConfigsResult.ok) {
       return allConfigsResult;
     }
