@@ -21,7 +21,8 @@ export type VideoJobSkipCause =
   | "MEMBERS_ONLY"
   | "GEO_RESTRICTED"
   | "AGE_RESTRICTED"
-  | "PREMIERE";
+  | "PREMIERE"
+  | "REMOVED_BY_UPLOADER";
 
 export type VideoDiscoveryJobStatus =
   | "PENDING"

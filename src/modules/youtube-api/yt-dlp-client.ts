@@ -24,11 +24,16 @@ export type AgeRestrictedVideoError = {
   message: string;
 };
 export type PremiereVideoError = { type: "PREMIERE_VIDEO"; message: string };
+export type RemovedByUploaderVideoError = {
+  type: "REMOVED_BY_UPLOADER_VIDEO";
+  message: string;
+};
 export type UnprocessableVideoError =
   | MembersOnlyVideoError
   | GeoRestrictedVideoError
   | AgeRestrictedVideoError
-  | PremiereVideoError;
+  | PremiereVideoError
+  | RemovedByUploaderVideoError;
 
 const MEMBERS_ONLY_MESSAGE =
   "Join this channel to get access to members-only content";
@@ -39,8 +44,10 @@ const AGE_RESTRICTED_MESSAGES = [
   "Take a few minutes to verify your age",
 ];
 const PREMIERE_MESSAGE = "Premieres in";
+const REMOVED_BY_UPLOADER_MESSAGE =
+  "This video has been removed by the uploader";
 
-function classifyUnprocessable(
+export function classifyUnprocessable(
   message: string,
 ): UnprocessableVideoError | null {
   if (message.includes(MEMBERS_ONLY_MESSAGE)) {
@@ -54,6 +61,9 @@ function classifyUnprocessable(
   }
   if (message.includes(PREMIERE_MESSAGE)) {
     return { type: "PREMIERE_VIDEO", message };
+  }
+  if (message.includes(REMOVED_BY_UPLOADER_MESSAGE)) {
+    return { type: "REMOVED_BY_UPLOADER_VIDEO", message };
   }
   return null;
 }
