@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { beforeEach, describe, it } from "node:test";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import { CamelCasePlugin, Kysely, PostgresDialect, sql } from "kysely";
 import { DataType, newDb } from "pg-mem";
 import { DatabaseClient } from "../../../db/client.js";
@@ -132,6 +132,10 @@ describe("ChannelPriorityService.getTopChannels", () => {
     sut = buildSut(db);
   });
 
+  afterEach(async () => {
+    await db.destroy();
+  });
+
   describe("activeOnly: false", () => {
     it("returns channels ordered by scrapingScore descending", async () => {
       await seedChannel(db, "ch-a", "Channel A");
@@ -195,6 +199,18 @@ describe("ChannelPriorityService.getTopChannels", () => {
 
       assert.ok(result.ok);
       assert.equal(result.value.length, 10);
+    });
+
+    it("returns zero counts for a channel with no video jobs", async () => {
+      await seedChannel(db, "ch-empty", "Empty Channel");
+      await seedPriorityScore(db, "ch-empty", 1.0);
+
+      const result = await sut.getTopChannels({ activeOnly: false });
+
+      assert.ok(result.ok);
+      const ch = result.value[0];
+      assert.equal(ch.processedCount, 0);
+      assert.equal(ch.totalCount, 0);
     });
   });
 

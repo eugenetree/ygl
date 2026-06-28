@@ -49,6 +49,10 @@ export class PriorityController implements TelegramController {
     });
 
     if (!result.ok) {
+      this.logger.error({
+        message: "Failed to fetch top channels",
+        error: result.error,
+      });
       await ctx.reply("Failed to load channels.");
       return;
     }
