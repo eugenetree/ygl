@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import type { Context } from "telegraf";
+import { Context } from "telegraf";
 import { Telegraf } from "telegraf";
 import { Logger } from "../_common/logger/logger.js";
 import { TopChannel } from "../scraping/channel-priority/channel-priority.service.js";
