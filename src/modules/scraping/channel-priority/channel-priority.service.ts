@@ -8,6 +8,15 @@ import {
   ChannelStats,
 } from "./channel-priority.calculator.js";
 
+export type TopChannel = {
+  id: string;
+  name: string;
+  scrapingScore: number;
+  subscriberCount: number | null;
+  processedCount: number;
+  totalCount: number;
+};
+
 @injectable()
 export class ChannelPriorityService {
   constructor(
@@ -63,6 +72,76 @@ export class ChannelPriorityService {
       return Failure({ type: "DATABASE", error: result.error });
     }
     return Success(result.value?.scrapingScore ?? null);
+  }
+
+  public async getTopChannels({
+    activeOnly,
+  }: {
+    activeOnly: boolean;
+  }): Promise<Result<TopChannel[], DatabaseError>> {
+    const result = await tryCatch(this.doGetTopChannels({ activeOnly }));
+    if (!result.ok) return Failure({ type: "DATABASE", error: result.error });
+    return Success(result.value);
+  }
+
+  private async doGetTopChannels({
+    activeOnly,
+  }: {
+    activeOnly: boolean;
+  }): Promise<TopChannel[]> {
+    const rows = await this.db
+      .selectFrom("channelPriorityScores")
+      .innerJoin("channels", "channels.id", "channelPriorityScores.channelId")
+      .$if(activeOnly, (qb) =>
+        qb.innerJoin(
+          (eb) =>
+            eb
+              .selectFrom("videoJobs")
+              .select("videoJobs.channelId")
+              .where("videoJobs.status", "in", ["PENDING", "PROCESSING"])
+              .distinct()
+              .as("activeChannels"),
+          "activeChannels.channelId",
+          "channels.id",
+        ),
+      )
+      .leftJoin("videoJobs", "videoJobs.channelId", "channels.id")
+      .select([
+        "channels.id",
+        "channels.name",
+        "channels.subscriberCount",
+        "channelPriorityScores.scrapingScore",
+        (eb) =>
+          eb.fn
+            .count<string>(
+              eb
+                .case()
+                .when("videoJobs.status", "=", "SUCCEEDED")
+                .then(eb.ref("videoJobs.id"))
+                .else(eb.val(null))
+                .end(),
+            )
+            .as("processedCount"),
+        (eb) => eb.fn.count<string>("videoJobs.id").as("totalCount"),
+      ])
+      .groupBy([
+        "channels.id",
+        "channels.name",
+        "channels.subscriberCount",
+        "channelPriorityScores.scrapingScore",
+      ])
+      .orderBy("channelPriorityScores.scrapingScore", "desc")
+      .limit(10)
+      .execute();
+
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      scrapingScore: row.scrapingScore,
+      subscriberCount: row.subscriberCount,
+      processedCount: Number(row.processedCount),
+      totalCount: Number(row.totalCount),
+    }));
   }
 
   private async doRecalculateScore(
