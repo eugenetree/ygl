@@ -82,7 +82,8 @@ async function seedChannel(
 ) {
   await db
     .insertInto("channels")
-    .values({ id, name, subscriberCount })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .values({ id, name, subscriberCount } as any)
     .execute();
 }
 

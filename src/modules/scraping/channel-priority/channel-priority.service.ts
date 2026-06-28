@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
+import { ExpressionBuilder } from "kysely";
 import { DatabaseClient } from "../../../db/client.js";
-import { DatabaseError } from "../../../db/types.js";
+import { Database, DatabaseError } from "../../../db/types.js";
 import { Failure, type Result, Success } from "../../../types/index.js";
 import { tryCatch } from "../../_common/try-catch.js";
 import {
@@ -94,7 +95,7 @@ export class ChannelPriorityService {
       .innerJoin("channels", "channels.id", "channelPriorityScores.channelId")
       .$if(activeOnly, (qb) =>
         qb.innerJoin(
-          (eb) =>
+          (eb: ExpressionBuilder<Database, "channelPriorityScores" | "channels">) =>
             eb
               .selectFrom("videoJobs")
               .select("videoJobs.channelId")
