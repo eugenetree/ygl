@@ -46,6 +46,15 @@ describe("classifyUnprocessable()", () => {
     });
   });
 
+  it("classifies videos blocked due to claimed content", () => {
+    const message =
+      "DGc_-FJnscQ: Video unavailable. It was blocked due to the claimed content by Turner EST.";
+
+    const result = classifyUnprocessable(message);
+
+    assert.deepEqual(result, { type: "CLAIMED_CONTENT_VIDEO", message });
+  });
+
   it("returns null for unrecognized messages", () => {
     const result = classifyUnprocessable("Some unexpected yt-dlp failure");
 

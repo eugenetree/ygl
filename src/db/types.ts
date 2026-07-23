@@ -22,7 +22,8 @@ export type VideoJobSkipCause =
   | "GEO_RESTRICTED"
   | "AGE_RESTRICTED"
   | "PREMIERE"
-  | "REMOVED_BY_UPLOADER";
+  | "REMOVED_BY_UPLOADER"
+  | "CLAIMED_CONTENT";
 
 export type VideoDiscoveryJobStatus =
   | "PENDING"

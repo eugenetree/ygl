@@ -99,6 +99,38 @@ describe("VideoEntriesWorker", () => {
     assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
   });
 
+  it("marks the job SKIPPED with CLAIMED_CONTENT and continues when the video is blocked due to claimed content", async () => {
+    let calls = 0;
+    mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => {
+      calls += 1;
+      if (calls === 1) return Promise.resolve(Success(entry));
+      return Promise.resolve(Success(null));
+    });
+    mocks.processVideoEntry.execute.mock.mockImplementation(() =>
+      Promise.resolve(
+        Failure({
+          type: "CLAIMED_CONTENT_VIDEO",
+          message:
+            "DGc_-FJnscQ: Video unavailable. It was blocked due to the claimed content by Turner EST.",
+        }),
+      ),
+    );
+
+    const result = await sut.run({
+      shouldContinue: () => true,
+      onError: async () => {},
+    });
+
+    assert.ok(result.ok);
+    assert.equal(result.value, WorkerStopCause.EMPTY);
+    assert.equal(mocks.videoEntriesQueue.markAsSkipped.mock.callCount(), 1);
+    assert.deepEqual(
+      mocks.videoEntriesQueue.markAsSkipped.mock.calls[0]?.arguments,
+      [entry.id, "CLAIMED_CONTENT"],
+    );
+    assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
+  });
+
   it("marks the job FAILED and stops the loop for an unrecognized yt-dlp error", async () => {
     mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() =>
       Promise.resolve(Success(entry)),

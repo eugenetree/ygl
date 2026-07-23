@@ -28,12 +28,17 @@ export type RemovedByUploaderVideoError = {
   type: "REMOVED_BY_UPLOADER_VIDEO";
   message: string;
 };
+export type ClaimedContentVideoError = {
+  type: "CLAIMED_CONTENT_VIDEO";
+  message: string;
+};
 export type UnprocessableVideoError =
   | MembersOnlyVideoError
   | GeoRestrictedVideoError
   | AgeRestrictedVideoError
   | PremiereVideoError
-  | RemovedByUploaderVideoError;
+  | RemovedByUploaderVideoError
+  | ClaimedContentVideoError;
 
 const MEMBERS_ONLY_MESSAGE =
   "Join this channel to get access to members-only content";
@@ -46,6 +51,7 @@ const AGE_RESTRICTED_MESSAGES = [
 const PREMIERE_MESSAGE = "Premieres in";
 const REMOVED_BY_UPLOADER_MESSAGE =
   "This video has been removed by the uploader";
+const CLAIMED_CONTENT_MESSAGE = "blocked due to the claimed content";
 
 export function classifyUnprocessable(
   message: string,
@@ -64,6 +70,9 @@ export function classifyUnprocessable(
   }
   if (message.includes(REMOVED_BY_UPLOADER_MESSAGE)) {
     return { type: "REMOVED_BY_UPLOADER_VIDEO", message };
+  }
+  if (message.includes(CLAIMED_CONTENT_MESSAGE)) {
+    return { type: "CLAIMED_CONTENT_VIDEO", message };
   }
   return null;
 }

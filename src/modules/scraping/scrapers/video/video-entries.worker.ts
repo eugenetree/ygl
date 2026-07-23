@@ -13,6 +13,7 @@ function toSkipCause(errorType: string): VideoJobSkipCause | null {
   if (errorType === "AGE_RESTRICTED_VIDEO") return "AGE_RESTRICTED";
   if (errorType === "PREMIERE_VIDEO") return "PREMIERE";
   if (errorType === "REMOVED_BY_UPLOADER_VIDEO") return "REMOVED_BY_UPLOADER";
+  if (errorType === "CLAIMED_CONTENT_VIDEO") return "CLAIMED_CONTENT";
   return null;
 }
 
