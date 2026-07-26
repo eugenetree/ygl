@@ -1,0 +1,6 @@
+I want to add another feature to my telegram bot.  
+I want to be able to show list of channels (top 10 based on their priority). I  
+also want to have an option to hide channels all videos of which are already    
+processed. 
+I want /priority-all to show all channels. /priority-active to show        
+  channels that still have videos to process.    
