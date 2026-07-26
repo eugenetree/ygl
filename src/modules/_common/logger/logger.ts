@@ -125,9 +125,9 @@ export class Logger {
     // code/errno/syscall/address/port; other error shapes may carry
     // statusCode/hostname/etc.) so we never silently discard detail. This is
     // intentionally verbose for now — we can trim noise later if needed.
-    const details = Object.entries(error as Record<string, unknown>).map(
-      ([key, value]) => `${key}=${String(value)}`,
-    );
+    const details = Object.entries(
+      error as unknown as Record<string, unknown>,
+    ).map(([key, value]) => `${key}=${String(value)}`);
     if (details.length > 0) {
       parts.push(`(${details.join(", ")})`);
     }
