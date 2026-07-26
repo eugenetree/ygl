@@ -1,0 +1,68 @@
+[
+  {
+    "id": "CYc-b6HSe98",
+    "channelId": "UCX2FFnr4wApa3LGlmCqDNSw",
+    "createdAt": "2026-04-27T10:25:50.333526",
+    "updatedAt": "2026-04-27T10:25:50.333526",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "E6k8yR3vPio",
+    "channelId": "UCP7pwTsLeHDrXx10Egm8ooQ",
+    "createdAt": "2026-04-27T10:31:36.139806",
+    "updatedAt": "2026-04-27T10:31:36.139806",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "F0EaLxI3y0k",
+    "channelId": "UCX0nfKiyBiAgFq_8QBuQW-Q",
+    "createdAt": "2026-05-02T00:05:37.009036",
+    "updatedAt": "2026-05-02T00:05:37.009036",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "ijpjC1bWDlU",
+    "channelId": "UCASR7nz9vIDOShxdeUplrxg",
+    "createdAt": "2026-05-02T00:14:42.978855",
+    "updatedAt": "2026-05-02T00:14:42.978855",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "BhIuNV1hwE8",
+    "channelId": "UCASR7nz9vIDOShxdeUplrxg",
+    "createdAt": "2026-05-02T00:15:36.15255",
+    "updatedAt": "2026-05-02T00:15:36.15255",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "KSwDQCKrO5s",
+    "channelId": "UCrUakQYl5gw_xjVGmEXq4rA",
+    "createdAt": "2026-05-05T19:12:35.035231",
+    "updatedAt": "2026-05-05T19:12:35.035231",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "tNTHKRynYJU",
+    "channelId": "UCrUakQYl5gw_xjVGmEXq4rA",
+    "createdAt": "2026-05-05T19:12:40.758194",
+    "updatedAt": "2026-05-05T19:12:40.758194",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "rx3epOlpfE8",
+    "channelId": "UCga9TURr0FoBgMvS3EwJ0KA",
+    "createdAt": "2026-05-05T20:16:36.980327",
+    "updatedAt": "2026-05-05T20:16:36.980327",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "SynthNs0001",
+    "channelId": "UCsynthUnscored000000001",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "SynthOrph01",
+    "channelId": "UCsynthOrphaned000000001",
+    "availability": "PUBLIC"
+  }
+]

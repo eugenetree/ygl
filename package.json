@@ -7,6 +7,7 @@
     "db:migration:run": "npx tsx src/db/scripts/run-migrations.ts",
     "db:migration:rollback": "npx tsx src/db/scripts/rollback-migration.ts",
     "db:migration:create-new": "npx tsx src/db/scripts/create-migration-file.ts",
+    "db:seed:dev": "npx tsx src/db/scripts/seed-dev.ts",
     "lint": "biome lint src",
     "lint:fix": "biome lint src --write",
     "test": "node --test --import tsx \"src/**/*.test.ts\"",

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "0d7ca496-f9bb-463b-aac4-bdc5e912cd49",
+    "searchQueryId": "1ea8d7ff-7ad3-422d-8639-7abd0ba82340",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-04-22T16:28:16.333",
+    "createdAt": "2026-04-15T02:44:40.728515"
+  },
+  {
+    "id": "f29f7837-83f2-4abb-b311-7c3f42b2de99",
+    "searchQueryId": "aa05e40a-6767-44be-9e38-3f01f7937e99",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-04-20T09:14:56.274",
+    "createdAt": "2026-04-15T02:44:29.845156"
+  },
+  {
+    "id": "c40116b9-0e77-4dbb-966d-153a635e89f3",
+    "searchQueryId": "e318d59d-f42c-4f61-89f8-8c59c933d98b",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-04-15T02:48:34.877",
+    "createdAt": "2026-04-15T02:44:55.330799"
+  },
+  {
+    "id": "4152fd14-9d4d-4fc5-bcc0-501d108d5783",
+    "searchQueryId": "e4e8c447-35ca-43e8-b445-dc7f5286c08b",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-04-15T04:06:50.29",
+    "createdAt": "2026-04-15T02:44:23.784802"
+  }
+]

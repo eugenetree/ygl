@@ -44,6 +44,10 @@ db-restore:
 db-create-migration:
 	npm run db:migration:create-new -- $(name)
 
+# Rebuild DB from scratch for the current branch: drop → migrate → seed dev fixtures
+db-fresh: db-reset db-migrate
+	docker exec bot npm run db:seed:dev
+
 # Completely reset the database (drop and recreate)
 db-reset:
 	@echo "Dropping and recreating database..."
