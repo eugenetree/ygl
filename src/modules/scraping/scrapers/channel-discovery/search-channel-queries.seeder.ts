@@ -6,6 +6,11 @@ import { Failure, Success } from "../../../../types/index.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { tryCatch } from "../../../_common/try-catch.js";
 
+function resolveWordsFilePath(appEnv: string | undefined): string {
+  const dataDir = path.join(__dirname, "data");
+  return path.join(dataDir, appEnv === "development" ? "dev.json" : "prod.json");
+}
+
 @injectable()
 export class SearchChannelQueriesSeeder {
   constructor(
@@ -46,12 +51,12 @@ export class SearchChannelQueriesSeeder {
   }
 
   private async seedQueriesIntoStorage() {
-    const wordsFilePath = path.join(process.cwd(), "words_dictionary.json");
+    const wordsFilePath = resolveWordsFilePath(process.env.APP_ENV);
     const wordsJsonResult = await tryCatch(readFile(wordsFilePath, "utf-8"));
 
     if (!wordsJsonResult.ok) {
       return Failure(
-        new Error("Failed to read words_dictionary.json", {
+        new Error("Failed to read words file", {
           cause: wordsJsonResult.error,
         }),
       );
@@ -62,7 +67,7 @@ export class SearchChannelQueriesSeeder {
 
     if (!wordsResult.ok) {
       return Failure(
-        new Error("Failed to parse words_dictionary.json", {
+        new Error("Failed to parse words file", {
           cause: wordsResult.error,
         }),
       );
