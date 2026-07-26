@@ -27,6 +27,7 @@ async function main() {
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);
+  const ytDlpClient = container.get(YtDlpClient);
   const seeder = container.get(SearchChannelQueriesSeeder);
   const scraperCommandListener = container.get(ScraperCommandListener);
   const scraperOrchestrator = container.get(ScraperOrchestrator);
@@ -59,6 +60,9 @@ async function main() {
 
   process.on("SIGTERM", () => shutdown());
   process.on("SIGINT", () => shutdown());
+
+  const ytDlpVersion = await ytDlpClient.getVersion();
+  logger.info(`yt-dlp version: ${ytDlpVersion ?? "unknown"}`);
 
   await seeder.seedIfNeeded();
   scraperHeartbeat.start();

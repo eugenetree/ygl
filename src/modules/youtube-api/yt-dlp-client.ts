@@ -102,6 +102,23 @@ export class YtDlpClient {
     this.cookiesFile = resolveCookiesFile(this.logger);
   }
 
+  /**
+   * Returns the version of the yt-dlp binary in use, or undefined if it
+   * cannot be resolved. Safe to call at startup.
+   */
+  async getVersion(): Promise<string | undefined> {
+    try {
+      return await this.ytdlp.getVersionAsync();
+    } catch (error) {
+      this.logger.warn(
+        `Failed to resolve yt-dlp version: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+      return undefined;
+    }
+  }
+
   private buildExec(url: string, remainingArgs: string[]) {
     const allArgs = this.cookiesFile
       ? ["--cookies", this.cookiesFile, ...remainingArgs]
