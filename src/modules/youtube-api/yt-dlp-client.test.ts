@@ -1,6 +1,8 @@
+import "reflect-metadata";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { classifyUnprocessable } from "./yt-dlp-client.js";
+import { Logger } from "../_common/logger/logger.js";
+import { classifyUnprocessable, YtDlpClient } from "./yt-dlp-client.js";
 
 describe("classifyUnprocessable()", () => {
   it("classifies members-only videos", () => {
@@ -59,5 +61,18 @@ describe("classifyUnprocessable()", () => {
     const result = classifyUnprocessable("Some unexpected yt-dlp failure");
 
     assert.equal(result, null);
+  });
+});
+
+describe("YtDlpClient.getVersion()", () => {
+  it("resolves the real yt-dlp version by invoking the binary", async () => {
+    const client = new YtDlpClient(
+      new Logger({ context: "test", category: "test" }),
+    );
+
+    const version = await client.getVersion();
+
+    assert.ok(version, "expected a version string, got undefined");
+    assert.match(version, /^\d{4}\.\d{2}\.\d{2}/);
   });
 });

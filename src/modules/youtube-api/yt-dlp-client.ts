@@ -1,3 +1,4 @@
+import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
@@ -53,6 +54,9 @@ const REMOVED_BY_UPLOADER_MESSAGE =
   "This video has been removed by the uploader";
 const CLAIMED_CONTENT_MESSAGE = "blocked due to the claimed content";
 
+/** Max time to wait for `yt-dlp --version` before giving up (keeps boot unblocked). */
+const VERSION_RESOLUTION_TIMEOUT_MS = 5_000;
+
 export function classifyUnprocessable(
   message: string,
 ): UnprocessableVideoError | null {
@@ -107,8 +111,14 @@ export class YtDlpClient {
    * cannot be resolved. Safe to call at startup.
    */
   async getVersion(): Promise<string | undefined> {
+    // NOTE: We deliberately do NOT call `this.ytdlp.getVersionAsync()`. In
+    // ytdlp-nodejs@3.4.4 that method invokes the binary with an empty URL plus
+    // `--version`, but the wrapper's arg builder throws "URL is required." on an
+    // empty URL — so version resolution can never succeed and always logs
+    // `unknown`. We invoke the binary directly with `--version` instead. Do not
+    // "simplify" this back to the wrapper method until the upstream bug is fixed.
     try {
-      return await this.ytdlp.getVersionAsync();
+      return await this.resolveVersionFromBinary();
     } catch (error) {
       this.logger.warn(
         `Failed to resolve yt-dlp version: ${
@@ -117,6 +127,61 @@ export class YtDlpClient {
       );
       return undefined;
     }
+  }
+
+  /**
+   * Spawns the yt-dlp binary with `--version` and resolves its trimmed stdout.
+   * Uses the same binary the wrapper runs extractions with when it exposes a
+   * usable path; otherwise falls back to `yt-dlp` on PATH (the scraper image
+   * symlinks the wrapper's binary onto PATH). Never a hardcoded absolute path.
+   * Bounded by a timeout so a wedged binary can't stall startup.
+   */
+  private resolveVersionFromBinary(): Promise<string> {
+    const binary = this.ytdlp.binaryPath || "yt-dlp";
+
+    return new Promise((resolve, reject) => {
+      const child = spawn(binary, ["--version"]);
+      let stdout = "";
+      let stderr = "";
+      let settled = false;
+
+      const settle = (fn: () => void) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        fn();
+      };
+
+      const timer = setTimeout(() => {
+        settle(() => {
+          child.kill("SIGKILL");
+          reject(
+            new Error(
+              `Timed out after ${VERSION_RESOLUTION_TIMEOUT_MS}ms resolving version`,
+            ),
+          );
+        });
+      }, VERSION_RESOLUTION_TIMEOUT_MS);
+      timer.unref?.();
+
+      child.stdout?.on("data", (chunk) => {
+        stdout += chunk.toString();
+      });
+      child.stderr?.on("data", (chunk) => {
+        stderr += chunk.toString();
+      });
+      child.on("error", (error) => settle(() => reject(error)));
+      child.on("close", (code) => {
+        settle(() => {
+          if (code === 0) {
+            // yt-dlp prints just the version (e.g. `2025.01.15`) + newline.
+            resolve(stdout.trim());
+          } else {
+            reject(new Error(stderr.trim() || `Exit code ${code}`));
+          }
+        });
+      });
+    });
   }
 
   private buildExec(url: string, remainingArgs: string[]) {
