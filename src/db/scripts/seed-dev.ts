@@ -6,15 +6,13 @@ import { dbClient } from "../client.js";
 
 const FIXTURES_DIR = path.join(__dirname, "../fixtures");
 
-function load<T>(name: string): T[] {
+function load(name: string): any[] {
   return JSON.parse(
     readFileSync(path.join(FIXTURES_DIR, `${name}.json`), "utf-8"),
-  ) as T[];
+  );
 }
 
-function strip<T extends { createdAt?: unknown; updatedAt?: unknown }>(
-  rows: T[],
-): Omit<T, "createdAt" | "updatedAt">[] {
+function strip(rows: any[]): any[] {
   return rows.map(({ createdAt: _ca, updatedAt: _ua, ...rest }) => rest);
 }
 
