@@ -56,7 +56,7 @@ export class Logger {
 
     if (error instanceof Error) {
       log += `\nstack: ${error.stack}`;
-      log += `\ncause: ${error.cause}`;
+      log += `\ncause: ${this.serializeCause(error.cause)}`;
       if ("context" in error) {
         log += `\nerror.context: ${this.stringifyContext(error.context)}`;
       }
@@ -85,6 +85,54 @@ export class Logger {
 
   private getLogsFilePath(): string {
     return `${this.logsDir}/${this.category}`;
+  }
+
+  /**
+   * Serializes an `error.cause` structurally so the actionable underlying
+   * detail survives. Node/undici's `TypeError: fetch failed` carries an
+   * `AggregateError` cause whose `.errors[]` hold the real network codes
+   * (`ENETUNREACH`/`ENOTFOUND`/`ECONNREFUSED`/`ETIMEDOUT`) plus address/port.
+   * Template interpolation would collapse all of that to `"AggregateError"`.
+   */
+  private serializeCause(cause: unknown): string {
+    if (!(cause instanceof Error)) {
+      return this.stringifyContext(cause);
+    }
+
+    let serialized = `${cause.name}: ${cause.message}`;
+
+    const errors = (cause as { errors?: unknown }).errors;
+    if (Array.isArray(errors)) {
+      const inner = errors
+        .map(
+          (entry, index) => `  [${index}] ${this.serializeInnerError(entry)}`,
+        )
+        .join("\n");
+      serialized += `\n  errors:\n${inner}`;
+    }
+
+    return serialized;
+  }
+
+  private serializeInnerError(error: unknown): string {
+    if (!(error instanceof Error)) {
+      return this.stringifyContext(error);
+    }
+
+    const parts = [`${error.name}: ${error.message}`];
+
+    // Log every own-enumerable property (Node system errors carry
+    // code/errno/syscall/address/port; other error shapes may carry
+    // statusCode/hostname/etc.) so we never silently discard detail. This is
+    // intentionally verbose for now — we can trim noise later if needed.
+    const details = Object.entries(error as Record<string, unknown>).map(
+      ([key, value]) => `${key}=${String(value)}`,
+    );
+    if (details.length > 0) {
+      parts.push(`(${details.join(", ")})`);
+    }
+
+    return parts.join(" ");
   }
 
   private stringifyContext(context: unknown): string {
