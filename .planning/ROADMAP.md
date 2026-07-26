@@ -25,10 +25,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Operator runs `/priority-all` and receives a formatted list of the top 10 channels ranked by priority score, each entry showing rank, channel name, priority score, and processed/total video count
   2. Operator runs `/priority-active` and receives the same ranked list filtered to only channels that have at least one `video_jobs` record with status `PENDING`
   3. Both commands follow the existing controller pattern in `src/modules/telegram/` and are registered in `telegram-bot.ts`
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 01-01-PLAN.md — Shared priority-rankings use case + `/priority_all` and `/priority_active` controllers, wired and advertised in telegram-bot.ts
 
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Priority Commands | 0/? | Not started | - |
+| 1. Priority Commands | 0/1 | Not started | - |
