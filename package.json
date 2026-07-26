@@ -8,30 +8,33 @@
     "db:migration:rollback": "npx tsx src/db/scripts/rollback-migration.ts",
     "db:migration:create-new": "npx tsx src/db/scripts/create-migration-file.ts",
     "db:seed:dev": "npx tsx src/db/scripts/seed-dev.ts",
-    "lint": "biome lint src",
-    "lint:fix": "biome lint src --write",
     "test": "node --test --import tsx \"src/**/*.test.ts\"",
-    "format": "biome format . --write",
-    "check": "biome check .",
     "clean": "rm -rf dist/*",
     "build": "npm run clean && tsc",
     "start:bot": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-bot.js",
     "start:scraper": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-scraper.js",
     "start:elastic": "node dist/src/db/scripts/run-migrations.js && node dist/src/main-elastic.js",
-    "start:api": "node dist/src/main-api.js"
+    "start:api": "node dist/src/main-api.js",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "lint-staged": {
+    "*.{ts,js,json}": "biome check --write --no-errors-on-unmatched"
+  },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",
     "@babel/preset-typescript": "^7.28.5",
     "@biomejs/biome": "^2.4.16",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0",
     "nodemon": "^3.1.4",
     "pg-mem": "^3.0.14",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0"
   },
+
   "dependencies": {
     "@elastic/elasticsearch": "^8.12.0",
     "@types/adm-zip": "^0.5.8",

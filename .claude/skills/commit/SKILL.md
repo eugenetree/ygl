@@ -8,10 +8,11 @@ Create well-formatted git commits following conventional commit standards.
 ```
 
 ## Behavior
-1. Analyze staged changes with `git diff --staged`
-2. Generate a conventional commit message (don't include any AI model as a co-author)
-3. Show the commit message to the user and ask for confirmation
-4. Create the commit only after the user confirms
+1. Check `git diff --staged`. If nothing is staged, run `git add -A` to stage all changes
+2. Analyze staged changes with `git diff --staged`
+3. Generate a conventional commit message (don't include any AI model as a co-author)
+4. Show the commit message to the user and ask for confirmation
+5. Create the commit only after the user confirms
 
 ## Commit Format
 ```
