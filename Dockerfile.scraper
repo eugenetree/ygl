@@ -21,7 +21,7 @@ RUN npm ci --omit=dev --ignore-scripts && \
     ln -s /usr/local/bin/yt-dlp node_modules/ytdlp-nodejs/bin/yt-dlp
 
 COPY --from=builder /usr/src/app/dist ./dist
-COPY words_dictionary.json ./
+COPY --from=builder /usr/src/app/src/modules/scraping/scrapers/channel-discovery/data ./dist/src/modules/scraping/scrapers/channel-discovery/data
 
 # entrypoint.scraper.sh handles VPN startup
 COPY entrypoint.scraper.sh ./
