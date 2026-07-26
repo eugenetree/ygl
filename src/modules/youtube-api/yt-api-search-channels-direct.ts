@@ -3,10 +3,7 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { FetchError } from "../_common/http/errors.js";
 import { HttpClient } from "../_common/http/index.js";
 import { Logger } from "../_common/logger/logger.js";
-import {
-  ParsingError,
-  ValidationError,
-} from "../_common/validation/errors.js";
+import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { searchChannelsExtractor } from "./extractors/search-channels-direct.extractor.js";
 
 export type SearchChannelEntry = {

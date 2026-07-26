@@ -2,10 +2,7 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { FetchError } from "../_common/http/errors.js";
 import { httpClient } from "../_common/http/index.js";
 import { Logger } from "../_common/logger/logger.js";
-import {
-  ParsingError,
-  ValidationError,
-} from "../_common/validation/errors.js";
+import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { channelVideosExtractor } from "./extractors/channel-videos.extractor.js";
 
 export type ChannelVideoEntry = {

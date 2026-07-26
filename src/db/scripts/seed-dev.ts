@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
-import path from "path";
 import type { Kysely } from "kysely";
-import type { Database } from "../types.js";
+import path from "path";
 import { dbClient } from "../client.js";
+import type { Database } from "../types.js";
 
 const FIXTURES_DIR = path.join(__dirname, "../fixtures");
 

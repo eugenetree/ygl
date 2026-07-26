@@ -3,10 +3,7 @@ import { injectable } from "inversify";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { FetchError } from "../_common/http/errors.js";
 import { HttpClient } from "../_common/http/index.js";
-import {
-  ParsingError,
-  ValidationError,
-} from "../_common/validation/errors.js";
+import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { channelInfoExtractor } from "./extractors/channel-info.extractor.js";
 import { Channel } from "./youtube-api.types.js";
 

@@ -8,7 +8,10 @@ import { tryCatch } from "../../../_common/try-catch.js";
 
 function resolveWordsFilePath(appEnv: string | undefined): string {
   const dataDir = path.join(__dirname, "data");
-  return path.join(dataDir, appEnv === "development" ? "dev.json" : "prod.json");
+  return path.join(
+    dataDir,
+    appEnv === "development" ? "dev.json" : "prod.json",
+  );
 }
 
 @injectable()

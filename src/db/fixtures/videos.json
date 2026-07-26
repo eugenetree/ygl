@@ -26,9 +26,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Science & Technology"
-    ],
+    "categories": ["Science & Technology"],
     "track": null,
     "artist": null,
     "album": null,
@@ -77,9 +75,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Film & Animation"
-    ],
+    "categories": ["Film & Animation"],
     "track": null,
     "artist": null,
     "album": null,
@@ -118,9 +114,7 @@
     "audioChannels": 2,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Education"
-    ],
+    "categories": ["Education"],
     "track": null,
     "artist": null,
     "album": null,
@@ -159,9 +153,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Education"
-    ],
+    "categories": ["Education"],
     "track": null,
     "artist": null,
     "album": null,
@@ -200,9 +192,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Education"
-    ],
+    "categories": ["Education"],
     "track": null,
     "artist": null,
     "album": null,
@@ -241,9 +231,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Science & Technology"
-    ],
+    "categories": ["Science & Technology"],
     "track": null,
     "artist": null,
     "album": null,
@@ -296,9 +284,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Entertainment"
-    ],
+    "categories": ["Entertainment"],
     "track": null,
     "artist": null,
     "album": null,
@@ -337,9 +323,7 @@
     "audioChannels": null,
     "audioQuality": null,
     "isDrc": null,
-    "categories": [
-      "Education"
-    ],
+    "categories": ["Education"],
     "track": null,
     "artist": null,
     "album": null,

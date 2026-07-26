@@ -2,10 +2,7 @@ import { injectable } from "inversify";
 import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
-import {
-  ParsingError,
-  ValidationError,
-} from "../_common/validation/errors.js";
+import { ParsingError, ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
 import { YtDlpClient, YtDlpError } from "./yt-dlp-client.js";
 
