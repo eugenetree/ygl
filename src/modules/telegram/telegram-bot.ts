@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
 import { Logger } from "../_common/logger/logger.js";
+import { ChannelPrioritiesController } from "./channel-priorities.controller.js";
 import { ConfigController } from "./config.controller.js";
 import { ExportLogsController } from "./export-logs.controller.js";
 import { FindController } from "./find.controller.js";
@@ -29,6 +30,7 @@ export class TelegramBot {
     private readonly resyncCaptionsController: ResyncCaptionsController,
     private readonly pushChannelController: PushChannelController,
     private readonly recalculatePriorityController: RecalculatePriorityController,
+    private readonly channelPrioritiesController: ChannelPrioritiesController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -76,6 +78,7 @@ export class TelegramBot {
     this.resyncCaptionsController.register(this.bot);
     this.pushChannelController.register(this.bot);
     this.recalculatePriorityController.register(this.bot);
+    this.channelPrioritiesController.register(this.bot);
   }
 
   private async syncCommands(): Promise<void> {
@@ -100,6 +103,14 @@ export class TelegramBot {
       {
         command: "recalculate_priority",
         description: "Recalculate priority scores for all channels",
+      },
+      {
+        command: "priority_all",
+        description: "Show top 10 channels by priority",
+      },
+      {
+        command: "priority_active",
+        description: "Show top 10 channels with videos left to process",
       },
     ]);
   }

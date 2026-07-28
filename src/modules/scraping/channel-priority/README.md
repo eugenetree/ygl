@@ -54,6 +54,12 @@ Two trigger points:
 
 `/push_channel` against an existing channel runs the same recalc-then-propagate pair.
 
+## Reading the ranking (`/priority_all`, `/priority_active`)
+
+`GetChannelPrioritiesUseCase` returns the top N channels by `scrapingScore`, each with a breakdown of its video jobs (total, succeeded, still-to-finish, failed, skipped). `/priority_active` restricts the list to [active channels](../../../../CONTEXT.md); `/priority_all` does not.
+
+Because the manual boost (+500) exceeds the maximum organic score (70), boosted channels occupy the top of the list until they drain — the listing marks them so this is visible rather than mysterious.
+
 ## Manual boost (`/push_channel`)
 
 Adds the channel to `boostedChannels` and triggers an immediate recalculation. The +500 boost is permanent (no expiry) and dominates all other factors, ensuring the channel rises to the top of every queue.
