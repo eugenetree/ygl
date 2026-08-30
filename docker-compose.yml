@@ -1,3 +1,10 @@
+# The application image. Every service that runs it declares the same build, so
+# any one of them can be built or started on its own; Compose de-duplicates
+# identical builds, so the image is still built only once.
+x-app-build: &app-build
+  context: .
+  dockerfile: Dockerfile
+
 x-db-env: &db-env
   POSTGRES_USER: ${POSTGRES_USER:-admin}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
@@ -65,15 +72,29 @@ services:
     depends_on:
       - elasticsearch
 
-  # ── 3. Application Services (Shared Image) ──────────────────────────────────
-  # All three share saythis-app:latest and declare the same build, so any one
-  # of them can be built or started on its own. Compose de-duplicates identical
-  # builds, so the image is still built only once.
+  # ── 3. Migrator ─────────────────────────────────────────────────────────────
+  # The single authority over the migration table. It replays migrations from
+  # the image's compiled output and exits; every service that reads Postgres
+  # waits for it to succeed rather than migrating at boot itself.
+  #
+  # No container_name, because `make db-migrate` and friends run it as a
+  # throwaway one-off container. No profile, because it has a production job:
+  # it must run on a normal `docker compose up`.
+  migrator:
+    build: *app-build
+    image: saythis-app:latest
+    environment:
+      <<: *db-env
+    restart: "no"
+    command: node dist/src/db/scripts/run-migrations.js
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── 4. Application Services (Shared Image) ──────────────────────────────────
   bot:
     container_name: bot
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: *app-build
     image: saythis-app:latest
     environment:
       # Postgres is both the store and the bot<->scraper control channel
@@ -85,12 +106,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
 
   sync-elastic:
     container_name: sync-elastic
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: *app-build
     image: saythis-app:latest
     environment:
       <<: [*db-env, *es-env]
@@ -98,14 +119,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
       elasticsearch:
         condition: service_started
 
   api:
     container_name: api
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: *app-build
     image: saythis-app:latest
     environment:
       # Reads from Elasticsearch only — never touches Postgres.
@@ -118,7 +139,7 @@ services:
       elasticsearch:
         condition: service_started
 
-  # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
+  # ── 5. VPN Scraper (Special Image) ─────────────────────────────────────────
   scraper:
     container_name: scraper
     build:
@@ -141,6 +162,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
