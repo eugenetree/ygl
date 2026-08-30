@@ -1,3 +1,21 @@
+x-db-env: &db-env
+  POSTGRES_USER: ${POSTGRES_USER:-admin}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+  POSTGRES_DB: ${POSTGRES_DB:-saythis}
+  DB_HOST: db
+  DB_PORT: 5432
+
+# The in-network Elasticsearch address, referenced by both our app services
+# (as ES_NODE) and Kibana (as ELASTICSEARCH_HOSTS).
+x-es-url: &es-url http://elasticsearch:9200
+
+x-es-env: &es-env
+  ES_NODE: *es-url
+
+x-telegram-env: &telegram-env
+  TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+  TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+
 services:
   # ── 1. PostgreSQL Database ──────────────────────────────────────────────────
   db:
@@ -41,28 +59,28 @@ services:
     ports:
       - "127.0.0.1:5601:5601"
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      # Mapping form (not `- KEY=value`) so the *es-url alias resolves;
+      # YAML aliases are not expanded inside sequence strings.
+      ELASTICSEARCH_HOSTS: *es-url
     depends_on:
       - elasticsearch
 
   # ── 3. Application Services (Shared Image) ──────────────────────────────────
+  # All three share saythis-app:latest and declare the same build, so any one
+  # of them can be built or started on its own. Compose de-duplicates identical
+  # builds, so the image is still built only once.
   bot:
     container_name: bot
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     image: saythis-app:latest
-    environment: &app-env
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-saythis}
-      DB_HOST: db
-      DB_PORT: 5432
-      ES_NODE: http://elasticsearch:9200
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    environment:
+      # Postgres is both the store and the bot<->scraper control channel
+      # (LISTEN/NOTIFY), so the DB vars are load-bearing here.
+      <<: [*db-env, *es-env, *telegram-env]
     volumes:
-      - /opt/ygl/logs:/usr/src/app/logs
+      - ${LOGS_DIR:-./logs}:/usr/src/app/logs
     command: npm run start:bot
     depends_on:
       db:
@@ -70,8 +88,12 @@ services:
 
   sync-elastic:
     container_name: sync-elastic
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     image: saythis-app:latest
-    environment: *app-env
+    environment:
+      <<: [*db-env, *es-env]
     command: npm run start:elastic
     depends_on:
       db:
@@ -81,9 +103,13 @@ services:
 
   api:
     container_name: api
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     image: saythis-app:latest
     environment:
-      <<: *app-env
+      # Reads from Elasticsearch only — never touches Postgres.
+      <<: *es-env
       IS_API_ENABLED: ${IS_API_ENABLED:-}
     ports:
       - "127.0.0.1:3001:3001"
@@ -103,13 +129,15 @@ services:
     devices:
       - /dev/net/tun
     environment:
-      <<: *app-env
+      <<: [*db-env, *telegram-env]
+      # Selects the seed word list: "development" -> dev.json, else prod.json
+      APP_ENV: ${APP_ENV:-}
       VPN_USER: ${VPN_USER}
       VPN_PASS: ${VPN_PASS}
       VPN_CONFIG_B64: ${VPN_CONFIG_B64}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
     volumes:
-      - /opt/ygl/logs:/usr/src/app/logs
+      - ${LOGS_DIR:-./logs}:/usr/src/app/logs
     depends_on:
       db:
         condition: service_healthy
