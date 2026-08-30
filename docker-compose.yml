@@ -19,6 +19,15 @@ x-es-url: &es-url http://elasticsearch:9200
 x-es-env: &es-env
   ES_NODE: *es-url
 
+# Everything that reads Postgres waits for the database and for the migrator to
+# have finished — the migrator is the only thing that touches the schema. See
+# ADR-0004.
+x-db-gate: &db-gate
+  db:
+    condition: service_healthy
+  migrator:
+    condition: service_completed_successfully
+
 x-telegram-env: &telegram-env
   TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
   TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
@@ -104,10 +113,7 @@ services:
       - ${LOGS_DIR:-./logs}:/usr/src/app/logs
     command: npm run start:bot
     depends_on:
-      db:
-        condition: service_healthy
-      migrator:
-        condition: service_completed_successfully
+      <<: *db-gate
 
   sync-elastic:
     container_name: sync-elastic
@@ -117,10 +123,7 @@ services:
       <<: [*db-env, *es-env]
     command: npm run start:elastic
     depends_on:
-      db:
-        condition: service_healthy
-      migrator:
-        condition: service_completed_successfully
+      <<: *db-gate
       elasticsearch:
         condition: service_started
 
@@ -160,10 +163,7 @@ services:
     volumes:
       - ${LOGS_DIR:-./logs}:/usr/src/app/logs
     depends_on:
-      db:
-        condition: service_healthy
-      migrator:
-        condition: service_completed_successfully
+      <<: *db-gate
 
 volumes:
   postgres_data:

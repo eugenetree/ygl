@@ -50,12 +50,18 @@ db-rollback:
 	docker compose run --rm migrator node dist/src/db/scripts/rollback-migration.js
 
 # Rebuild DB from scratch for the current branch: drop → migrate → seed dev fixtures
-db-fresh: db-reset db-migrate
+# db-up first: db-reset exec's into the database container, so unlike the two
+# targets above it cannot start the database itself.
+db-fresh: db-up db-reset db-migrate
 	docker compose run --rm migrator node dist/src/db/scripts/seed-dev.js
 
 # ── Postgres itself (running db container) ──────────────────────────────────
 # These operate on the server rather than on the schema, so they exec into the
 # database container — the one service with an always-restart policy.
+
+# Start the database on its own and wait for it to pass its healthcheck
+db-up:
+	docker compose up -d --wait db
 
 db-connect:
 	docker exec -it db psql -U admin -d saythis
