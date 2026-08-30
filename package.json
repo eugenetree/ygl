@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "db:migration:run": "npx tsx src/db/scripts/run-migrations.ts",
-    "db:migration:rollback": "npx tsx src/db/scripts/rollback-migration.ts",
     "db:migration:create-new": "npx tsx src/db/scripts/create-migration-file.ts",
-    "db:seed:dev": "npx tsx src/db/scripts/seed-dev.ts",
     "test": "node --test --import tsx \"src/**/*.test.ts\"",
     "clean": "rm -rf dist/*",
     "build": "npm run clean && tsc",

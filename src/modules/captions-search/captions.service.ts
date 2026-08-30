@@ -9,8 +9,13 @@ export class CaptionsService {
 
   constructor(private readonly logger: Logger) {
     this.logger.setContext(CaptionsService.name);
-    // Use elasticsearch service name in Docker, localhost outside Docker
-    const esNode = process.env.ES_NODE || "http://elasticsearch:9200";
+    // No default: docker-compose.yml sets ES_NODE for every service that needs
+    // it, so an unset value means something is misconfigured. Failing by name
+    // beats falling back to an address that may not resolve.
+    const esNode = process.env.ES_NODE;
+    if (!esNode) {
+      throw new Error("ES_NODE is not set");
+    }
     this.esClient = new Client({ node: esNode });
   }
 
