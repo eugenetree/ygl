@@ -73,7 +73,7 @@ services:
     container_name: bot
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile
     image: saythis-app:latest
     environment:
       # Postgres is both the store and the bot<->scraper control channel
@@ -90,7 +90,7 @@ services:
     container_name: sync-elastic
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile
     image: saythis-app:latest
     environment:
       <<: [*db-env, *es-env]
@@ -105,7 +105,7 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile
     image: saythis-app:latest
     environment:
       # Reads from Elasticsearch only — never touches Postgres.
