@@ -17,6 +17,9 @@ COPY package*.json ./
 RUN npm ci --omit=dev --ignore-scripts
 
 COPY --from=builder /usr/src/app/dist ./dist
+# Dev seed fixtures: tsc does not emit .json, and `make db-fresh` seeds from
+# the compiled entrypoint in a throwaway migrator container.
+COPY --from=builder /usr/src/app/src/db/fixtures ./dist/src/db/fixtures
 
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
