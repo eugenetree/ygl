@@ -1,19 +1,32 @@
+# ── Shared environment blocks ───────────────────────────────────────────────
+x-postgres-env: &postgres-env
+  POSTGRES_USER: ${POSTGRES_USER:?set it in .env — see .env.example}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set it in .env — see .env.example}
+  POSTGRES_DB: ${POSTGRES_DB:?set it in .env — see .env.example}
+  DB_HOST: db
+  DB_PORT: 5432
+
+x-es-env: &es-env
+  ES_NODE: http://elasticsearch:9200
+
+x-telegram-env: &telegram-env
+  TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?set it in .env — see .env.example}
+  TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:?set it in .env — see .env.example}
+
 services:
   # ── 1. PostgreSQL Database ──────────────────────────────────────────────────
   db:
     container_name: db
     image: postgres:18-alpine
     restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-saythis}
+    environment: *postgres-env
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/18/docker
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-saythis}"]
+      # CMD-SHELL takes a string, which cannot reference an anchor.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:?set it in .env} -d ${POSTGRES_DB:?set it in .env}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -23,9 +36,9 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
     container_name: elasticsearch
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -41,7 +54,7 @@ services:
     ports:
       - "127.0.0.1:5601:5601"
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     depends_on:
       - elasticsearch
 
@@ -52,15 +65,9 @@ services:
       context: .
       dockerfile: Dockerfile
     image: saythis-app:latest
-    environment: &app-env
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-saythis}
-      DB_HOST: db
-      DB_PORT: 5432
-      ES_NODE: http://elasticsearch:9200
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    environment:
+      # Elasticsearch because the bot's /find and /resync commands search captions
+      <<: [*postgres-env, *es-env, *telegram-env]
     volumes:
       - /opt/ygl/logs:/usr/src/app/logs
     command: npm run start:bot
@@ -71,7 +78,8 @@ services:
   sync-elastic:
     container_name: sync-elastic
     image: saythis-app:latest
-    environment: *app-env
+    environment:
+      <<: [*postgres-env, *es-env]
     command: npm run start:elastic
     depends_on:
       db:
@@ -83,7 +91,7 @@ services:
     container_name: api
     image: saythis-app:latest
     environment:
-      <<: *app-env
+      <<: *es-env
       IS_API_ENABLED: ${IS_API_ENABLED:-}
     ports:
       - "127.0.0.1:3001:3001"
@@ -103,10 +111,11 @@ services:
     devices:
       - /dev/net/tun
     environment:
-      <<: *app-env
-      VPN_USER: ${VPN_USER}
-      VPN_PASS: ${VPN_PASS}
-      VPN_CONFIG_B64: ${VPN_CONFIG_B64}
+      <<: [*postgres-env, *telegram-env]
+      APP_ENV: ${APP_ENV:-}
+      VPN_USER: ${VPN_USER:-}
+      VPN_PASS: ${VPN_PASS:-}
+      VPN_CONFIG_B64: ${VPN_CONFIG_B64:-}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
     volumes:
       - /opt/ygl/logs:/usr/src/app/logs
