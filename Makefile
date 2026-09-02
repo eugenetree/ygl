@@ -3,6 +3,10 @@ ifneq (,$(wildcard .env))
   export
 endif
 
+# Fail with the variable's name instead of passing an empty flag to the tool
+guard-%:
+	@test -n "$($*)" || { echo "$* is not set — see .env.example"; exit 1; }
+
 up:
 	docker compose up -d
 
@@ -15,29 +19,29 @@ app-connect:
 db-migrate:
 	docker exec bot npm run db:migration:run
 
-db-connect:
-	docker exec -it db psql -U admin -d saythis
+db-connect: guard-POSTGRES_USER guard-POSTGRES_DB
+	docker exec -it db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 db-rollback:
 	npm run db:migration:rollback
 
-db-export:
+db-export: guard-POSTGRES_USER guard-POSTGRES_DB
 	mkdir -p db/dump
-	docker exec -t db pg_dump -U admin -d saythis > db/dump/dump-$$(date +%Y%m%d%H%M%S).sql
+	docker exec -t db pg_dump -U $(POSTGRES_USER) -d $(POSTGRES_DB) > db/dump/dump-$$(date +%Y%m%d%H%M%S).sql
 
 # Load a SQL dump into the database: make db-load-dump file=dump.sql
-db-load-dump:
-	docker exec -i db pg_restore -U admin -d saythis < "$(file)"
+db-load-dump: guard-POSTGRES_USER guard-POSTGRES_DB
+	docker exec -i db pg_restore -U $(POSTGRES_USER) -d $(POSTGRES_DB) < "$(file)"
 
 file ?= dump.sql
 
 # Reset DB and load a dump: make db-restore file=dump.sql
-db-restore:
+db-restore: guard-POSTGRES_USER guard-POSTGRES_DB
 	@echo "Dropping and recreating database..."
-	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
-	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "DROP DATABASE IF EXISTS \"$(POSTGRES_DB)\" WITH (FORCE);"
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "CREATE DATABASE \"$(POSTGRES_DB)\""
 	@echo "Loading dump from $(file)..."
-	docker exec -i db pg_restore -U admin -d saythis < "$(file)"
+	docker exec -i db pg_restore -U $(POSTGRES_USER) -d $(POSTGRES_DB) < "$(file)"
 	@echo "Done."
 
 # make db-create-migration name="table_name"
@@ -49,10 +53,10 @@ db-fresh: db-reset db-migrate
 	docker exec bot npm run db:seed:dev
 
 # Completely reset the database (drop and recreate)
-db-reset:
+db-reset: guard-POSTGRES_USER guard-POSTGRES_DB
 	@echo "Dropping and recreating database..."
-	docker exec db psql -U admin -d postgres -c "DROP DATABASE IF EXISTS \"saythis\" WITH (FORCE);"
-	docker exec db psql -U admin -d postgres -c "CREATE DATABASE \"saythis\""
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "DROP DATABASE IF EXISTS \"$(POSTGRES_DB)\" WITH (FORCE);"
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "CREATE DATABASE \"$(POSTGRES_DB)\""
 	@echo "Database reset complete. Run 'make db-migrate' to recreate tables."
 
 # Run commands inside app container
@@ -77,19 +81,19 @@ rebuild:
 
 # Download the latest file from R2 bucket folder into db/dump/
 # Requires: R2_* env vars set (see .env.example)
-r2-download-latest:
+r2-download-latest: guard-R2_BUCKET guard-R2_FOLDER guard-R2_ENDPOINT guard-R2_ACCESS_KEY_ID guard-R2_SECRET_ACCESS_KEY
 	@mkdir -p db/dump && \
 	LATEST=$$(docker run --rm \
 		-e AWS_ACCESS_KEY_ID=$(R2_ACCESS_KEY_ID) \
 		-e AWS_SECRET_ACCESS_KEY=$(R2_SECRET_ACCESS_KEY) \
-		amazon/aws-cli s3 ls s3://saythis/saythis-saythis-trr9pp_db/ \
+		amazon/aws-cli s3 ls s3://$(R2_BUCKET)/$(R2_FOLDER)/ \
 		--endpoint-url $(R2_ENDPOINT) | sort | tail -1 | awk '{print $$4}') && \
 	echo "Downloading $$LATEST..." && \
 	docker run --rm \
 		-e AWS_ACCESS_KEY_ID=$(R2_ACCESS_KEY_ID) \
 		-e AWS_SECRET_ACCESS_KEY=$(R2_SECRET_ACCESS_KEY) \
 		-v $(PWD)/db/dump:/data \
-		amazon/aws-cli s3 cp s3://saythis/saythis-saythis-trr9pp_db/$$LATEST /data/$$LATEST \
+		amazon/aws-cli s3 cp s3://$(R2_BUCKET)/$(R2_FOLDER)/$$LATEST /data/$$LATEST \
 		--endpoint-url $(R2_ENDPOINT) && \
 	echo "Saved to db/dump/$$LATEST"
 
