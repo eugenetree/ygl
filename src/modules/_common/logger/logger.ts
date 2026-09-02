@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { injectable } from "inversify";
 
 type Config = {
@@ -9,16 +8,11 @@ type Config = {
 @injectable()
 export class Logger {
   private context: string; // service-specific marker
-  private logsDir = "logs";
   private category: string; // overall category, like "videos-scraper"
 
   constructor({ context = "default", category = "default" }: Config) {
     this.context = this.toKebabCase(context);
     this.category = this.toKebabCase(category);
-
-    if (!fs.existsSync(this.logsDir)) {
-      fs.mkdirSync(this.logsDir);
-    }
   }
 
   public setContext(context: string): void {
@@ -33,10 +27,9 @@ export class Logger {
   }
 
   public info(message: string): void {
-    const log = `${this.getTimestamp()} [info]\n[${this.context}]\n${message}\n`;
+    const log = `${this.header("info")}\n${message}\n`;
 
     console.log(log);
-    fs.appendFileSync(this.getLogsFilePath(), log + "\n");
   }
 
   public error({
@@ -48,11 +41,10 @@ export class Logger {
     error?: unknown;
     context?: Record<string, unknown>;
   }): void {
-    const timestamp = this.getTimestamp();
     const errorMessage =
       message ?? (error instanceof Error ? error.message : undefined);
 
-    let log = `${timestamp} [error]\n[${this.context}]\n${errorMessage}`;
+    let log = `${this.header("error")}\n${errorMessage}`;
 
     if (error instanceof Error) {
       log += `\nstack: ${error.stack}`;
@@ -69,22 +61,16 @@ export class Logger {
     }
 
     console.error(log);
-    fs.appendFileSync(this.getLogsFilePath(), log + "\n");
   }
 
   public warn(message: string): void {
-    const log = `${this.getTimestamp()} [warn]\n[${this.context}]\n${message}\n`;
+    const log = `${this.header("warn")}\n${message}\n`;
 
     console.warn(log);
-    fs.appendFileSync(this.getLogsFilePath(), log + "\n");
   }
 
-  private getTimestamp(): string {
-    return new Date().toISOString();
-  }
-
-  private getLogsFilePath(): string {
-    return `${this.logsDir}/${this.category}`;
+  private header(level: "info" | "warn" | "error"): string {
+    return `${new Date().toISOString()} [${level}] [${this.category}]\n[${this.context}]`;
   }
 
   /**

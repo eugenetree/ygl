@@ -68,8 +68,6 @@ services:
     environment:
       # Elasticsearch because the bot's /find and /resync commands search captions
       <<: [*postgres-env, *es-env, *telegram-env]
-    volumes:
-      - /opt/ygl/logs:/usr/src/app/logs
     command: npm run start:bot
     depends_on:
       db:
@@ -117,8 +115,6 @@ services:
       VPN_PASS: ${VPN_PASS:-}
       VPN_CONFIG_B64: ${VPN_CONFIG_B64:-}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
-    volumes:
-      - /opt/ygl/logs:/usr/src/app/logs
     depends_on:
       db:
         condition: service_healthy
