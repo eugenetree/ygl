@@ -50,6 +50,4 @@ fi
 
 # ── Start Scraper ─────────────────────────────────────────────────────────────
 echo "[vpn-scraper] Starting scraper process..."
-# We run migrations first to ensure DB is ready
-node dist/src/db/scripts/run-migrations.js
 node dist/src/main-scraper.js

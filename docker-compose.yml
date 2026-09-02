@@ -58,20 +58,30 @@ services:
     depends_on:
       - elasticsearch
 
-  # ── 3. Application Services (Shared Image) ──────────────────────────────────
-  bot:
-    container_name: bot
+  # ── 3. Migrations ───────────────────────────────────────────────────────────
+  migrate:
     build:
       context: .
       dockerfile: Dockerfile
+    image: saythis-app:latest
+    environment: *postgres-env
+    command: node dist/src/db/scripts/run-migrations.js
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── 4. Application Services (Shared Image) ──────────────────────────────────
+  bot:
+    container_name: bot
     image: saythis-app:latest
     environment:
       # Elasticsearch because the bot's /find and /resync commands search captions
       <<: [*postgres-env, *es-env, *telegram-env]
     command: npm run start:bot
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   sync-elastic:
     container_name: sync-elastic
@@ -80,8 +90,8 @@ services:
       <<: [*postgres-env, *es-env]
     command: npm run start:elastic
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       elasticsearch:
         condition: service_started
 
@@ -98,7 +108,7 @@ services:
       elasticsearch:
         condition: service_started
 
-  # ── 4. VPN Scraper (Special Image) ─────────────────────────────────────────
+  # ── 5. VPN Scraper (Special Image) ─────────────────────────────────────────
   scraper:
     container_name: scraper
     build:
@@ -116,8 +126,8 @@ services:
       VPN_CONFIG_B64: ${VPN_CONFIG_B64:-}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
