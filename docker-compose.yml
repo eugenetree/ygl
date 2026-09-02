@@ -50,7 +50,7 @@ services:
     container_name: bot
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile
     image: saythis-app:latest
     environment: &app-env
       POSTGRES_USER: ${POSTGRES_USER:-admin}
