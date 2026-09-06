@@ -13,6 +13,15 @@ x-telegram-env: &telegram-env
   TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?set it in .env — see .env.example}
   TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:?set it in .env — see .env.example}
 
+# Every service running the app declares this, so no single service owns the build.
+# Compose builds the image once and the rest reuse it.
+x-app-image: &app-image
+  image: saythis-app:latest
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: app
+
 services:
   # ── 1. PostgreSQL Database ──────────────────────────────────────────────────
   db:
@@ -60,10 +69,7 @@ services:
 
   # ── 3. Migrations ───────────────────────────────────────────────────────────
   migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: saythis-app:latest
+    <<: *app-image
     environment: *postgres-env
     command: node dist/src/db/scripts/run-migrations.js
     restart: "no"
@@ -74,7 +80,7 @@ services:
   # ── 4. Application Services (Shared Image) ──────────────────────────────────
   bot:
     container_name: bot
-    image: saythis-app:latest
+    <<: *app-image
     environment:
       # Elasticsearch because the bot's /find and /resync commands search captions
       <<: [*postgres-env, *es-env, *telegram-env]
@@ -85,7 +91,7 @@ services:
 
   sync-elastic:
     container_name: sync-elastic
-    image: saythis-app:latest
+    <<: *app-image
     environment:
       <<: [*postgres-env, *es-env]
     command: npm run start:elastic
@@ -97,7 +103,7 @@ services:
 
   api:
     container_name: api
-    image: saythis-app:latest
+    <<: *app-image
     environment:
       <<: *es-env
       IS_API_ENABLED: ${IS_API_ENABLED:-}
@@ -113,7 +119,9 @@ services:
     container_name: scraper
     build:
       context: .
-      dockerfile: Dockerfile.scraper
+      dockerfile: Dockerfile
+      target: scraper
+    image: saythis-scraper:latest
     cap_add:
       - NET_ADMIN
     devices:
