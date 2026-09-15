@@ -32,7 +32,7 @@ export type VideoDiscoveryJobStatus =
   | "FAILED"
   | "SKIPPED";
 
-export type VideoDiscoveryJobSkipCause = "CHANNEL_NOT_FOUND";
+export type VideoDiscoveryJobSkipCause = "CHANNEL_NOT_FOUND" | "NO_VIDEOS_TAB";
 
 export type AutoCaptionsStatus =
   | "CAPTIONS_ABSENT"

@@ -11,6 +11,32 @@ export type ChannelNotFoundError = {
   channelId: string;
 };
 
+export type ChannelNoVideosTabError = {
+  type: "CHANNEL_NO_VIDEOS_TAB";
+  channelId: string;
+};
+
+/** Permanent, known conditions that make a channel un-scrapable, like `UnprocessableVideoError`. */
+export type UnprocessableChannelError =
+  | ChannelNotFoundError
+  | ChannelNoVideosTabError;
+
+const CHANNEL_NOT_FOUND_MESSAGE = "This channel does not exist";
+const NO_VIDEOS_TAB_MESSAGE = "This channel does not have a videos tab";
+
+function classifyUnprocessableChannel(
+  message: string,
+  channelId: string,
+): UnprocessableChannelError | null {
+  if (message.includes(CHANNEL_NOT_FOUND_MESSAGE)) {
+    return { type: "CHANNEL_NOT_FOUND", channelId };
+  }
+  if (message.includes(NO_VIDEOS_TAB_MESSAGE)) {
+    return { type: "CHANNEL_NO_VIDEOS_TAB", channelId };
+  }
+  return null;
+}
+
 export type ChannelVideoEntry = {
   id: string;
   availability: "subscriber_only" | null;
@@ -50,7 +76,7 @@ export class YoutubeApiGetChannelVideoEntries {
   }): AsyncGenerator<
     Result<
       ChannelVideosResultSuccess,
-      YtDlpError | ValidationError | ChannelNotFoundError
+      YtDlpError | ValidationError | UnprocessableChannelError
     >,
     void,
     undefined
@@ -72,12 +98,16 @@ export class YoutubeApiGetChannelVideoEntries {
 
     for await (const result of stream) {
       if (!result.ok) {
-        if (
-          result.error.type === "YT_DLP_ERROR" &&
-          result.error.message.includes("This channel does not exist")
-        ) {
-          this.logger.info(`Channel ${channelId} does not exist on YouTube.`);
-          yield Failure({ type: "CHANNEL_NOT_FOUND", channelId });
+        const unprocessable = classifyUnprocessableChannel(
+          result.error.message,
+          channelId,
+        );
+
+        if (unprocessable) {
+          this.logger.info(
+            `Channel ${channelId} is unprocessable: ${unprocessable.type}`,
+          );
+          yield Failure(unprocessable);
           return;
         }
 

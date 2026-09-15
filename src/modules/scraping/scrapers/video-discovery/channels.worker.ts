@@ -1,10 +1,17 @@
 import { injectable } from "inversify";
+import { VideoDiscoveryJobSkipCause } from "../../../../db/types.js";
 import { Failure, type Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
 import { Logger } from "../../../_common/logger/logger.js";
 import { WorkerStopCause } from "../../constants.js";
 import { ChannelsQueue } from "./channels.queue.js";
 import { FindChannelVideosUseCase } from "./use-cases/find-channel-videos.use-case.js";
+
+function toSkipCause(errorType: string): VideoDiscoveryJobSkipCause | null {
+  if (errorType === "CHANNEL_NOT_FOUND") return "CHANNEL_NOT_FOUND";
+  if (errorType === "CHANNEL_NO_VIDEOS_TAB") return "NO_VIDEOS_TAB";
+  return null;
+}
 
 type WorkerOptions = {
   shouldContinue: () => boolean;
@@ -68,14 +75,11 @@ export class ChannelsWorker {
       const result = await this.findChannelVideos.execute(channel.id);
 
       if (!result.ok) {
-        if (result.error.type === "CHANNEL_NOT_FOUND") {
-          this.logger.info(
-            `Channel ${channel.id} does not exist on YouTube. Skipping.`,
-          );
-          await this.channelsQueue.markAsSkipped(
-            channel.id,
-            "CHANNEL_NOT_FOUND",
-          );
+        const skipCause = toSkipCause(result.error.type);
+
+        if (skipCause) {
+          this.logger.info(`Channel ${channel.id} skipped: ${skipCause}.`);
+          await this.channelsQueue.markAsSkipped(channel.id, skipCause);
           continue;
         }
 
