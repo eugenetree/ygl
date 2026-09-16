@@ -133,9 +133,24 @@ services:
       VPN_PASS: ${VPN_PASS:-}
       VPN_CONFIG_B64: ${VPN_CONFIG_B64:-}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
+      YTDLP_POT_PROVIDER_URL: ${YTDLP_POT_PROVIDER_URL-http://127.0.0.1:4416}
     depends_on:
       migrate:
         condition: service_completed_successfully
+
+  # Generates YouTube PO tokens for yt-dlp (ADR-0004).
+  # Shares the scraper's network namespace so tokens are minted through the same
+  # VPN exit that yt-dlp uses, and so it is reachable at 127.0.0.1:4416 without
+  # publishing a port. Its tag must match the bgutil-ytdlp-pot-provider pip
+  # version in the Dockerfile.
+  pot-provider:
+    container_name: pot-provider
+    image: brainicism/bgutil-ytdlp-pot-provider:2.0.0
+    init: true
+    restart: always
+    network_mode: "service:scraper"
+    depends_on:
+      - scraper
 
 volumes:
   postgres_data:

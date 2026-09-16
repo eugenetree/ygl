@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { injectable } from "inversify";
+import { inject, injectable, optional } from "inversify";
 import { YtDlp as YtDlpWrapper } from "ytdlp-nodejs";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
@@ -53,9 +53,29 @@ const PREMIERE_MESSAGE = "Premieres in";
 const REMOVED_BY_UPLOADER_MESSAGE =
   "This video has been removed by the uploader";
 const CLAIMED_CONTENT_MESSAGE = "blocked due to the claimed content";
+/** YouTube distrusts the requester (IP reputation / missing PO token), not the video. */
+const BOT_CHALLENGE_PATTERN = /Sign in to confirm you.re not a bot/;
 
 /** Max time to wait for `yt-dlp --version` before giving up (keeps boot unblocked). */
 const VERSION_RESOLUTION_TIMEOUT_MS = 5_000;
+
+export type YtDlpRunResult = {
+  exitCode: number | null;
+  stdout: string;
+  stderr: string;
+  command?: string;
+};
+
+/**
+ * The boundary to the yt-dlp process: receives the fully composed argument
+ * list and resolves with what the process produced. Rejects (like the
+ * ytdlp-nodejs wrapper) when yt-dlp exits non-zero. Injected in tests.
+ */
+export type YtDlpRunner = (
+  url: string,
+  args: string[],
+) => Promise<YtDlpRunResult>;
+export const YT_DLP_RUNNER = Symbol.for("YT_DLP_RUNNER");
 
 export function classifyUnprocessable(
   message: string,
@@ -81,6 +101,30 @@ export function classifyUnprocessable(
   return null;
 }
 
+/**
+ * Maps a yt-dlp failure message to the error the caller should see: a skip
+ * cause when the video itself is unprocessable, otherwise a YT_DLP_ERROR —
+ * with the bot challenge called out, since it means the scraper's IP/session
+ * is being rejected and every following video would fail the same way.
+ */
+function toYtDlpFailure(
+  message: string,
+  cause?: unknown,
+): YtDlpError | UnprocessableVideoError {
+  return classifyUnprocessable(message) ?? toYtDlpError(message, cause);
+}
+
+function toYtDlpError(message: string, cause?: unknown): YtDlpError {
+  if (BOT_CHALLENGE_PATTERN.test(message)) {
+    return {
+      type: "YT_DLP_ERROR",
+      message: `YouTube bot challenge: the scraper's IP/session is not trusted (check the VPN exit, the PO token provider and the cookies). ${message}`,
+      cause,
+    };
+  }
+  return { type: "YT_DLP_ERROR", message, cause };
+}
+
 function resolveCookiesFile(logger: Logger): string | undefined {
   const cookiesB64 = process.env["YTDLP_COOKIES_B64"];
   if (!cookiesB64) return undefined;
@@ -97,13 +141,22 @@ function resolveCookiesFile(logger: Logger): string | undefined {
 export class YtDlpClient {
   private ytdlp: YtDlpWrapper;
   private readonly cookiesFile: string | undefined;
+  private readonly potProviderUrl: string | undefined;
+  private readonly run: YtDlpRunner;
 
-  constructor(private readonly logger: Logger) {
+  // The runner is a function type, so it needs an explicit token: without
+  // `@inject` inversify would try to resolve `Function` from its metadata.
+  constructor(
+    private readonly logger: Logger,
+    @optional() @inject(YT_DLP_RUNNER) runner?: YtDlpRunner,
+  ) {
     this.logger.setContext(YtDlpClient.name);
 
     // ytdlp-nodejs will automatically find/download its own version of the binary
     this.ytdlp = new YtDlpWrapper();
     this.cookiesFile = resolveCookiesFile(this.logger);
+    this.potProviderUrl = process.env["YTDLP_POT_PROVIDER_URL"] || undefined;
+    this.run = runner ?? ((url, args) => this.runWithWrapper(url, args));
   }
 
   /**
@@ -184,13 +237,69 @@ export class YtDlpClient {
     });
   }
 
-  private buildExec(url: string, remainingArgs: string[]) {
-    const allArgs = this.cookiesFile
-      ? ["--cookies", this.cookiesFile, ...remainingArgs]
-      : remainingArgs;
-    const builder = this.ytdlp.execBuilder(url).addArgs(...allArgs);
+  /**
+   * Arguments every yt-dlp invocation carries so YouTube accepts the request,
+   * each only when configured: account cookies and the PO token provider (the
+   * bgutil plugin reads its base_url from this extractor arg). The JS runtime
+   * needs no arg: ytdlp-nodejs passes `--js-runtime node` on its own.
+   */
+  private youtubeAccessArgs(): string[] {
+    const args: string[] = [];
+    if (this.cookiesFile) args.push("--cookies", this.cookiesFile);
+    if (this.potProviderUrl) {
+      args.push(
+        "--extractor-args",
+        `youtubepot-bgutilhttp:base_url=${this.potProviderUrl}`,
+      );
+    }
+    return args;
+  }
+
+  private buildExec(url: string, args: string[]) {
+    const builder = this.ytdlp.execBuilder(url).addArgs(...args);
     builder.debugPrint(false);
     return builder;
+  }
+
+  /**
+   * Runs yt-dlp with the YouTube access args prepended and turns a non-zero
+   * exit into the failure the caller should see.
+   */
+  private async runChecked(
+    url: string,
+    remainingArgs: string[],
+  ): Promise<Result<YtDlpRunResult, YtDlpError | UnprocessableVideoError>> {
+    const result = await this.run(url, [
+      ...this.youtubeAccessArgs(),
+      ...remainingArgs,
+    ]);
+
+    if (result.exitCode !== 0) {
+      const message = result.stderr || `Exit code ${result.exitCode}`;
+      const failure = toYtDlpFailure(message);
+      if (failure.type === "YT_DLP_ERROR") {
+        this.logger.error({
+          message: `yt-dlp execution failed with code ${result.exitCode}`,
+          context: { stderr: result.stderr, command: result.command },
+        });
+      }
+      return Failure(failure);
+    }
+
+    return Success(result);
+  }
+
+  private async runWithWrapper(
+    url: string,
+    args: string[],
+  ): Promise<YtDlpRunResult> {
+    const result = await this.buildExec(url, args).exec();
+    return {
+      exitCode: result.exitCode,
+      stdout: result.stdout,
+      stderr: result.stderr,
+      command: result.command,
+    };
   }
 
   /**
@@ -212,25 +321,11 @@ export class YtDlpClient {
         });
       }
 
-      // We use the raw execBuilder to have full control over the arguments
-      const builder = this.buildExec(url, remainingArgs);
-      const result = await builder.exec();
-
-      if (result.exitCode !== 0) {
-        const message = result.stderr || `Exit code ${result.exitCode}`;
-        const unprocessable = classifyUnprocessable(message);
-        if (unprocessable) {
-          return Failure(unprocessable);
-        }
-        this.logger.error({
-          message: `yt-dlp execution failed with code ${result.exitCode}`,
-          context: { stderr: result.stderr, command: result.command },
-        });
-        return Failure({ type: "YT_DLP_ERROR", message });
-      }
+      const run = await this.runChecked(url, remainingArgs);
+      if (!run.ok) return run;
 
       const results: T[] = [];
-      const lines = result.output.split("\n");
+      const lines = run.value.stdout.split("\n");
 
       for (const line of lines) {
         if (line.trim()) {
@@ -257,16 +352,7 @@ export class YtDlpClient {
       });
 
       const message = error?.message || "Unexpected error";
-      const unprocessable = classifyUnprocessable(message);
-      if (unprocessable) {
-        return Failure(unprocessable);
-      }
-
-      return Failure({
-        type: "YT_DLP_ERROR",
-        message,
-        cause: errorContext,
-      });
+      return Failure(toYtDlpFailure(message, errorContext));
     }
   }
 
@@ -290,21 +376,8 @@ export class YtDlpClient {
         });
       }
 
-      const builder = this.buildExec(url, remainingArgs);
-      const result = await builder.exec();
-
-      if (result.exitCode !== 0) {
-        const message = result.stderr || `Exit code ${result.exitCode}`;
-        const unprocessable = classifyUnprocessable(message);
-        if (unprocessable) {
-          return Failure(unprocessable);
-        }
-        this.logger.error({
-          message: `yt-dlp execution failed with code ${result.exitCode}`,
-          context: { stderr: result.stderr, command: result.command },
-        });
-        return Failure({ type: "YT_DLP_ERROR", message });
-      }
+      const run = await this.runChecked(url, remainingArgs);
+      if (!run.ok) return run;
 
       return Success(undefined);
     } catch (error: any) {
@@ -321,16 +394,7 @@ export class YtDlpClient {
       });
 
       const message = error?.message || "Unexpected error";
-      const unprocessable = classifyUnprocessable(message);
-      if (unprocessable) {
-        return Failure(unprocessable);
-      }
-
-      return Failure({
-        type: "YT_DLP_ERROR",
-        message,
-        cause: errorContext,
-      });
+      return Failure(toYtDlpFailure(message, errorContext));
     }
   }
 
@@ -354,7 +418,10 @@ export class YtDlpClient {
         return;
       }
 
-      const builder = this.buildExec(url, remainingArgs);
+      const builder = this.buildExec(url, [
+        ...this.youtubeAccessArgs(),
+        ...remainingArgs,
+      ]);
 
       let errorResult: YtDlpError | undefined;
       const queue: T[] = [];
@@ -385,11 +452,10 @@ export class YtDlpClient {
       });
 
       builder.on("error", (error: Error) => {
-        errorResult = {
-          type: "YT_DLP_ERROR",
-          message: error.message,
-          cause: { originalError: error, stderr: stderrBuffer },
-        };
+        errorResult = toYtDlpError(error.message, {
+          originalError: error,
+          stderr: stderrBuffer,
+        });
         done = true;
         resolveNext?.();
       });
@@ -408,21 +474,19 @@ export class YtDlpClient {
           }
 
           if (result.exitCode !== 0 && !errorResult) {
-            errorResult = {
-              type: "YT_DLP_ERROR",
-              message: result.stderr || `Exit code ${result.exitCode}`,
-            };
+            errorResult = toYtDlpError(
+              result.stderr || `Exit code ${result.exitCode}`,
+            );
           }
           done = true;
           resolveNext?.();
         })
         .catch((error) => {
           if (!errorResult) {
-            errorResult = {
-              type: "YT_DLP_ERROR",
-              message: error.message || "Unknown error during yt-dlp execution",
-              cause: { originalError: error, stderr: stderrBuffer },
-            };
+            errorResult = toYtDlpError(
+              error.message || "Unknown error during yt-dlp execution",
+              { originalError: error, stderr: stderrBuffer },
+            );
           }
           done = true;
           resolveNext?.();
