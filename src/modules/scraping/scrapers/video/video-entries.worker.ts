@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { inject, injectable, optional } from "inversify";
 import { VideoJobSkipCause } from "../../../../db/types.js";
 import { Failure, type Result, Success } from "../../../../types/index.js";
 import { BaseError } from "../../../_common/errors.js";
@@ -17,6 +17,22 @@ function toSkipCause(errorType: string): VideoJobSkipCause | null {
   return null;
 }
 
+/**
+ * Pause between videos so the scraper stays under YouTube's request rate limit
+ * (the yt-dlp wiki advises 5-10 s between downloads; each video costs several
+ * yt-dlp invocations). Randomized so the cadence does not look scripted.
+ */
+const PAUSE_BETWEEN_ENTRIES_MS = { min: 5_000, max: 10_000 };
+
+export type PauseBetweenEntries = () => Promise<void>;
+export const PAUSE_BETWEEN_ENTRIES = Symbol.for("PAUSE_BETWEEN_ENTRIES");
+
+const randomizedPause: PauseBetweenEntries = () => {
+  const { min, max } = PAUSE_BETWEEN_ENTRIES_MS;
+  const ms = min + Math.random() * (max - min);
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 type WorkerOptions = {
   shouldContinue: () => boolean;
   onError: (error: BaseError) => Promise<void>;
@@ -26,18 +42,24 @@ type WorkerOptions = {
 export class VideoEntriesWorker {
   private isRunning: boolean = false;
 
+  // Explicit token for the function-typed pause, as with YT_DLP_RUNNER.
   constructor(
     logger: Logger,
     private readonly processVideoEntry: ProcessVideoEntryUseCase,
     private readonly videoEntriesQueue: VideoEntriesQueue,
+    @optional()
+    @inject(PAUSE_BETWEEN_ENTRIES)
+    pauseBetweenEntries?: PauseBetweenEntries,
   ) {
     this.logger = logger.child({
       context: "VideoEntriesWorker",
       category: "worker-video-fetcher",
     });
+    this.pauseBetweenEntries = pauseBetweenEntries ?? randomizedPause;
   }
 
   private readonly logger: Logger;
+  private readonly pauseBetweenEntries: PauseBetweenEntries;
 
   public async run({
     shouldContinue,
@@ -78,27 +100,30 @@ export class VideoEntriesWorker {
         channelId: entry.channelId,
       });
 
-      if (!result.ok) {
+      if (result.ok) {
+        await this.videoEntriesQueue.markAsSuccess(entry.id);
+      } else {
         const skipCause = toSkipCause(result.error.type);
-        if (skipCause) {
-          this.logger.info(`Video entry ${entry.id} skipped (${skipCause}).`);
-          await this.videoEntriesQueue.markAsSkipped(entry.id, skipCause);
-          continue;
+        if (!skipCause) {
+          this.logger.error({
+            message: `Failed to process video entry ${entry.id}`,
+            error: result.error,
+            context: { entryId: entry.id },
+          });
+
+          await this.videoEntriesQueue.markAsFailed(entry.id);
+          this.isRunning = false;
+          await onError(result.error);
+          return result;
         }
 
-        this.logger.error({
-          message: `Failed to process video entry ${entry.id}`,
-          error: result.error,
-          context: { entryId: entry.id },
-        });
-
-        await this.videoEntriesQueue.markAsFailed(entry.id);
-        this.isRunning = false;
-        await onError(result.error);
-        return result;
+        this.logger.info(`Video entry ${entry.id} skipped (${skipCause}).`);
+        await this.videoEntriesQueue.markAsSkipped(entry.id, skipCause);
       }
 
-      await this.videoEntriesQueue.markAsSuccess(entry.id);
+      // YouTube was just hit for this entry; do not go straight for the next
+      // one — unless a stop is pending, when the wait would only delay it.
+      if (shouldContinue()) await this.pauseBetweenEntries();
     }
 
     return Success(WorkerStopCause.DONE);

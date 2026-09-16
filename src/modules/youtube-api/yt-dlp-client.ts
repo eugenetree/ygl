@@ -56,6 +56,15 @@ const CLAIMED_CONTENT_MESSAGE = "blocked due to the claimed content";
 /** YouTube distrusts the requester (IP reputation / missing PO token), not the video. */
 const BOT_CHALLENGE_PATTERN = /Sign in to confirm you.re not a bot/;
 
+/**
+ * Pacing yt-dlp applies inside one invocation, per the yt-dlp wiki's advice
+ * for staying under YouTube's rate limit (~300 videos/h as a guest): a pause
+ * between its HTTP requests and before each subtitle download. The pause
+ * between videos lives in the worker loop.
+ */
+const SLEEP_BETWEEN_REQUESTS_S = "0.75";
+const SLEEP_BEFORE_SUBTITLES_S = "5";
+
 /** Max time to wait for `yt-dlp --version` before giving up (keeps boot unblocked). */
 const VERSION_RESOLUTION_TIMEOUT_MS = 5_000;
 
@@ -68,8 +77,9 @@ export type YtDlpRunResult = {
 
 /**
  * The boundary to the yt-dlp process: receives the fully composed argument
- * list and resolves with what the process produced. Rejects (like the
- * ytdlp-nodejs wrapper) when yt-dlp exits non-zero. Injected in tests.
+ * list and resolves with what the process produced, including a non-zero
+ * exit (with its stderr). Rejects only when the process cannot be run at
+ * all. Injected in tests.
  */
 export type YtDlpRunner = (
   url: string,
@@ -238,13 +248,18 @@ export class YtDlpClient {
   }
 
   /**
-   * Arguments every yt-dlp invocation carries so YouTube accepts the request,
-   * each only when configured: account cookies and the PO token provider (the
+   * Arguments every yt-dlp invocation carries: the request pacing, and — each
+   * only when configured — account cookies and the PO token provider (the
    * bgutil plugin reads its base_url from this extractor arg). The JS runtime
    * needs no arg: ytdlp-nodejs passes `--js-runtime node` on its own.
    */
-  private youtubeAccessArgs(): string[] {
-    const args: string[] = [];
+  private baseArgs(): string[] {
+    const args: string[] = [
+      "--sleep-requests",
+      SLEEP_BETWEEN_REQUESTS_S,
+      "--sleep-subtitles",
+      SLEEP_BEFORE_SUBTITLES_S,
+    ];
     if (this.cookiesFile) args.push("--cookies", this.cookiesFile);
     if (this.potProviderUrl) {
       args.push(
@@ -262,17 +277,15 @@ export class YtDlpClient {
   }
 
   /**
-   * Runs yt-dlp with the YouTube access args prepended and turns a non-zero
-   * exit into the failure the caller should see.
+   * Runs yt-dlp with the base args prepended and turns a non-zero exit into
+   * the failure the caller should see; warnings from a successful run are
+   * logged so they are not lost.
    */
   private async runChecked(
     url: string,
     remainingArgs: string[],
   ): Promise<Result<YtDlpRunResult, YtDlpError | UnprocessableVideoError>> {
-    const result = await this.run(url, [
-      ...this.youtubeAccessArgs(),
-      ...remainingArgs,
-    ]);
+    const result = await this.run(url, [...this.baseArgs(), ...remainingArgs]);
 
     if (result.exitCode !== 0) {
       const message = result.stderr || `Exit code ${result.exitCode}`;
@@ -286,20 +299,52 @@ export class YtDlpClient {
       return Failure(failure);
     }
 
+    this.logWarnings(result.command ?? url, result.stderr);
+
     return Success(result);
   }
 
+  /** Surfaces what yt-dlp wrote to stderr on a successful run (its WARNING lines). */
+  private logWarnings(command: string, stderr: string): void {
+    if (!stderr.trim()) return;
+    this.logger.warn(`yt-dlp warnings (${command}):\n${stderr.trim()}`);
+  }
+
+  /**
+   * ytdlp-nodejs rejects on a non-zero exit with only the first `ERROR:` line
+   * of stderr (or "Unknown yt-dlp error" when there is none), so the builder's
+   * events are captured to hand the caller the full stderr and the command.
+   */
   private async runWithWrapper(
     url: string,
     args: string[],
   ): Promise<YtDlpRunResult> {
-    const result = await this.buildExec(url, args).exec();
-    return {
-      exitCode: result.exitCode,
-      stdout: result.stdout,
-      stderr: result.stderr,
-      command: result.command,
-    };
+    const builder = this.buildExec(url, args);
+    let command: string | undefined;
+    let stderr = "";
+    builder.on("start", (cmd: string) => {
+      command = cmd;
+    });
+    builder.on("stderr", (chunk: string) => {
+      stderr += chunk;
+    });
+
+    try {
+      const result = await builder.exec();
+      return {
+        exitCode: result.exitCode,
+        stdout: result.stdout,
+        stderr: result.stderr || stderr,
+        command: result.command || command,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      // ytdlp-nodejs@3.4.x phrases its rejection as `yt-dlp exited with code N: …`.
+      const exitCode = Number(
+        message.match(/exited with code (\d+)/)?.[1] ?? 1,
+      );
+      return { exitCode, stdout: "", stderr: stderr || message, command };
+    }
   }
 
   /**
@@ -419,7 +464,7 @@ export class YtDlpClient {
       }
 
       const builder = this.buildExec(url, [
-        ...this.youtubeAccessArgs(),
+        ...this.baseArgs(),
         ...remainingArgs,
       ]);
 
@@ -477,6 +522,8 @@ export class YtDlpClient {
             errorResult = toYtDlpError(
               result.stderr || `Exit code ${result.exitCode}`,
             );
+          } else {
+            this.logWarnings(result.command, stderrBuffer);
           }
           done = true;
           resolveNext?.();

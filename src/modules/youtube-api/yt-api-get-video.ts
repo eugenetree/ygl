@@ -33,12 +33,7 @@ export class YoutubeApiGetVideo {
     this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
-    const args = [
-      "--dump-json",
-      "--no-download",
-      "--skip-download",
-      "--no-warnings",
-    ];
+    const args = ["--dump-json", "--no-download", "--skip-download"];
 
     const execResult = await this.ytDlpClient.execJson<unknown>([url, ...args]);
 
@@ -256,7 +251,6 @@ export class YoutubeApiGetVideo {
         "--sub-langs",
         autoLang,
         "--skip-download",
-        "--no-warnings",
         "-o",
         path.join(autoDir, "%(id)s"),
       ]);
@@ -270,7 +264,6 @@ export class YoutubeApiGetVideo {
         "--sub-langs",
         manualLang,
         "--skip-download",
-        "--no-warnings",
         "-o",
         path.join(manualDir, "%(id)s"),
       ]);

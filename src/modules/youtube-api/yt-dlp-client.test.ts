@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it, mock } from "node:test";
 import { Logger } from "../_common/logger/logger.js";
 import {
   classifyUnprocessable,
@@ -123,6 +123,17 @@ describe("YtDlpClient.execJson()", () => {
       assert.match(args, /--dump-json/);
     }));
 
+  it("paces every run so the scraper stays under YouTube's request rate limit", async () => {
+    const { runner, calls } = recordingRunner(async () => ({ stdout: "" }));
+    const client = new YtDlpClient(testLogger(), runner);
+
+    await client.execJson(["https://youtube.com/watch?v=abc", "--dump-json"]);
+
+    const args = calls[0]?.args.join(" ") ?? "";
+    assert.match(args, /--sleep-requests 0\.75/);
+    assert.match(args, /--sleep-subtitles 5/);
+  });
+
   it("runs yt-dlp without a PO token provider when YTDLP_POT_PROVIDER_URL is empty", () =>
     withEnv({ YTDLP_POT_PROVIDER_URL: "" }, async () => {
       const { runner, calls } = recordingRunner(async () => ({
@@ -136,14 +147,43 @@ describe("YtDlpClient.execJson()", () => {
       assert.doesNotMatch(args, /youtubepot/);
     }));
 
-  it("names YouTube's bot challenge instead of a bare yt-dlp failure", async () => {
+  it("logs yt-dlp's warnings when the run succeeds with stderr output", async () => {
+    const stderr =
+      "WARNING: [youtube] abc: Some web client https formats have been skipped\n";
+    const runner: YtDlpRunner = async () => ({
+      exitCode: 0,
+      stdout: '{"id":"abc"}\n',
+      stderr,
+      command: "yt-dlp --dump-json https://youtube.com/watch?v=abc",
+    });
+    const logger = testLogger();
+    const warn = mock.method(logger, "warn", () => {});
+    const client = new YtDlpClient(logger, runner);
+
+    const result = await client.execJson([
+      "https://youtube.com/watch?v=abc",
+      "--dump-json",
+    ]);
+
+    assert.deepEqual(result, { ok: true, value: [{ id: "abc" }] });
+    assert.equal(warn.mock.callCount(), 1);
+    const logged = String(warn.mock.calls[0]?.arguments[0]);
+    assert.match(logged, /Some web client https formats have been skipped/);
+    assert.match(logged, /yt-dlp --dump-json/);
+  });
+
+  it("names YouTube's bot challenge and keeps the full stderr", async () => {
     // Captured from prod (yt-dlp 2026.08.19, VPN exit flagged by YouTube).
-    // ytdlp-nodejs rejects with only the first ERROR line of stderr.
-    const runner: YtDlpRunner = async () => {
-      throw new Error(
-        "yt-dlp exited with code 1: lq4fz7WhjF4: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.",
-      );
-    };
+    const stderr = [
+      "WARNING: [youtube] lq4fz7WhjF4: No PO Token provider available",
+      "ERROR: [youtube] lq4fz7WhjF4: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.",
+    ].join("\n");
+    const runner: YtDlpRunner = async () => ({
+      exitCode: 1,
+      stdout: "",
+      stderr,
+      command: "yt-dlp --dump-json https://youtube.com/watch?v=lq4fz7WhjF4",
+    });
     const client = new YtDlpClient(testLogger(), runner);
 
     const result = await client.execJson([
@@ -155,7 +195,7 @@ describe("YtDlpClient.execJson()", () => {
     if (result.ok) return;
     assert.equal(result.error.type, "YT_DLP_ERROR");
     assert.match(result.error.message, /^YouTube bot challenge/);
-    assert.match(result.error.message, /Sign in to confirm you’re not a bot/);
+    assert.ok(result.error.message.endsWith(stderr), "full stderr kept");
   });
 });
 
@@ -163,9 +203,7 @@ describe("YtDlpClient.exec()", () => {
   it("keeps skip causes as skip causes and names the bot challenge", async () => {
     const failingWith =
       (stderr: string): YtDlpRunner =>
-      async () => {
-        throw new Error(`yt-dlp exited with code 1: ${stderr}`);
-      };
+      async () => ({ exitCode: 1, stdout: "", stderr });
 
     const membersOnly = await new YtDlpClient(
       testLogger(),
@@ -186,6 +224,28 @@ describe("YtDlpClient.exec()", () => {
       assert.equal(botChallenge.error.type, "YT_DLP_ERROR");
       assert.match(botChallenge.error.message, /^YouTube bot challenge/);
     }
+  });
+});
+
+describe("YtDlpClient (real binary)", () => {
+  it("surfaces yt-dlp's full stderr when the binary exits non-zero", async () => {
+    // No runner injected: goes through ytdlp-nodejs, which rejects with only
+    // the first `ERROR:` line — a usage error has none, so without stderr
+    // capture the failure would read "Unknown yt-dlp error". No network.
+    const client = new YtDlpClient(testLogger());
+
+    const result = await client.exec([
+      "https://youtube.com/watch?v=abc",
+      "--this-flag-does-not-exist",
+    ]);
+
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.equal(result.error.type, "YT_DLP_ERROR");
+    assert.match(
+      result.error.message,
+      /no such option: --this-flag-does-not-exist/,
+    );
   });
 });
 

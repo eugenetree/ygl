@@ -59,13 +59,7 @@ export class YoutubeApiSearchChannelsViaVideos {
     const ccFilter = "EgIoAQ%253D%253D";
     const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=${ccFilter}`;
 
-    const args = [
-      url,
-      "--dump-json",
-      "--flat-playlist",
-      "--no-warnings",
-      "--lazy-playlist",
-    ];
+    const args = [url, "--dump-json", "--flat-playlist", "--lazy-playlist"];
 
     const stream = this.ytDlpClient.execJsonStream<unknown>(args);
     const channelsMap = new Map<string, SearchChannelEntry>();

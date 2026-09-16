@@ -38,7 +38,10 @@ function createMocks() {
   };
 }
 
-function buildSut(mocks: ReturnType<typeof createMocks>) {
+function buildSut(
+  mocks: ReturnType<typeof createMocks>,
+  pauseBetweenEntries: () => Promise<void> = async () => {},
+) {
   mocks.logger.child.mock.mockImplementation(
     () => mocks.logger as unknown as Logger,
   );
@@ -47,6 +50,7 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
     mocks.logger as unknown as Logger,
     mocks.processVideoEntry as unknown as ProcessVideoEntryUseCase,
     mocks.videoEntriesQueue as unknown as VideoEntriesQueue,
+    pauseBetweenEntries,
   );
 }
 
@@ -129,6 +133,37 @@ describe("VideoEntriesWorker", () => {
       [entry.id, "CLAIMED_CONTENT"],
     );
     assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
+  });
+
+  it("pauses after every processed entry so YouTube is not hit back-to-back", async () => {
+    const pause = mock.fn<() => Promise<void>>(() => Promise.resolve());
+    sut = buildSut(mocks, pause);
+    const entries = [entry, { ...entry, id: "video-2" }];
+    let calls = 0;
+    mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => {
+      calls += 1;
+      return Promise.resolve(Success(entries[calls - 1] ?? null));
+    });
+    mocks.processVideoEntry.execute.mock.mockImplementation(({ videoId }) =>
+      Promise.resolve(
+        videoId === "video-2"
+          ? Failure({ type: "MEMBERS_ONLY_VIDEO", message: "members only" })
+          : Success({ hasValidCaptions: true }),
+      ),
+    );
+    mocks.videoEntriesQueue.markAsSuccess.mock.mockImplementation(() =>
+      Promise.resolve(Success(undefined)),
+    );
+
+    const result = await sut.run({
+      shouldContinue: () => true,
+      onError: async () => {},
+    });
+
+    assert.ok(result.ok);
+    assert.equal(result.value, WorkerStopCause.EMPTY);
+    // Once after the success, once after the skip; none after the empty poll.
+    assert.equal(pause.mock.callCount(), 2);
   });
 
   it("marks the job FAILED and stops the loop for an unrecognized yt-dlp error", async () => {

@@ -85,13 +85,7 @@ export class YoutubeApiGetChannelVideoEntries {
 
     const url = `https://www.youtube.com/channel/${channelId}/videos`;
 
-    const args = [
-      url,
-      "--dump-json",
-      "--flat-playlist",
-      "--no-warnings",
-      "--lazy-playlist",
-    ];
+    const args = [url, "--dump-json", "--flat-playlist", "--lazy-playlist"];
 
     const stream = this.ytDlpClient.execJsonStream<unknown>(args);
     let foundAny = false;

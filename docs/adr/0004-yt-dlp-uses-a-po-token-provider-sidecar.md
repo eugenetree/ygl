@@ -53,6 +53,14 @@ client and is what the bgutil project exists to provide for the first.
 - A PO token does not guarantee acceptance; IP reputation still matters. The
   bot challenge is now reported as `YouTube bot challenge: …` so the alert says
   which check failed.
+- A token does not lift YouTube's request rate limit either (the yt-dlp wiki
+  cites ~300 videos/h as a guest, ~2000/h with an account; exceeding it shows
+  up as empty `200` caption responses — `Did not get any data blocks`). Every
+  yt-dlp run therefore carries `--sleep-requests`/`--sleep-subtitles` and the
+  video worker pauses 5–10 s between videos.
+- `curl_cffi` is installed alongside the plugin so yt-dlp can impersonate a
+  browser TLS fingerprint where the extractor asks for it (captions, player);
+  without it yt-dlp warns and sends those requests bare.
 
 ## When to reopen
 
