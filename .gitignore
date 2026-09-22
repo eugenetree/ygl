@@ -16,3 +16,4 @@ db/dump/
 router_config.ovpn
 .claude/settings.local.json
 .scratch
+.DS_Store

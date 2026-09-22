@@ -66,6 +66,14 @@ describe("classifyUnprocessable()", () => {
     assert.equal(result?.type, "AGE_RESTRICTED_VIDEO");
   });
 
+  it("classifies age-restricted videos reported to a signed-in session", () => {
+    const result = classifyUnprocessable(
+      "ERROR: [youtube] GELmGHJlQ6o: Sorry, this content is age-restricted\n",
+    );
+
+    assert.equal(result?.type, "AGE_RESTRICTED_VIDEO");
+  });
+
   it("classifies premiere videos", () => {
     const result = classifyUnprocessable("Premieres in 2 hours");
 

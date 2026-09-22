@@ -48,6 +48,7 @@ const GEO_RESTRICTED_MESSAGE =
 const AGE_RESTRICTED_MESSAGES = [
   "Sign in to confirm your age",
   "Take a few minutes to verify your age",
+  "Sorry, this content is age-restricted",
 ];
 const PREMIERE_MESSAGE = "Premieres in";
 const REMOVED_BY_UPLOADER_MESSAGE =
