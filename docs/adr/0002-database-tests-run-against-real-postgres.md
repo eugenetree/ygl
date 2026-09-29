@@ -53,9 +53,18 @@ Two structural failures, not ergonomics:
 
 ## Consequences
 
-- Running DB tests requires Docker. The suite is split by suffix —
-  `*.test.ts` (pure), `*.db.test.ts` (Docker), `*.net.test.ts` (live network) —
-  so a pure-logic pass stays available without it.
+- Running DB tests requires Docker. The suite is split by suffix, naming what a
+  file needs from outside the process — `*.test.ts` (nothing), `*.db.test.ts`
+  (the Postgres container), `*.net.test.ts` (live network or an external
+  binary) — so a pure-logic pass stays available without it. `.net` covers
+  binaries such as yt-dlp because spawning one is slow and host-dependent in
+  the same way a network call is (the macOS build cold-starts in ~10s), and a
+  fourth suffix for two tests was not worth another script.
+- The suffix split is a candidate for reconsideration. It encodes one
+  dependency per file, is enforced only by convention, and has already had to
+  stretch `.net` past its name. If another kind of dependency appears, or the
+  suites need finer selection than a glob, revisit it rather than adding or
+  overloading suffixes.
 - Stale `base_<hash>` databases accumulate as branches come and go; a reset
   script removes them.
 - Fixtures must satisfy real foreign keys, `NOT NULL`s and enum types that the

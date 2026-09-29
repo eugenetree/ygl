@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -7,7 +7,7 @@ COPY . .
 RUN npx tsc
 
 # ── App runtime: bot, api, sync-elastic, migrations ───────────────────────────
-FROM node:22-alpine AS app
+FROM node:24-alpine AS app
 WORKDIR /usr/src/app
 
 COPY package*.json ./

@@ -8,7 +8,9 @@
     "db:migration:rollback": "npx tsx src/db/scripts/rollback-migration.ts",
     "db:migration:create-new": "npx tsx src/db/scripts/create-migration-file.ts",
     "db:seed:dev": "npx tsx src/db/scripts/seed-dev.ts",
-    "test": "node --test --import tsx \"src/**/*.test.ts\"",
+    "test": "node --test --import tsx \"src/**/!(*.net).test.ts\"",
+    "test:unit": "node --test --import tsx \"src/**/!(*.db|*.net).test.ts\"",
+    "test:net": "node --test --import tsx \"src/**/*.net.test.ts\"",
     "clean": "rm -rf dist/*",
     "build": "npm run clean && tsc",
     "typecheck": "tsc --noEmit",
@@ -21,6 +23,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "lint-staged": {
     "*.{ts,js,json}": "biome check --write --no-errors-on-unmatched"
   },
