@@ -22,11 +22,17 @@ export function useTestDatabase(): DatabaseClient {
   let truncateAll: RawBuilder<unknown> | undefined;
 
   before(async () => {
-    await withAdminClient(server, (admin) =>
-      admin.query(
+    await withAdminClient(server, async (admin) => {
+      await admin.query(
         `CREATE DATABASE ${escapeIdentifier(name)} TEMPLATE ${escapeIdentifier(baseDatabase)}`,
-      ),
-    );
+      );
+      // Code under test opens its own transactions, so a test can't set this on
+      // the session that waits. Set before the client's first connection, it
+      // turns a query blocked on a row lock into an error instead of a hang.
+      await admin.query(
+        `ALTER DATABASE ${escapeIdentifier(name)} SET lock_timeout = '1s'`,
+      );
+    });
 
     const { rows } = await sql<{ tablename: string }>`
       SELECT tablename FROM pg_tables

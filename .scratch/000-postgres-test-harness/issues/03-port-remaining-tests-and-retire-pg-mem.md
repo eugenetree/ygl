@@ -34,14 +34,45 @@ machine.
 
 **Status:** ready-for-agent
 
-- [ ] The video entries queue test passes against real Postgres with its existing assertions intact — priority ordering, behaviour when priorities are equal, and empty-queue behaviour
-- [ ] No test rewrites, normalises or intercepts SQL before execution
-- [ ] The push-channel use-case test passes against real Postgres with its existing priority-boosting assertions intact
-- [ ] Its dead `SKIP LOCKED` interception is deleted, not ported
-- [ ] Fixture defects surfaced by real foreign keys, `NOT NULL`s and enum types are fixed in the fixtures
-- [ ] A test holds a row lock on the highest-priority job from a separate connection and asserts `getNextEntry()` returns a different job
-- [ ] That test fails when `SKIP LOCKED` is removed from the query, and fails the same way every run
-- [ ] That test errors rather than hangs on regression, and the connection pool has room for both the lock-holder and the queue's own connection so it cannot deadlock against itself
-- [ ] `pg-mem` is removed from `devDependencies` and appears nowhere in the source tree
-- [ ] The pre-commit hook runs the pure and database suites alongside the existing lint and typecheck steps
-- [ ] `--no-verify` still bypasses the hook
+- [x] The video entries queue test passes against real Postgres with its existing assertions intact — priority ordering, behaviour when priorities are equal, and empty-queue behaviour
+- [x] No test rewrites, normalises or intercepts SQL before execution
+- [x] The push-channel use-case test passes against real Postgres with its existing priority-boosting assertions intact
+- [x] Its dead `SKIP LOCKED` interception is deleted, not ported
+- [x] Fixture defects surfaced by real foreign keys, `NOT NULL`s and enum types are fixed in the fixtures
+- [x] A test holds a row lock on the highest-priority job from a separate connection and asserts `getNextEntry()` returns a different job
+- [x] That test fails when `SKIP LOCKED` is removed from the query, and fails the same way every run
+- [x] That test errors rather than hangs on regression, and the connection pool has room for both the lock-holder and the queue's own connection so it cannot deadlock against itself
+- [x] `pg-mem` is removed from `devDependencies` and appears nowhere in the source tree
+- [x] The pre-commit hook runs the pure and database suites alongside the existing lint and typecheck steps
+- [x] `--no-verify` still bypasses the hook
+
+## Comments
+
+**Implementation notes (2026-10-01)**
+
+- `lock_timeout` is set per test database (`ALTER DATABASE … SET lock_timeout =
+  '1s'` in `useTestDatabase()`, before the client's first connection), not on a
+  test connection. The session that waits is the one `getNextEntry()` opens
+  internally, so a test can't `SET` it. Passing it per connection would mean
+  widening `DatabaseConnectionConfig` in `src/db/client.ts`. The consequence is
+  that every database test now errors after waiting 1s on a lock, not just the
+  contention test.
+- Mutation-checked by deleting `.skipLocked()` from `video-entries.queue.ts`.
+  The contention test failed 3 of 3 runs with the same assertion, at about
+  1.05s (the `lock_timeout`). With the clause restored it passes in about 40ms.
+- The lock-holder is a `db.transaction()` on the same pool as the queue. Each
+  gets its own connection, and the pool allows 10. `lock_timeout` only covers
+  waiting on a lock: with a pool of 1 the queue would hang waiting for a
+  connection, and the timeout wouldn't catch it.
+- The video queue fixtures passed the real schema unchanged. The push-channel
+  fixtures seeded `videoDiscoveryJobs` and `videoJobs` for a channel with no
+  `channels` row, and `videoJobs` with no parent `videoEntries` row. Adding the
+  `channels` row doesn't change the computed score: a null `subscriberCount`
+  falls back to 0, the same as a missing row.
+- Both files build the system under test once per `describe` rather than in
+  `beforeEach`. The use-case, services and queue hold no state of their own.
+- Left as is after review, as judgement calls: the channel-insert fixture is now
+  duplicated across the two `.db.test.ts` files, and push-channel's
+  `seedVideoJob` also inserts the parent video entry.
+- `--no-verify` checked by amending this commit with it: the amend finished in
+  0.15s with no lint-staged, typecheck or test output.

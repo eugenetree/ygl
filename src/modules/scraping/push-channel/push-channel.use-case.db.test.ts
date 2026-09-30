@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { CamelCasePlugin, Kysely, PostgresDialect, sql } from "kysely";
-import { DataType, newDb } from "pg-mem";
-import { DatabaseClient } from "../../../db/client.js";
-import { Database } from "../../../db/types.js";
+import type { Kysely } from "kysely";
+import type { DatabaseClient } from "../../../db/client.js";
+import { useTestDatabase } from "../../../db/testing/test-database.js";
+import type { Database } from "../../../db/types.js";
 import { ChannelPriorityCalculator } from "../channel-priority/channel-priority.calculator.js";
 import { PRIORITY_MANUAL_BOOST } from "../channel-priority/channel-priority.constants.js";
 import { ChannelPriorityService } from "../channel-priority/channel-priority.service.js";
@@ -12,139 +12,9 @@ import { ChannelEntryRepository } from "../scrapers/channel-discovery/channel-en
 import { BoostedChannelsRepository } from "./boosted-channels.repository.js";
 import { PushChannelUseCase } from "./push-channel.use-case.js";
 
-// ---- In-memory DB setup -----------------------------------------------------
-
-async function createTestDb() {
-  const mem = newDb();
-
-  mem.public.registerFunction({
-    name: "gen_random_uuid",
-    returns: DataType.uuid,
-    implementation: () => crypto.randomUUID(),
-  });
-
-  const { Pool } = mem.adapters.createPg();
-  const pool = new Pool();
-
-  const origConnect = pool.connect.bind(pool);
-  pool.connect = async () => {
-    const client = await origConnect();
-    const origQuery = client.query.bind(client);
-    client.query = (config: any, values?: any[]) => {
-      const normalize = (s: string) =>
-        s
-          .replace(/\bfor\s+update\s+of\s+"[^"]+"/gi, "for update")
-          .replace(/\bskip\s+locked\b/gi, "");
-      if (typeof config === "string") config = normalize(config);
-      else if (typeof config?.text === "string")
-        config = { ...config, text: normalize(config.text) };
-      return origQuery(config, values);
-    };
-    return client;
-  };
-
-  const db = new Kysely<Database>({
-    dialect: new PostgresDialect({ pool }),
-    plugins: [new CamelCasePlugin()],
-  });
-
-  await db.schema
-    .createTable("boostedChannels")
-    .addColumn("channelId", "varchar", (c) => c.primaryKey())
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("channelEntries")
-    .addColumn("id", "varchar", (c) => c.primaryKey())
-    .addColumn("queryId", "varchar")
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .addColumn("updatedAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("channelJobs")
-    .addColumn("id", "uuid", (c) =>
-      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
-    .addColumn("channelId", "varchar", (c) => c.notNull())
-    .addColumn("status", "varchar", (c) => c.notNull())
-    .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("videoDiscoveryJobs")
-    .addColumn("id", "uuid", (c) =>
-      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
-    .addColumn("channelId", "varchar", (c) => c.notNull())
-    .addColumn("status", "varchar", (c) => c.notNull())
-    .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("videoJobs")
-    .addColumn("id", "uuid", (c) =>
-      c.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
-    .addColumn("videoId", "varchar", (c) => c.notNull())
-    .addColumn("channelId", "varchar", (c) => c.notNull())
-    .addColumn("status", "varchar", (c) => c.notNull())
-    .addColumn("skipCause", "varchar")
-    .addColumn("statusUpdatedAt", "timestamp")
-    .addColumn("priority", "double precision", (c) => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "timestamp", (c) =>
-      c.notNull().defaultTo(sql`now()`),
-    )
-    .execute();
-
-  await db.schema
-    .createTable("channelPriorityScores")
-    .addColumn("channelId", "varchar", (c) => c.primaryKey())
-    .addColumn("scrapingScore", "double precision", (c) => c.notNull())
-    .addColumn("searchScore", "double precision", (c) => c.notNull())
-    .addColumn("components", "jsonb", (c) => c.notNull())
-    .addColumn("calculatedAt", "timestamp")
-    .execute();
-
-  // Only columns accessed by recalculate
-  await db.schema
-    .createTable("channels")
-    .addColumn("id", "varchar", (c) => c.primaryKey())
-    .addColumn("subscriberCount", "integer")
-    .execute();
-
-  await db.schema
-    .createTable("videos")
-    .addColumn("id", "varchar", (c) => c.primaryKey())
-    .addColumn("autoCaptionsStatus", "varchar", (c) => c.notNull())
-    .addColumn("manualCaptionsStatus", "varchar", (c) => c.notNull())
-    .addColumn("captionsSimilarityScore", "double precision")
-    .addColumn("duration", "integer")
-    .addColumn("viewCount", "integer")
-    .execute();
-
-  return db;
-}
-
 // ---- SUT factory ------------------------------------------------------------
 
-function buildSut(db: Kysely<Database>) {
-  const dbClient = db as unknown as DatabaseClient;
+function buildSut(dbClient: DatabaseClient) {
   const calculator = new ChannelPriorityCalculator();
   const channelPriorityService = new ChannelPriorityService(
     dbClient,
@@ -167,6 +37,23 @@ async function seedChannelEntry(db: Kysely<Database>, channelId: string) {
   await db
     .insertInto("channelEntries")
     .values({ id: channelId, queryId: null })
+    .execute();
+}
+
+async function seedChannel(db: Kysely<Database>, channelId: string) {
+  await db
+    .insertInto("channels")
+    .values({
+      id: channelId,
+      name: channelId,
+      viewCount: 0,
+      videoCount: 0,
+      isFamilySafe: true,
+      channelCreatedAt: new Date(),
+      username: channelId,
+      isArtist: false,
+      keywords: [],
+    })
     .execute();
 }
 
@@ -202,6 +89,10 @@ async function seedVideoJob(
   priority = 0,
 ) {
   await db
+    .insertInto("videoEntries")
+    .values({ id: videoId, channelId, availability: "PUBLIC" })
+    .execute();
+  await db
     .insertInto("videoJobs")
     .values({
       id: crypto.randomUUID(),
@@ -217,13 +108,8 @@ async function seedVideoJob(
 // ---- Tests ------------------------------------------------------------------
 
 describe("PushChannelUseCase", () => {
-  let db: Kysely<Database>;
-  let sut: PushChannelUseCase;
-
-  beforeEach(async () => {
-    db = await createTestDb();
-    sut = buildSut(db);
-  });
+  const db = useTestDatabase();
+  const sut = buildSut(db);
 
   describe("new channel (not previously in scraping flow)", () => {
     it("returns ADDED status", async () => {
@@ -314,6 +200,7 @@ describe("PushChannelUseCase", () => {
     beforeEach(async () => {
       await seedChannelEntry(db, "channel-1");
       await seedChannelJob(db, "channel-1", "SUCCEEDED");
+      await seedChannel(db, "channel-1");
       await seedVideoDiscoveryJob(db, "channel-1", "PENDING", 0);
     });
 
@@ -344,6 +231,7 @@ describe("PushChannelUseCase", () => {
     beforeEach(async () => {
       await seedChannelEntry(db, "channel-1");
       await seedChannelJob(db, "channel-1", "SUCCEEDED");
+      await seedChannel(db, "channel-1");
       await seedVideoDiscoveryJob(db, "channel-1", "SUCCEEDED");
       await seedVideoJob(db, "channel-1", "video-1", "PENDING", 0);
       await seedVideoJob(db, "channel-1", "video-2", "PENDING", 0);
@@ -380,6 +268,7 @@ describe("PushChannelUseCase", () => {
     beforeEach(async () => {
       await seedChannelEntry(db, "channel-1");
       await seedChannelJob(db, "channel-1", "SUCCEEDED");
+      await seedChannel(db, "channel-1");
       await seedVideoDiscoveryJob(db, "channel-1", "SUCCEEDED");
       await seedVideoJob(db, "channel-1", "video-1", "SUCCEEDED");
     });
