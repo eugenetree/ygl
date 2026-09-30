@@ -107,6 +107,9 @@ services:
     environment:
       <<: *es-env
       IS_API_ENABLED: ${IS_API_ENABLED:-}
+      API_PORT: 3001
+      # Left to the API to reject when unset, so a stack without the API still starts
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-}
     ports:
       - "127.0.0.1:3001:3001"
     command: npm run start:api

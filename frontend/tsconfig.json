@@ -14,7 +14,13 @@
     "jsx": "preserve",
     "incremental": true,
     "plugins": [{ "name": "next" }],
-    "paths": { "@/*": ["./*"] }
+    "paths": {
+      "@/*": ["./*"],
+      "@api/contract": ["../src/modules/api/contract/index.ts"],
+      // The contract imports zod from outside this folder; without this it
+      // resolves to the backend's node_modules, which a frontend-only install lacks.
+      "zod": ["./node_modules/zod"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

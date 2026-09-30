@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import type { SearchResponse } from "@api/contract";
 import { EXAMPLE_PHRASES } from "../lib/data";
-import { searchPhrases } from "../lib/api";
+import { searchClips } from "../lib/api";
 import {
   Icon,
   SearchBar,
@@ -27,6 +28,21 @@ interface Result {
   text: string;
 }
 
+const PAGE_SIZE = 20;
+
+function toResult(clip: SearchResponse["clips"][number]): Result {
+  return {
+    id: clip.captionId,
+    videoId: clip.videoId,
+    startAt: clip.playFrom / 1000,
+    text: clip.text,
+  };
+}
+
+function fmtTotal(total: number, isTotalExact: boolean) {
+  return `${total.toLocaleString("en-US")}${isTotalExact ? "" : "+"}`;
+}
+
 function fmt(s: number) {
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
@@ -40,7 +56,11 @@ export default function GentleResults({ query }: { query: string }) {
   const [speed, setSpeed] = useState<SpeedFilter>("any");
   const [dark, setDark] = useState(false);
   const [results, setResults] = useState<Result[]>([]);
+  const [total, setTotal] = useState(0);
+  const [isTotalExact, setIsTotalExact] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [endReached, setEndReached] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -50,29 +70,72 @@ export default function GentleResults({ query }: { query: string }) {
   const playerDivRef = useRef<HTMLDivElement>(null);
   const playerReadyRef = useRef(false);
   const activeRef = useRef<Result | undefined>(undefined);
+  const queryRef = useRef(query);
+  queryRef.current = query;
 
   useEffect(() => {
     setLoading(true);
+    setLoadingMore(false);
+    setEndReached(false);
     setResults([]);
+    setTotal(0);
+    setIsTotalExact(true);
     setActiveId("");
 
-    searchPhrases(query)
-      .then((clips) => {
-        const mapped: Result[] = clips.map((clip) => ({
-          id: clip.captionId,
-          videoId: clip.videoId,
-          startAt: clip.playFrom / 1000,
-          text: clip.text,
-        }));
+    searchClips({ q: query, limit: PAGE_SIZE })
+      .then((page) => {
+        if (queryRef.current !== query) return;
+        const mapped = page.clips.map(toResult);
         setResults(mapped);
+        setTotal(page.total);
+        setIsTotalExact(page.isTotalExact);
         setActiveId(mapped[0]?.id ?? "");
       })
-      .catch(() => setResults([]))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (queryRef.current === query) setResults([]);
+      })
+      .finally(() => {
+        if (queryRef.current === query) setLoading(false);
+      });
   }, [query]);
 
   const active = results.find((r) => r.id === activeId) ?? results[0];
   activeRef.current = active;
+
+  const idx = active ? results.findIndex((r) => r.id === activeId) : -1;
+  // The API never counts past what it can page to, so total also caps the offset.
+  const hasMore = !endReached && results.length < total;
+
+  useEffect(() => {
+    if (loading || loadingMore || !hasMore) return;
+    if (idx !== results.length - 1) return;
+
+    const requestedFor = query;
+    setLoadingMore(true);
+    searchClips({
+      q: query,
+      offset: results.length,
+      limit: Math.min(PAGE_SIZE, total - results.length),
+    })
+      .then((page) => {
+        if (queryRef.current !== requestedFor) return;
+        const seen = new Set(results.map((r) => r.id));
+        const fresh = page.clips.map(toResult).filter((r) => !seen.has(r.id));
+        if (fresh.length === 0) {
+          setEndReached(true);
+          return;
+        }
+        setResults([...results, ...fresh]);
+        setTotal(page.total);
+        setIsTotalExact(page.isTotalExact);
+      })
+      .catch(() => {
+        if (queryRef.current === requestedFor) setEndReached(true);
+      })
+      .finally(() => {
+        if (queryRef.current === requestedFor) setLoadingMore(false);
+      });
+  }, [idx, results, hasMore, loading, loadingMore, query, total]);
 
   const isEmpty = results.length === 0;
   const emptyReason: EmptyReason = !loading && isEmpty ? "no-phrase" : null;
@@ -165,7 +228,6 @@ export default function GentleResults({ query }: { query: string }) {
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const idx = active ? results.findIndex((r) => r.id === activeId) : -1;
   const atStart = idx <= 0;
   const atEnd = idx >= results.length - 1;
 
@@ -198,7 +260,7 @@ export default function GentleResults({ query }: { query: string }) {
                 <span>no clips</span>
               ) : (
                 <span>
-                  <b>{results.length}</b> clips
+                  <b>{fmtTotal(total, isTotalExact)}</b> clips
                 </span>
               )}
             </div>
@@ -243,7 +305,7 @@ export default function GentleResults({ query }: { query: string }) {
                     <Icon name="next" size={18} />
                   </button>
                   <div className="g-clip-pos">
-                    Clip <b>{idx + 1}</b> of <b>{results.length}</b>
+                    Clip <b>{idx + 1}</b> of <b>{fmtTotal(total, isTotalExact)}</b>
                   </div>
                   <div className="g-scrub">
                     <div className="g-scrub-bar">

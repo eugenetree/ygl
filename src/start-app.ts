@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import { Logger } from "./modules/_common/logger/logger.js";
-import { ApiServer } from "./modules/api/api-server.js";
 import { ScraperConfigRepository } from "./modules/scraping/config/scraper-config.repository.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
@@ -20,11 +19,9 @@ export class StartAppUseCase {
     private readonly searchChannelQueriesSeeder: SearchChannelQueriesSeeder,
     private readonly scraperStatusWatcher: ScraperStatusWatcher,
     private readonly scraperCommandListener: ScraperCommandListener,
-    private readonly apiServer: ApiServer,
   ) {}
 
   public async execute() {
-    this.apiServer.start();
     await this.searchChannelQueriesSeeder.seedIfNeeded();
     await this.telegramBot.start();
     await this.scraperStatusWatcher.start();
