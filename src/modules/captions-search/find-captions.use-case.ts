@@ -11,9 +11,13 @@ export class FindCaptionsUseCase {
     this.logger.setContext(FindCaptionsUseCase.name);
   }
 
-  async execute(query: string) {
-    const hits = await this.captionsService.search(query);
-    this.logger.info(`Found ${hits.length} captions for query: ${query}`);
-    return hits;
+  async execute(query: string, page: { offset: number; limit: number }) {
+    const result = await this.captionsService.search(query, page);
+    if (result.ok) {
+      this.logger.info(
+        `Found ${result.value.total}${result.value.isTotalExact ? "" : "+"} clips for query: ${query}`,
+      );
+    }
+    return result;
   }
 }

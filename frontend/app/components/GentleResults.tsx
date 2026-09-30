@@ -57,12 +57,12 @@ export default function GentleResults({ query }: { query: string }) {
     setActiveId("");
 
     searchPhrases(query)
-      .then((hits) => {
-        const mapped: Result[] = hits.map((h) => ({
-          id: `${h.videoId}_${h.startTime}`,
-          videoId: h.videoId,
-          startAt: Math.max(0, h.startTime / 1000 - 1),
-          text: h.text,
+      .then((clips) => {
+        const mapped: Result[] = clips.map((clip) => ({
+          id: clip.captionId,
+          videoId: clip.videoId,
+          startAt: clip.playFrom / 1000,
+          text: clip.text,
         }));
         setResults(mapped);
         setActiveId(mapped[0]?.id ?? "");

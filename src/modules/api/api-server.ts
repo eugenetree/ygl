@@ -35,22 +35,36 @@ export class ApiServer {
           return;
         }
 
+        const offset = Number(url.searchParams.get("offset") ?? 0);
+        const limit = Number(url.searchParams.get("limit") ?? 20);
+        if (
+          !Number.isInteger(offset) ||
+          !Number.isInteger(limit) ||
+          offset < 0 ||
+          limit < 1 ||
+          offset + limit > 10000
+        ) {
+          res.writeHead(400);
+          res.end(JSON.stringify({ error: "Invalid offset or limit" }));
+          return;
+        }
+
         try {
-          const hits = await this.findCaptionsUseCase.execute(q);
-          const results = hits.map((hit) => {
-            const source = hit._source as {
-              videoId: string;
-              startTime: number;
-              text: string;
-            };
-            return {
-              videoId: source.videoId,
-              startTime: source.startTime,
-              text: source.text,
-            };
+          const result = await this.findCaptionsUseCase.execute(q, {
+            offset,
+            limit,
           });
+          if (!result.ok) {
+            this.logger.error({
+              message: "Search failed",
+              error: result.error.error,
+            });
+            res.writeHead(503);
+            res.end(JSON.stringify({ error: "Search is unavailable" }));
+            return;
+          }
           res.writeHead(200);
-          res.end(JSON.stringify({ results }));
+          res.end(JSON.stringify(result.value));
         } catch (err) {
           this.logger.error({ message: "Search failed", error: err });
           res.writeHead(500);

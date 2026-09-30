@@ -27,26 +27,35 @@ export class FindController implements TelegramController {
 
       this.logger.info(`Received /find command with query: ${query}`);
 
-      const hits = await this.findCaptionsUseCase.execute(query);
+      const result = await this.findCaptionsUseCase.execute(query, {
+        offset: 0,
+        limit: MAX_RESULTS,
+      });
 
-      if (hits.length === 0) {
+      if (!result.ok) {
+        this.logger.error({
+          message: "Search failed",
+          error: result.error.error,
+        });
+        await ctx.reply("Search is unavailable right now, try again later.");
+        return;
+      }
+
+      const { clips, total, isTotalExact } = result.value;
+
+      if (clips.length === 0) {
         await ctx.reply(`No results found for: ${query}`);
         return;
       }
 
-      const lines = hits.slice(0, MAX_RESULTS).map((hit) => {
-        const source = hit._source as {
-          videoId: string;
-          startTime: number;
-          text: string;
-        };
-        const url = `https://www.youtube.com/watch?v=${source.videoId}&t=${Math.floor((source.startTime - 1000) / 1000)}s`;
-        return `${source.text}\n${url}`;
+      const lines = clips.map((clip) => {
+        const url = `https://www.youtube.com/watch?v=${clip.videoId}&t=${Math.floor(clip.playFrom / 1000)}s`;
+        return `${clip.text}\n${url}`;
       });
 
       const header =
-        hits.length > MAX_RESULTS
-          ? `Showing ${MAX_RESULTS} of ${hits.length} results:\n\n`
+        total > clips.length
+          ? `Showing ${clips.length} of ${total}${isTotalExact ? "" : "+"} results:\n\n`
           : "";
 
       await ctx.reply(`${header}${lines.join("\n\n")}`);

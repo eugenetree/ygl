@@ -1,17 +1,42 @@
 import { Client } from "@elastic/elasticsearch";
-import { injectable } from "inversify";
+import type { SearchTotalHits } from "@elastic/elasticsearch/lib/api/types.js";
+import { injectable, unmanaged } from "inversify";
+import { z } from "zod";
+import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
+import { tryCatch } from "../_common/try-catch.js";
 import { Caption } from "../scraping/scrapers/video/caption.js";
+import { type Clip, type ClipSearchResult, toClip } from "./clip.js";
+
+const MAX_TRACKED_TOTAL = 10000;
+
+const storedCaptionSchema = z.object({
+  id: z.string(),
+  videoId: z.string(),
+  startTime: z.number(),
+  endTime: z.number(),
+  text: z.string(),
+});
+
+export type SearchUnavailableError = {
+  type: "SEARCH_UNAVAILABLE";
+  error: unknown;
+};
+
+function clientFromEnv(): Client {
+  // Use elasticsearch service name in Docker, localhost outside Docker
+  const esNode = process.env.ES_NODE || "http://elasticsearch:9200";
+  return new Client({ node: esNode });
+}
 
 @injectable()
 export class CaptionsService {
-  private readonly esClient: Client;
-
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    @unmanaged()
+    private readonly esClient: Client = clientFromEnv(),
+  ) {
     this.logger.setContext(CaptionsService.name);
-    // Use elasticsearch service name in Docker, localhost outside Docker
-    const esNode = process.env.ES_NODE || "http://elasticsearch:9200";
-    this.esClient = new Client({ node: esNode });
   }
 
   async sync(captions: Caption[], batchSize = 2000) {
@@ -36,29 +61,60 @@ export class CaptionsService {
     }
   }
 
-  async search(query: string) {
-    const response = await this.esClient.search({
-      index: "captions",
-      query: {
-        bool: {
-          must: {
-            match: {
-              text: {
-                query,
-                operator: "and",
+  async search(
+    query: string,
+    { offset, limit }: { offset: number; limit: number },
+  ): Promise<Result<ClipSearchResult, SearchUnavailableError>> {
+    const searchResult = await tryCatch(
+      this.esClient.search({
+        index: "captions",
+        from: offset,
+        size: limit,
+        sort: [{ _score: { order: "desc" } }, { id: { order: "asc" } }],
+        track_total_hits: MAX_TRACKED_TOTAL,
+        query: {
+          bool: {
+            must: {
+              match: {
+                text: {
+                  query,
+                  operator: "and",
+                },
+              },
+            },
+            should: {
+              match_phrase: {
+                text: query,
               },
             },
           },
-          should: {
-            match_phrase: {
-              text: query,
-            },
-          },
         },
-      },
-    });
+      }),
+    );
 
-    return response.hits.hits;
+    if (!searchResult.ok) {
+      return Failure({ type: "SEARCH_UNAVAILABLE", error: searchResult.error });
+    }
+
+    const response = searchResult.value;
+    const clips: Clip[] = [];
+    for (const hit of response.hits.hits) {
+      const parsed = storedCaptionSchema.safeParse(hit._source);
+      if (!parsed.success) {
+        this.logger.warn(
+          `Skipping stored caption ${hit._id} that failed validation: ${parsed.error.message}`,
+        );
+        continue;
+      }
+      clips.push(toClip(parsed.data));
+    }
+    const total = response.hits.total as SearchTotalHits;
+
+    return Success({
+      clips,
+      total: total.value,
+      isTotalExact: total.relation === "eq",
+    });
   }
 
   async clear() {
