@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 
 import { FindCaptionsUseCase } from "../../captions-search/find-captions.use-case.js";
 import {
-  errorSchema,
+  errorSchemaFor,
   searchQuerySchema,
   searchResponseSchema,
   validationErrorSchema,
@@ -21,10 +21,14 @@ export class SearchController implements HttpController {
         schema: {
           querystring: searchQuerySchema,
           response: {
-            200: searchResponseSchema,
-            400: validationErrorSchema,
-            500: errorSchema,
-            503: errorSchema,
+            200: searchResponseSchema.describe("Clips matching the query"),
+            400: validationErrorSchema.describe("The query failed validation"),
+            500: errorSchemaFor("INTERNAL_ERROR").describe(
+              "Something unexpected went wrong",
+            ),
+            503: errorSchemaFor("SEARCH_UNAVAILABLE").describe(
+              "Search is unavailable",
+            ),
           },
         },
       },

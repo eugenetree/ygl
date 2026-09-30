@@ -8,6 +8,7 @@ import {
 import type { Logger } from "../_common/logger/logger.js";
 import type { HttpApp, HttpController } from "./http-controller.js";
 import { corsPlugin } from "./plugins/cors.plugin.js";
+import { docsPlugin } from "./plugins/docs.plugin.js";
 import { errorsPlugin } from "./plugins/errors.plugin.js";
 import { requestLoggingPlugin } from "./plugins/request-logging.plugin.js";
 
@@ -27,6 +28,8 @@ export function buildHttpServer({
   app.register(requestLoggingPlugin, { logger });
   app.register(corsPlugin, { frontendOrigin });
   app.register(errorsPlugin, { logger });
+  // Before the controllers: swagger only documents routes added after it.
+  app.register(docsPlugin);
 
   app.register(async (scope) => {
     for (const controller of controllers) {

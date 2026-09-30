@@ -1,19 +1,31 @@
 import { z } from "zod";
 
 export const MAX_SEARCH_WINDOW = 10000;
+const SEARCH_WINDOW_RULE = `offset + limit must not exceed ${MAX_SEARCH_WINDOW}`;
 
 export const searchQuerySchema = z
   .object({
     q: z.string().trim().min(1).max(200),
-    offset: z.coerce.number().int().min(0).default(0),
-    limit: z.coerce.number().int().min(1).max(50).default(20),
+    offset: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .default(0)
+      .describe(SEARCH_WINDOW_RULE),
+    limit: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(50)
+      .default(20)
+      .describe(SEARCH_WINDOW_RULE),
   })
   .superRefine(({ offset, limit }, ctx) => {
     if (offset + limit <= MAX_SEARCH_WINDOW) return;
     for (const field of ["offset", "limit"]) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `offset + limit must not exceed ${MAX_SEARCH_WINDOW}`,
+        message: SEARCH_WINDOW_RULE,
         path: [field],
       });
     }

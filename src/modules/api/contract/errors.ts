@@ -11,6 +11,12 @@ export const errorSchema = z.object({
   message: z.string(),
 });
 
+export const errorSchemaFor = <
+  Code extends z.infer<typeof errorSchema>["code"],
+>(
+  code: Code,
+) => errorSchema.extend({ code: z.literal(code) });
+
 export const errorResponseSchema = z.discriminatedUnion("code", [
   validationErrorSchema,
   errorSchema,

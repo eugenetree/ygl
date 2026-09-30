@@ -282,3 +282,46 @@ describe("request logging", () => {
     assert.match(lines[0], /^GET \/api\/search 200 \d+ms$/);
   });
 });
+
+describe("API docs", () => {
+  it("serves an OpenAPI document listing the search route with its query, response and error codes", async () => {
+    const app = buildSut(createMocks());
+
+    const response = await app.inject({ method: "GET", url: "/api/docs/json" });
+    await app.close();
+
+    assert.equal(response.statusCode, 200);
+    const document = response.json();
+    assert.match(document.openapi, /^3\./);
+    const search = document.paths["/api/search"].get;
+    assert.deepEqual(
+      search.parameters.map(
+        (parameter: { name: string; in: string }) =>
+          `${parameter.in}:${parameter.name}`,
+      ),
+      ["query:q", "query:offset", "query:limit"],
+    );
+    assert.deepEqual(Object.keys(search.responses).sort(), [
+      "200",
+      "400",
+      "500",
+      "503",
+    ]);
+    const errorCodes = (status: string) =>
+      search.responses[status].content["application/json"].schema.properties
+        .code.enum;
+    assert.deepEqual(errorCodes("400"), ["VALIDATION_ERROR"]);
+    assert.deepEqual(errorCodes("500"), ["INTERNAL_ERROR"]);
+    assert.deepEqual(errorCodes("503"), ["SEARCH_UNAVAILABLE"]);
+  });
+
+  it("serves a browsable docs page", async () => {
+    const app = buildSut(createMocks());
+
+    const response = await app.inject({ method: "GET", url: "/api/docs" });
+    await app.close();
+
+    assert.equal(response.statusCode, 200);
+    assert.match(response.headers["content-type"] ?? "", /text\/html/);
+  });
+});

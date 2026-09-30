@@ -12,8 +12,20 @@ generated file is committed.
 
 **Status:** ready-for-agent
 
-- [ ] Fastify's swagger plugin produces an OpenAPI document from the contract schemas.
-- [ ] The document is served as JSON and a browsable docs page is served, both under `/api/docs`, in every environment.
-- [ ] The search route appears with its query parameters, its response schema, and the error shape with its codes.
-- [ ] No generated OpenAPI file is committed to the repo.
-- [ ] An inject-based test asserts the document is served and lists the search route.
+- [x] Fastify's swagger plugin produces an OpenAPI document from the contract schemas.
+- [x] The document is served as JSON and a browsable docs page is served, both under `/api/docs`, in every environment.
+- [x] The search route appears with its query parameters, its response schema, and the error shape with its codes.
+- [x] No generated OpenAPI file is committed to the repo.
+- [x] An inject-based test asserts the document is served and lists the search route.
+
+## Comments
+
+- The docs page is `@fastify/swagger-ui` at `/api/docs`; the document is at
+  `/api/docs/json` (and `/api/docs/yaml`).
+- The document is OpenAPI 3.0.3, so a zod literal renders as a one-value
+  `enum` rather than `const`.
+- Each error status declares only the code it can carry (`errorSchemaFor`),
+  so a generated client does not see `NOT_FOUND` on search or
+  `SEARCH_UNAVAILABLE` on a 500.
+- The `offset + limit` cap can't be written as an OpenAPI schema; it appears
+  as the description of both parameters.
