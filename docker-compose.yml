@@ -155,8 +155,44 @@ services:
     depends_on:
       - scraper
 
+  # ── 6. Caddy ────────────────────────────────────────────────────────────────
+  # Serves the API over HTTPS on API_DOMAIN, issuing and renewing its certificate.
+  caddy:
+    container_name: caddy
+    image: caddy:2.11-alpine
+    restart: always
+    environment:
+      # Left to Caddy to reject when unset, so a stack without the API still starts
+      API_DOMAIN: ${API_DOMAIN:-}
+    # Names API_DOMAIN when it is empty, where Caddy would fail on a Caddyfile
+    # parse error that doesn't.
+    command:
+      - sh
+      - -c
+      - >-
+        test -n "$$API_DOMAIN" || { echo "API_DOMAIN is not set — see .env.example"; exit 1; };
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      # The directory rather than the file, so `caddy reload` picks up an edited
+      # Caddyfile.
+      - ./caddy:/etc/caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
     driver: local
   elasticsearch_data:
+    driver: local
+  # Certificates and the ACME account. Losing it means issuing again, against
+  # Let's Encrypt's rate limits.
+  caddy_data:
+    driver: local
+  caddy_config:
     driver: local

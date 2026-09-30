@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it, mock } from "node:test";
+import type { InjectOptions } from "fastify";
 import { Failure, Success } from "../../types/index.js";
 import type { Logger } from "../_common/logger/logger.js";
 import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
 import { SearchController } from "./controllers/search.controller.js";
+import type { HttpController } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
 const FRONTEND_ORIGIN = "https://saythis.cc";
@@ -41,27 +43,32 @@ function createMocks(
   };
 }
 
-function buildSut(mocks: ReturnType<typeof createMocks>) {
+function buildSut(
+  mocks: ReturnType<typeof createMocks>,
+  controllers: HttpController[] = [
+    new SearchController(
+      mocks.findCaptionsUseCase as unknown as FindCaptionsUseCase,
+    ),
+  ],
+) {
   return buildHttpServer({
     logger: mocks.logger as unknown as Logger,
     frontendOrigin: FRONTEND_ORIGIN,
-    controllers: [
-      new SearchController(
-        mocks.findCaptionsUseCase as unknown as FindCaptionsUseCase,
-      ),
-    ],
+    controllers,
   });
 }
 
 async function search(
   mocks: ReturnType<typeof createMocks>,
   query: Record<string, string>,
+  options: Pick<InjectOptions, "remoteAddress" | "headers"> = {},
 ) {
   const app = buildSut(mocks);
   const response = await app.inject({
     method: "GET",
     url: "/api/search",
     query,
+    ...options,
   });
   await app.close();
   return response;
@@ -272,14 +279,65 @@ describe("CORS", () => {
 });
 
 describe("request logging", () => {
-  it("logs one line per request with method, route, status and duration", async () => {
+  it("logs one line per request with method, route, status, duration and client address", async () => {
     const mocks = createMocks();
 
     await search(mocks, { q: "hello" });
 
     const lines = mocks.logger.info.mock.calls.map((call) => call.arguments[0]);
     assert.equal(lines.length, 1);
-    assert.match(lines[0], /^GET \/api\/search 200 \d+ms$/);
+    assert.match(lines[0], /^GET \/api\/search 200 \d+ms 127\.0\.0\.1$/);
+  });
+});
+
+describe("behind the proxy", () => {
+  const CADDY_ADDRESS = "172.18.0.9";
+
+  async function loggedLine(remoteAddress: string, forwardedFor: string) {
+    const mocks = createMocks();
+    await search(
+      mocks,
+      { q: "hello" },
+      { remoteAddress, headers: { "x-forwarded-for": forwardedFor } },
+    );
+    return mocks.logger.info.mock.calls[0].arguments[0];
+  }
+
+  it("logs the client's address the proxy forwarded, not the proxy's", async () => {
+    const line = await loggedLine(CADDY_ADDRESS, "203.0.113.7");
+
+    assert.match(line, / 203\.0\.113\.7$/);
+  });
+
+  it("trusts only the proxy's own entry in X-Forwarded-For", async () => {
+    const line = await loggedLine(CADDY_ADDRESS, "198.51.100.1, 203.0.113.7");
+
+    assert.match(line, / 203\.0\.113\.7$/);
+  });
+
+  it("ignores X-Forwarded-For from a client that reaches the API directly", async () => {
+    const line = await loggedLine("198.51.100.20", "203.0.113.7");
+
+    assert.match(line, / 198\.51\.100\.20$/);
+  });
+
+  it("gives controllers the scheme the proxy forwarded", async () => {
+    const app = buildSut(createMocks(), [
+      {
+        register: (app) =>
+          app.get("/api/scheme", async (request) => request.protocol),
+      },
+    ]);
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/scheme",
+      remoteAddress: CADDY_ADDRESS,
+      headers: { "x-forwarded-proto": "https" },
+    });
+    await app.close();
+
+    assert.equal(response.body, "https");
   });
 });
 
