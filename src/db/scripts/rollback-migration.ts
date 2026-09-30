@@ -1,20 +1,8 @@
-import fs from "fs/promises";
-import { FileMigrationProvider, type Kysely, Migrator } from "kysely";
-import * as path from "path";
-
 import { dbClient } from "../client.js";
+import { migrateDown } from "../migrator.js";
 
 async function rollbackMigration() {
-  const migrator = new Migrator({
-    db: dbClient as unknown as Kysely<any>,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      migrationFolder: path.join(__dirname, "../migrations"),
-    }),
-  });
-
-  const { error, results } = await migrator.migrateDown();
+  const { error, results } = await migrateDown(dbClient);
 
   if (error) {
     console.error("failed to rollback");

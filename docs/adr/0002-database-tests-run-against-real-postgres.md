@@ -65,7 +65,7 @@ Two structural failures, not ergonomics:
   stretch `.net` past its name. If another kind of dependency appears, or the
   suites need finer selection than a glob, revisit it rather than adding or
   overloading suffixes.
-- Stale `base_<hash>` databases accumulate as branches come and go; a reset
-  script removes them.
+- Stale `base_<hash>` databases accumulate as branches come and go;
+  `npm run test:db:reset` removes them by removing the container.
 - Fixtures must satisfy real foreign keys, `NOT NULL`s and enum types that the
   hand-written DDL declared away.
