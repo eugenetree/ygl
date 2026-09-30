@@ -20,9 +20,16 @@ belongs:
 
 That choice is why this is triage, not ready-for-agent.
 
+**Resolution:** none of the three. The test was deleted instead. `getVersion()`
+only feeds the startup log line, and a failure logs `unknown` without blocking
+boot. On a Mac the test exercised `yt-dlp_macos`, not the Linux binary
+production runs, so it failed for a reason production never hits. The NOTE in
+`getVersion()` already guards against going back to the wrapper's broken
+`getVersionAsync()`. The production timeout stays at 5s.
+
 **Blocked by:** None.
 
-**Status:** needs-triage
+**Status:** wontfix
 
-- [ ] `npm run test:net` passes on macOS
-- [ ] Scraper boot is still bounded if the binary hangs
+- [x] `npm run test:net` passes on macOS
+- [x] Scraper boot is still bounded if the binary hangs

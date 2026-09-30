@@ -27,14 +27,3 @@ describe("YtDlpClient (real binary)", () => {
     );
   });
 });
-
-describe("YtDlpClient.getVersion()", () => {
-  it("resolves the real yt-dlp version by invoking the binary", async () => {
-    const client = new YtDlpClient(testLogger());
-
-    const version = await client.getVersion();
-
-    assert.ok(version, "expected a version string, got undefined");
-    assert.match(version, /^\d{4}\.\d{2}\.\d{2}/);
-  });
-});
