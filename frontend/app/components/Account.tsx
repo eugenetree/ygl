@@ -138,41 +138,40 @@ function DeleteConfirmation({
   onConfirm: () => void;
   onSignInAgain: () => void;
 }) {
-  if (step === "stale-session") {
-    return (
-      <div className="g-account-confirm" role="alertdialog" aria-label="Sign in again">
-        <p>For your security, sign in again, then delete your account.</p>
-        <div className="g-account-actions">
-          <button className="g-account-item" onClick={onCancel}>
-            Cancel
-          </button>
+  const staleSession = step === "stale-session";
+  const deleting = step === "deleting";
+
+  return (
+    <div
+      className="g-account-confirm"
+      role="alertdialog"
+      aria-label={staleSession ? "Sign in again" : "Delete account"}
+    >
+      <p>
+        {staleSession
+          ? "For your security, sign in again, then delete your account."
+          : step === "failed"
+            ? "Your account couldn't be deleted. Try again in a moment."
+            : "Delete your account? You'll be signed out everywhere. Signing in with Google later starts a new account."}
+      </p>
+      <div className="g-account-actions">
+        <button className="g-account-item" onClick={onCancel} disabled={deleting}>
+          Cancel
+        </button>
+        {staleSession ? (
           <button className="g-account-item" onClick={onSignInAgain}>
             Sign in again
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="g-account-confirm" role="alertdialog" aria-label="Delete account">
-      <p>
-        {step === "failed"
-          ? "Your account couldn't be deleted. Try again in a moment."
-          : "Delete your account? You'll be signed out everywhere. Signing in with Google later starts a new account."}
-      </p>
-      <div className="g-account-actions">
-        <button className="g-account-item" onClick={onCancel} disabled={step === "deleting"}>
-          Cancel
-        </button>
-        <button
-          className="g-account-item g-account-danger"
-          onClick={onConfirm}
-          disabled={step === "deleting"}
-          autoFocus
-        >
-          {step === "deleting" ? "Deleting…" : "Delete"}
-        </button>
+        ) : (
+          <button
+            className="g-account-item g-account-danger"
+            onClick={onConfirm}
+            disabled={deleting}
+            autoFocus
+          >
+            {deleting ? "Deleting…" : "Delete"}
+          </button>
+        )}
       </div>
     </div>
   );
