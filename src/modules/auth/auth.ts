@@ -26,7 +26,7 @@ export function createAuth(db: Kysely<Database>, settings: AuthSettings) {
       },
     },
     emailAndPassword: { enabled: false },
-    user: { modelName: "users" },
+    user: { modelName: "users", deleteUser: { enabled: true } },
     session: { modelName: "sessions" },
     account: { modelName: "accounts" },
     verification: { modelName: "verifications" },

@@ -13,6 +13,7 @@
   --accent-2: oklch(0.65 0.11 254);
   --accent-wash: oklch(0.94 0.035 254);
   --accent-ink: oklch(0.42 0.14 255);
+  --danger: oklch(0.52 0.17 27);
 }
 .gentle.dark,
 .dark .gentle {
@@ -30,6 +31,7 @@
   --accent-2: oklch(0.8 0.1 254);
   --accent-wash: oklch(0.28 0.07 254);
   --accent-ink: oklch(0.82 0.13 254);
+  --danger: oklch(0.72 0.14 27);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -304,6 +306,18 @@ body {
   cursor: pointer;
 }
 .g-account-item:hover { background: var(--bg-3); color: var(--ink); }
+.g-account-item:disabled { opacity: 0.6; cursor: default; }
+.g-account-danger,
+.g-account-danger:hover { color: var(--danger); }
+.g-account-confirm p {
+  margin: 0;
+  padding: 4px 10px 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.g-account-actions { display: flex; gap: 4px; }
+.g-account-actions .g-account-item { text-align: center; }
 .g-home-search { width: 100%; max-width: 640px; margin-top: 8px; }
 .g-home-hero { padding: 64px 28px 48px; }
 .g-home-hero-inner {

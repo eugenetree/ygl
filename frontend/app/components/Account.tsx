@@ -10,6 +10,7 @@ export default function Account() {
   // button at a signed-in listener.
   const [me, setMe] = useState<MeResponse | null | undefined>(undefined);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<DeleteStep>("idle");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,7 +20,10 @@ export default function Account() {
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen) {
+      setDeleteStep("idle");
+      return;
+    }
     function onPointerDown(e: PointerEvent) {
       if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
     }
@@ -47,6 +51,18 @@ export default function Account() {
     setMenuOpen(false);
     const { error } = await authClient.signOut();
     if (!error) setMe(null);
+  }
+
+  async function deleteAccount() {
+    setDeleteStep("deleting");
+    const { error } = await authClient.deleteUser();
+    if (!error) {
+      setMenuOpen(false);
+      setMe(null);
+      return;
+    }
+    // better-auth only deletes from a session signed in within the last day.
+    setDeleteStep(error.code === "SESSION_EXPIRED" ? "stale-session" : "failed");
   }
 
   if (me === undefined) return <div className="g-account-slot" aria-hidden="true" />;
@@ -82,11 +98,82 @@ export default function Account() {
             <b>{me.name}</b>
             <span>{me.email}</span>
           </div>
-          <button className="g-account-item" role="menuitem" onClick={signOut}>
-            Sign out
-          </button>
+          {deleteStep === "idle" ? (
+            <>
+              <button className="g-account-item" role="menuitem" onClick={signOut}>
+                Sign out
+              </button>
+              <button
+                className="g-account-item g-account-danger"
+                role="menuitem"
+                onClick={() => setDeleteStep("confirming")}
+              >
+                Delete account
+              </button>
+            </>
+          ) : (
+            <DeleteConfirmation
+              step={deleteStep}
+              onCancel={() => setDeleteStep("idle")}
+              onConfirm={deleteAccount}
+              onSignInAgain={signIn}
+            />
+          )}
         </div>
       )}
+    </div>
+  );
+}
+
+type DeleteStep = "idle" | "confirming" | "deleting" | "failed" | "stale-session";
+
+function DeleteConfirmation({
+  step,
+  onCancel,
+  onConfirm,
+  onSignInAgain,
+}: {
+  step: Exclude<DeleteStep, "idle">;
+  onCancel: () => void;
+  onConfirm: () => void;
+  onSignInAgain: () => void;
+}) {
+  if (step === "stale-session") {
+    return (
+      <div className="g-account-confirm" role="alertdialog" aria-label="Sign in again">
+        <p>For your security, sign in again, then delete your account.</p>
+        <div className="g-account-actions">
+          <button className="g-account-item" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="g-account-item" onClick={onSignInAgain}>
+            Sign in again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="g-account-confirm" role="alertdialog" aria-label="Delete account">
+      <p>
+        {step === "failed"
+          ? "Your account couldn't be deleted. Try again in a moment."
+          : "Delete your account? You'll be signed out everywhere. Signing in with Google later starts a new account."}
+      </p>
+      <div className="g-account-actions">
+        <button className="g-account-item" onClick={onCancel} disabled={step === "deleting"}>
+          Cancel
+        </button>
+        <button
+          className="g-account-item g-account-danger"
+          onClick={onConfirm}
+          disabled={step === "deleting"}
+          autoFocus
+        >
+          {step === "deleting" ? "Deleting…" : "Delete"}
+        </button>
+      </div>
     </div>
   );
 }
