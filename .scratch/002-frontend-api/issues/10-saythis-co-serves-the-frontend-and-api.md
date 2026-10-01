@@ -14,8 +14,8 @@ resolves and a frontend deploy doesn't restart the scraper.
 
 **Status:** ready-for-agent
 
-- [ ] `frontend/Dockerfile` builds Next's standalone output from the repo root and runs it on port 3000; it copies only `frontend/` and `src/modules/api/contract/`.
-- [ ] `docker build -f frontend/Dockerfile .` succeeds from the repo root and the container serves the home page.
+- [x] `frontend/Dockerfile` builds Next's standalone output from the repo root and runs it on port 3000; it copies only `frontend/` and `src/modules/api/contract/`.
+- [x] `docker build -f frontend/Dockerfile .` succeeds from the repo root and the container serves the home page.
 - [ ] Still to do by hand:
   - DNS: A records for `saythis.co` and `www.saythis.co` point straight at the server, not through Cloudflare's proxy (a second hop, ADR-0007).
   - Dokploy, compose app: domain `saythis.co`, path `/api`, service `api`, port 3001, strip path off, HTTPS with Let's Encrypt.
@@ -33,3 +33,6 @@ resolves and a frontend deploy doesn't restart the scraper.
   Traefik dynamic config file in Dokploy's Traefik file editor: a router on
   `Host(www.saythis.co)` with a `redirectRegex` middleware. Keep it out of
   `docker-compose.yml` (ADR-0007).
+- The image serves the home page, its static chunks and a 404 on `/api`, which
+  Traefik answers in production. `.dockerignore` now skips every `node_modules`
+  and `frontend/.next`, so `COPY frontend/` doesn't bring the host's in.
