@@ -8,8 +8,7 @@ import type { Database } from "../../db/types.js";
 
 export type AuthSettings = {
   secret: string;
-  apiPublicUrl: string;
-  frontendOrigin: string;
+  publicOrigin: string;
   google: { clientId: string; clientSecret: string };
 };
 
@@ -57,8 +56,7 @@ export function createAuth(db: Kysely<Database>, settings: AuthSettings) {
   return betterAuth({
     database: { db, type: "postgres" },
     secret: settings.secret,
-    baseURL: settings.apiPublicUrl,
-    trustedOrigins: [settings.frontendOrigin],
+    baseURL: settings.publicOrigin,
     socialProviders: {
       google: {
         clientId: settings.google.clientId,
@@ -72,7 +70,7 @@ export function createAuth(db: Kysely<Database>, settings: AuthSettings) {
     verification: { modelName: "verifications" },
     advanced: {
       database: { generateId: () => randomUUID() },
-      useSecureCookies: new URL(settings.apiPublicUrl).protocol === "https:",
+      useSecureCookies: new URL(settings.publicOrigin).protocol === "https:",
       defaultCookieAttributes: { httpOnly: true, sameSite: "lax" },
     },
     plugins: [openAPI()],

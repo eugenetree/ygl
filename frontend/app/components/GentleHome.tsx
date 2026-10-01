@@ -49,7 +49,7 @@ export default function GentleHome() {
         <header className="g-header">
           <div className="g-header-row">
             <div className="g-brand">
-              saythis<span>.cc</span>
+              saythis<span>.co</span>
             </div>
             <div className="g-header-right">
               <div className="g-kbd-hint" aria-hidden="true">

@@ -29,7 +29,7 @@ export const docsPlugin = fp<{ auth: Auth }>(async (app, { auth }) => {
 
   await app.register(swagger, {
     openapi: {
-      info: { title: "saythis.cc API", version: "1.0.0" },
+      info: { title: "saythis.co API", version: "1.0.0" },
       components: {
         securitySchemes: {
           session: {

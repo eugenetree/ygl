@@ -17,7 +17,7 @@ import { SearchController } from "./controllers/search.controller.js";
 import type { HttpController } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
-const FRONTEND_ORIGIN = TEST_AUTH_SETTINGS.frontendOrigin;
+const PUBLIC_ORIGIN = TEST_AUTH_SETTINGS.publicOrigin;
 
 // ---- Fixtures ---------------------------------------------------------------
 
@@ -114,7 +114,6 @@ function buildSut(
 ) {
   return buildHttpServer({
     logger: mocks.logger as unknown as Logger,
-    frontendOrigin: FRONTEND_ORIGIN,
     auth: mocks.auth,
     controllers,
   });
@@ -218,7 +217,7 @@ describe("better-auth's routes", () => {
     const app = buildSut(createMocks());
     const body = JSON.stringify({
       provider: "google",
-      callbackURL: "https://saythis.cc/hello",
+      callbackURL: `${PUBLIC_ORIGIN}/hello`,
     });
 
     const response = await app.inject({
@@ -315,7 +314,7 @@ describe("better-auth's routes this API does not offer", () => {
         method,
         url,
         headers: {
-          origin: FRONTEND_ORIGIN,
+          origin: PUBLIC_ORIGIN,
           "content-type": "application/json",
         },
         payload: method === "POST" ? "{}" : undefined,
@@ -466,51 +465,6 @@ describe("errors", () => {
     const body = response.json();
     assert.deepEqual(Object.keys(body).sort(), ["code", "message"]);
     assert.equal(body.code, "NOT_FOUND");
-  });
-});
-
-describe("CORS", () => {
-  async function preflight(origin: string) {
-    const app = buildSut(createMocks());
-    const response = await app.inject({
-      method: "OPTIONS",
-      url: "/api/search?q=hello",
-      headers: { origin, "access-control-request-method": "GET" },
-    });
-    await app.close();
-    return response;
-  }
-
-  it("lets the frontend origin make credentialed requests", async () => {
-    const response = await preflight(FRONTEND_ORIGIN);
-
-    assert.equal(
-      response.headers["access-control-allow-origin"],
-      FRONTEND_ORIGIN,
-    );
-    assert.equal(response.headers["access-control-allow-credentials"], "true");
-  });
-
-  it("does not allow any other origin", async () => {
-    const response = await preflight("https://evil.example");
-
-    assert.equal(response.headers["access-control-allow-origin"], undefined);
-  });
-
-  it("names the frontend origin on actual responses", async () => {
-    const app = buildSut(createMocks());
-    const response = await app.inject({
-      method: "GET",
-      url: "/api/search?q=hello",
-      headers: { origin: FRONTEND_ORIGIN },
-    });
-    await app.close();
-
-    assert.equal(
-      response.headers["access-control-allow-origin"],
-      FRONTEND_ORIGIN,
-    );
-    assert.equal(response.headers["access-control-allow-credentials"], "true");
   });
 });
 

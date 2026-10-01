@@ -6,8 +6,7 @@ import { type AuthSettings, createAuth } from "../auth.js";
 
 export const TEST_AUTH_SETTINGS = {
   secret: randomBytes(32).toString("base64"),
-  apiPublicUrl: "https://api.saythis.cc",
-  frontendOrigin: "https://saythis.cc",
+  publicOrigin: "https://saythis.co",
   google: { clientId: "google-client-id", clientSecret: "google-secret" },
 } satisfies AuthSettings;
 

@@ -238,7 +238,7 @@ export default function GentleResults({ query }: { query: string }) {
         <header className="g-header">
           <div className="g-header-row">
             <button className="g-brand g-brand-btn" onClick={goHome}>
-              saythis<span>.cc</span>
+              saythis<span>.co</span>
             </button>
             <div className="g-header-search">
               <SearchBar query={queryInput} setQuery={setQueryInput} onSubmit={onSubmit} />

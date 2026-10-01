@@ -109,8 +109,7 @@ services:
       IS_API_ENABLED: ${IS_API_ENABLED:-}
       API_PORT: 3001
       # Left to the API to reject when unset, so a stack without the API still starts
-      API_PUBLIC_URL: ${API_PUBLIC_URL:-}
-      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}

@@ -13,7 +13,7 @@ import { MeController } from "./controllers/me.controller.js";
 import type { HttpApp } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
-const FRONTEND_ORIGIN = TEST_AUTH_SETTINGS.frontendOrigin;
+const PUBLIC_ORIGIN = TEST_AUTH_SETTINGS.publicOrigin;
 
 const googleProfile = {
   sub: "108234567890123456789",
@@ -55,7 +55,6 @@ function fakeGoogleTokenEndpoint() {
 function buildSut(db: ReturnType<typeof useTestDatabase>) {
   return buildHttpServer({
     logger: createLoggerMock() as unknown as Logger,
-    frontendOrigin: FRONTEND_ORIGIN,
     auth: createTestAuth(db),
     controllers: [new MeController()],
   });
@@ -71,7 +70,7 @@ class Browser {
   async signInWithGoogle() {
     const start = await this.post("/api/auth/sign-in/social", {
       provider: "google",
-      callbackURL: `${FRONTEND_ORIGIN}/`,
+      callbackURL: `${PUBLIC_ORIGIN}/`,
     });
     assert.equal(start.statusCode, 200, start.body);
     const state = new URL(start.json().url).searchParams.get("state");
@@ -80,7 +79,7 @@ class Browser {
       `/api/auth/callback/google?code=google-code&state=${state}`,
     );
     assert.equal(callback.statusCode, 302, callback.body);
-    assert.equal(callback.headers.location, `${FRONTEND_ORIGIN}/`);
+    assert.equal(callback.headers.location, `${PUBLIC_ORIGIN}/`);
   }
 
   deleteAccount() {
@@ -111,7 +110,7 @@ class Browser {
     const response = await this.app.inject({
       ...request,
       headers: {
-        origin: FRONTEND_ORIGIN,
+        origin: PUBLIC_ORIGIN,
         cookie: [...this.cookies]
           .map(([name, value]) => `${name}=${value}`)
           .join("; "),

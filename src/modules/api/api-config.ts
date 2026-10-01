@@ -16,8 +16,7 @@ const port = () => setting().pipe(z.coerce.number().int().min(1).max(65535));
 
 const envSchema = z.object({
   API_PORT: port(),
-  API_PUBLIC_URL: origin("https://api.saythis.cc"),
-  FRONTEND_ORIGIN: origin("https://saythis.cc"),
+  PUBLIC_ORIGIN: origin("https://saythis.co"),
   ES_NODE: setting().url(),
   BETTER_AUTH_SECRET: setting().min(
     32,
@@ -34,8 +33,7 @@ const envSchema = z.object({
 
 export type ApiConfig = {
   port: number;
-  publicUrl: string;
-  frontendOrigin: string;
+  publicOrigin: string;
   esNode: string;
   authSecret: string;
   google: { clientId: string; clientSecret: string };
@@ -56,8 +54,7 @@ export function parseApiConfig(env: NodeJS.ProcessEnv): ApiConfig {
   const { data } = parsed;
   return {
     port: data.API_PORT,
-    publicUrl: data.API_PUBLIC_URL,
-    frontendOrigin: data.FRONTEND_ORIGIN,
+    publicOrigin: data.PUBLIC_ORIGIN,
     esNode: data.ES_NODE,
     authSecret: data.BETTER_AUTH_SECRET,
     google: {

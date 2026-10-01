@@ -6,9 +6,6 @@ import type {
   SearchResponse,
 } from "@api/contract";
 
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -20,7 +17,7 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { credentials: "include" });
+  const res = await fetch(path);
   const body = await res.json().catch(() => undefined);
   if (res.ok) return body as T;
 

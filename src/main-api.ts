@@ -44,15 +44,13 @@ async function main() {
   const db = container.get(DatabaseClient);
   const auth = createAuth(db, {
     secret: config.authSecret,
-    apiPublicUrl: config.publicUrl,
-    frontendOrigin: config.frontendOrigin,
+    publicOrigin: config.publicOrigin,
     google: config.google,
   });
 
   const logger = container.get(Logger);
   const app = buildHttpServer({
     logger,
-    frontendOrigin: config.frontendOrigin,
     auth,
     controllers: [container.get(SearchController), container.get(MeController)],
   });
