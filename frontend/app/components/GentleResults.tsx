@@ -154,7 +154,7 @@ export default function GentleResults({ query }: { query: string }) {
   // Until playback reaches a line of this video's captions, the matched line stands in.
   const nowMs = currentTime * 1000;
   const spoken =
-    captions?.videoId === activeVideoId
+    captions && captions.videoId === activeVideoId
       ? captions.lines.findLast((line) => line.startTime <= nowMs)?.text
       : undefined;
 
