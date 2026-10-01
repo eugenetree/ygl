@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-
-const geist = Geist({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-geist",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
   title: "saythis — gentle",
@@ -25,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>{children}</body>
     </html>
   );
