@@ -3,10 +3,13 @@ import "reflect-metadata";
 import { Client } from "@elastic/elasticsearch";
 import { Container } from "inversify";
 
+import { DatabaseClient } from "./db/client.js";
 import { Logger } from "./modules/_common/logger/logger.js";
 import { API_CONFIG, parseApiConfig } from "./modules/api/api-config.js";
+import { MeController } from "./modules/api/controllers/me.controller.js";
 import { SearchController } from "./modules/api/controllers/search.controller.js";
 import { buildHttpServer } from "./modules/api/http-server.js";
+import { createAuth } from "./modules/auth/auth.js";
 import { CaptionsService } from "./modules/captions-search/captions.service.js";
 
 async function main() {
@@ -25,6 +28,9 @@ async function main() {
     );
   container.bind(API_CONFIG).toConstantValue(config);
   container
+    .bind(DatabaseClient)
+    .toConstantValue(new DatabaseClient(config.database));
+  container
     .bind(CaptionsService)
     .toDynamicValue(
       (context) =>
@@ -35,16 +41,26 @@ async function main() {
     )
     .inSingletonScope();
 
+  const db = container.get(DatabaseClient);
+  const auth = createAuth(db, {
+    secret: config.authSecret,
+    apiPublicUrl: config.publicUrl,
+    frontendOrigin: config.frontendOrigin,
+    google: config.google,
+  });
+
   const logger = container.get(Logger);
   const app = buildHttpServer({
     logger,
     frontendOrigin: config.frontendOrigin,
-    controllers: [container.get(SearchController)],
+    auth,
+    controllers: [container.get(SearchController), container.get(MeController)],
   });
 
   const shutdown = async () => {
     logger.info("Closing API server...");
     await app.close();
+    await db.destroy();
     process.exit(0);
   };
   process.once("SIGTERM", shutdown);

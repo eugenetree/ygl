@@ -227,6 +227,83 @@ body {
 }
 
 .g-header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+
+/* -------------- ACCOUNT -------------- */
+.g-account-slot { width: 36px; height: 36px; }
+.g-signin {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: var(--card);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.g-signin:hover { color: var(--ink); background: var(--bg-3); }
+.g-account { position: relative; }
+.g-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  padding: 0;
+  overflow: hidden;
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.g-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.g-account-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  min-width: 220px;
+  max-width: 280px;
+  padding: 6px;
+  background: var(--card);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.g-account-who {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 10px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.g-account-who b { font-size: 14px; font-weight: 600; color: var(--ink); }
+.g-account-who span {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.g-account-item {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.g-account-item:hover { background: var(--bg-3); color: var(--ink); }
 .g-home-search { width: 100%; max-width: 640px; margin-top: 8px; }
 .g-home-hero { padding: 64px 28px 48px; }
 .g-home-hero-inner {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { SearchResponse } from "@api/contract";
 import { EXAMPLE_PHRASES } from "../lib/data";
 import { searchClips } from "../lib/api";
+import Account from "./Account";
 import {
   Icon,
   SearchBar,
@@ -242,9 +243,12 @@ export default function GentleResults({ query }: { query: string }) {
             <div className="g-header-search">
               <SearchBar query={queryInput} setQuery={setQueryInput} onSubmit={onSubmit} />
             </div>
-            <button className="g-theme" onClick={() => setDark(!dark)}>
-              <Icon name={dark ? "sun" : "moon"} size={16} />
-            </button>
+            <div className="g-header-right">
+              <button className="g-theme" onClick={() => setDark(!dark)}>
+                <Icon name={dark ? "sun" : "moon"} size={16} />
+              </button>
+              <Account />
+            </div>
           </div>
           <div className="g-header-row thin">
             <FilterChips

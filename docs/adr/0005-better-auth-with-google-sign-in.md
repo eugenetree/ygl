@@ -29,6 +29,8 @@ runtime, so ADR-0002's rule holds: the tested schema is the shipped schema.
   origin with credentials instead of `*`.
 - better-auth owns the `/api/auth/*` namespace. Replacing it later means
   rewriting sign-in on both server and client and migrating its four tables.
+- Since it runs on our Kysely instance, better-auth sets a floor on Kysely's
+  version (1.7 needs 0.28 or later), so upgrading either can force the other.
 - Email and password sign-in was deliberately left out, because it needs a
   transactional email provider for verification and password reset. better-auth
   can add it to the same user table later without migrating existing users.

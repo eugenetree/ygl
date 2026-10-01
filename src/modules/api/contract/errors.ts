@@ -7,7 +7,12 @@ export const validationErrorSchema = z.object({
 });
 
 export const errorSchema = z.object({
-  code: z.enum(["NOT_FOUND", "SEARCH_UNAVAILABLE", "INTERNAL_ERROR"]),
+  code: z.enum([
+    "NOT_SIGNED_IN",
+    "NOT_FOUND",
+    "SEARCH_UNAVAILABLE",
+    "INTERNAL_ERROR",
+  ]),
   message: z.string(),
 });
 

@@ -42,9 +42,11 @@ Two structural failures, not ergonomics:
   runs files in parallel processes against one database and they `TRUNCATE`
   each other's fixtures.
 - **`TRUNCATE … CASCADE` between tests, not transaction rollback.** The queues
-  open their own `db.transaction()` and Kysely 0.27 has no savepoint support,
-  so an outer wrapping transaction cannot work — and could not test concurrent
-  claiming regardless, which needs two genuinely separate connections.
+  open their own `db.transaction()`, which Kysely refuses to call inside
+  another transaction (its savepoints, since 0.28, are only on a transaction
+  the caller drives by hand), so an outer wrapping transaction cannot work —
+  and could not test concurrent claiming regardless, which needs two genuinely
+  separate connections.
 - **`SKIP LOCKED` is asserted by holding a lock on a second connection**:
   `SELECT … FOR UPDATE` pins the highest-priority job, then `getNextEntry()`
   must return the *second* job rather than block. Deterministic, unlike racing

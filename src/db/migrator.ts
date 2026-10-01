@@ -7,12 +7,14 @@ import {
   Migrator,
 } from "kysely";
 
+import type { Database } from "./types.js";
+
 export const MIGRATIONS_FOLDER = path.join(__dirname, "migrations");
 
-function createMigrator<DB>(db: Kysely<DB>): Migrator {
+function createMigrator(db: Kysely<Database>): Migrator {
   return new Migrator({
-    // Migrations are written against Kysely<any>, which a Kysely<DB> is not
-    // assignable to.
+    // Migrations are written against Kysely<any>, which a Kysely<Database> is
+    // not assignable to.
     db: db as unknown as Kysely<any>,
     provider: new FileMigrationProvider({
       fs,
@@ -22,12 +24,12 @@ function createMigrator<DB>(db: Kysely<DB>): Migrator {
   });
 }
 
-export function migrateToLatest<DB>(
-  db: Kysely<DB>,
+export function migrateToLatest(
+  db: Kysely<Database>,
 ): Promise<MigrationResultSet> {
   return createMigrator(db).migrateToLatest();
 }
 
-export function migrateDown<DB>(db: Kysely<DB>): Promise<MigrationResultSet> {
+export function migrateDown(db: Kysely<Database>): Promise<MigrationResultSet> {
   return createMigrator(db).migrateDown();
 }

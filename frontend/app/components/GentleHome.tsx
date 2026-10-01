@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WALL_CLIPS } from "../lib/data";
+import Account from "./Account";
 import { Icon, SearchBar, pushQueryPath } from "./shared";
 
 export default function GentleHome() {
@@ -57,6 +58,7 @@ export default function GentleHome() {
               <button className="g-theme" onClick={() => setDark(!dark)}>
                 <Icon name={dark ? "sun" : "moon"} size={16} />
               </button>
+              <Account />
             </div>
           </div>
         </header>

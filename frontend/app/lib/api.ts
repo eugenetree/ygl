@@ -1,11 +1,13 @@
 import type {
   ErrorCode,
   ErrorResponse,
+  MeResponse,
   SearchQuery,
   SearchResponse,
 } from "@api/contract";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 export class ApiError extends Error {
   constructor(
@@ -35,4 +37,13 @@ export function searchClips({ q, offset, limit }: SearchQuery) {
   if (offset !== undefined) params.set("offset", String(offset));
   if (limit !== undefined) params.set("limit", String(limit));
   return request<SearchResponse>(`/api/search?${params}`);
+}
+
+export async function getMe(): Promise<MeResponse | null> {
+  try {
+    return await request<MeResponse>("/api/me");
+  } catch (error) {
+    if (error instanceof ApiError && error.code === "NOT_SIGNED_IN") return null;
+    throw error;
+  }
 }

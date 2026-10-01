@@ -3,7 +3,9 @@ import { describe, it, mock } from "node:test";
 import type { InjectOptions } from "fastify";
 import { Failure, Success } from "../../types/index.js";
 import type { Logger } from "../_common/logger/logger.js";
+import type { Auth, User } from "../auth/auth.js";
 import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import { MeController } from "./controllers/me.controller.js";
 import { SearchController } from "./controllers/search.controller.js";
 import type { HttpController } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
@@ -26,10 +28,54 @@ type SearchArgs = Parameters<FindCaptionsUseCase["execute"]>;
 const found = (clips = [clip], total = clips.length, isTotalExact = true) =>
   Success({ clips, total, isTotalExact });
 
+const SESSION_COOKIE = "better-auth.session_token=token.signature";
+
+const user: User = {
+  id: "5036b8d4-b9f3-4afb-ba59-49b6c32d3f83",
+  name: "Ada Lovelace",
+  email: "ada@example.com",
+  emailVerified: true,
+  image: "https://lh3.googleusercontent.com/a/ada",
+  createdAt: new Date("2026-09-01T10:00:00Z"),
+  updatedAt: new Date("2026-09-01T10:00:00Z"),
+};
+
+function stubAuth(
+  session: { user: User } | null = null,
+  cookies: string[] = [],
+) {
+  return {
+    handler: async (request: Request) =>
+      Response.json(
+        {
+          method: request.method,
+          url: request.url,
+          cookie: request.headers.get("cookie"),
+          forwardedFor: request.headers.get("x-forwarded-for"),
+          body: await request.text(),
+        },
+        {
+          status: 202,
+          headers: [
+            ["set-cookie", "better-auth.state=abc; Path=/; HttpOnly"],
+            ["set-cookie", "better-auth.pkce=def; Path=/; HttpOnly"],
+          ],
+        },
+      ),
+    api: {
+      getSession: mock.fn(async ({ headers }: { headers: Headers }) => ({
+        headers: new Headers(cookies.map((cookie) => ["set-cookie", cookie])),
+        response: headers.get("cookie") === SESSION_COOKIE ? session : null,
+      })),
+    },
+  };
+}
+
 // ---- Factory ----------------------------------------------------------------
 
 function createMocks(
   execute: FindCaptionsUseCase["execute"] = async () => found(),
+  auth = stubAuth(),
 ) {
   const logger = {
     setContext: mock.fn(),
@@ -40,6 +86,7 @@ function createMocks(
   return {
     logger: { ...logger, child: () => logger },
     findCaptionsUseCase: { execute: mock.fn(execute) },
+    auth,
   };
 }
 
@@ -49,11 +96,13 @@ function buildSut(
     new SearchController(
       mocks.findCaptionsUseCase as unknown as FindCaptionsUseCase,
     ),
+    new MeController(),
   ],
 ) {
   return buildHttpServer({
     logger: mocks.logger as unknown as Logger,
     frontendOrigin: FRONTEND_ORIGIN,
+    auth: mocks.auth as unknown as Auth,
     controllers,
   });
 }
@@ -74,6 +123,16 @@ async function search(
   return response;
 }
 
+async function me(
+  auth: ReturnType<typeof stubAuth>,
+  headers: InjectOptions["headers"] = { cookie: SESSION_COOKIE },
+) {
+  const app = buildSut(createMocks(undefined, auth));
+  const response = await app.inject({ method: "GET", url: "/api/me", headers });
+  await app.close();
+  return response;
+}
+
 // ---- Tests ------------------------------------------------------------------
 
 describe("GET /api/search", () => {
@@ -88,6 +147,134 @@ describe("GET /api/search", () => {
       total: 10000,
       isTotalExact: false,
     });
+  });
+});
+
+describe("GET /api/me", () => {
+  it("returns the signed-in user's id, name, email and avatar URL", async () => {
+    const response = await me(stubAuth({ user }));
+
+    assert.equal(response.statusCode, 200);
+    assert.deepEqual(response.json(), {
+      id: "5036b8d4-b9f3-4afb-ba59-49b6c32d3f83",
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      avatarUrl: "https://lh3.googleusercontent.com/a/ada",
+    });
+  });
+
+  it("returns a null avatar URL for a user without a picture", async () => {
+    const response = await me(stubAuth({ user: { ...user, image: null } }));
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.json().avatarUrl, null);
+  });
+
+  it("answers NOT_SIGNED_IN with 401 without a session", async () => {
+    const response = await me(stubAuth(), {});
+
+    assert.equal(response.statusCode, 401);
+    const body = response.json();
+    assert.deepEqual(Object.keys(body).sort(), ["code", "message"]);
+    assert.equal(body.code, "NOT_SIGNED_IN");
+  });
+
+  it("passes on the session cookie better-auth refreshes", async () => {
+    const refreshed =
+      "better-auth.session_token=token.signature; Max-Age=604800; Path=/; HttpOnly; SameSite=Lax";
+    const response = await me(stubAuth({ user }, [refreshed]));
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.headers["set-cookie"], refreshed);
+  });
+
+  it("passes on the cookies better-auth clears for an expired session", async () => {
+    const cleared = [
+      "better-auth.session_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+      "better-auth.session_data=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+    ];
+    const response = await me(stubAuth(null, cleared));
+
+    assert.equal(response.statusCode, 401);
+    assert.deepEqual(response.headers["set-cookie"], cleared);
+  });
+});
+
+describe("better-auth's routes", () => {
+  it("hands better-auth the request and relays its response", async () => {
+    const app = buildSut(createMocks());
+    const body = JSON.stringify({
+      provider: "google",
+      callbackURL: "https://saythis.cc/hello",
+    });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/auth/sign-in/social?disableRedirect=false",
+      headers: { "content-type": "application/json", cookie: SESSION_COOKIE },
+      payload: body,
+    });
+    await app.close();
+
+    assert.equal(response.statusCode, 202);
+    assert.deepEqual(response.headers["set-cookie"], [
+      "better-auth.state=abc; Path=/; HttpOnly",
+      "better-auth.pkce=def; Path=/; HttpOnly",
+    ]);
+    const received = response.json();
+    assert.equal(received.method, "POST");
+    const url = new URL(received.url);
+    assert.equal(
+      url.pathname + url.search,
+      "/api/auth/sign-in/social?disableRedirect=false",
+    );
+    assert.equal(received.cookie, SESSION_COOKIE);
+    assert.equal(received.body, body);
+  });
+
+  it("hands over a GET without a body, as Google's callback is", async () => {
+    const app = buildSut(createMocks());
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/auth/callback/google?code=4%2F0Ab&state=xyz",
+    });
+    await app.close();
+
+    assert.equal(response.statusCode, 202);
+    const received = response.json();
+    assert.equal(received.method, "GET");
+    assert.equal(new URL(received.url).search, "?code=4%2F0Ab&state=xyz");
+    assert.equal(received.body, "");
+  });
+
+  async function addressGivenToAuth(
+    remoteAddress: string,
+    forwardedFor: string,
+  ) {
+    const app = buildSut(createMocks());
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/auth/get-session",
+      remoteAddress,
+      headers: { "x-forwarded-for": forwardedFor },
+    });
+    await app.close();
+    return response.json().forwardedFor;
+  }
+
+  it("tells better-auth the client address the proxy forwarded", async () => {
+    assert.equal(
+      await addressGivenToAuth("172.18.0.9", "198.51.100.1, 203.0.113.7"),
+      "203.0.113.7",
+    );
+  });
+
+  it("tells better-auth the address of a client reaching the API directly", async () => {
+    assert.equal(
+      await addressGivenToAuth("198.51.100.20", "203.0.113.7"),
+      "198.51.100.20",
+    );
   });
 });
 

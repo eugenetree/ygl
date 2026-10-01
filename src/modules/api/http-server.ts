@@ -7,7 +7,9 @@ import {
 } from "fastify-type-provider-zod";
 
 import type { Logger } from "../_common/logger/logger.js";
+import type { Auth } from "../auth/auth.js";
 import type { HttpApp, HttpController } from "./http-controller.js";
+import { authPlugin } from "./plugins/auth.plugin.js";
 import { corsPlugin } from "./plugins/cors.plugin.js";
 import { docsPlugin } from "./plugins/docs.plugin.js";
 import { errorsPlugin } from "./plugins/errors.plugin.js";
@@ -21,10 +23,12 @@ const isInternalAddress = proxyAddr.compile(["loopback", "uniquelocal"]);
 export function buildHttpServer({
   logger,
   frontendOrigin,
+  auth,
   controllers,
 }: {
   logger: Logger;
   frontendOrigin: string;
+  auth: Auth;
   controllers: HttpController[];
 }): HttpApp {
   const app = Fastify({
@@ -37,6 +41,7 @@ export function buildHttpServer({
   app.register(requestLoggingPlugin, { logger });
   app.register(corsPlugin, { frontendOrigin });
   app.register(errorsPlugin, { logger });
+  app.register(authPlugin, { auth });
   // Before the controllers: swagger only documents routes added after it.
   app.register(docsPlugin);
 
