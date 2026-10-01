@@ -10,6 +10,12 @@ type AuthDocument = Awaited<ReturnType<Auth["api"]["generateOpenAPISchema"]>>;
 const SCHEMAS = "#/components/schemas/";
 
 const signedIn = [{ session: [] }];
+const optionallySignedIn = [{}, ...signedIn];
+
+// better-auth's document marks every route as needing a bearer token, which this
+// API does not accept, and does not say which need a session. Its other routes
+// read the session cookie if there is one.
+const AUTH_PATHS_NEEDING_SESSION = ["/delete-user"];
 
 export const docsPlugin = fp<{ auth: Auth }>(async (app, { auth }) => {
   const authDocument = await auth.api.generateOpenAPISchema();
@@ -40,13 +46,13 @@ export const docsPlugin = fp<{ auth: Auth }>(async (app, { auth }) => {
         throw new Error("Expected an OpenAPI document");
       }
       const ours = document.openapiObject;
-      const auth = authParts(authDocument);
+      const { paths, schemas } = adaptAuthDocument(authDocument);
       return {
         ...ours,
-        paths: { ...ours.paths, ...auth.paths },
+        paths: { ...ours.paths, ...paths },
         components: {
           ...ours.components,
-          schemas: { ...ours.components?.schemas, ...auth.schemas },
+          schemas: { ...ours.components?.schemas, ...schemas },
         },
       };
     },
@@ -56,16 +62,14 @@ export const docsPlugin = fp<{ auth: Auth }>(async (app, { auth }) => {
 
 // better-auth documents its paths relative to its own base path, and names its
 // schemas plainly (User, Session), so they are prefixed to keep clear of ours.
-// It marks every operation as needing a bearer token, which this API does not
-// accept; any of its routes may read the session cookie, and some need it.
-function authParts(document: AuthDocument) {
+function adaptAuthDocument(document: AuthDocument) {
   const basePath = new URL(document.servers[0].url).pathname;
   const renamed = (name: string) => `Auth${name}`;
 
   // Its schemas are OpenAPI 3.1, ours 3.0. The only 3.1 it uses are nullable
   // types and propertyNames, which only ever says keys are strings.
-  const adapted = (value: unknown): unknown => {
-    if (Array.isArray(value)) return value.map(adapted);
+  const toOpenApi30 = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(toOpenApi30);
     if (value === null || typeof value !== "object") return value;
     const { propertyNames: _, ...schema } = value as Record<string, unknown>;
     if (Array.isArray(schema.type) && schema.type.includes("null")) {
@@ -76,7 +80,7 @@ function authParts(document: AuthDocument) {
       schema.$ref = SCHEMAS + renamed(schema.$ref.slice(SCHEMAS.length));
     }
     return Object.fromEntries(
-      Object.entries(schema).map(([key, entry]) => [key, adapted(entry)]),
+      Object.entries(schema).map(([key, entry]) => [key, toOpenApi30(entry)]),
     );
   };
 
@@ -87,7 +91,12 @@ function authParts(document: AuthDocument) {
         Object.fromEntries(
           Object.entries(item).map(([method, operation]) => [
             method,
-            { ...(adapted(operation) as object), security: [{}, ...signedIn] },
+            {
+              ...(toOpenApi30(operation) as object),
+              security: AUTH_PATHS_NEEDING_SESSION.includes(path)
+                ? signedIn
+                : optionallySignedIn,
+            },
           ]),
         ),
       ]),
@@ -95,7 +104,7 @@ function authParts(document: AuthDocument) {
     schemas: Object.fromEntries(
       Object.entries(document.components.schemas).map(([name, schema]) => [
         renamed(name),
-        adapted(schema),
+        toOpenApi30(schema),
       ]),
     ),
   };

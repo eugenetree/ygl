@@ -29,7 +29,10 @@ ours to write.
 - better-auth only deletes for a session created within its `freshAge`, one day
   by default; an older one gets `SESSION_EXPIRED`. Google-only listeners have no
   password to re-enter, so the menu asks them to sign in again and then delete.
-  `freshAge` was left at the default, since it guards every sensitive route.
+  `freshAge` was left at the default (ADR-0005's addendum).
+- Deletion goes through `/delete-user` with a fresh session. Its email
+  confirmation route, `/delete-user/callback`, is disabled with the other
+  routes the API doesn't use.
 - The confirmation is a step inside the avatar menu, not a modal. Closing the
   menu cancels it.
 - Not yet checked: the Google round trip after deletion with a real Google

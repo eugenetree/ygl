@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { betterAuth } from "better-auth";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { openAPI } from "better-auth/plugins";
 import type { Kysely } from "kysely";
 
@@ -12,10 +13,48 @@ export type AuthSettings = {
   google: { clientId: string; clientSecret: string };
 };
 
+// better-auth serves every route it has whatever its options, refusing at
+// request time the ones they leave off. Disabled, these answer 404 and are left
+// out of the OpenAPI document. They are everything but Google sign-in, the
+// session, sign-out, account deletion and the page OAuth errors land on.
+const DISABLED_PATHS = [
+  // Served with ours under /api/docs.
+  "/open-api/generate-schema",
+  "/reference",
+  // Email and password, and everything that needs an email sent.
+  "/sign-up/email",
+  "/sign-in/email",
+  "/verify-password",
+  "/change-password",
+  "/request-password-reset",
+  "/reset-password",
+  "/reset-password/:token",
+  "/send-verification-email",
+  "/verify-email",
+  "/change-email",
+  "/delete-user/callback",
+  // Profiles are Google's, and Google is the only account a user has.
+  "/update-user",
+  "/link-social",
+  "/unlink-account",
+  "/list-accounts",
+  "/account-info",
+  "/refresh-token",
+  "/get-access-token",
+  // Listeners don't manage sessions: signing out ends one, deleting ends all.
+  "/update-session",
+  "/list-sessions",
+  "/revoke-session",
+  "/revoke-sessions",
+  "/revoke-other-sessions",
+  // A health check, which the API does not offer.
+  "/ok",
+];
+
 // Given our Kysely instance so its CamelCasePlugin maps better-auth's fields to
 // snake_case columns, as it does for every other table (ADR-0005).
 export function createAuth(db: Kysely<Database>, settings: AuthSettings) {
-  const options = {
+  return betterAuth({
     database: { db, type: "postgres" },
     secret: settings.secret,
     baseURL: settings.apiPublicUrl,
@@ -37,37 +76,17 @@ export function createAuth(db: Kysely<Database>, settings: AuthSettings) {
       defaultCookieAttributes: { httpOnly: true, sameSite: "lax" },
     },
     plugins: [openAPI()],
-  } satisfies BetterAuthOptions;
-  return betterAuth({ ...options, disabledPaths: pathsLeftOff(options) });
-}
-
-// better-auth serves every route whatever its options, refusing at request time
-// the ones they leave off. Disabled, they answer 404 and are left out of the
-// OpenAPI document.
-function pathsLeftOff(options: BetterAuthOptions) {
-  return [
-    // The document is served with ours under /api/docs.
-    "/open-api/generate-schema",
-    "/reference",
-    ...(options.emailAndPassword?.enabled
-      ? []
-      : [
-          "/sign-up/email",
-          "/sign-in/email",
-          "/verify-password",
-          "/change-password",
-          "/request-password-reset",
-          "/reset-password",
-          "/reset-password/:token",
-        ]),
-    ...(options.emailVerification?.sendVerificationEmail
-      ? []
-      : ["/send-verification-email", "/verify-email"]),
-    ...(options.user?.changeEmail?.enabled ? [] : ["/change-email"]),
-    ...(options.user?.deleteUser?.enabled
-      ? []
-      : ["/delete-user", "/delete-user/callback"]),
-  ];
+    disabledPaths: DISABLED_PATHS,
+    hooks: {
+      // disabledPaths is matched against the requested path as it is, so a path
+      // with a parameter in it is refused here, by the route it reaches.
+      before: createAuthMiddleware(async (ctx) => {
+        if (ctx.path === "/reset-password/:token") {
+          throw new APIError("NOT_FOUND");
+        }
+      }),
+    },
+  });
 }
 
 export type Auth = ReturnType<typeof createAuth>;

@@ -1,18 +1,23 @@
 import assert from "node:assert/strict";
-import { randomBytes } from "node:crypto";
 import { after, describe, it, mock } from "node:test";
 import type { InjectOptions } from "fastify";
-import { DatabaseClient } from "../../db/client.js";
+import { Kysely, PostgresDialect } from "kysely";
+import type { Database } from "../../db/types.js";
 import { Failure, Success } from "../../types/index.js";
 import type { Logger } from "../_common/logger/logger.js";
-import { type Auth, createAuth, type User } from "../auth/auth.js";
+import { createLoggerMock } from "../_common/logger/testing/logger-mock.js";
+import type { User } from "../auth/auth.js";
+import {
+  createTestAuth,
+  TEST_AUTH_SETTINGS,
+} from "../auth/testing/test-auth.js";
 import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
 import { MeController } from "./controllers/me.controller.js";
 import { SearchController } from "./controllers/search.controller.js";
 import type { HttpController } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
-const FRONTEND_ORIGIN = "https://saythis.cc";
+const FRONTEND_ORIGIN = TEST_AUTH_SETTINGS.frontendOrigin;
 
 // ---- Fixtures ---------------------------------------------------------------
 
@@ -32,16 +37,14 @@ const found = (clips = [clip], total = clips.length, isTotalExact = true) =>
 
 const SESSION_COOKIE = "better-auth.session_token=token.signature";
 
-// Nothing these tests reach queries the database, so it is never connected to.
-const db = new DatabaseClient({ host: "db.invalid" });
-after(() => db.destroy());
-
-const auth = createAuth(db, {
-  secret: randomBytes(32).toString("base64"),
-  apiPublicUrl: "https://api.saythis.cc",
-  frontendOrigin: FRONTEND_ORIGIN,
-  google: { clientId: "google-client-id", clientSecret: "google-secret" },
+const db = new Kysely<Database>({
+  dialect: new PostgresDialect({
+    pool: async () => {
+      throw new Error("These tests have no database");
+    },
+  }),
 });
+after(() => db.destroy());
 
 const user: User = {
   id: "5036b8d4-b9f3-4afb-ba59-49b6c32d3f83",
@@ -57,49 +60,44 @@ function stubAuth(
   session: { user: User } | null = null,
   cookies: string[] = [],
 ) {
-  return {
-    ...auth,
-    handler: async (request: Request) =>
-      Response.json(
-        {
-          method: request.method,
-          url: request.url,
-          cookie: request.headers.get("cookie"),
-          forwardedFor: request.headers.get("x-forwarded-for"),
-          body: await request.text(),
-        },
-        {
-          status: 202,
-          headers: [
-            ["set-cookie", "better-auth.state=abc; Path=/; HttpOnly"],
-            ["set-cookie", "better-auth.pkce=def; Path=/; HttpOnly"],
-          ],
-        },
-      ),
-    api: {
-      ...auth.api,
-      getSession: mock.fn(async ({ headers }: { headers: Headers }) => ({
-        headers: new Headers(cookies.map((cookie) => ["set-cookie", cookie])),
-        response: headers.get("cookie") === SESSION_COOKIE ? session : null,
-      })),
-    },
-  };
+  const auth = createTestAuth(db);
+  mock.method(auth, "handler", async (request: Request) =>
+    Response.json(
+      {
+        method: request.method,
+        url: request.url,
+        cookie: request.headers.get("cookie"),
+        forwardedFor: request.headers.get("x-forwarded-for"),
+        body: await request.text(),
+      },
+      {
+        status: 202,
+        headers: [
+          ["set-cookie", "better-auth.state=abc; Path=/; HttpOnly"],
+          ["set-cookie", "better-auth.pkce=def; Path=/; HttpOnly"],
+        ],
+      },
+    ),
+  );
+  mock.method(
+    auth.api,
+    "getSession",
+    async ({ headers }: { headers: Headers }) => ({
+      headers: new Headers(cookies.map((cookie) => ["set-cookie", cookie])),
+      response: headers.get("cookie") === SESSION_COOKIE ? session : null,
+    }),
+  );
+  return auth;
 }
 
 // ---- Factory ----------------------------------------------------------------
 
 function createMocks(
   execute: FindCaptionsUseCase["execute"] = async () => found(),
-  auth: Auth | ReturnType<typeof stubAuth> = stubAuth(),
+  auth = stubAuth(),
 ) {
-  const logger = {
-    setContext: mock.fn(),
-    info: mock.fn((_message: string) => {}),
-    warn: mock.fn(),
-    error: mock.fn((_entry: { message?: string; error?: unknown }) => {}),
-  };
   return {
-    logger: { ...logger, child: () => logger },
+    logger: createLoggerMock(),
     findCaptionsUseCase: { execute: mock.fn(execute) },
     auth,
   };
@@ -117,7 +115,7 @@ function buildSut(
   return buildHttpServer({
     logger: mocks.logger as unknown as Logger,
     frontendOrigin: FRONTEND_ORIGIN,
-    auth: mocks.auth as unknown as Auth,
+    auth: mocks.auth,
     controllers,
   });
 }
@@ -291,6 +289,42 @@ describe("better-auth's routes", () => {
       "198.51.100.20",
     );
   });
+});
+
+describe("better-auth's routes this API does not offer", () => {
+  const notOffered: [InjectOptions["method"], string][] = [
+    ["POST", "/api/auth/update-user"],
+    ["GET", "/api/auth/delete-user/callback?token=abc"],
+    ["POST", "/api/auth/link-social"],
+    ["POST", "/api/auth/unlink-account"],
+    ["GET", "/api/auth/list-sessions"],
+    ["POST", "/api/auth/revoke-sessions"],
+    ["POST", "/api/auth/get-access-token"],
+    ["POST", "/api/auth/sign-in/email"],
+    ["POST", "/api/auth/request-password-reset"],
+    ["GET", "/api/auth/reset-password/abc"],
+    ["GET", "/api/auth/reference"],
+    ["GET", "/api/auth/open-api/generate-schema"],
+  ];
+
+  for (const [method, url] of notOffered) {
+    it(`answers 404 to ${method} ${url}`, async () => {
+      const app = buildSut(createMocks(undefined, createTestAuth(db)));
+
+      const response = await app.inject({
+        method,
+        url,
+        headers: {
+          origin: FRONTEND_ORIGIN,
+          "content-type": "application/json",
+        },
+        payload: method === "POST" ? "{}" : undefined,
+      });
+      await app.close();
+
+      assert.equal(response.statusCode, 404, response.body);
+    });
+  }
 });
 
 describe("GET /api/search validation", () => {
@@ -566,6 +600,13 @@ describe("API docs", () => {
     return node as any;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: walked into untyped JSON
+  function getSessionSchema(document: any) {
+    return document.paths["/api/auth/get-session"].get.responses["200"].content[
+      "application/json"
+    ].schema;
+  }
+
   it("serves an OpenAPI document listing the search route with its query, response and error codes", async () => {
     const document = await openApiDocument();
 
@@ -592,37 +633,28 @@ describe("API docs", () => {
     assert.deepEqual(errorCodes("503"), ["SEARCH_UNAVAILABLE"]);
   });
 
-  it("lists better-auth's sign-in, callback, sign-out and account deletion routes under /api/auth", async () => {
+  it("lists only the better-auth routes this API offers: Google sign-in, the session, sign-out and account deletion", async () => {
     const { paths } = await openApiDocument();
 
-    assert.ok(paths["/api/auth/sign-in/social"].post);
-    assert.ok(paths["/api/auth/callback/{id}"].get);
-    assert.ok(paths["/api/auth/sign-out"].post);
-    assert.ok(paths["/api/auth/delete-user"].post);
-  });
-
-  it("leaves out the email and password routes, which are not enabled", async () => {
-    const { paths } = await openApiDocument();
-
-    for (const path of [
-      "/api/auth/sign-up/email",
-      "/api/auth/sign-in/email",
-      "/api/auth/request-password-reset",
-      "/api/auth/reset-password",
-      "/api/auth/change-password",
-      "/api/auth/send-verification-email",
-    ]) {
-      assert.equal(paths[path], undefined, path);
-    }
+    assert.deepEqual(
+      Object.keys(paths)
+        .filter((path) => path.startsWith("/api/auth/"))
+        .sort(),
+      [
+        "/api/auth/callback/{id}",
+        "/api/auth/delete-user",
+        "/api/auth/error",
+        "/api/auth/get-session",
+        "/api/auth/sign-in/social",
+        "/api/auth/sign-out",
+      ],
+    );
   });
 
   it("documents the session and user that get-session returns", async () => {
     const document = await openApiDocument();
 
-    const session =
-      document.paths["/api/auth/get-session"].get.responses["200"].content[
-        "application/json"
-      ].schema;
+    const session = getSessionSchema(document);
     assert.ok(
       resolve(document, session.properties.session.$ref).properties.token,
     );
@@ -632,24 +664,21 @@ describe("API docs", () => {
   it("describes the auth routes in OpenAPI 3.0, as the rest of the document is", async () => {
     const document = await openApiDocument();
 
-    const session =
-      document.paths["/api/auth/get-session"].get.responses["200"].content[
-        "application/json"
-      ].schema;
+    const session = getSessionSchema(document);
     assert.equal(session.type, "object");
     assert.equal(session.nullable, true);
 
-    const newerThan30: string[] = [];
+    const openApi31Keywords: string[] = [];
     const walk = (value: unknown, pointer: string) => {
       if (!value || typeof value !== "object") return;
       for (const [key, entry] of Object.entries(value)) {
         if (key === "propertyNames" || (key === "type" && Array.isArray(entry)))
-          newerThan30.push(`${pointer}/${key}`);
+          openApi31Keywords.push(`${pointer}/${key}`);
         walk(entry, `${pointer}/${key}`);
       }
     };
     walk(document, "#");
-    assert.deepEqual(newerThan30, []);
+    assert.deepEqual(openApi31Keywords, []);
   });
 
   it("documents that /api/me needs the session cookie", async () => {
@@ -664,6 +693,23 @@ describe("API docs", () => {
     });
   });
 
+  it("documents that deleting an account needs the session cookie", async () => {
+    const { paths } = await openApiDocument();
+
+    assert.deepEqual(paths["/api/auth/delete-user"].post.security, [
+      { session: [] },
+    ]);
+  });
+
+  it("documents that get-session takes the session cookie if there is one", async () => {
+    const { paths } = await openApiDocument();
+
+    assert.deepEqual(paths["/api/auth/get-session"].get.security, [
+      {},
+      { session: [] },
+    ]);
+  });
+
   it("names only security schemes it declares", async () => {
     const document = await openApiDocument();
 
@@ -675,19 +721,6 @@ describe("API docs", () => {
       [...new Set(named)],
       Object.keys(document.components.securitySchemes),
     );
-  });
-
-  it("serves no second docs page or document for the auth routes", async () => {
-    const app = buildSut(createMocks(undefined, auth));
-
-    for (const url of [
-      "/api/auth/reference",
-      "/api/auth/open-api/generate-schema",
-    ]) {
-      const response = await app.inject({ method: "GET", url });
-      assert.equal(response.statusCode, 404, url);
-    }
-    await app.close();
   });
 
   it("serves a browsable docs page", async () => {

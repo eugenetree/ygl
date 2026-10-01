@@ -4,12 +4,16 @@ import type { LightMyRequestResponse } from "fastify";
 import { sql } from "kysely";
 import { useTestDatabase } from "../../db/testing/test-database.js";
 import type { Logger } from "../_common/logger/logger.js";
-import { createAuth } from "../auth/auth.js";
+import { createLoggerMock } from "../_common/logger/testing/logger-mock.js";
+import {
+  createTestAuth,
+  TEST_AUTH_SETTINGS,
+} from "../auth/testing/test-auth.js";
 import { MeController } from "./controllers/me.controller.js";
 import type { HttpApp } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
-const FRONTEND_ORIGIN = "http://localhost:3000";
+const FRONTEND_ORIGIN = TEST_AUTH_SETTINGS.frontendOrigin;
 
 const googleProfile = {
   sub: "108234567890123456789",
@@ -49,29 +53,16 @@ function fakeGoogleTokenEndpoint() {
 // ---- SUT factory ------------------------------------------------------------
 
 function buildSut(db: ReturnType<typeof useTestDatabase>) {
-  const auth = createAuth(db, {
-    secret: "test-secret-that-is-at-least-32-characters-long",
-    apiPublicUrl: "http://localhost:3001",
-    frontendOrigin: FRONTEND_ORIGIN,
-    google: { clientId: "google-client-id", clientSecret: "google-secret" },
-  });
-  const logger = {
-    setContext: () => {},
-    info: () => {},
-    warn: () => {},
-    error: () => {},
-  };
   return buildHttpServer({
-    logger: { ...logger, child: () => logger } as unknown as Logger,
+    logger: createLoggerMock() as unknown as Logger,
     frontendOrigin: FRONTEND_ORIGIN,
-    auth,
+    auth: createTestAuth(db),
     controllers: [new MeController()],
   });
 }
 
 // ---- Browser ----------------------------------------------------------------
 
-// A listener's browser: keeps the cookies the API sets, as a browser would.
 class Browser {
   private readonly cookies = new Map<string, string>();
 
@@ -97,7 +88,7 @@ class Browser {
   }
 
   hasSessionCookie() {
-    return this.cookies.has("better-auth.session_token");
+    return this.cookies.has("__Secure-better-auth.session_token");
   }
 
   me() {

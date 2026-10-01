@@ -5,18 +5,13 @@ import { getAuthTables } from "better-auth/db";
 import { sql } from "kysely";
 
 import { useTestDatabase } from "../../db/testing/test-database.js";
-import { createAuth } from "./auth.js";
+import { createTestAuth } from "./testing/test-auth.js";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 describe("better-auth on the migrated schema", () => {
   const db = useTestDatabase();
-  const auth = createAuth(db, {
-    secret: "test-secret-at-least-32-characters-long",
-    apiPublicUrl: "http://localhost:3001",
-    frontendOrigin: "http://localhost:3000",
-    google: { clientId: "test-client-id", clientSecret: "test-client-secret" },
-  });
+  const auth = createTestAuth(db);
 
   async function signInWithGoogle() {
     const ctx = await auth.$context;

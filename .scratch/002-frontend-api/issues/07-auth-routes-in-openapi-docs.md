@@ -21,14 +21,16 @@ into the one the API already serves.
 ## Comments
 
 - better-auth's generator lists every route it has, whatever the config, and
-  refuses the ones left off only at request time. `createAuth` now derives
-  `disabledPaths` from its own options: email and password, email
-  verification, change-email, and account deletion while
-  `user.deleteUser.enabled` is off. Disabled routes answer 404 and drop out of
-  the document, so ticket 06 enabling deletion put `/delete-user` in the docs
-  with no change here; the docs test asserts it is listed. better-auth matches
-  `disabledPaths` exactly, so `/reset-password/:token` is only hidden from the
-  docs; it can still be called, and fails for want of a token.
+  refuses the ones left off only at request time. `createAuth` disables every
+  route the spec doesn't use, listed by hand: only Google sign-in and its
+  callback, `get-session`, `sign-out`, `delete-user` and the OAuth `error`
+  page are served. That drops `update-user` (profiles aren't editable),
+  `delete-user/callback` (needs email), `link-social`, `unlink-account`, the
+  session list and revoke routes, the token routes and `/ok`. Disabled routes
+  answer 404 and drop out of the document; the docs test pins the exact set of
+  auth paths. better-auth matches `disabledPaths` exactly, so
+  `/reset-password/:token` is refused by a `before` hook on its route instead.
+  See ADR-0005's addendum.
 - better-auth's own docs routes, `/api/auth/reference` (a Scalar page) and
   `/api/auth/open-api/generate-schema`, are disabled too, so `/api/docs` is the
   one place to read the API.
@@ -44,7 +46,10 @@ into the one the API already serves.
   named as better-auth names it (with the `__Secure-` prefix when the public
   URL is HTTPS). Every route behind `signedIn` is marked as needing it, picked
   up from its pre-handler. better-auth marks all its routes as needing a
-  bearer token, which this API does not accept; they are marked as taking the
-  session cookie optionally, since the generator does not say which need it.
+  bearer token, which this API does not accept. `/delete-user`, the one
+  served route that needs a session, is marked as requiring the cookie; the
+  others take it optionally. The generator does not say which need it, so the
+  docs plugin names it.
 - The docs tests build the server with a real better-auth on a Kysely
-  instance that never connects, so they see what the running API documents.
+  instance whose pool fails to open, so nothing can reach a database, and
+  they see what the running API documents.
