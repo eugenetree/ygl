@@ -1,10 +1,12 @@
 # Dokploy's Traefik routes the API; compose has no proxy of its own
 
 The API reaches the internet through the Traefik that Dokploy runs on the
-server (`dokploy-traefik`). Its subdomain is a Dokploy domain on the `api`
-service, port 3001, and Traefik issues and renews the certificate. Compose
-publishes no 80 or 443 and has no reverse proxy service, so the routing lives
-in Dokploy's settings, not in this repo.
+server (`dokploy-traefik`), as does the frontend, which is a Dokploy
+Application of its own rather than a compose service. Each is a Dokploy domain
+on the site's one origin (ADR-0008): path `/api` on the compose app's `api`
+service, port 3001, and `/` on the frontend Application. Traefik issues and
+renews the certificates. Compose publishes no 80 or 443 and has no reverse
+proxy service, so the routing lives in Dokploy's settings, not in this repo.
 
 ## Why
 

@@ -50,3 +50,7 @@ address and scheme, which later makes Secure cookies correct.
   - If Docker's address pools were moved outside the private ranges, Fastify
     would stop trusting Traefik, and the log would quietly show Traefik's
     address.
+- The API is no longer on a subdomain: the frontend and the API share
+  `https://saythis.co`, with `/api` routed to the api service (ADR-0008). The
+  last box moves to ticket 10, which checks the same thing on the shared origin.
+  The Caddy leftovers above are cleaned up as part of 10.

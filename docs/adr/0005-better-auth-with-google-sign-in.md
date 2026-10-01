@@ -24,9 +24,8 @@ runtime, so ADR-0002's rule holds: the tested schema is the shipped schema.
 
 ## Consequences
 
-- Cookies require the API to be same-site with the frontend, so it is served
-  from a subdomain of the frontend's domain, and CORS names the exact frontend
-  origin with credentials instead of `*`.
+- Cookies require the API to be same-site with the frontend. It is served from
+  the frontend's own origin, so there is no CORS at all (ADR-0008).
 - better-auth owns the `/api/auth/*` namespace. Replacing it later means
   rewriting sign-in on both server and client and migrating its four tables.
 - Since it runs on our Kysely instance, better-auth sets a floor on Kysely's

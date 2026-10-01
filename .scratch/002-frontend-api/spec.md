@@ -4,7 +4,7 @@ Status: ready-for-agent
 
 ## Problem Statement
 
-The saythis.cc frontend talks to a backend API that was built as a single raw
+The saythis.co frontend talks to a backend API that was built as a single raw
 Node HTTP handler with one route. It works for a demo, but it cannot grow into
 what the product needs next, and it already has visible bugs.
 
@@ -53,8 +53,10 @@ one contract folder. Those schemas drive runtime validation, the frontend's
 TypeScript types, and an OpenAPI document with a browsable docs page that any
 future consumer can generate a client from.
 
-The API is served on a subdomain of the frontend's domain through Dokploy's
-Traefik, with CORS naming the exact frontend origin.
+The frontend and the API share one origin, `https://saythis.co`, per ADR-0008:
+Dokploy's Traefik sends `/api/*` to the API and everything else to the frontend,
+so the API needs no CORS. Locally, Next's dev server rewrites `/api/*` to the
+API, so development is same-origin too.
 
 ## User Stories
 
@@ -99,7 +101,7 @@ Traefik, with CORS naming the exact frontend origin.
 ### Operator
 
 27. As the operator, I want the API to refuse to start when a required setting is missing, and name it, so that a misconfigured deploy fails at boot rather than on a user's first sign-in.
-28. As the operator, I want the API served over HTTPS on its own subdomain with automatically managed certificates, so that I do not renew certificates by hand.
+28. As the operator, I want the frontend and the API served over HTTPS on one origin with automatically managed certificates, so that I do not renew certificates by hand.
 29. As the operator, I want one log line per request with method, route, status and duration, so that I can see traffic and failures in the container logs.
 30. As the operator, I want unexpected errors logged with their full detail while clients receive only a generic message, so that I can debug without leaking internals.
 31. As the operator, I want the API to finish in-flight requests and close its connections when the container stops, so that deploys do not cut requests off mid-response.
@@ -115,7 +117,7 @@ Traefik, with CORS naming the exact frontend origin.
 
 ### Layout and framework
 
-- The HTTP module is rebuilt on Fastify. It holds the server factory, a controller interface with a single `register(app)` method mirroring the Telegram controller interface, one controller per endpoint group, and plugins for CORS, error handling, request logging and the signed-in guard.
+- The HTTP module is rebuilt on Fastify. It holds the server factory, a controller interface with a single `register(app)` method mirroring the Telegram controller interface, one controller per endpoint group, and plugins for error handling, request logging and the signed-in guard.
 - Feature modules never import Fastify or Telegraf (ADR-0006). The captions-search module gains no HTTP code.
 - inversify keeps constructing everything. The API entrypoint builds the container, binds the validated config, and hands the controllers to the server factory.
 - The project's own Logger is used for request logging. Fastify's built-in pino logger is disabled so API logs look like the bot's and scraper's.
@@ -166,33 +168,35 @@ Traefik, with CORS naming the exact frontend origin.
 - It is given the existing Kysely instance so Kysely's CamelCasePlugin applies to its columns. `modelName` maps its four models to the plural tables `users`, `sessions`, `accounts` and `verifications`. `generateId` is `crypto.randomUUID`.
 - The first task is to verify that better-auth's queries go through the CamelCasePlugin. If they do not, fall back to its per-field `fields` mapping to snake_case column names.
 - The auth schema is added as a normal Kysely migration, generated once with better-auth's CLI and then owned by the repo. better-auth never migrates at runtime.
-- Sessions are database-backed and carried in an httpOnly, SameSite=Lax cookie, Secure whenever the API's public URL is HTTPS.
+- Sessions are database-backed and carried in an httpOnly, SameSite=Lax cookie, Secure whenever the public origin is HTTPS.
 - A signed-in guard, implemented as a Fastify pre-handler, asks better-auth for the session from the request headers and attaches the user to the request. Controllers read the user from the request and never call better-auth directly.
-- better-auth's trusted origins and Fastify's CORS both name the exact frontend origin, with credentials allowed. The wildcard is removed.
-- After sign-in, better-auth redirects to a callback URL on the frontend, which must be under the trusted origin.
+- The API has no CORS: no browser calls it cross-origin (ADR-0008). better-auth trusts only its own origin, which is also the frontend's.
+- After sign-in, better-auth redirects to a callback URL on the frontend, which is on that same origin.
 - The API container gains Postgres access and waits for the migrate service to complete.
 
 ### Configuration
 
 - One zod schema describes the API's settings. It is parsed once at startup and bound in the container. A missing or malformed value stops the process with the variable's name.
-- Settings: port, the API's public URL, the frontend origin, the better-auth secret, the Google client id and secret, the Elasticsearch node, and the Postgres settings.
+- Settings: port, the public origin (`PUBLIC_ORIGIN`, the one origin browsers reach the site and the API on), the better-auth secret, the Google client id and secret, the Elasticsearch node, and the Postgres settings.
 - The Elasticsearch node no longer silently falls back to a default when read through this config.
 - Only the API entrypoint uses the validated config. The bot, scraper and sync entrypoints are unchanged.
 - The new variables are added to the example env file and the api service's compose block.
 
 ### Deployment
 
-- Dokploy's Traefik, which already holds 80 and 443 on the server, terminates TLS for the API's subdomain and forwards to the api service over Dokploy's Docker network. The subdomain is a Dokploy domain on the api service; compose has no proxy of its own.
+- Dokploy's Traefik, which already holds 80 and 443 on the server, terminates TLS for `saythis.co` and routes by path (ADR-0007, ADR-0008): `/api` is a Dokploy domain on the compose app's api service, port 3001, with the prefix kept; `/` is a Dokploy domain on the frontend. Compose has no proxy of its own.
+- The frontend is a separate Dokploy Application, not a compose service, so deploying one doesn't restart the other. It is built from `frontend/Dockerfile` with the repo root as build context, so the contract import resolves.
+- `www.saythis.co` redirects permanently to `saythis.co`.
 - Fastify trusts exactly one proxy hop, so it sees the client's real address and scheme.
 - The api service keeps its localhost port binding for local development without a proxy.
-- Locally, the frontend on localhost:3000 and the API on localhost:3001 are same-site, so the session cookie works without a proxy.
+- Locally, the API runs on localhost:3001 and `next dev` on localhost:3000 rewrites `/api/*` to it, in development only. The browser only ever talks to localhost:3000.
 
 ### Frontend
 
-- The frontend's API client uses the contract types, sends credentials with every request, and reads the API URL from its existing environment variable.
+- The frontend's API client uses the contract types, sends credentials with every request, and calls the API by relative `/api/...` paths, so it needs no API URL setting.
 - The results page requests the next page as the listener reaches the last loaded clip, shows the total with a "+" when it is not exact, and starts playback at the play-from point.
 - The header gains a "Sign in with Google" button when signed out, and the user's avatar with a menu offering sign-out and account deletion when signed in. Account deletion asks for confirmation.
-- The frontend uses better-auth's React client pointed at the API URL.
+- The frontend uses better-auth's React client on its own origin.
 
 ## Testing Decisions
 
@@ -200,7 +204,7 @@ A good test here drives the system through the same door a real caller uses and 
 
 ### Seams
 
-1. **The HTTP app, through Fastify's inject.** The main seam. The server factory is built with a test container in which use cases are replaced with stubs. Tests cover validation (missing `q`, `limit` over 50, `offset + limit` over 10,000), the error shape and codes for each failure type, the search response shape, the signed-in guard on `/api/me` with and without a session, CORS headers for the allowed and a disallowed origin, and that the OpenAPI document is served and lists the search route. These run in the pure suite, with no Docker and no network.
+1. **The HTTP app, through Fastify's inject.** The main seam. The server factory is built with a test container in which use cases are replaced with stubs. Tests cover validation (missing `q`, `limit` over 50, `offset + limit` over 10,000), the error shape and codes for each failure type, the search response shape, the signed-in guard on `/api/me` with and without a session, and that the OpenAPI document is served and lists the search route. These run in the pure suite, with no Docker and no network.
 2. **Clip mapping, as pure unit tests.** Fixture Elasticsearch documents go in, Clips come out. Covers the play-from point including the clamp at zero, skipping documents that fail validation, the exact and not-exact total, and that Elasticsearch-only fields are dropped.
 3. **The auth schema, through the database suite.** One test runs the migrations and proves better-auth can create a user, create a session, and look it up again through our Kysely instance. This test depends on the Testcontainers harness from ADR-0002, which is not built yet (`.scratch/000-postgres-test-harness`). Until it lands, this test is written but its ticket is blocked.
 
@@ -232,6 +236,6 @@ A good test here drives the system through the same door a real caller uses and 
 ## Further Notes
 
 - The frontend UI changes (sign-in button, avatar menu, account deletion confirmation, infinite paging) were not designed in detail during the grilling session. The spec states the minimum needed to exercise the API. Visual design is the frontend developer's call.
-- If the frontend is deployed with only the frontend folder as the build root, the type-only import from the backend contract will not resolve. On Vercel, the default "include files outside the root directory" setting covers it.
-- A Google OAuth client must be created in Google Cloud Console, with the callback URL on the API subdomain under `/api/auth/callback/google`, before sign-in works in any environment. Local development needs its own authorised redirect URI on localhost.
-- ADR-0005 and ADR-0006 record the auth and layout decisions. `CONTEXT.md` defines Caption, Search, Clip and Play-from point.
+- If the frontend is built with only the frontend folder as the build context, the type-only import from the backend contract will not resolve. Its Dokploy Application uses the repo root as context for that reason.
+- A Google OAuth client must be created in Google Cloud Console, with `$PUBLIC_ORIGIN/api/auth/callback/google` as an authorised redirect URI for every environment (`https://saythis.co/...` and `http://localhost:3000/...`), before sign-in works there.
+- ADR-0005 and ADR-0006 record the auth and layout decisions, ADR-0007 and ADR-0008 the routing. `CONTEXT.md` defines Caption, Search, Clip and Play-from point.
