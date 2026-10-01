@@ -15,7 +15,7 @@ import { docsPlugin } from "./plugins/docs.plugin.js";
 import { errorsPlugin } from "./plugins/errors.plugin.js";
 import { requestLoggingPlugin } from "./plugins/request-logging.plugin.js";
 
-// Caddy reaches the API over the compose network and host-local callers through
+// The proxy reaches the API over the Docker network and host-local callers through
 // Docker's gateway, so a peer outside these ranges is a client reaching the API
 // directly, whose X-Forwarded-* headers are its own to forge.
 const isInternalAddress = proxyAddr.compile(["loopback", "uniquelocal"]);

@@ -53,8 +53,8 @@ one contract folder. Those schemas drive runtime validation, the frontend's
 TypeScript types, and an OpenAPI document with a browsable docs page that any
 future consumer can generate a client from.
 
-The API is served on a subdomain of the frontend's domain through Caddy, with
-CORS naming the exact frontend origin.
+The API is served on a subdomain of the frontend's domain through Dokploy's
+Traefik, with CORS naming the exact frontend origin.
 
 ## User Stories
 
@@ -182,10 +182,10 @@ CORS naming the exact frontend origin.
 
 ### Deployment
 
-- A Caddy service is added to compose. It terminates TLS for the API's subdomain, taken from an env variable, and forwards to the api service over the compose network. Caddy publishes 80 and 443.
+- Dokploy's Traefik, which already holds 80 and 443 on the server, terminates TLS for the API's subdomain and forwards to the api service over Dokploy's Docker network. The subdomain is a Dokploy domain on the api service; compose has no proxy of its own.
 - Fastify trusts exactly one proxy hop, so it sees the client's real address and scheme.
-- The api service keeps its localhost port binding for local development without Caddy.
-- Locally, the frontend on localhost:3000 and the API on localhost:3001 are same-site, so the session cookie works without Caddy.
+- The api service keeps its localhost port binding for local development without a proxy.
+- Locally, the frontend on localhost:3000 and the API on localhost:3001 are same-site, so the session cookie works without a proxy.
 
 ### Frontend
 

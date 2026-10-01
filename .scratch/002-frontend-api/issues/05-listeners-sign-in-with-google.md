@@ -64,7 +64,8 @@ when signed out.
   round trip, register `http://localhost:3001/api/auth/callback/google` on the
   Google client and set `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID` and
   `GOOGLE_CLIENT_SECRET`.
-- In production `API_PUBLIC_URL` must be `https://$API_DOMAIN`. Nothing derives
-  one from the other, and a mismatch makes Google reject the redirect URI.
+- In production `API_PUBLIC_URL` must be `https://` plus the API's subdomain, as
+  set on the Dokploy domain. Nothing derives one from the other, and a mismatch
+  makes Google reject the redirect URI.
 - A cancelled or failed sign-in returns the listener to the page with only
   `?error=…` in the URL, and no message.

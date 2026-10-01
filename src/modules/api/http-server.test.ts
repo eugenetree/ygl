@@ -265,7 +265,7 @@ describe("better-auth's routes", () => {
 
   it("tells better-auth the client address the proxy forwarded", async () => {
     assert.equal(
-      await addressGivenToAuth("172.18.0.9", "198.51.100.1, 203.0.113.7"),
+      await addressGivenToAuth("10.0.1.5", "198.51.100.1, 203.0.113.7"),
       "203.0.113.7",
     );
   });
@@ -478,7 +478,7 @@ describe("request logging", () => {
 });
 
 describe("behind the proxy", () => {
-  const CADDY_ADDRESS = "172.18.0.9";
+  const PROXY_ADDRESS = "10.0.1.5";
 
   async function loggedLine(remoteAddress: string, forwardedFor: string) {
     const mocks = createMocks();
@@ -491,13 +491,13 @@ describe("behind the proxy", () => {
   }
 
   it("logs the client's address the proxy forwarded, not the proxy's", async () => {
-    const line = await loggedLine(CADDY_ADDRESS, "203.0.113.7");
+    const line = await loggedLine(PROXY_ADDRESS, "203.0.113.7");
 
     assert.match(line, / 203\.0\.113\.7$/);
   });
 
   it("trusts only the proxy's own entry in X-Forwarded-For", async () => {
-    const line = await loggedLine(CADDY_ADDRESS, "198.51.100.1, 203.0.113.7");
+    const line = await loggedLine(PROXY_ADDRESS, "198.51.100.1, 203.0.113.7");
 
     assert.match(line, / 203\.0\.113\.7$/);
   });
@@ -519,7 +519,7 @@ describe("behind the proxy", () => {
     const response = await app.inject({
       method: "GET",
       url: "/api/scheme",
-      remoteAddress: CADDY_ADDRESS,
+      remoteAddress: PROXY_ADDRESS,
       headers: { "x-forwarded-proto": "https" },
     });
     await app.close();
