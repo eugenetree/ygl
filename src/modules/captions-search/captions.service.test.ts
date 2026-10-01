@@ -177,3 +177,91 @@ describe("CaptionsService.search", () => {
     });
   });
 });
+
+describe("CaptionsService.findByVideo", () => {
+  it("returns the video's stored captions with their times and text", async () => {
+    const mocks = createMocks(
+      searchResponse([
+        storedCaption(),
+        storedCaption({
+          id: "caption-2",
+          startTime: 4200,
+          endTime: 6100,
+          text: "never gonna let you down",
+        }),
+      ]),
+    );
+
+    const result = await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
+
+    assert.deepEqual(result, {
+      ok: true,
+      value: [
+        {
+          captionId: "caption-1",
+          startTime: 2500,
+          endTime: 4200,
+          text: "never gonna give you up",
+        },
+        {
+          captionId: "caption-2",
+          startTime: 4200,
+          endTime: 6100,
+          text: "never gonna let you down",
+        },
+      ],
+    });
+  });
+
+  it("asks Elasticsearch for every caption of the video, in the order they are spoken", async () => {
+    const mocks = createMocks();
+
+    await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
+
+    const request = mocks.esClient.search.mock.calls[0].arguments[0] as Record<
+      string,
+      unknown
+    >;
+    assert.deepEqual(request.query, {
+      term: { "videoId.keyword": "dQw4w9WgXcQ" },
+    });
+    assert.deepEqual(request.sort, [
+      { startTime: { order: "asc" } },
+      { id: { order: "asc" } },
+    ]);
+    assert.equal(request.size, 10000);
+  });
+
+  it("skips a stored caption that does not match the expected shape and warns about it", async () => {
+    const mocks = createMocks(
+      searchResponse([
+        storedCaption({ id: "broken", text: null }),
+        storedCaption({ id: "caption-2" }),
+      ]),
+    );
+
+    const result = await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
+
+    assert.ok(result.ok);
+    assert.deepEqual(
+      result.value.map((caption) => caption.captionId),
+      ["caption-2"],
+    );
+    assert.equal(mocks.logger.warn.mock.callCount(), 1);
+  });
+
+  it("returns a search-unavailable failure when Elasticsearch cannot be reached", async () => {
+    const mocks = createMocks();
+    const cause = new Error("getaddrinfo ENOTFOUND elasticsearch");
+    mocks.esClient.search.mock.mockImplementation(async () => {
+      throw cause;
+    });
+
+    const result = await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
+
+    assert.deepEqual(result, {
+      ok: false,
+      error: { type: "SEARCH_UNAVAILABLE", error: cause },
+    });
+  });
+});

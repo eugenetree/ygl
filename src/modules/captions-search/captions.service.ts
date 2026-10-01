@@ -6,9 +6,16 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { tryCatch } from "../_common/try-catch.js";
 import { Caption } from "../scraping/scrapers/video/caption.js";
-import { type Clip, type ClipSearchResult, toClip } from "./clip.js";
+import {
+  type Clip,
+  type ClipSearchResult,
+  toClip,
+  type VideoCaption,
+} from "./clip.js";
 
 const MAX_TRACKED_TOTAL = 10000;
+// Elasticsearch's default max_result_window; hours of captions fit well under it.
+const MAX_CAPTIONS_PER_VIDEO = 10000;
 
 const storedCaptionSchema = z.object({
   id: z.string(),
@@ -115,6 +122,38 @@ export class CaptionsService {
       total: total.value,
       isTotalExact: total.relation === "eq",
     });
+  }
+
+  async findByVideo(
+    videoId: string,
+  ): Promise<Result<VideoCaption[], SearchUnavailableError>> {
+    const searchResult = await tryCatch(
+      this.esClient.search({
+        index: "captions",
+        size: MAX_CAPTIONS_PER_VIDEO,
+        sort: [{ startTime: { order: "asc" } }, { id: { order: "asc" } }],
+        query: { term: { "videoId.keyword": videoId } },
+      }),
+    );
+
+    if (!searchResult.ok) {
+      return Failure({ type: "SEARCH_UNAVAILABLE", error: searchResult.error });
+    }
+
+    const captions: VideoCaption[] = [];
+    for (const hit of searchResult.value.hits.hits) {
+      const parsed = storedCaptionSchema.safeParse(hit._source);
+      if (!parsed.success) {
+        this.logger.warn(
+          `Skipping stored caption ${hit._id} that failed validation: ${parsed.error.message}`,
+        );
+        continue;
+      }
+      const { id, startTime, endTime, text } = parsed.data;
+      captions.push({ captionId: id, startTime, endTime, text });
+    }
+
+    return Success(captions);
   }
 
   async clear() {

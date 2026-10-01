@@ -4,6 +4,7 @@ import type {
   MeResponse,
   SearchQuery,
   SearchResponse,
+  VideoCaptionsResponse,
 } from "@api/contract";
 
 export class ApiError extends Error {
@@ -34,6 +35,12 @@ export function searchClips({ q, offset, limit }: SearchQuery) {
   if (offset !== undefined) params.set("offset", String(offset));
   if (limit !== undefined) params.set("limit", String(limit));
   return request<SearchResponse>(`/api/search?${params}`);
+}
+
+export function getVideoCaptions(videoId: string) {
+  return request<VideoCaptionsResponse>(
+    `/api/videos/${encodeURIComponent(videoId)}/captions`,
+  );
 }
 
 export async function getMe(): Promise<MeResponse | null> {

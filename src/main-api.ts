@@ -8,6 +8,7 @@ import { Logger } from "./modules/_common/logger/logger.js";
 import { API_CONFIG, parseApiConfig } from "./modules/api/api-config.js";
 import { MeController } from "./modules/api/controllers/me.controller.js";
 import { SearchController } from "./modules/api/controllers/search.controller.js";
+import { VideoCaptionsController } from "./modules/api/controllers/video-captions.controller.js";
 import { buildHttpServer } from "./modules/api/http-server.js";
 import { createAuth } from "./modules/auth/auth.js";
 import { CaptionsService } from "./modules/captions-search/captions.service.js";
@@ -52,7 +53,11 @@ async function main() {
   const app = buildHttpServer({
     logger,
     auth,
-    controllers: [container.get(SearchController), container.get(MeController)],
+    controllers: [
+      container.get(SearchController),
+      container.get(VideoCaptionsController),
+      container.get(MeController),
+    ],
   });
 
   const shutdown = async () => {

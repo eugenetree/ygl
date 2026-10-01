@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import type { SearchResponse } from "@api/contract";
+import type { SearchResponse, VideoCaption } from "@api/contract";
 import { EXAMPLE_PHRASES } from "../lib/data";
-import { searchClips } from "../lib/api";
+import { getVideoCaptions, searchClips } from "../lib/api";
 import Account from "./Account";
 import {
   Icon,
@@ -44,6 +44,39 @@ function fmtTotal(total: number, isTotalExact: boolean) {
   return `${total.toLocaleString("en-US")}${isTotalExact ? "" : "+"}`;
 }
 
+// Close to Elasticsearch's standard tokenizer, which the captions index searches with.
+const WORD = /[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu;
+
+function Highlighted({ text, query }: { text: string; query: string }) {
+  const words = new Set(Array.from(query.matchAll(WORD), (m) => m[0].toLowerCase()));
+  const parts: React.ReactNode[] = [];
+  let run: { start: number; end: number } | null = null;
+  let last = 0;
+
+  function flush() {
+    if (!run) return;
+    parts.push(text.slice(last, run.start), <mark key={run.start}>{text.slice(run.start, run.end)}</mark>);
+    last = run.end;
+    run = null;
+  }
+
+  for (const m of text.matchAll(WORD)) {
+    const start = m.index;
+    const end = start + m[0].length;
+    if (!words.has(m[0].toLowerCase())) {
+      flush();
+    } else if (run && /^\s+$/.test(text.slice(run.end, start))) {
+      run.end = end;
+    } else {
+      flush();
+      run = { start, end };
+    }
+  }
+  flush();
+  parts.push(text.slice(last));
+  return <>{parts}</>;
+}
+
 function fmt(s: number) {
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
@@ -66,6 +99,7 @@ export default function GentleResults({ query }: { query: string }) {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [captions, setCaptions] = useState<{ videoId: string; lines: VideoCaption[] }>();
 
   const playerRef = useRef<any>(null);
   const playerDivRef = useRef<HTMLDivElement>(null);
@@ -102,6 +136,27 @@ export default function GentleResults({ query }: { query: string }) {
 
   const active = results.find((r) => r.id === activeId) ?? results[0];
   activeRef.current = active;
+  const activeVideoId = active?.videoId;
+
+  useEffect(() => {
+    if (!activeVideoId) return;
+    let stale = false;
+    getVideoCaptions(activeVideoId)
+      .then(({ captions }) => {
+        if (!stale) setCaptions({ videoId: activeVideoId, lines: captions });
+      })
+      .catch(() => {});
+    return () => {
+      stale = true;
+    };
+  }, [activeVideoId]);
+
+  // Until playback reaches a line of this video's captions, the matched line stands in.
+  const nowMs = currentTime * 1000;
+  const spoken =
+    captions?.videoId === activeVideoId
+      ? captions.lines.findLast((line) => line.startTime <= nowMs)?.text
+      : undefined;
 
   const idx = active ? results.findIndex((r) => r.id === activeId) : -1;
   // The API never counts past what it can page to, so total also caps the offset.
@@ -285,7 +340,9 @@ export default function GentleResults({ query }: { query: string }) {
                 <div ref={playerDivRef} />
               </div>
               <div className="g-player-meta">
-                <div className="g-player-caption">{active.text}</div>
+                <div className="g-player-caption">
+                  <Highlighted text={spoken ?? active.text} query={query} />
+                </div>
                 <div className="g-player-controls">
                   <button
                     className="g-circ"

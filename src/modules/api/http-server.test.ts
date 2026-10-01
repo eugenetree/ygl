@@ -12,8 +12,10 @@ import {
   TEST_AUTH_SETTINGS,
 } from "../auth/testing/test-auth.js";
 import type { FindCaptionsUseCase } from "../captions-search/find-captions.use-case.js";
+import type { FindVideoCaptionsUseCase } from "../captions-search/find-video-captions.use-case.js";
 import { MeController } from "./controllers/me.controller.js";
 import { SearchController } from "./controllers/search.controller.js";
+import { VideoCaptionsController } from "./controllers/video-captions.controller.js";
 import type { HttpController } from "./http-controller.js";
 import { buildHttpServer } from "./http-server.js";
 
@@ -29,6 +31,21 @@ const clip = {
   text: "never gonna give you up",
   playFrom: 1500,
 };
+
+const videoCaptions = [
+  {
+    captionId: "caption-1",
+    startTime: 2500,
+    endTime: 4200,
+    text: "never gonna",
+  },
+  {
+    captionId: "caption-2",
+    startTime: 4200,
+    endTime: 6100,
+    text: "give you up",
+  },
+];
 
 type SearchArgs = Parameters<FindCaptionsUseCase["execute"]>;
 
@@ -95,10 +112,13 @@ function stubAuth(
 function createMocks(
   execute: FindCaptionsUseCase["execute"] = async () => found(),
   auth = stubAuth(),
+  findVideoCaptions: FindVideoCaptionsUseCase["execute"] = async () =>
+    Success(videoCaptions),
 ) {
   return {
     logger: createLoggerMock(),
     findCaptionsUseCase: { execute: mock.fn(execute) },
+    findVideoCaptionsUseCase: { execute: mock.fn(findVideoCaptions) },
     auth,
   };
 }
@@ -108,6 +128,9 @@ function buildSut(
   controllers: HttpController[] = [
     new SearchController(
       mocks.findCaptionsUseCase as unknown as FindCaptionsUseCase,
+    ),
+    new VideoCaptionsController(
+      mocks.findVideoCaptionsUseCase as unknown as FindVideoCaptionsUseCase,
     ),
     new MeController(),
   ],
@@ -130,6 +153,19 @@ async function search(
     url: "/api/search",
     query,
     ...options,
+  });
+  await app.close();
+  return response;
+}
+
+async function captionsOf(
+  mocks: ReturnType<typeof createMocks>,
+  videoId: string,
+) {
+  const app = buildSut(mocks);
+  const response = await app.inject({
+    method: "GET",
+    url: `/api/videos/${videoId}/captions`,
   });
   await app.close();
   return response;
@@ -159,6 +195,50 @@ describe("GET /api/search", () => {
       total: 10000,
       isTotalExact: false,
     });
+  });
+});
+
+describe("GET /api/videos/:videoId/captions", () => {
+  it("returns the video's captions", async () => {
+    const mocks = createMocks();
+
+    const response = await captionsOf(mocks, "dQw4w9WgXcQ");
+
+    assert.equal(response.statusCode, 200);
+    assert.deepEqual(response.json(), { captions: videoCaptions });
+    assert.deepEqual(
+      mocks.findVideoCaptionsUseCase.execute.mock.calls[0].arguments,
+      ["dQw4w9WgXcQ"],
+    );
+  });
+
+  it("rejects a video id that is not a YouTube video id, naming the field", async () => {
+    const mocks = createMocks();
+
+    const response = await captionsOf(mocks, "dQw4w9WgXcQ%3Cscript");
+
+    assert.equal(response.statusCode, 400);
+    const body = response.json();
+    assert.equal(body.code, "VALIDATION_ERROR");
+    assert.deepEqual(
+      body.issues.map((issue: { field: string }) => issue.field),
+      ["videoId"],
+    );
+    assert.equal(mocks.findVideoCaptionsUseCase.execute.mock.callCount(), 0);
+  });
+
+  it("answers SEARCH_UNAVAILABLE with 503 when the captions cannot be read", async () => {
+    const mocks = createMocks(undefined, undefined, async () =>
+      Failure({
+        type: "SEARCH_UNAVAILABLE" as const,
+        error: new Error("connect ECONNREFUSED 10.0.0.5:9200"),
+      }),
+    );
+
+    const response = await captionsOf(mocks, "dQw4w9WgXcQ");
+
+    assert.equal(response.statusCode, 503);
+    assert.equal(response.json().code, "SEARCH_UNAVAILABLE");
   });
 });
 
@@ -585,6 +665,25 @@ describe("API docs", () => {
     assert.deepEqual(errorCodes("400"), ["VALIDATION_ERROR"]);
     assert.deepEqual(errorCodes("500"), ["INTERNAL_ERROR"]);
     assert.deepEqual(errorCodes("503"), ["SEARCH_UNAVAILABLE"]);
+  });
+
+  it("lists the video captions route with its path parameter, response and error codes", async () => {
+    const document = await openApiDocument();
+
+    const route = document.paths["/api/videos/{videoId}/captions"].get;
+    assert.deepEqual(
+      route.parameters.map(
+        (parameter: { name: string; in: string }) =>
+          `${parameter.in}:${parameter.name}`,
+      ),
+      ["path:videoId"],
+    );
+    assert.deepEqual(Object.keys(route.responses).sort(), [
+      "200",
+      "400",
+      "500",
+      "503",
+    ]);
   });
 
   it("lists only the better-auth routes this API offers: Google sign-in, the session, sign-out and account deletion", async () => {

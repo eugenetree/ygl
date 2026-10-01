@@ -12,6 +12,14 @@ export type Clip = {
   playFrom: number;
 };
 
+// All times are milliseconds.
+export type VideoCaption = {
+  captionId: string;
+  startTime: number;
+  endTime: number;
+  text: string;
+};
+
 export type ClipSearchResult = {
   clips: Clip[];
   total: number;
