@@ -25,10 +25,10 @@ into the one the API already serves.
   `disabledPaths` from its own options: email and password, email
   verification, change-email, and account deletion while
   `user.deleteUser.enabled` is off. Disabled routes answer 404 and drop out of
-  the document, so enabling deletion (ticket 06) adds `/delete-user` to the
-  docs with no change here. better-auth matches `disabledPaths` exactly, so
-  `/reset-password/:token` is only hidden from the docs; it can still be
-  called, and fails for want of a token.
+  the document, so ticket 06 enabling deletion put `/delete-user` in the docs
+  with no change here; the docs test asserts it is listed. better-auth matches
+  `disabledPaths` exactly, so `/reset-password/:token` is only hidden from the
+  docs; it can still be called, and fails for want of a token.
 - better-auth's own docs routes, `/api/auth/reference` (a Scalar page) and
   `/api/auth/open-api/generate-schema`, are disabled too, so `/api/docs` is the
   one place to read the API.

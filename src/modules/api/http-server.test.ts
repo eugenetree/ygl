@@ -592,12 +592,13 @@ describe("API docs", () => {
     assert.deepEqual(errorCodes("503"), ["SEARCH_UNAVAILABLE"]);
   });
 
-  it("lists better-auth's sign-in, callback and sign-out routes under /api/auth", async () => {
+  it("lists better-auth's sign-in, callback, sign-out and account deletion routes under /api/auth", async () => {
     const { paths } = await openApiDocument();
 
     assert.ok(paths["/api/auth/sign-in/social"].post);
     assert.ok(paths["/api/auth/callback/{id}"].get);
     assert.ok(paths["/api/auth/sign-out"].post);
+    assert.ok(paths["/api/auth/delete-user"].post);
   });
 
   it("leaves out the email and password routes, which are not enabled", async () => {
