@@ -43,7 +43,7 @@ export function buildHttpServer({
   app.register(errorsPlugin, { logger });
   app.register(authPlugin, { auth });
   // Before the controllers: swagger only documents routes added after it.
-  app.register(docsPlugin);
+  app.register(docsPlugin, { auth });
 
   app.register(async (scope) => {
     for (const controller of controllers) {
