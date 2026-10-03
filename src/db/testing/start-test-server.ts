@@ -15,8 +15,9 @@ import {
 // `npm run test:db:reset` finds the container by this label.
 const CONTAINER_LABEL = "yg.test-postgres";
 
-// Renaming onto a base another run just created fails with duplicate_database,
-// or with unique_violation on pg_database when the two renames race.
+// Renaming onto a base another run just created fails with duplicate_database
+// (42P04), or with unique_violation (23505) on pg_database when the two renames
+// race.
 const BASE_ALREADY_BUILT = new Set(["42P04", "23505"]);
 
 // Naming the base database after the migrations lets a reused container serve
