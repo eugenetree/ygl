@@ -50,6 +50,7 @@ export class VideoEntriesQueue {
               .selectFrom("videoJobs")
               .select("videoJobs.id")
               .where("status", "=", "PENDING")
+              .where("videoJobs.priority", ">=", 0)
               // TODO: temporary skip as this channel contains too many members only videos.
               // need check if yt-dlp supports option to skip members only videos during the discovery phase
               .where("videoJobs.channelId", "!=", "UCPHpx55tgrbm8FrYYCflAHw")

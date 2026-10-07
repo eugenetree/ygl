@@ -71,6 +71,24 @@ describe("VideoEntriesQueue", () => {
       assert.ok(result.value !== null);
     });
 
+    it("does not return a job with negative priority", async () => {
+      await seedChannel(db, "channel-neg", "video-neg__", -1);
+
+      const result = await queue.getNextEntry();
+
+      assert.ok(result.ok);
+      assert.equal(result.value, null);
+    });
+
+    it("returns a job with zero priority", async () => {
+      await seedChannel(db, "channel-zero", "video-zero_", 0);
+
+      const result = await queue.getNextEntry();
+
+      assert.ok(result.ok);
+      assert.equal(result.value?.id, "video-zero_");
+    });
+
     it("returns null when the queue is empty", async () => {
       const result = await queue.getNextEntry();
 
