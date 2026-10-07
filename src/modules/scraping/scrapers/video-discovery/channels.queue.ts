@@ -69,8 +69,24 @@ export class ChannelsQueue {
             )
             .select("videoDiscoveryJobs.id")
             .where("videoDiscoveryJobs.status", "=", "PENDING")
-            .where("channels.videoCount", "<", VIDEOS_PER_CHANNEL_LIMIT)
-            .where("channels.countryCode", "in", SUPPORTED_COUNTRY_CODES)
+            .where((eb) =>
+              eb.or([
+                eb.exists(
+                  eb
+                    .selectFrom("boostedChannels")
+                    .select("boostedChannels.channelId")
+                    .whereRef(
+                      "boostedChannels.channelId",
+                      "=",
+                      "videoDiscoveryJobs.channelId",
+                    ),
+                ),
+                eb.and([
+                  eb("channels.videoCount", "<", VIDEOS_PER_CHANNEL_LIMIT),
+                  eb("channels.countryCode", "in", SUPPORTED_COUNTRY_CODES),
+                ]),
+              ]),
+            )
             .orderBy("videoDiscoveryJobs.priority", "desc")
             .orderBy("channels.subscriberCount", "desc")
             .orderBy("videoDiscoveryJobs.createdAt", "asc")
