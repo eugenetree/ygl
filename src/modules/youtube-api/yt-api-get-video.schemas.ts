@@ -36,6 +36,15 @@ export const inputSchemas = {
         ),
       )
       .optional(),
+    formats: z
+      .array(
+        z.object({
+          acodec: z.string().optional().nullable(),
+          language: z.string().optional().nullable(),
+          language_preference: z.number().optional().nullable(),
+        }),
+      )
+      .optional(),
     categories: z.array(z.string()).nullable().optional().default([]),
     track: z.string().optional().nullable(),
     artist: z.string().optional().nullable(),

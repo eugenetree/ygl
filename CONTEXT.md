@@ -14,6 +14,28 @@ _Avoid_: Push (a push results in a boost, but they are not the same thing)
 A one-off manual request to bring a channel's details and video list up to date now, ahead of the backlog; it also boosts the channel.
 _Avoid_: Boost, prioritize
 
+### Videos
+
+**Spoken language**:
+The language actually spoken in a video's original audio. It is a fact about the video, independent of which captions YouTube happens to offer for it.
+_Avoid_: Caption language
+
+**Video language**:
+The spoken language we record for a video, decided from YouTube's own labels. It can be wrong when they are.
+_Avoid_: yt-dlp language (yt-dlp's top-level language follows the format it would download, not the video)
+
+**Original audio**:
+The audio track carrying the original mark, as opposed to its dubs. When a video has one, its language becomes the video language. That language can be mislabelled (e.g. the uploader set the wrong language in YouTube Studio), so it can differ from the spoken language.
+_Avoid_: "original" for `-orig` auto-captions (those are YouTube's transcript of some audio track, not necessarily the original audio)
+
+**Original mark**:
+YouTube's label on an audio track saying it is the one the video was published with. Mostly dubbed videos carry one.
+_Avoid_: Default audio (YouTube's other label, for the track it plays to this viewer)
+
+**Dub**:
+An extra audio track in another language, added alongside the original audio.
+_Avoid_: Translation, audio track (too general)
+
 ### Search
 
 **Caption**:

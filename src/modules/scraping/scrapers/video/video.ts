@@ -26,6 +26,7 @@ export type Video = {
   thumbnail: string;
   languageCode: LanguageCode | null;
   languageCodeYtdlp: string | null;
+  originalAudioLanguage: string | null;
   autoCaptionsStatus: AutoCaptionsStatus;
   manualCaptionsStatus: ManualCaptionsStatus;
   captionsSimilarityScore: number | null;

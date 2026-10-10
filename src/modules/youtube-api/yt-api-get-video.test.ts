@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { after, before, describe, it } from "node:test";
-import { Result } from "../../types/index.js";
+import { Failure, Result } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import {
@@ -22,6 +22,20 @@ const MINIMAL_JSON3 = JSON.stringify({
 
 function captionEntry() {
   return [{ ext: "json3", url: "https://example.com/caps.json3" }];
+}
+
+function audioFormat(language: string, languagePreference: number) {
+  return { acodec: "opus", language, language_preference: languagePreference };
+}
+
+const originalAudio = (language: string) => audioFormat(language, 10);
+const defaultAudio = (language: string) => audioFormat(language, 5);
+const descriptiveAudio = (language: string) =>
+  audioFormat(`${language}-desc`, -10);
+const unmarkedAudio = (language: string) => audioFormat(language, -1);
+
+function videoOnlyFormat() {
+  return { acodec: "none", language: null, language_preference: -1 };
 }
 
 function baseYtData(overrides: Record<string, unknown> = {}) {
@@ -103,7 +117,7 @@ after(() => {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe("YoutubeApiGetVideo - language key selection", () => {
-  describe("auto captions key (findOrigTrack)", () => {
+  describe("auto captions key", () => {
     it("uses en-orig as the auto captions key", async () => {
       const { service, mockClient } = createService(
         baseYtData({
@@ -332,6 +346,302 @@ describe("YoutubeApiGetVideo - language key selection", () => {
 
       assert.ok(result.ok);
       assert.equal(result.value.languageCode, null);
+    });
+  });
+
+  describe("original audio", () => {
+    it("takes the video language from the original audio, not the first -orig key", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [
+            videoOnlyFormat(),
+            unmarkedAudio("ar"),
+            unmarkedAudio("bn"),
+            originalAudio("en-US"),
+          ],
+          automatic_captions: {
+            "ar-orig": captionEntry(),
+            "bn-orig": captionEntry(),
+            "en-orig": captionEntry(),
+          },
+          subtitles: { "en-US": captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "en");
+      assert.equal(mockClient.capturedSubLangs.auto, "en-orig");
+    });
+
+    it("records the original audio's language with auto captions absent when no -orig key matches it", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("ja"), originalAudio("en-US")],
+          automatic_captions: { "ja-orig": captionEntry(), en: captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "en");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(result.value.manualCaptions.state, "PRESENT_NOT_FETCHED");
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+      assert.equal(mockClient.capturedSubLangs.manual, null);
+    });
+
+    it("records a non-English original audio even when a dub has an English -orig key", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [originalAudio("fr-FR"), unmarkedAudio("en-US")],
+          automatic_captions: {
+            "en-US-orig": captionEntry(),
+            "fr-orig": captionEntry(),
+          },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "fr");
+      assert.equal(result.value.autoCaptions.state, "PRESENT_NOT_FETCHED");
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+    });
+
+    it("keeps the original audio's language as YouTube gave it", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("ar"), originalAudio("en-US")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.originalAudioLanguage, "en-US");
+    });
+
+    it("believes the original audio's mark even when the only -orig key disagrees", async () => {
+      // English speech, but the uploader marked the audio Hindi
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [originalAudio("hi"), unmarkedAudio("en-US")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "hi");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+    });
+
+    it("records no video language when the original audio's language is unsupported", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [originalAudio("xx")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, null);
+      assert.equal(result.value.originalAudioLanguage, "xx");
+      assert.equal(result.value.autoCaptions.state, "ABSENT");
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+    });
+
+    it("stops with an ambiguous-language error when audio in several languages is marked original", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [originalAudio("en-US"), originalAudio("ja")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.deepEqual(
+        result,
+        Failure({
+          type: "AMBIGUOUS_VIDEO_LANGUAGE",
+          videoId: "testVideoId",
+          markLanguages: ["en", "ja"],
+          audioLanguages: ["en", "ja"],
+          origKeys: ["en-orig"],
+        }),
+      );
+    });
+  });
+
+  describe("no original audio", () => {
+    it("takes the video language from the single -orig key", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [videoOnlyFormat(), unmarkedAudio("en")],
+          automatic_captions: { "en-orig": captionEntry(), fr: captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "en");
+      assert.equal(result.value.originalAudioLanguage, null);
+      assert.equal(mockClient.capturedSubLangs.auto, "en-orig");
+    });
+
+    it("trusts the single -orig key even when YouTube transcribed in the wrong language", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("bg")],
+          automatic_captions: { "bg-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "bg");
+    });
+
+    it("counts an audio-description track as its base language", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("en"), descriptiveAudio("en")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "en");
+      assert.equal(mockClient.capturedSubLangs.auto, "en-orig");
+    });
+
+    it("stores a regional -orig key's language as its base code", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("nl-NL")],
+          automatic_captions: { "nl-NL-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.equal(result.value.languageCode, "nl");
+    });
+
+    it("stops with an ambiguous-language error when there are several -orig keys", async () => {
+      const { service, mockClient } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("en")],
+          automatic_captions: {
+            "en-orig": captionEntry(),
+            "de-orig": captionEntry(),
+          },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.deepEqual(
+        result,
+        Failure({
+          type: "AMBIGUOUS_VIDEO_LANGUAGE",
+          videoId: "testVideoId",
+          markLanguages: [],
+          audioLanguages: ["en"],
+          origKeys: ["en-orig", "de-orig"],
+        }),
+      );
+      assert.equal(mockClient.capturedSubLangs.auto, null);
+    });
+
+    it("counts -orig keys in unsupported languages when checking for several", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("en")],
+          automatic_captions: {
+            "xx-orig": captionEntry(),
+            "en-orig": captionEntry(),
+          },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.equal(result.ok, false);
+      assert.equal(!result.ok && result.error.type, "AMBIGUOUS_VIDEO_LANGUAGE");
+    });
+
+    it("does not take audio YouTube plays by default as the original audio", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [defaultAudio("en"), unmarkedAudio("es")],
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.deepEqual(
+        result,
+        Failure({
+          type: "AMBIGUOUS_VIDEO_LANGUAGE",
+          videoId: "testVideoId",
+          markLanguages: [],
+          audioLanguages: ["en", "es"],
+          origKeys: ["en-orig"],
+        }),
+      );
+    });
+
+    it("stops with an ambiguous-language error when the audio comes in several languages", async () => {
+      const { service } = createService(
+        baseYtData({
+          formats: [unmarkedAudio("en-US"), unmarkedAudio("vi")],
+          automatic_captions: { "vi-orig": captionEntry() },
+          subtitles: {},
+        }),
+      );
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.deepEqual(
+        result,
+        Failure({
+          type: "AMBIGUOUS_VIDEO_LANGUAGE",
+          videoId: "testVideoId",
+          markLanguages: [],
+          audioLanguages: ["en", "vi"],
+          origKeys: ["vi-orig"],
+        }),
+      );
     });
   });
 });

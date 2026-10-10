@@ -25,6 +25,7 @@ type VideoBase = {
   viewCount: number;
   thumbnail: string;
   languageCodeYtdlp: string | null;
+  originalAudioLanguage: string | null;
   asr: number | null;
   abr: number | null;
   acodec: string | null;

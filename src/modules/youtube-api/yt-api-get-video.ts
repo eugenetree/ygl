@@ -2,19 +2,46 @@ import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { injectable } from "inversify";
+import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
 import { isValidLanguageCode, type LanguageCode } from "../i18n/index.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
-import { Caption, Video } from "./youtube-api.types.js";
+import { Caption, CaptionTrackState, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
 import {
   UnprocessableVideoError,
   YtDlpClient,
   YtDlpError,
 } from "./yt-dlp-client.js";
+
+type Format = NonNullable<
+  z.infer<typeof inputSchemas.ytDlpJson>["formats"]
+>[number];
+
+export type AmbiguousVideoLanguageError = {
+  type: "AMBIGUOUS_VIDEO_LANGUAGE";
+  videoId: string;
+  markLanguages: string[];
+  audioLanguages: string[];
+  origKeys: string[];
+};
+
+const baseCode = (code: string): string =>
+  code.toLowerCase().split("-")[0] ?? "";
+
+const distinctBaseCodes = (formats: Format[]): string[] => {
+  const codes = new Set<string>();
+  for (const f of formats) {
+    if (f.language) codes.add(baseCode(f.language));
+  }
+  return [...codes];
+};
+
+// yt-dlp's language_preference for audio YouTube names "… original".
+const isMarkedOriginal = (f: Format): boolean => f.language_preference === 10;
 
 @injectable()
 export class YoutubeApiGetVideo {
@@ -28,7 +55,13 @@ export class YoutubeApiGetVideo {
   public async getVideo(
     videoId: string,
   ): Promise<
-    Result<Video, YtDlpError | UnprocessableVideoError | ValidationError>
+    Result<
+      Video,
+      | YtDlpError
+      | UnprocessableVideoError
+      | ValidationError
+      | AmbiguousVideoLanguageError
+    >
   > {
     this.logger.info(`Processing video ${videoId}...`);
 
@@ -60,6 +93,18 @@ export class YoutubeApiGetVideo {
 
     const ytData = validationResult.value;
 
+    const decision = this.decideVideoLanguage(
+      videoId,
+      ytData.automatic_captions ?? {},
+      ytData.formats ?? [],
+    );
+
+    if (!decision.ok) {
+      return decision;
+    }
+
+    const { language, autoKey, originalAudioLanguage } = decision.value;
+
     const videoBase = {
       id: ytData.id,
       title: ytData.title,
@@ -69,6 +114,7 @@ export class YoutubeApiGetVideo {
       viewCount: ytData.view_count ? Math.round(ytData.view_count) : 0,
       thumbnail: ytData.thumbnail,
       languageCodeYtdlp: ytData.language ?? null,
+      originalAudioLanguage,
       asr: ytData.asr ? Math.round(ytData.asr) : null,
       abr: ytData.abr ? Math.round(ytData.abr) : null,
       acodec: ytData.acodec ?? null,
@@ -96,11 +142,7 @@ export class YoutubeApiGetVideo {
       mediaType: ytData.media_type ?? null,
     };
 
-    const origTrack = ytData.automatic_captions
-      ? this.findOrigTrack(ytData.automatic_captions)
-      : null;
-
-    if (!origTrack) {
+    if (!language) {
       const hasAnyManual = ytData.subtitles
         ? Object.values(ytData.subtitles).some((formats) =>
             Boolean(formats?.length),
@@ -109,7 +151,7 @@ export class YoutubeApiGetVideo {
 
       if (hasAnyManual) {
         this.logger.info(
-          `Video ${videoId} has only manual captions (no *-orig auto key).`,
+          `Video ${videoId} has only manual captions (no video language).`,
         );
       }
 
@@ -123,14 +165,16 @@ export class YoutubeApiGetVideo {
       });
     }
 
-    const { language, autoKey } = origTrack;
     this.logger.info(`Detected language: ${language}. Video ID: ${videoId}`);
 
-    if (language !== "en") {
-      const manualKey = ytData.subtitles
-        ? this.findMatchingKey(ytData.subtitles, language)
-        : null;
+    const manualKey = ytData.subtitles
+      ? this.findMatchingKey(ytData.subtitles, language)
+      : null;
+    const manualCaptions: CaptionTrackState = manualKey
+      ? { state: "PRESENT_NOT_FETCHED" }
+      : { state: "ABSENT" };
 
+    if (language !== "en") {
       this.logger.info(
         `Skipping caption fetch for non-English video ${videoId}.`,
       );
@@ -138,16 +182,24 @@ export class YoutubeApiGetVideo {
       return Success({
         ...videoBase,
         languageCode: language,
-        autoCaptions: { state: "PRESENT_NOT_FETCHED" },
-        manualCaptions: manualKey
+        autoCaptions: autoKey
           ? { state: "PRESENT_NOT_FETCHED" }
           : { state: "ABSENT" },
+        manualCaptions,
       });
     }
 
-    const manualKey = ytData.subtitles
-      ? this.findMatchingKey(ytData.subtitles, language)
-      : null;
+    if (!autoKey) {
+      this.logger.info(
+        `No auto captions in the original audio's language for video ${videoId}, skipping.`,
+      );
+      return Success({
+        ...videoBase,
+        languageCode: language,
+        autoCaptions: { state: "ABSENT" },
+        manualCaptions,
+      });
+    }
 
     if (!manualKey) {
       this.logger.info(`No manual captions for video ${videoId}, skipping.`);
@@ -182,21 +234,81 @@ export class YoutubeApiGetVideo {
     });
   }
 
-  private findOrigTrack(
+  private decideVideoLanguage(
+    videoId: string,
     autoCaptions: Record<string, unknown[]>,
-  ): { language: LanguageCode; autoKey: string } | null {
-    for (const [key, formats] of Object.entries(autoCaptions)) {
-      if (!key.endsWith("-orig") || !formats?.length) continue;
-      const lang = key.slice(0, -5).toLowerCase();
-      if (!isValidLanguageCode(lang)) {
-        this.logger.warn(
-          `*-orig key "${key}" has unsupported language code "${lang}", skipping.`,
-        );
-        continue;
-      }
-      return { language: lang, autoKey: key };
+    formats: Format[],
+  ): Result<
+    {
+      language: LanguageCode | null;
+      autoKey: string | null;
+      originalAudioLanguage: string | null;
+    },
+    AmbiguousVideoLanguageError
+  > {
+    const audioFormats = formats.filter((f) => f.acodec !== "none");
+    const audioLanguages = distinctBaseCodes(audioFormats);
+    const markLanguages = distinctBaseCodes(
+      audioFormats.filter(isMarkedOriginal),
+    );
+    const origKeys = Object.keys(autoCaptions).filter(
+      (key) => key.endsWith("-orig") && autoCaptions[key]?.length,
+    );
+
+    const ambiguous = () =>
+      Failure({
+        type: "AMBIGUOUS_VIDEO_LANGUAGE" as const,
+        videoId,
+        markLanguages,
+        audioLanguages,
+        origKeys,
+      });
+
+    const noLanguage = (originalAudioLanguage: string | null) =>
+      Success({ language: null, autoKey: null, originalAudioLanguage });
+
+    if (markLanguages.length > 1) {
+      return ambiguous();
     }
-    return null;
+
+    const markedLanguage = audioFormats.find(
+      (f) => isMarkedOriginal(f) && f.language,
+    )?.language;
+
+    if (markedLanguage) {
+      const language = baseCode(markedLanguage);
+      if (!isValidLanguageCode(language)) {
+        this.logger.warn(
+          `Original audio of video ${videoId} has unsupported language code "${language}".`,
+        );
+        return noLanguage(markedLanguage);
+      }
+
+      return Success({
+        language,
+        autoKey: origKeys.find((key) => baseCode(key) === language) ?? null,
+        originalAudioLanguage: markedLanguage,
+      });
+    }
+
+    if (audioLanguages.length > 1 || origKeys.length > 1) {
+      return ambiguous();
+    }
+
+    const [origKey] = origKeys;
+    if (!origKey) {
+      return noLanguage(null);
+    }
+
+    const language = baseCode(origKey);
+    if (!isValidLanguageCode(language)) {
+      this.logger.warn(
+        `*-orig key "${origKey}" has unsupported language code "${language}", skipping.`,
+      );
+      return noLanguage(null);
+    }
+
+    return Success({ language, autoKey: origKey, originalAudioLanguage: null });
   }
 
   private findMatchingKey(

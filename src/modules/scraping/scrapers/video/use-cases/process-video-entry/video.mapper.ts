@@ -32,6 +32,7 @@ export class VideoMapper {
         "thumbnail",
         "languageCode",
         "languageCodeYtdlp",
+        "originalAudioLanguage",
         "asr",
         "abr",
         "acodec",
