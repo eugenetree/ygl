@@ -39,7 +39,7 @@ export class YtDlpResponseRecorder {
       const dayDir = path.join(dir, day);
       await fs.mkdir(dayDir, { recursive: true });
       const body = await gzipAsync(
-        JSON.stringify({ videoId, fetchedAt, result }),
+        JSON.stringify({ videoId, fetchedAt, result }) + "\n",
       );
       await fs.writeFile(path.join(dayDir, `${time}_${videoId}.json.gz`), body);
 
