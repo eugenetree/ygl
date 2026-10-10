@@ -5,7 +5,6 @@ import { Logger } from "../../../../../_common/logger/logger.js";
 import { Video } from "../../../../../youtube-api/youtube-api.types.js";
 import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
 import { CaptionProps } from "../../caption.js";
-import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import { AutoCaptionsStatus, ManualCaptionsStatus } from "../../video.js";
 import { VideoRepository } from "../../video.repository.js";
 import { CaptionAnalysisService } from "./caption-analysis.service.js";
@@ -69,20 +68,6 @@ const bothVideo: Video = {
   languageCode: "en",
   autoCaptions: { state: "FETCHED", data: [autoCaptionSegment] },
   manualCaptions: { state: "FETCHED", data: [manualCaptionSegment] },
-};
-
-const autoOnlyVideo: Video = {
-  ...baseVideoDto,
-  languageCode: "en",
-  autoCaptions: { state: "PRESENT_NOT_FETCHED" },
-  manualCaptions: { state: "ABSENT" },
-};
-
-const manualOnlyVideo: Video = {
-  ...baseVideoDto,
-  languageCode: null,
-  autoCaptions: { state: "ABSENT" },
-  manualCaptions: { state: "PRESENT_NOT_FETCHED" },
 };
 
 const mappedVideoProps = {
@@ -171,9 +156,6 @@ function createMocks() {
     youtubeApiGetVideo: {
       getVideo: mock.fn<YoutubeApiGetVideo["getVideo"]>(),
     },
-    transcriptionJobsQueue: {
-      enqueue: mock.fn<TranscriptionJobsQueue["enqueue"]>(),
-    },
     captionAnalysisService: {
       analyze: mock.fn<CaptionAnalysisService["analyze"]>(),
     },
@@ -186,7 +168,6 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
     mocks.videoMapper as unknown as VideoMapper,
     mocks.videoRepository as unknown as VideoRepository,
     mocks.youtubeApiGetVideo as unknown as YoutubeApiGetVideo,
-    mocks.transcriptionJobsQueue as unknown as TranscriptionJobsQueue,
     mocks.captionAnalysisService as unknown as CaptionAnalysisService,
   );
 }
@@ -221,9 +202,6 @@ describe("ProcessVideoEntryUseCase", () => {
       () => analysisResult,
     );
     mocks.videoRepository.createWithCaptions.mock.mockImplementation(() =>
-      Promise.resolve(Success(undefined)),
-    );
-    mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() =>
       Promise.resolve(Success(undefined)),
     );
 
@@ -266,7 +244,6 @@ describe("ProcessVideoEntryUseCase", () => {
         call.video.manualCaptionsStatus,
         "CAPTIONS_MISSING_DURATIONS",
       );
-      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
       if (result.ok) assert.equal(result.value.hasValidCaptions, false);
     });
 
@@ -390,50 +367,6 @@ describe("ProcessVideoEntryUseCase", () => {
 
     it("returns failure when createWithCaptions fails", async () => {
       mocks.videoRepository.createWithCaptions.mock.mockImplementation(() =>
-        Promise.resolve(Failure(dbError)),
-      );
-
-      const result = await sut.execute(videoInput);
-
-      assertFailure(result);
-      assert.deepEqual(result.error, dbError);
-    });
-
-    it("enqueues a transcription job when only manual captions are present (manual PRESENT_NOT_FETCHED, auto ABSENT)", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
-        Promise.resolve(Success(manualOnlyVideo)),
-      );
-
-      await sut.execute(videoInput);
-
-      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 1);
-      assert.equal(
-        mocks.transcriptionJobsQueue.enqueue.mock.calls[0]!.arguments[0],
-        manualOnlyVideo.id,
-      );
-    });
-
-    it("does not enqueue a transcription job when only auto captions are present", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
-        Promise.resolve(Success(autoOnlyVideo)),
-      );
-
-      await sut.execute(videoInput);
-
-      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
-    });
-
-    it("does not enqueue a transcription job when both tracks are FETCHED", async () => {
-      await sut.execute(videoInput);
-
-      assert.equal(mocks.transcriptionJobsQueue.enqueue.mock.callCount(), 0);
-    });
-
-    it("returns failure when transcription enqueue fails", async () => {
-      mocks.youtubeApiGetVideo.getVideo.mock.mockImplementation(() =>
-        Promise.resolve(Success(manualOnlyVideo)),
-      );
-      mocks.transcriptionJobsQueue.enqueue.mock.mockImplementation(() =>
         Promise.resolve(Failure(dbError)),
       );
 

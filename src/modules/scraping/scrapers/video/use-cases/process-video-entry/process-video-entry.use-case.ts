@@ -3,7 +3,6 @@ import { Success } from "../../../../../../types/index.js";
 import { Logger } from "../../../../../_common/logger/logger.js";
 import { YoutubeApiGetVideo } from "../../../../../youtube-api/yt-api-get-video.js";
 import { CaptionProps } from "../../caption.js";
-import { TranscriptionJobsQueue } from "../../transcription-jobs.queue.js";
 import {
   AutoCaptionsStatus,
   ManualCaptionsStatus,
@@ -29,7 +28,6 @@ export class ProcessVideoEntryUseCase {
     private readonly videoMapper: VideoMapper,
     private readonly videoRepository: VideoRepository,
     private readonly youtubeApiGetVideo: YoutubeApiGetVideo,
-    private readonly transcriptionJobsQueue: TranscriptionJobsQueue,
     private readonly captionAnalysisService: CaptionAnalysisService,
   ) {
     this.logger.setContext(ProcessVideoEntryUseCase.name);
@@ -105,24 +103,6 @@ export class ProcessVideoEntryUseCase {
         error: createVideoResult.error,
       });
       return createVideoResult;
-    }
-
-    // Manual captions exist but we couldn't pair them with auto captions
-    // (no *-orig auto track to derive language) — enqueue transcription.
-    if (
-      videoDto.manualCaptions.state === "PRESENT_NOT_FETCHED" &&
-      videoDto.autoCaptions.state === "ABSENT"
-    ) {
-      const enqueueResult = await this.transcriptionJobsQueue.enqueue(
-        videoDto.id,
-      );
-      if (!enqueueResult.ok) {
-        this.logger.error({
-          message: `Failed to enqueue transcription job for video ${videoDto.id}`,
-          error: enqueueResult.error,
-        });
-        return enqueueResult;
-      }
     }
 
     this.logger.info(
