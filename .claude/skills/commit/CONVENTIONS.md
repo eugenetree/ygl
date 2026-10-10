@@ -44,12 +44,15 @@ State the change, not the file touched: `fix(captions): order by startTime when 
 
 Optional. A one-line chore stands alone — half the history is subject-only. Add a body when the change has parts, or when it was subtle enough that the next reader will ask why.
 
+A blank line separates the body from the subject. Git takes everything up to the first blank line as the subject, so a body that starts on the second line ends up inside the subject.
+
 Two styles, chosen by what the reader needs:
 
 **Bullets — for a change with several parts.** One `-` per part, imperative, wrapped at ~80.
 
 ```
 feat(search-queries-seeder): split word list by APP_ENV for dev vs prod
+
 - Move words_dictionary.json to seeder-local data/prod.json
 - Add data/dev.json with 10 generic words for local development
 - Seeder reads dev.json when APP_ENV=development, prod.json otherwise
