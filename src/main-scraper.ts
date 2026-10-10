@@ -13,6 +13,7 @@ import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js"
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
+import { YtDlpResponseRecorder } from "./modules/youtube-api/yt-dlp-response-recorder.js";
 
 async function main() {
   const container = new Container({ autobind: true });
@@ -23,6 +24,7 @@ async function main() {
     );
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(YtDlpClient).toSelf().inSingletonScope();
+  container.bind(YtDlpResponseRecorder).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 

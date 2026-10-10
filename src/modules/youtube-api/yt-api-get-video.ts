@@ -16,6 +16,7 @@ import {
   YtDlpClient,
   YtDlpError,
 } from "./yt-dlp-client.js";
+import { YtDlpResponseRecorder } from "./yt-dlp-response-recorder.js";
 
 type Format = NonNullable<
   z.infer<typeof inputSchemas.ytDlpJson>["formats"]
@@ -48,6 +49,7 @@ export class YoutubeApiGetVideo {
   constructor(
     private readonly logger: Logger,
     private readonly ytDlpClient: YtDlpClient,
+    private readonly responseRecorder?: YtDlpResponseRecorder,
   ) {
     this.logger.setContext(YoutubeApiGetVideo.name);
   }
@@ -69,6 +71,7 @@ export class YoutubeApiGetVideo {
     const args = ["--dump-json", "--no-download", "--skip-download"];
 
     const execResult = await this.ytDlpClient.execJson<unknown>([url, ...args]);
+    await this.responseRecorder?.record(videoId, execResult);
 
     if (!execResult.ok) {
       return execResult;

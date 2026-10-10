@@ -142,6 +142,9 @@ services:
       VPN_CONFIG_B64: ${VPN_CONFIG_B64:-}
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
       YTDLP_POT_PROVIDER_URL: ${YTDLP_POT_PROVIDER_URL-http://127.0.0.1:4416}
+      YTDLP_RAW_DIR: /var/lib/ytdlp-raw
+    volumes:
+      - ytdlp_raw:/var/lib/ytdlp-raw
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -164,4 +167,6 @@ volumes:
   postgres_data:
     driver: local
   elasticsearch_data:
+    driver: local
+  ytdlp_raw:
     driver: local

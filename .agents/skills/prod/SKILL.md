@@ -23,7 +23,7 @@ Start with `docker ps -a` to confirm the container names (`db`, `api`, `bot`, `s
 
 Run only commands of these shapes. Everything else goes to **Handing over**.
 
-**Host** — `ls`, `cat`, `head`, `tail`, `grep`, `find` (with read-only predicates), `wc`, `df -h`, `du -sh`, `free -h`, `uptime`, `ps aux`, `top -bn1`, `journalctl --no-pager` with `-n` or `--since`. App logs live in `/opt/ygl/logs`.
+**Host** — `ls`, `cat`, `zcat`, `head`, `tail`, `grep`, `find` (with read-only predicates), `wc`, `df -h`, `du -sh`, `free -h`, `uptime`, `ps aux`, `top -bn1`, `journalctl --no-pager` with `-n` or `--since`. App logs live in `/opt/ygl/logs`.
 
 **Docker** — `docker ps -a`, `docker logs --tail <n>` or `--since <t>` (always bounded), `docker inspect --format '<template>'`, `docker stats --no-stream`, `docker top <c>`, `docker images`, `docker system df`, `docker compose ls`.
 
@@ -38,6 +38,8 @@ SQL
 Only `SELECT`, `EXPLAIN` (without `ANALYZE`), and `\d`-style catalog reads. Give every query over a big table a `LIMIT` or an aggregate.
 
 **Elasticsearch** — `curl -s -XGET` against `localhost:9200` on the host: `_cat/*`, `_cluster/health`, `<index>/_mapping`, `<index>/_count`, `<index>/_search` with a JSON body and a `size`.
+
+**yt-dlp responses** — the scraper keeps what `yt-dlp --dump-json` returned for every video it fetched in the last 14 days, in the `scraper` container's volume, whose host path is `docker inspect --format '{{range .Mounts}}{{.Source}}{{end}}' scraper`. One gzipped JSON line per fetch at `<YYYY-MM-DD>/<HHMMSS>_<videoId>.json.gz` (UTC): `{ videoId, fetchedAt, result }`, where `result` is `{ ok: true, value: [<yt-dlp JSON>] }` or `{ ok: false, error }` with yt-dlp's stderr in `error.message`. The host has no `jq`, so pull the files still gzipped and parse them locally: `ssh … 'cat <dir>/<day>/*.json.gz' | gunzip` gives one fetch per line.
 
 ## Credentials
 
