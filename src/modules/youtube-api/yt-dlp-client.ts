@@ -1,9 +1,10 @@
-import { spawn } from "node:child_process";
+import * as childProcess from "node:child_process";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
+import { createInterface } from "node:readline";
+import type { Readable } from "node:stream";
 import { inject, injectable, optional } from "inversify";
-import { YtDlp as YtDlpWrapper } from "ytdlp-nodejs";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 
@@ -74,24 +75,115 @@ const SLEEP_BEFORE_SUBTITLES_S = "5";
 /** Max time to wait for `yt-dlp --version` before giving up (keeps boot unblocked). */
 const VERSION_RESOLUTION_TIMEOUT_MS = 5_000;
 
-export type YtDlpRunResult = {
-  exitCode: number | null;
-  stdout: string;
-  stderr: string;
-  command?: string;
+/**
+ * Flags every run carries, ahead of `baseArgs()`: node as the JS runtime
+ * (ADR-0004), and the output shape runs keep (ADR-0010) — quiet, with each
+ * progress update on its own line.
+ */
+const FIXED_ARGS = [
+  "--js-runtime",
+  "node",
+  "--quiet",
+  "--progress",
+  "--newline",
+];
+
+const ERROR_LINE_PATTERN = /^ERROR:/m;
+
+export type YtDlpExit = { exitCode: number | null; stderr: string };
+
+/**
+ * A running yt-dlp process. `exited` resolves with the exit code and all of
+ * stderr, including on a non-zero exit, and rejects only when the process
+ * could not be started.
+ */
+export type YtDlpProcess = {
+  lines: AsyncIterable<string>;
+  exited: Promise<YtDlpExit>;
+  kill: () => void;
 };
 
 /**
- * The boundary to the yt-dlp process: receives the fully composed argument
- * list and resolves with what the process produced, including a non-zero
- * exit (with its stderr). Rejects only when the process cannot be run at
- * all. Injected in tests.
+ * The message a failed run fails with, or undefined when it succeeded.
+ * yt-dlp can log an error and still exit 0; such a run is a failure too.
  */
-export type YtDlpRunner = (
-  url: string,
-  args: string[],
-) => Promise<YtDlpRunResult>;
-export const YT_DLP_RUNNER = Symbol.for("YT_DLP_RUNNER");
+function failureMessage({ exitCode, stderr }: YtDlpExit): string | undefined {
+  if (exitCode === 0 && !ERROR_LINE_PATTERN.test(stderr)) return undefined;
+  return stderr || `Exit code ${exitCode}`;
+}
+
+/** The boundary to the yt-dlp binary: starts it with the fully composed args. Injected in tests. */
+export type YtDlpSpawn = (args: string[]) => YtDlpProcess;
+export const YT_DLP_SPAWN = Symbol.for("YT_DLP_SPAWN");
+
+const spawnYtDlp: YtDlpSpawn = (args) => {
+  const child = childProcess.spawn("yt-dlp", args);
+
+  let stderr = "";
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data", (chunk: string) => {
+    stderr += chunk;
+  });
+
+  const exited = new Promise<YtDlpExit>((resolve, reject) => {
+    child.on("error", reject);
+    child.on("close", (exitCode) => resolve({ exitCode, stderr }));
+  });
+  // A consumer awaits `exited` only after reading stdout; until then a
+  // spawn failure must not surface as an unhandled rejection.
+  exited.catch(() => {});
+
+  return {
+    lines: linesOf(child.stdout),
+    exited,
+    kill: () => child.kill("SIGKILL"),
+  };
+};
+
+/**
+ * Reads `stream` line by line into a queue as fast as the process writes, so
+ * a consumer that is slow or has stopped reading never leaves yt-dlp blocked
+ * on a full pipe.
+ */
+function linesOf(stream: Readable): AsyncIterable<string> {
+  const queue: string[] = [];
+  let closed = false;
+  let wake: (() => void) | undefined;
+
+  const reader = createInterface({ input: stream, crlfDelay: Infinity });
+  reader.on("line", (line) => {
+    queue.push(line);
+    wake?.();
+  });
+  reader.on("close", () => {
+    closed = true;
+    wake?.();
+  });
+
+  return {
+    async *[Symbol.asyncIterator]() {
+      while (true) {
+        const line = queue.shift();
+        if (line !== undefined) {
+          yield line;
+        } else if (closed) {
+          return;
+        } else {
+          await new Promise<void>((resolve) => {
+            wake = resolve;
+          });
+          wake = undefined;
+        }
+      }
+    },
+  };
+}
+
+async function collect(child: YtDlpProcess) {
+  const stdout: string[] = [];
+  for await (const line of child.lines) stdout.push(line);
+  return { stdout, ...(await child.exited) };
+}
 
 export function classifyUnprocessable(
   message: string,
@@ -155,39 +247,53 @@ function resolveCookiesFile(logger: Logger): string | undefined {
 
 @injectable()
 export class YtDlpClient {
-  private ytdlp: YtDlpWrapper;
   private readonly cookiesFile: string | undefined;
   private readonly potProviderUrl: string | undefined;
-  private readonly run: YtDlpRunner;
+  private readonly spawn: YtDlpSpawn;
 
-  // The runner is a function type, so it needs an explicit token: without
+  // The spawn is a function type, so it needs an explicit token: without
   // `@inject` inversify would try to resolve `Function` from its metadata.
   constructor(
     private readonly logger: Logger,
-    @optional() @inject(YT_DLP_RUNNER) runner?: YtDlpRunner,
+    @optional() @inject(YT_DLP_SPAWN) spawn?: YtDlpSpawn,
   ) {
     this.logger.setContext(YtDlpClient.name);
 
-    // ytdlp-nodejs will automatically find/download its own version of the binary
-    this.ytdlp = new YtDlpWrapper();
     this.cookiesFile = resolveCookiesFile(this.logger);
     this.potProviderUrl = process.env["YTDLP_POT_PROVIDER_URL"] || undefined;
-    this.run = runner ?? ((url, args) => this.runWithWrapper(url, args));
+    this.spawn = spawn ?? spawnYtDlp;
   }
 
   /**
    * Returns the version of the yt-dlp binary in use, or undefined if it
-   * cannot be resolved. Safe to call at startup.
+   * cannot be resolved. Safe to call at startup: bounded by a timeout so a
+   * wedged binary can't stall boot.
    */
   async getVersion(): Promise<string | undefined> {
-    // NOTE: We deliberately do NOT call `this.ytdlp.getVersionAsync()`. In
-    // ytdlp-nodejs@3.4.4 that method invokes the binary with an empty URL plus
-    // `--version`, but the wrapper's arg builder throws "URL is required." on an
-    // empty URL — so version resolution can never succeed and always logs
-    // `unknown`. We invoke the binary directly with `--version` instead. Do not
-    // "simplify" this back to the wrapper method until the upstream bug is fixed.
+    const child = this.spawn(["--version"]);
+    let timer: NodeJS.Timeout | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        child.kill();
+        reject(
+          new Error(
+            `Timed out after ${VERSION_RESOLUTION_TIMEOUT_MS}ms resolving version`,
+          ),
+        );
+      }, VERSION_RESOLUTION_TIMEOUT_MS);
+      timer.unref?.();
+    });
+
     try {
-      return await this.resolveVersionFromBinary();
+      const { stdout, exitCode, stderr } = await Promise.race([
+        collect(child),
+        timeout,
+      ]);
+      if (exitCode !== 0) {
+        throw new Error(stderr.trim() || `Exit code ${exitCode}`);
+      }
+      // yt-dlp prints just the version (e.g. `2025.01.15`) + newline.
+      return stdout.join("\n").trim();
     } catch (error) {
       this.logger.warn(
         `Failed to resolve yt-dlp version: ${
@@ -195,69 +301,15 @@ export class YtDlpClient {
         }`,
       );
       return undefined;
+    } finally {
+      clearTimeout(timer);
     }
-  }
-
-  /**
-   * Spawns the yt-dlp binary with `--version` and resolves its trimmed stdout.
-   * Uses the same binary the wrapper runs extractions with when it exposes a
-   * usable path; otherwise falls back to `yt-dlp` on PATH (the scraper image
-   * symlinks the wrapper's binary onto PATH). Never a hardcoded absolute path.
-   * Bounded by a timeout so a wedged binary can't stall startup.
-   */
-  private resolveVersionFromBinary(): Promise<string> {
-    const binary = this.ytdlp.binaryPath || "yt-dlp";
-
-    return new Promise((resolve, reject) => {
-      const child = spawn(binary, ["--version"]);
-      let stdout = "";
-      let stderr = "";
-      let settled = false;
-
-      const settle = (fn: () => void) => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        fn();
-      };
-
-      const timer = setTimeout(() => {
-        settle(() => {
-          child.kill("SIGKILL");
-          reject(
-            new Error(
-              `Timed out after ${VERSION_RESOLUTION_TIMEOUT_MS}ms resolving version`,
-            ),
-          );
-        });
-      }, VERSION_RESOLUTION_TIMEOUT_MS);
-      timer.unref?.();
-
-      child.stdout?.on("data", (chunk) => {
-        stdout += chunk.toString();
-      });
-      child.stderr?.on("data", (chunk) => {
-        stderr += chunk.toString();
-      });
-      child.on("error", (error) => settle(() => reject(error)));
-      child.on("close", (code) => {
-        settle(() => {
-          if (code === 0) {
-            // yt-dlp prints just the version (e.g. `2025.01.15`) + newline.
-            resolve(stdout.trim());
-          } else {
-            reject(new Error(stderr.trim() || `Exit code ${code}`));
-          }
-        });
-      });
-    });
   }
 
   /**
    * Arguments every yt-dlp invocation carries: the request pacing, and — each
    * only when configured — account cookies and the PO token provider (the
-   * bgutil plugin reads its base_url from this extractor arg). The JS runtime
-   * needs no arg: ytdlp-nodejs passes `--js-runtime node` on its own.
+   * bgutil plugin reads its base_url from this extractor arg).
    */
   private baseArgs(): string[] {
     const args: string[] = [
@@ -276,38 +328,40 @@ export class YtDlpClient {
     return args;
   }
 
-  private buildExec(url: string, args: string[]) {
-    const builder = this.ytdlp.execBuilder(url).addArgs(...args);
-    builder.debugPrint(false);
-    return builder;
+  // `--` so the URL is never read as a flag.
+  private composeArgs(url: string, args: string[]): string[] {
+    return [...FIXED_ARGS, ...this.baseArgs(), ...args, "--", url];
   }
 
   /**
-   * Runs yt-dlp with the base args prepended and turns a non-zero exit into
-   * the failure the caller should see; warnings from a successful run are
-   * logged so they are not lost.
+   * Runs yt-dlp to completion and turns a failed run into the failure the
+   * caller should see; warnings from a successful run are logged so they are
+   * not lost.
    */
   private async runChecked(
     url: string,
     remainingArgs: string[],
-  ): Promise<Result<YtDlpRunResult, YtDlpError | UnprocessableVideoError>> {
-    const result = await this.run(url, [...this.baseArgs(), ...remainingArgs]);
+  ): Promise<Result<string[], YtDlpError | UnprocessableVideoError>> {
+    const args = this.composeArgs(url, remainingArgs);
+    const command = `yt-dlp ${args.join(" ")}`;
+    const { stdout, ...exit } = await collect(this.spawn(args));
+    const { exitCode, stderr } = exit;
 
-    if (result.exitCode !== 0) {
-      const message = result.stderr || `Exit code ${result.exitCode}`;
+    const message = failureMessage(exit);
+    if (message !== undefined) {
       const failure = toYtDlpFailure(message);
       if (failure.type === "YT_DLP_ERROR") {
         this.logger.error({
-          message: `yt-dlp execution failed with code ${result.exitCode}`,
-          context: { stderr: result.stderr, command: result.command },
+          message: `yt-dlp execution failed with code ${exitCode}`,
+          context: { stderr, command },
         });
       }
       return Failure(failure);
     }
 
-    this.logWarnings(result.command ?? url, result.stderr);
+    this.logWarnings(command, stderr);
 
-    return Success(result);
+    return Success(stdout);
   }
 
   /** Surfaces what yt-dlp wrote to stderr on a successful run (its WARNING lines). */
@@ -317,52 +371,13 @@ export class YtDlpClient {
   }
 
   /**
-   * ytdlp-nodejs rejects on a non-zero exit with only the first `ERROR:` line
-   * of stderr (or "Unknown yt-dlp error" when there is none), so the builder's
-   * events are captured to hand the caller the full stderr and the command.
-   */
-  private async runWithWrapper(
-    url: string,
-    args: string[],
-  ): Promise<YtDlpRunResult> {
-    const builder = this.buildExec(url, args);
-    let command: string | undefined;
-    let stderr = "";
-    builder.on("start", (cmd: string) => {
-      command = cmd;
-    });
-    builder.on("stderr", (chunk: string) => {
-      stderr += chunk;
-    });
-
-    try {
-      const result = await builder.exec();
-      return {
-        exitCode: result.exitCode,
-        stdout: result.stdout,
-        stderr: result.stderr || stderr,
-        command: result.command || command,
-      };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      // ytdlp-nodejs@3.4.x phrases its rejection as `yt-dlp exited with code N: …`.
-      const exitCode = Number(
-        message.match(/exited with code (\d+)/)?.[1] ?? 1,
-      );
-      return { exitCode, stdout: "", stderr: stderr || message, command };
-    }
-  }
-
-  /**
    * Executes yt-dlp with the specified arguments and parses each line of stdout as a JSON object of type T.
    */
   async execJson<T>(
     args: string[],
   ): Promise<Result<T[], YtDlpError | UnprocessableVideoError>> {
     try {
-      this.logger.info(
-        `Running yt-dlp via wrapper with args: ${args.join(" ")}`,
-      );
+      this.logger.info(`Running yt-dlp with args: ${args.join(" ")}`);
 
       const [url, ...remainingArgs] = args;
       if (!url) {
@@ -376,9 +391,8 @@ export class YtDlpClient {
       if (!run.ok) return run;
 
       const results: T[] = [];
-      const lines = run.value.stdout.split("\n");
 
-      for (const line of lines) {
+      for (const line of run.value) {
         if (line.trim()) {
           try {
             results.push(JSON.parse(line));
@@ -415,9 +429,7 @@ export class YtDlpClient {
     args: string[],
   ): Promise<Result<void, YtDlpError | UnprocessableVideoError>> {
     try {
-      this.logger.info(
-        `Running yt-dlp via wrapper with args: ${args.join(" ")}`,
-      );
+      this.logger.info(`Running yt-dlp with args: ${args.join(" ")}`);
 
       const [url, ...remainingArgs] = args;
       if (!url) {
@@ -457,7 +469,7 @@ export class YtDlpClient {
   ): AsyncGenerator<Result<T, YtDlpError>, void, undefined> {
     try {
       this.logger.info(
-        `Running yt-dlp via wrapper with args (streaming): ${args.join(" ")}`,
+        `Running yt-dlp with args (streaming): ${args.join(" ")}`,
       );
 
       const [url, ...remainingArgs] = args;
@@ -469,99 +481,42 @@ export class YtDlpClient {
         return;
       }
 
-      const builder = this.buildExec(url, [
-        ...this.baseArgs(),
-        ...remainingArgs,
-      ]);
+      const fullArgs = this.composeArgs(url, remainingArgs);
+      const child = this.spawn(fullArgs);
 
-      let errorResult: YtDlpError | undefined;
-      const queue: T[] = [];
-      let done = false;
-      let resolveNext: (() => void) | undefined;
+      for await (const line of child.lines) {
+        if (!line.trim()) continue;
 
-      let stderrBuffer = "";
-      builder.on("stderr", (chunk: string) => {
-        stderrBuffer += chunk;
-      });
-
-      let buffer = "";
-      builder.on("stdout", (chunk: string) => {
-        buffer += chunk;
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
-
-        for (const line of lines) {
-          if (line.trim()) {
-            try {
-              queue.push(JSON.parse(line));
-              resolveNext?.();
-            } catch {
-              this.logger.warn(`Failed to parse yt-dlp output line: ${line}`);
-            }
-          }
+        let entry: T;
+        try {
+          entry = JSON.parse(line);
+        } catch {
+          this.logger.warn(`Failed to parse yt-dlp output line: ${line}`);
+          continue;
         }
-      });
-
-      builder.on("error", (error: Error) => {
-        errorResult = toYtDlpError(error.message, {
-          originalError: error,
-          stderr: stderrBuffer,
-        });
-        done = true;
-        resolveNext?.();
-      });
-
-      const execPromise = builder
-        .exec()
-        .then((result) => {
-          if (buffer.trim()) {
-            try {
-              queue.push(JSON.parse(buffer));
-            } catch {
-              this.logger.warn(
-                `Failed to parse final yt-dlp output line: ${buffer}`,
-              );
-            }
-          }
-
-          if (result.exitCode !== 0 && !errorResult) {
-            errorResult = toYtDlpError(
-              result.stderr || `Exit code ${result.exitCode}`,
-            );
-          } else {
-            this.logWarnings(result.command, stderrBuffer);
-          }
-          done = true;
-          resolveNext?.();
-        })
-        .catch((error) => {
-          if (!errorResult) {
-            errorResult = toYtDlpError(
-              error.message || "Unknown error during yt-dlp execution",
-              { originalError: error, stderr: stderrBuffer },
-            );
-          }
-          done = true;
-          resolveNext?.();
-        });
-
-      while (!done || queue.length > 0) {
-        if (queue.length > 0) {
-          yield Success(queue.shift()!);
-        } else {
-          await new Promise<void>((resolve) => {
-            resolveNext = resolve;
-          });
-          resolveNext = undefined;
-        }
-
-        if (errorResult) {
-          yield Failure(errorResult);
-          return;
-        }
+        yield Success(entry);
       }
 
-      await execPromise;
+      let exit: YtDlpExit;
+      try {
+        exit = await child.exited;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "";
+        yield Failure(
+          toYtDlpError(message || "Unknown error during yt-dlp execution", {
+            originalError: error,
+          }),
+        );
+        return;
+      }
+
+      const message = failureMessage(exit);
+      if (message !== undefined) {
+        yield Failure(toYtDlpError(message));
+        return;
+      }
+
+      this.logWarnings(`yt-dlp ${fullArgs.join(" ")}`, exit.stderr);
     } catch (error: any) {
       const errorContext = {
         name: error?.name,

@@ -8,9 +8,8 @@ const testLogger = () => new Logger({ context: "test", category: "test" });
 
 describe("YtDlpClient (real binary)", () => {
   it("surfaces yt-dlp's full stderr when the binary exits non-zero", async () => {
-    // No runner injected: goes through ytdlp-nodejs, which rejects with only
-    // the first `ERROR:` line — a usage error has none, so without stderr
-    // capture the failure would read "Unknown yt-dlp error". No network.
+    // No spawn injected: runs the yt-dlp on PATH. A usage error has no
+    // `ERROR:` line, so this checks stderr is read in full. No network.
     const client = new YtDlpClient(testLogger());
 
     const result = await client.exec([

@@ -43,7 +43,7 @@ type WorkerOptions = {
 export class VideoEntriesWorker {
   private isRunning: boolean = false;
 
-  // Explicit token for the function-typed pause, as with YT_DLP_RUNNER.
+  // Explicit token for the function-typed pause, as with YT_DLP_SPAWN.
   constructor(
     logger: Logger,
     private readonly processVideoEntry: ProcessVideoEntryUseCase,

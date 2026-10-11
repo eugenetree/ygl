@@ -5,20 +5,39 @@ import { Logger } from "../_common/logger/logger.js";
 import {
   classifyUnprocessable,
   YtDlpClient,
-  type YtDlpRunner,
+  type YtDlpProcess,
+  type YtDlpSpawn,
 } from "./yt-dlp-client.js";
 
 const testLogger = () => new Logger({ context: "test", category: "test" });
 
-/** A runner that records what yt-dlp would be invoked with and answers `respond`. */
-function recordingRunner(respond: () => Promise<{ stdout: string }>) {
-  const calls: { url: string; args: string[] }[] = [];
-  const runner: YtDlpRunner = async (url, args) => {
-    calls.push({ url, args });
-    const { stdout } = await respond();
-    return { exitCode: 0, stdout, stderr: "" };
+/** A yt-dlp process that writes `stdout` and `stderr`, then exits with `exitCode`. */
+function fakeProcess({
+  stdout = "",
+  stderr = "",
+  exitCode = 0,
+}: {
+  stdout?: string;
+  stderr?: string;
+  exitCode?: number;
+}): YtDlpProcess {
+  return {
+    lines: (async function* () {
+      yield* stdout.split("\n");
+    })(),
+    exited: Promise.resolve({ exitCode, stderr }),
+    kill: () => {},
   };
-  return { runner, calls };
+}
+
+/** A spawn that records what yt-dlp would be invoked with and answers `respond`. */
+function recordingSpawn(respond: () => { stdout: string }) {
+  const calls: string[][] = [];
+  const spawn: YtDlpSpawn = (args) => {
+    calls.push(args);
+    return fakeProcess(respond());
+  };
+  return { spawn, calls };
 }
 
 function withEnv(
@@ -111,10 +130,10 @@ describe("classifyUnprocessable()", () => {
 describe("YtDlpClient.execJson()", () => {
   it("runs yt-dlp with the configured PO token provider", () =>
     withEnv({ YTDLP_POT_PROVIDER_URL: "http://127.0.0.1:4416" }, async () => {
-      const { runner, calls } = recordingRunner(async () => ({
+      const { spawn, calls } = recordingSpawn(() => ({
         stdout: '{"id":"abc"}\n',
       }));
-      const client = new YtDlpClient(testLogger(), runner);
+      const client = new YtDlpClient(testLogger(), spawn);
 
       const result = await client.execJson([
         "https://youtube.com/watch?v=abc",
@@ -122,8 +141,11 @@ describe("YtDlpClient.execJson()", () => {
       ]);
 
       assert.deepEqual(result, { ok: true, value: [{ id: "abc" }] });
-      assert.equal(calls[0]?.url, "https://youtube.com/watch?v=abc");
-      const args = calls[0]?.args.join(" ") ?? "";
+      assert.deepEqual(calls[0]?.slice(-2), [
+        "--",
+        "https://youtube.com/watch?v=abc",
+      ]);
+      const args = calls[0]?.join(" ") ?? "";
       assert.match(
         args,
         /--extractor-args youtubepot-bgutilhttp:base_url=http:\/\/127\.0\.0\.1:4416/,
@@ -132,41 +154,64 @@ describe("YtDlpClient.execJson()", () => {
     }));
 
   it("paces every run so the scraper stays under YouTube's request rate limit", async () => {
-    const { runner, calls } = recordingRunner(async () => ({ stdout: "" }));
-    const client = new YtDlpClient(testLogger(), runner);
+    const { spawn, calls } = recordingSpawn(() => ({ stdout: "" }));
+    const client = new YtDlpClient(testLogger(), spawn);
 
     await client.execJson(["https://youtube.com/watch?v=abc", "--dump-json"]);
 
-    const args = calls[0]?.args.join(" ") ?? "";
+    const args = calls[0]?.join(" ") ?? "";
     assert.match(args, /--sleep-requests 0\.75/);
     assert.match(args, /--sleep-subtitles 5/);
   });
 
+  it("runs yt-dlp with node as its JS runtime, quiet, with progress on separate lines", async () => {
+    const { spawn, calls } = recordingSpawn(() => ({ stdout: "" }));
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    await client.execJson(["https://youtube.com/watch?v=abc", "--dump-json"]);
+
+    const args = calls[0]?.join(" ") ?? "";
+    assert.match(args, /--js-runtime node/);
+    assert.match(args, /--quiet/);
+    assert.match(args, /--progress --newline/);
+  });
+
+  it("fails a run that logs an ERROR line even though yt-dlp exits 0", async () => {
+    const stderr = "ERROR: [youtube:tab] UCabc: Unable to download API page\n";
+    const spawn: YtDlpSpawn = () =>
+      fakeProcess({ stdout: '{"id":"abc"}\n', stderr });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson([
+      "https://youtube.com/watch?v=abc",
+      "--dump-json",
+    ]);
+
+    assert.deepEqual(result, {
+      ok: false,
+      error: { type: "YT_DLP_ERROR", message: stderr, cause: undefined },
+    });
+  });
+
   it("runs yt-dlp without a PO token provider when YTDLP_POT_PROVIDER_URL is empty", () =>
     withEnv({ YTDLP_POT_PROVIDER_URL: "" }, async () => {
-      const { runner, calls } = recordingRunner(async () => ({
-        stdout: "",
-      }));
-      const client = new YtDlpClient(testLogger(), runner);
+      const { spawn, calls } = recordingSpawn(() => ({ stdout: "" }));
+      const client = new YtDlpClient(testLogger(), spawn);
 
       await client.execJson(["https://youtube.com/watch?v=abc", "--dump-json"]);
 
-      const args = calls[0]?.args.join(" ") ?? "";
+      const args = calls[0]?.join(" ") ?? "";
       assert.doesNotMatch(args, /youtubepot/);
     }));
 
   it("logs yt-dlp's warnings when the run succeeds with stderr output", async () => {
     const stderr =
       "WARNING: [youtube] abc: Some web client https formats have been skipped\n";
-    const runner: YtDlpRunner = async () => ({
-      exitCode: 0,
-      stdout: '{"id":"abc"}\n',
-      stderr,
-      command: "yt-dlp --dump-json https://youtube.com/watch?v=abc",
-    });
+    const spawn: YtDlpSpawn = () =>
+      fakeProcess({ stdout: '{"id":"abc"}\n', stderr });
     const logger = testLogger();
     const warn = mock.method(logger, "warn", () => {});
-    const client = new YtDlpClient(logger, runner);
+    const client = new YtDlpClient(logger, spawn);
 
     const result = await client.execJson([
       "https://youtube.com/watch?v=abc",
@@ -177,7 +222,7 @@ describe("YtDlpClient.execJson()", () => {
     assert.equal(warn.mock.callCount(), 1);
     const logged = String(warn.mock.calls[0]?.arguments[0]);
     assert.match(logged, /Some web client https formats have been skipped/);
-    assert.match(logged, /yt-dlp --dump-json/);
+    assert.match(logged, /yt-dlp .*--dump-json/);
   });
 
   it("names YouTube's bot challenge and keeps the full stderr", async () => {
@@ -186,13 +231,8 @@ describe("YtDlpClient.execJson()", () => {
       "WARNING: [youtube] lq4fz7WhjF4: No PO Token provider available",
       "ERROR: [youtube] lq4fz7WhjF4: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.",
     ].join("\n");
-    const runner: YtDlpRunner = async () => ({
-      exitCode: 1,
-      stdout: "",
-      stderr,
-      command: "yt-dlp --dump-json https://youtube.com/watch?v=lq4fz7WhjF4",
-    });
-    const client = new YtDlpClient(testLogger(), runner);
+    const spawn: YtDlpSpawn = () => fakeProcess({ exitCode: 1, stderr });
+    const client = new YtDlpClient(testLogger(), spawn);
 
     const result = await client.execJson([
       "https://youtube.com/watch?v=lq4fz7WhjF4",
@@ -210,8 +250,9 @@ describe("YtDlpClient.execJson()", () => {
 describe("YtDlpClient.exec()", () => {
   it("keeps skip causes as skip causes and names the bot challenge", async () => {
     const failingWith =
-      (stderr: string): YtDlpRunner =>
-      async () => ({ exitCode: 1, stdout: "", stderr });
+      (stderr: string): YtDlpSpawn =>
+      () =>
+        fakeProcess({ exitCode: 1, stderr });
 
     const membersOnly = await new YtDlpClient(
       testLogger(),
@@ -232,5 +273,101 @@ describe("YtDlpClient.exec()", () => {
       assert.equal(botChallenge.error.type, "YT_DLP_ERROR");
       assert.match(botChallenge.error.message, /^YouTube bot challenge/);
     }
+  });
+});
+
+describe("YtDlpClient.execJsonStream()", () => {
+  async function drain<T>(stream: AsyncIterable<T>): Promise<T[]> {
+    const results: T[] = [];
+    for await (const result of stream) results.push(result);
+    return results;
+  }
+
+  it("yields each JSON line yt-dlp writes", async () => {
+    const { spawn, calls } = recordingSpawn(() => ({
+      stdout: '{"id":"a"}\n{"id":"b"}\n',
+    }));
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const results = await drain(
+      client.execJsonStream([
+        "https://www.youtube.com/channel/UCabc/videos",
+        "--flat-playlist",
+      ]),
+    );
+
+    assert.deepEqual(results, [
+      { ok: true, value: { id: "a" } },
+      { ok: true, value: { id: "b" } },
+    ]);
+    assert.deepEqual(calls[0]?.slice(-3), [
+      "--flat-playlist",
+      "--",
+      "https://www.youtube.com/channel/UCabc/videos",
+    ]);
+  });
+
+  it("ends with a failure carrying the full stderr when yt-dlp exits non-zero", async () => {
+    const stderr = [
+      "WARNING: [youtube:tab] Incomplete data received",
+      "ERROR: [youtube:tab] UCabc: This channel does not have a videos tab",
+    ].join("\n");
+    const spawn: YtDlpSpawn = () =>
+      fakeProcess({ stdout: '{"id":"a"}\n', stderr, exitCode: 1 });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const results = await drain(
+      client.execJsonStream(["https://www.youtube.com/channel/UCabc/videos"]),
+    );
+
+    assert.deepEqual(results, [
+      { ok: true, value: { id: "a" } },
+      {
+        ok: false,
+        error: { type: "YT_DLP_ERROR", message: stderr, cause: undefined },
+      },
+    ]);
+  });
+
+  it("ends with a failure when yt-dlp logs an ERROR line but exits 0", async () => {
+    const stderr = "ERROR: [youtube:tab] UCabc: Unable to download API page\n";
+    const spawn: YtDlpSpawn = () => fakeProcess({ stderr });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const results = await drain(
+      client.execJsonStream(["https://www.youtube.com/channel/UCabc/videos"]),
+    );
+
+    assert.deepEqual(results, [
+      {
+        ok: false,
+        error: { type: "YT_DLP_ERROR", message: stderr, cause: undefined },
+      },
+    ]);
+  });
+
+  it("fails when yt-dlp cannot be started", async () => {
+    const notFound = new Error("spawn yt-dlp ENOENT");
+    const spawn: YtDlpSpawn = () => ({
+      lines: (async function* () {})(),
+      exited: Promise.reject(notFound),
+      kill: () => {},
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const results = await drain(
+      client.execJsonStream(["https://www.youtube.com/channel/UCabc/videos"]),
+    );
+
+    assert.deepEqual(results, [
+      {
+        ok: false,
+        error: {
+          type: "YT_DLP_ERROR",
+          message: "spawn yt-dlp ENOENT",
+          cause: { originalError: notFound },
+        },
+      },
+    ]);
   });
 });
