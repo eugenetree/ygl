@@ -34,7 +34,11 @@ export const searchQuerySchema = z
 // All times are milliseconds.
 export const clipSchema = z.object({
   captionId: z.string(),
-  videoId: z.string(),
+  video: z.object({
+    id: z.string(),
+    title: z.string(),
+    channel: z.object({ name: z.string() }),
+  }),
   startTime: z.number(),
   endTime: z.number(),
   text: z.string(),

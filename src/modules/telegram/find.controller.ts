@@ -49,7 +49,7 @@ export class FindController implements TelegramController {
       }
 
       const lines = clips.map((clip) => {
-        const url = `https://www.youtube.com/watch?v=${clip.videoId}&t=${Math.floor(clip.playFrom / 1000)}s`;
+        const url = `https://www.youtube.com/watch?v=${clip.video.id}&t=${Math.floor(clip.playFrom / 1000)}s`;
         return `${clip.text}\n${url}`;
       });
 

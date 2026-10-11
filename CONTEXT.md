@@ -14,6 +14,12 @@ _Avoid_: Push (a push results in a boost, but they are not the same thing)
 A one-off manual request to bring a channel's details and video list up to date now, ahead of the backlog; it also boosts the channel.
 _Avoid_: Boost, prioritize
 
+### Channels
+
+**Channel name**:
+The name a channel shows on YouTube, under its videos and on its page.
+_Avoid_: Username, handle (the `@` identifier in the channel's URL, a different thing)
+
 ### Videos
 
 **Spoken language**:
@@ -47,7 +53,7 @@ A word or phrase looked up across every searchable caption, answered with clips.
 _Avoid_: Find, lookup, query (the query is the text being searched for, not the search)
 
 **Clip**:
-A caption as it comes back from a search: the video it is in, the caption's own start and end, its text, and a play-from point. It is a caption in the role of a result, not something stored separately.
+A caption as it comes back from a search: the video it is in (with the video's title and channel name), the caption's own start and end, its text, and a play-from point. It is a caption in the role of a result, not something stored separately.
 _Avoid_: Hit, result, match
 
 **Play-from point**:

@@ -64,7 +64,7 @@ function buildSut(mocks: ReturnType<typeof createMocks>) {
 // ---- Tests ------------------------------------------------------------------
 
 describe("CaptionsService.search", () => {
-  it("returns a stored caption as a clip that plays from one second before it starts", async () => {
+  it("returns a stored caption with its video id, times and text", async () => {
     const mocks = createMocks(searchResponse([storedCaption()]));
 
     const result = await buildSut(mocks).search("give you up", {
@@ -75,34 +75,19 @@ describe("CaptionsService.search", () => {
     assert.deepEqual(result, {
       ok: true,
       value: {
-        clips: [
+        captions: [
           {
-            captionId: "caption-1",
+            id: "caption-1",
             videoId: "video-1",
             startTime: 2500,
             endTime: 4200,
             text: "never gonna give you up",
-            playFrom: 1500,
           },
         ],
         total: 1,
         isTotalExact: true,
       },
     });
-  });
-
-  it("plays a clip from the start of the video when its caption begins in the first second", async () => {
-    const mocks = createMocks(
-      searchResponse([storedCaption({ startTime: 400, endTime: 1900 })]),
-    );
-
-    const result = await buildSut(mocks).search("give you up", {
-      offset: 0,
-      limit: 20,
-    });
-
-    assert.ok(result.ok);
-    assert.equal(result.value.clips[0].playFrom, 0);
   });
 
   it("skips a stored caption that does not match the expected shape and warns about it", async () => {
@@ -120,7 +105,7 @@ describe("CaptionsService.search", () => {
 
     assert.ok(result.ok);
     assert.deepEqual(
-      result.value.clips.map((clip) => clip.captionId),
+      result.value.captions.map((caption) => caption.id),
       ["caption-2"],
     );
     assert.equal(mocks.logger.warn.mock.callCount(), 1);

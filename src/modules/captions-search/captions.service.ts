@@ -6,12 +6,7 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { tryCatch } from "../_common/try-catch.js";
 import { Caption } from "../scraping/scrapers/video/caption.js";
-import {
-  type Clip,
-  type ClipSearchResult,
-  toClip,
-  type VideoCaption,
-} from "./clip.js";
+import type { VideoCaption } from "./clip.js";
 
 const MAX_TRACKED_TOTAL = 10000;
 // Elasticsearch's default max_result_window; hours of captions fit well under it.
@@ -24,6 +19,14 @@ const storedCaptionSchema = z.object({
   endTime: z.number(),
   text: z.string(),
 });
+
+export type StoredCaption = z.infer<typeof storedCaptionSchema>;
+
+export type CaptionSearchResult = {
+  captions: StoredCaption[];
+  total: number;
+  isTotalExact: boolean;
+};
 
 export type SearchUnavailableError = {
   type: "SEARCH_UNAVAILABLE";
@@ -71,7 +74,7 @@ export class CaptionsService {
   async search(
     query: string,
     { offset, limit }: { offset: number; limit: number },
-  ): Promise<Result<ClipSearchResult, SearchUnavailableError>> {
+  ): Promise<Result<CaptionSearchResult, SearchUnavailableError>> {
     const searchResult = await tryCatch(
       this.esClient.search({
         index: "captions",
@@ -104,7 +107,7 @@ export class CaptionsService {
     }
 
     const response = searchResult.value;
-    const clips: Clip[] = [];
+    const captions: StoredCaption[] = [];
     for (const hit of response.hits.hits) {
       const parsed = storedCaptionSchema.safeParse(hit._source);
       if (!parsed.success) {
@@ -113,12 +116,12 @@ export class CaptionsService {
         );
         continue;
       }
-      clips.push(toClip(parsed.data));
+      captions.push(parsed.data);
     }
     const total = response.hits.total as SearchTotalHits;
 
     return Success({
-      clips,
+      captions,
       total: total.value,
       isTotalExact: total.relation === "eq",
     });

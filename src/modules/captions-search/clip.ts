@@ -2,10 +2,16 @@ import type { Caption } from "../scraping/scrapers/video/caption.js";
 
 const PLAY_FROM_BEFORE_CAPTION_MS = 1000;
 
+export type ClipVideo = {
+  id: string;
+  title: string;
+  channel: { name: string };
+};
+
 // All times are milliseconds.
 export type Clip = {
   captionId: string;
-  videoId: string;
+  video: ClipVideo;
   startTime: number;
   endTime: number;
   text: string;
@@ -27,11 +33,12 @@ export type ClipSearchResult = {
 };
 
 export function toClip(
-  caption: Pick<Caption, "id" | "videoId" | "startTime" | "endTime" | "text">,
+  caption: Pick<Caption, "id" | "startTime" | "endTime" | "text">,
+  video: ClipVideo,
 ): Clip {
   return {
     captionId: caption.id,
-    videoId: caption.videoId,
+    video,
     startTime: caption.startTime,
     endTime: caption.endTime,
     text: caption.text,

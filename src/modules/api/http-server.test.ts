@@ -25,7 +25,11 @@ const PUBLIC_ORIGIN = TEST_AUTH_SETTINGS.publicOrigin;
 
 const clip = {
   captionId: "caption-1",
-  videoId: "video-1",
+  video: {
+    id: "video-1",
+    title: "Never Gonna Give You Up",
+    channel: { name: "Rick Astley" },
+  },
   startTime: 2500,
   endTime: 4200,
   text: "never gonna give you up",

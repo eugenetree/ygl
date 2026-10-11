@@ -27,6 +27,8 @@ interface Result {
   videoId: string;
   startAt: number; // seconds
   text: string;
+  title: string;
+  channelName: string;
 }
 
 const PAGE_SIZE = 20;
@@ -34,9 +36,11 @@ const PAGE_SIZE = 20;
 function toResult(clip: SearchResponse["clips"][number]): Result {
   return {
     id: clip.captionId,
-    videoId: clip.videoId,
+    videoId: clip.video.id,
     startAt: clip.playFrom / 1000,
     text: clip.text,
+    title: clip.video.title,
+    channelName: clip.video.channel.name,
   };
 }
 
