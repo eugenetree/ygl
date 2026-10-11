@@ -116,6 +116,16 @@ after(() => {
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
+describe("YoutubeApiGetVideo - which video yt-dlp returned", () => {
+  it("treats a different video in place of the requested one as a Premium-only video", async () => {
+    const { service } = createService(baseYtData({ id: "trailerId" }));
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.equal(!result.ok && result.error.type, "PREMIUM_ONLY_VIDEO");
+  });
+});
+
 describe("YoutubeApiGetVideo - language key selection", () => {
   describe("auto captions key", () => {
     it("uses en-orig as the auto captions key", async () => {

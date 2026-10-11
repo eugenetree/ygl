@@ -135,6 +135,38 @@ describe("VideoEntriesWorker", () => {
     assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
   });
 
+  it("marks the job SKIPPED with PREMIUM_ONLY and continues when the video needs YouTube Premium", async () => {
+    let calls = 0;
+    mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => {
+      calls += 1;
+      if (calls === 1) return Promise.resolve(Success(entry));
+      return Promise.resolve(Success(null));
+    });
+    mocks.processVideoEntry.execute.mock.mockImplementation(() =>
+      Promise.resolve(
+        Failure({
+          type: "PREMIUM_ONLY_VIDEO",
+          message:
+            "yt-dlp returned HczF26bAqaI in place of ZyN8jp4XYhc, the trailer YouTube offers for a Premium-only video",
+        }),
+      ),
+    );
+
+    const result = await sut.run({
+      shouldContinue: () => true,
+      onError: async () => {},
+    });
+
+    assert.ok(result.ok);
+    assert.equal(result.value, WorkerStopCause.EMPTY);
+    assert.equal(mocks.videoEntriesQueue.markAsSkipped.mock.callCount(), 1);
+    assert.deepEqual(
+      mocks.videoEntriesQueue.markAsSkipped.mock.calls[0]?.arguments,
+      [entry.id, "PREMIUM_ONLY"],
+    );
+    assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
+  });
+
   it("pauses after every processed entry so YouTube is not hit back-to-back", async () => {
     const pause = mock.fn<() => Promise<void>>(() => Promise.resolve());
     sut = buildSut(mocks, pause);

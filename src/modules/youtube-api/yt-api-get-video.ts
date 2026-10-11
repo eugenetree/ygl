@@ -68,7 +68,14 @@ export class YoutubeApiGetVideo {
     this.logger.info(`Processing video ${videoId}...`);
 
     const url = encodeURI(`https://youtube.com/watch?v=${videoId}`);
-    const args = ["--dump-json", "--no-download", "--skip-download"];
+    // Without --no-playlist, a multi-camera video comes back as one JSON line
+    // per feed, each under a different id.
+    const args = [
+      "--dump-json",
+      "--no-download",
+      "--skip-download",
+      "--no-playlist",
+    ];
 
     const execResult = await this.ytDlpClient.execJson<unknown>([url, ...args]);
     await this.responseRecorder?.record(videoId, execResult);
@@ -95,6 +102,15 @@ export class YoutubeApiGetVideo {
     }
 
     const ytData = validationResult.value;
+
+    // yt-dlp answers a Premium-only video with its free trailer, exiting 0;
+    // the differing id is the only trace of the swap.
+    if (ytData.id !== videoId) {
+      return Failure({
+        type: "PREMIUM_ONLY_VIDEO",
+        message: `yt-dlp returned ${ytData.id} in place of ${videoId}, the trailer YouTube offers for a Premium-only video`,
+      });
+    }
 
     const decision = this.decideVideoLanguage(
       videoId,

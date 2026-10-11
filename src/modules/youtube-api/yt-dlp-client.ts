@@ -33,13 +33,18 @@ export type ClaimedContentVideoError = {
   type: "CLAIMED_CONTENT_VIDEO";
   message: string;
 };
+export type PremiumOnlyVideoError = {
+  type: "PREMIUM_ONLY_VIDEO";
+  message: string;
+};
 export type UnprocessableVideoError =
   | MembersOnlyVideoError
   | GeoRestrictedVideoError
   | AgeRestrictedVideoError
   | PremiereVideoError
   | RemovedByUploaderVideoError
-  | ClaimedContentVideoError;
+  | ClaimedContentVideoError
+  | PremiumOnlyVideoError;
 
 const MEMBERS_ONLY_MESSAGE =
   "Join this channel to get access to members-only content";

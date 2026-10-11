@@ -14,6 +14,7 @@ function toSkipCause(errorType: string): VideoJobSkipCause | null {
   if (errorType === "PREMIERE_VIDEO") return "PREMIERE";
   if (errorType === "REMOVED_BY_UPLOADER_VIDEO") return "REMOVED_BY_UPLOADER";
   if (errorType === "CLAIMED_CONTENT_VIDEO") return "CLAIMED_CONTENT";
+  if (errorType === "PREMIUM_ONLY_VIDEO") return "PREMIUM_ONLY";
   return null;
 }
 
