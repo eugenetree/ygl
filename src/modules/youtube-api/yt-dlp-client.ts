@@ -484,17 +484,25 @@ export class YtDlpClient {
       const fullArgs = this.composeArgs(url, remainingArgs);
       const child = this.spawn(fullArgs);
 
-      for await (const line of child.lines) {
-        if (!line.trim()) continue;
+      let readToEnd = false;
+      try {
+        for await (const line of child.lines) {
+          if (!line.trim()) continue;
 
-        let entry: T;
-        try {
-          entry = JSON.parse(line);
-        } catch {
-          this.logger.warn(`Failed to parse yt-dlp output line: ${line}`);
-          continue;
+          let entry: T;
+          try {
+            entry = JSON.parse(line);
+          } catch {
+            this.logger.warn(`Failed to parse yt-dlp output line: ${line}`);
+            continue;
+          }
+          yield Success(entry);
         }
-        yield Success(entry);
+        readToEnd = true;
+      } finally {
+        // Left alone, a consumer that stopped early leaves yt-dlp paging
+        // through the rest of the playlist, spending YouTube's rate limit.
+        if (!readToEnd) child.kill();
       }
 
       let exit: YtDlpExit;

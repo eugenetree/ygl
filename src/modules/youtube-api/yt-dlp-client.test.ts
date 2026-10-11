@@ -346,6 +346,41 @@ describe("YtDlpClient.execJsonStream()", () => {
     ]);
   });
 
+  function killCountingSpawn(stdout: string) {
+    const counter = { kills: 0 };
+    const spawn: YtDlpSpawn = () => ({
+      ...fakeProcess({ stdout }),
+      kill: () => {
+        counter.kills++;
+      },
+    });
+    return { spawn, counter };
+  }
+
+  it("stops yt-dlp when the consumer stops reading early", async () => {
+    const { spawn, counter } = killCountingSpawn('{"id":"a"}\n{"id":"b"}\n');
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    for await (const _ of client.execJsonStream([
+      "https://www.youtube.com/channel/UCabc/videos",
+    ])) {
+      break;
+    }
+
+    assert.equal(counter.kills, 1);
+  });
+
+  it("leaves yt-dlp alone once it has run to completion", async () => {
+    const { spawn, counter } = killCountingSpawn('{"id":"a"}\n');
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    await drain(
+      client.execJsonStream(["https://www.youtube.com/channel/UCabc/videos"]),
+    );
+
+    assert.equal(counter.kills, 0);
+  });
+
   it("fails when yt-dlp cannot be started", async () => {
     const notFound = new Error("spawn yt-dlp ENOENT");
     const spawn: YtDlpSpawn = () => ({
