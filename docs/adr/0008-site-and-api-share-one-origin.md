@@ -22,6 +22,8 @@ better-auth trusts only its own origin.
   on another origin, such as a hosted preview or a local frontend pointed at the
   production API, can't call the API until CORS is brought back.
 - `/api` belongs to the API. A frontend page under `/api` would be unreachable.
+- Relative `/api/...` paths are for the browser. The frontend's server renders
+  search pages by calling the API at `API_URL` instead (ADR-0011).
 - `PUBLIC_ORIGIN` names the one origin. better-auth builds the Google callback
   URL from it, so Google's authorised redirect URIs are
   `$PUBLIC_ORIGIN/api/auth/callback/google`: the frontend's port locally, not
