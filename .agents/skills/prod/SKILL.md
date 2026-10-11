@@ -1,6 +1,6 @@
 ---
 name: prod
-description: Read-only SSH access to the production server — container state and logs, database rows, Elasticsearch indices. Use when a question can only be answered by what is actually running in production.
+description: Read-only SSH access to the production server — container state and logs, database rows, Elasticsearch indices, and the raw yt-dlp responses of the last 14 days. Use when investigating a "Scraper failure" alert, what yt-dlp returned for a video, or any question only what is actually running in production can answer.
 ---
 
 # Prod
@@ -40,6 +40,8 @@ Only `SELECT`, `EXPLAIN` (without `ANALYZE`), and `\d`-style catalog reads. Give
 **Elasticsearch** — `curl -s -XGET` against `localhost:9200` on the host: `_cat/*`, `_cluster/health`, `<index>/_mapping`, `<index>/_count`, `<index>/_search` with a JSON body and a `size`.
 
 **yt-dlp responses** — the scraper keeps what `yt-dlp --dump-json` returned for every video it fetched in the last 14 days, in the `scraper` container's volume, whose host path is `docker inspect --format '{{range .Mounts}}{{.Source}}{{end}}' scraper`. One gzipped JSON line per fetch at `<YYYY-MM-DD>/<HHMMSS>_<videoId>.json.gz` (UTC): `{ videoId, fetchedAt, result }`, where `result` is `{ ok: true, value: [<yt-dlp JSON>] }` or `{ ok: false, error }` with yt-dlp's stderr in `error.message`. The host has no `jq`, so pull the files still gzipped and parse them locally: `ssh … 'cat <dir>/<day>/*.json.gz' | gunzip` gives one fetch per line.
+
+To trace one video, `ls <dir>/*/*_<videoId>.json.gz` lists every fetch of it still on disk. No match means the fetch is past retention or wasn't a `getVideo` metadata fetch; caption downloads aren't recorded. A failed fetch's record holds the same stderr the alert showed. What it adds is `fetchedAt`, which bounds `docker logs scraper --since … --until …`, and the video's other fetches, which show what it looked like when it last worked.
 
 ## Credentials
 
