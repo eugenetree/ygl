@@ -64,5 +64,40 @@
     "id": "SynthOrph01",
     "channelId": "UCsynthOrphaned000000001",
     "availability": "PUBLIC"
+  },
+  {
+    "id": "8bVhLamxZZc",
+    "channelId": "UCDbiEgV3Y7JQtaftgN7lyPw",
+    "createdAt": "2026-09-06T03:29:59.724402",
+    "updatedAt": "2026-09-06T03:29:59.724402",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "YjM4klfdSvk",
+    "channelId": "UCLgEVx4mzk3T3mzgbKG54Eg",
+    "createdAt": "2026-07-23T03:00:49.685592",
+    "updatedAt": "2026-07-23T03:00:49.685592",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "dqas8DvC7mc",
+    "channelId": "UCfyehHM_eo4g5JUyWmms2LA",
+    "createdAt": "2026-09-03T00:09:57.195676",
+    "updatedAt": "2026-09-03T00:09:57.195676",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "roz9UB8pu9E",
+    "channelId": "UCfyehHM_eo4g5JUyWmms2LA",
+    "createdAt": "2026-09-03T00:09:42.120461",
+    "updatedAt": "2026-09-03T00:09:42.120461",
+    "availability": "PUBLIC"
+  },
+  {
+    "id": "rw3NAQJhEF0",
+    "channelId": "UC-Q0VEt_ConjePtx96BlVPw",
+    "createdAt": "2026-07-23T03:01:26.904845",
+    "updatedAt": "2026-07-23T03:01:26.904845",
+    "availability": "PUBLIC"
   }
 ]

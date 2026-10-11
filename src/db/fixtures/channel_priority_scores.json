@@ -334,5 +334,233 @@
     "searchScore": 0.0,
     "components": {},
     "calculatedAt": "2026-01-01T00:00:00"
+  },
+  {
+    "channelId": "UC-Q0VEt_ConjePtx96BlVPw",
+    "scrapingScore": 40.333085817365685,
+    "components": {
+      "subs": {
+        "cap": 1000000,
+        "value": 8.48,
+        "weight": 10,
+        "subscriberCount": 123000
+      },
+      "views": {
+        "cap": 100000,
+        "value": 9.97,
+        "weight": 10,
+        "avgViews": 97073.55
+      },
+      "captions": {
+        "rate": 0.17,
+        "value": 2.27,
+        "weight": 30,
+        "penalty": -150,
+        "minVideos": 100,
+        "threshold": 0.1,
+        "gateActive": true,
+        "totalVideos": 214,
+        "validVideos": 36
+      },
+      "duration": {
+        "cap": 1800,
+        "value": 10,
+        "weight": 10,
+        "avgDuration": 2740.53
+      },
+      "language": {
+        "rate": 0.01,
+        "value": 0,
+        "penalty": -150,
+        "minVideos": 30,
+        "threshold": 0.25,
+        "gateActive": true,
+        "totalVideos": 214,
+        "nonEnglishVideos": 3
+      },
+      "similarity": {
+        "value": 9.6,
+        "weight": 10,
+        "avgSimilarity": 0.96
+      },
+      "manualBoost": {
+        "value": 0,
+        "amount": 500,
+        "isBoosted": false
+      }
+    },
+    "calculatedAt": "2026-07-29T23:19:19.712",
+    "searchScore": 28.457373629846394
+  },
+  {
+    "channelId": "UCDbiEgV3Y7JQtaftgN7lyPw",
+    "scrapingScore": 56.397903015257576,
+    "components": {
+      "subs": {
+        "cap": 1000000,
+        "value": 8.45,
+        "weight": 10,
+        "subscriberCount": 118000
+      },
+      "views": {
+        "cap": 100000,
+        "value": 5.62,
+        "weight": 10,
+        "avgViews": 646.01
+      },
+      "captions": {
+        "rate": 0.9,
+        "value": 26.79,
+        "weight": 30,
+        "penalty": -150,
+        "minVideos": 100,
+        "threshold": 0.1,
+        "gateActive": true,
+        "totalVideos": 2028,
+        "validVideos": 1833
+      },
+      "duration": {
+        "cap": 1800,
+        "value": 6.23,
+        "weight": 10,
+        "avgDuration": 106.37
+      },
+      "language": {
+        "rate": 0.03,
+        "value": 0,
+        "penalty": -150,
+        "minVideos": 30,
+        "threshold": 0.25,
+        "gateActive": true,
+        "totalVideos": 2028,
+        "nonEnglishVideos": 68
+      },
+      "similarity": {
+        "value": 9.3,
+        "weight": 10,
+        "avgSimilarity": 0.93
+      },
+      "manualBoost": {
+        "value": 0,
+        "amount": 500,
+        "isBoosted": false
+      }
+    },
+    "calculatedAt": "2026-09-28T20:15:45.861",
+    "searchScore": 20.299427286302162
+  },
+  {
+    "channelId": "UCLgEVx4mzk3T3mzgbKG54Eg",
+    "scrapingScore": 43.21932955038278,
+    "components": {
+      "subs": {
+        "cap": 1000000,
+        "value": 10,
+        "weight": 10,
+        "subscriberCount": 3830000
+      },
+      "views": {
+        "cap": 100000,
+        "value": 10,
+        "weight": 10,
+        "avgViews": 507700.14
+      },
+      "captions": {
+        "rate": 0.26,
+        "value": 5.2,
+        "weight": 30,
+        "penalty": -150,
+        "minVideos": 100,
+        "threshold": 0.1,
+        "gateActive": true,
+        "totalVideos": 1579,
+        "validVideos": 404
+      },
+      "duration": {
+        "cap": 1800,
+        "value": 8.97,
+        "weight": 10,
+        "avgDuration": 835.09
+      },
+      "language": {
+        "rate": 0.01,
+        "value": 0,
+        "penalty": -150,
+        "minVideos": 30,
+        "threshold": 0.25,
+        "gateActive": true,
+        "totalVideos": 1579,
+        "nonEnglishVideos": 9
+      },
+      "similarity": {
+        "value": 9.05,
+        "weight": 10,
+        "avgSimilarity": 0.9
+      },
+      "manualBoost": {
+        "value": 0,
+        "amount": 500,
+        "isBoosted": false
+      }
+    },
+    "calculatedAt": "2026-07-29T22:24:19.46",
+    "searchScore": 28.974727651122265
+  },
+  {
+    "channelId": "UCfyehHM_eo4g5JUyWmms2LA",
+    "scrapingScore": 551.0713238142407,
+    "components": {
+      "subs": {
+        "cap": 1000000,
+        "value": 10,
+        "weight": 10,
+        "subscriberCount": 2990000
+      },
+      "views": {
+        "cap": 100000,
+        "value": 10,
+        "weight": 10,
+        "avgViews": 584939.62
+      },
+      "captions": {
+        "rate": 0.5,
+        "value": 13.42,
+        "weight": 30,
+        "penalty": -150,
+        "minVideos": 100,
+        "threshold": 0.1,
+        "gateActive": true,
+        "totalVideos": 2391,
+        "validVideos": 1202
+      },
+      "duration": {
+        "cap": 1800,
+        "value": 8.82,
+        "weight": 10,
+        "avgDuration": 741.99
+      },
+      "language": {
+        "rate": 0,
+        "value": 0,
+        "penalty": -150,
+        "minVideos": 30,
+        "threshold": 0.25,
+        "gateActive": true,
+        "totalVideos": 2391,
+        "nonEnglishVideos": 3
+      },
+      "similarity": {
+        "value": 8.83,
+        "weight": 10,
+        "avgSimilarity": 0.88
+      },
+      "manualBoost": {
+        "value": 500,
+        "amount": 500,
+        "isBoosted": true
+      }
+    },
+    "calculatedAt": "2026-09-17T07:13:05.758",
+    "searchScore": 28.817029584290367
   }
 ]

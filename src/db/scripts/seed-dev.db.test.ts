@@ -85,15 +85,15 @@ describe("seedDevFixtures idempotency", () => {
     const counts = await countAll(db);
 
     assert.equal(Number(counts.scq), 4, "searchChannelQueries");
-    assert.equal(Number(counts.ch), 10, "channels");
+    assert.equal(Number(counts.ch), 14, "channels");
     assert.equal(Number(counts.cdj), 4, "channelDiscoveryJobs");
     assert.equal(Number(counts.ce), 9, "channelEntries");
     assert.equal(Number(counts.cj), 9, "channelJobs");
     assert.equal(Number(counts.vdj), 9, "videoDiscoveryJobs");
-    assert.equal(Number(counts.cps), 8, "channelPriorityScores");
-    assert.equal(Number(counts.v), 10, "videos");
-    assert.equal(Number(counts.ve), 10, "videoEntries");
-    assert.equal(Number(counts.vj), 10, "videoJobs");
-    assert.equal(Number(counts.cap), 40, "captions");
+    assert.equal(Number(counts.cps), 12, "channelPriorityScores");
+    assert.equal(Number(counts.v), 15, "videos");
+    assert.equal(Number(counts.ve), 15, "videoEntries");
+    assert.equal(Number(counts.vj), 15, "videoJobs");
+    assert.equal(Number(counts.cap), 2221, "captions");
   });
 });

@@ -96,5 +96,55 @@
     "statusUpdatedAt": "2026-01-01T00:00:00",
     "skipCause": null,
     "priority": 0
+  },
+  {
+    "id": "5c9d5a14-c659-4dc4-be87-311d3e6f89d0",
+    "videoId": "8bVhLamxZZc",
+    "channelId": "UCDbiEgV3Y7JQtaftgN7lyPw",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-09-22T23:14:57.419",
+    "createdAt": "2026-09-06T03:29:59.726249",
+    "skipCause": null,
+    "priority": 28.929437636331834
+  },
+  {
+    "id": "45258efa-7516-47ad-9077-9f557c2e1a0c",
+    "videoId": "YjM4klfdSvk",
+    "channelId": "UCLgEVx4mzk3T3mzgbKG54Eg",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-07-29T17:59:23.279",
+    "createdAt": "2026-07-23T03:00:49.687773",
+    "skipCause": null,
+    "priority": 42.48462498893328
+  },
+  {
+    "id": "ff4bb9e3-8a15-47d8-b337-9bf641a0cdb0",
+    "videoId": "dqas8DvC7mc",
+    "channelId": "UCfyehHM_eo4g5JUyWmms2LA",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-09-17T05:47:33.766",
+    "createdAt": "2026-09-03T00:09:57.197799",
+    "skipCause": null,
+    "priority": 550.9444780192422
+  },
+  {
+    "id": "e4771067-dfb7-47b7-9827-32b2f8ffbffa",
+    "videoId": "roz9UB8pu9E",
+    "channelId": "UCfyehHM_eo4g5JUyWmms2LA",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-09-16T03:23:41.719",
+    "createdAt": "2026-09-03T00:09:42.123121",
+    "skipCause": null,
+    "priority": 551.4993743369174
+  },
+  {
+    "id": "8c180950-46b7-43ff-b02e-faaf1be8aa5d",
+    "videoId": "rw3NAQJhEF0",
+    "channelId": "UC-Q0VEt_ConjePtx96BlVPw",
+    "status": "SUCCEEDED",
+    "statusUpdatedAt": "2026-07-29T22:32:06.617",
+    "createdAt": "2026-07-23T03:01:26.907648",
+    "skipCause": null,
+    "priority": 37.46610482024856
   }
 ]
