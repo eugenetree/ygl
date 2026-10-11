@@ -115,6 +115,7 @@ describe("YoutubeApiGetVideo.getVideo()", () => {
 
   it("detects Thai (th) via th-orig key despite yt-dlp reporting en-US (wda-B3NJSek)", {
     timeout: TIMEOUT,
+    skip: "YouTube marks this video's en-US audio as original, which wins over th-orig since ADR-0009",
   }, async () => {
     const result = await service.getVideo("wda-B3NJSek");
 
