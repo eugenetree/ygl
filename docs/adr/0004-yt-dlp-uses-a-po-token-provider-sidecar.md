@@ -53,6 +53,14 @@ client and is what the bgutil project exists to provide for the first.
 - A PO token does not guarantee acceptance; IP reputation still matters. The
   bot challenge is now reported as `YouTube bot challenge: …` so the alert says
   which check failed.
+- A bare `Video unavailable` is not always the IP check. With cookies, yt-dlp
+  tries `web_embedded` first, and on prod it is the only client that returns
+  formats, so a video whose owner disabled embedding fails the same bare way.
+  YouTube gives the reason in a part of its response yt-dlp doesn't read, so
+  `getVideo` runs with `--write-pages` and skips the video
+  (`EMBEDDING_DISABLED`) when the saved responses say "Playback on other
+  websites has been disabled by the video owner". Any other bare
+  `Video unavailable` stays a failure.
 - A token does not lift YouTube's request rate limit either (the yt-dlp wiki
   cites ~300 videos/h as a guest, ~2000/h with an account; exceeding it shows
   up as empty `200` caption responses — `Did not get any data blocks`). Every
