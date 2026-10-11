@@ -167,6 +167,37 @@ describe("VideoEntriesWorker", () => {
     assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
   });
 
+  it("marks the job SKIPPED with EMBEDDING_DISABLED and continues when the owner disabled playback on other websites", async () => {
+    let calls = 0;
+    mocks.videoEntriesQueue.getNextEntry.mock.mockImplementation(() => {
+      calls += 1;
+      if (calls === 1) return Promise.resolve(Success(entry));
+      return Promise.resolve(Success(null));
+    });
+    mocks.processVideoEntry.execute.mock.mockImplementation(() =>
+      Promise.resolve(
+        Failure({
+          type: "EMBEDDING_DISABLED_VIDEO",
+          message:
+            "ERROR: [youtube] GOBE0yqiMHo: Video unavailable\nYouTube: Playback on other websites has been disabled by the video owner",
+        }),
+      ),
+    );
+
+    const result = await sut.run({
+      shouldContinue: () => true,
+      onError: async () => {},
+    });
+
+    assert.ok(result.ok);
+    assert.equal(result.value, WorkerStopCause.EMPTY);
+    assert.deepEqual(
+      mocks.videoEntriesQueue.markAsSkipped.mock.calls[0]?.arguments,
+      [entry.id, "EMBEDDING_DISABLED"],
+    );
+    assert.equal(mocks.videoEntriesQueue.markAsFailed.mock.callCount(), 0);
+  });
+
   it("pauses after every processed entry so YouTube is not hit back-to-back", async () => {
     const pause = mock.fn<() => Promise<void>>(() => Promise.resolve());
     sut = buildSut(mocks, pause);

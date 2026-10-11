@@ -25,4 +25,27 @@ describe("YtDlpClient (real binary)", () => {
       /no such option: --this-flag-does-not-exist/,
     );
   });
+
+  it("finds out that an owner disabled playback on other websites", async () => {
+    // GOBE0yqiMHo can be watched on YouTube but not embedded. Prod passes
+    // cookies, which make yt-dlp try these clients; only web_embedded gets
+    // formats there, so it fails with a bare "Video unavailable".
+    const client = new YtDlpClient(testLogger());
+
+    const result = await client.execJson(
+      [
+        "https://youtube.com/watch?v=GOBE0yqiMHo",
+        "--dump-json",
+        "--skip-download",
+        "--extractor-args",
+        "youtube:player_client=web_embedded,tv_downgraded,web",
+      ],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.equal(
+      result.ok ? undefined : result.error.type,
+      "EMBEDDING_DISABLED_VIDEO",
+    );
+  });
 });

@@ -1,5 +1,6 @@
 import * as childProcess from "node:child_process";
 import * as fs from "node:fs";
+import * as fsp from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import { createInterface } from "node:readline";
@@ -38,6 +39,10 @@ export type PremiumOnlyVideoError = {
   type: "PREMIUM_ONLY_VIDEO";
   message: string;
 };
+export type EmbeddingDisabledVideoError = {
+  type: "EMBEDDING_DISABLED_VIDEO";
+  message: string;
+};
 export type UnprocessableVideoError =
   | MembersOnlyVideoError
   | GeoRestrictedVideoError
@@ -45,7 +50,8 @@ export type UnprocessableVideoError =
   | PremiereVideoError
   | RemovedByUploaderVideoError
   | ClaimedContentVideoError
-  | PremiumOnlyVideoError;
+  | PremiumOnlyVideoError
+  | EmbeddingDisabledVideoError;
 
 const MEMBERS_ONLY_MESSAGE =
   "Join this channel to get access to members-only content";
@@ -62,6 +68,10 @@ const REMOVED_BY_UPLOADER_MESSAGE =
 const CLAIMED_CONTENT_MESSAGE = "blocked due to the claimed content";
 /** YouTube distrusts the requester (IP reputation / missing PO token), not the video. */
 const BOT_CHALLENGE_PATTERN = /Sign in to confirm you.re not a bot/;
+const BARE_UNAVAILABLE_PATTERN =
+  /^ERROR: \[youtube\] [^:]+: Video unavailable$/m;
+const EMBEDDING_DISABLED_MESSAGE =
+  "Playback on other websites has been disabled by the video owner";
 
 /**
  * Pacing yt-dlp applies inside one invocation, per the yt-dlp wiki's advice
@@ -112,12 +122,25 @@ function failureMessage({ exitCode, stderr }: YtDlpExit): string | undefined {
   return stderr || `Exit code ${exitCode}`;
 }
 
+export type ExecJsonOptions = {
+  /**
+   * When yt-dlp fails with a bare "Video unavailable", find the reason
+   * YouTube gave in its raw responses. The run gets `--write-pages` and a
+   * throwaway working folder, as yt-dlp saves its dumps where it runs and
+   * has no option to put them elsewhere.
+   */
+  diagnoseUnavailable?: boolean;
+};
+
 /** The boundary to the yt-dlp binary: starts it with the fully composed args. Injected in tests. */
-export type YtDlpSpawn = (args: string[]) => YtDlpProcess;
+export type YtDlpSpawn = (
+  args: string[],
+  options?: { cwd?: string },
+) => YtDlpProcess;
 export const YT_DLP_SPAWN = Symbol.for("YT_DLP_SPAWN");
 
-const spawnYtDlp: YtDlpSpawn = (args) => {
-  const child = childProcess.spawn("yt-dlp", args);
+const spawnYtDlp: YtDlpSpawn = (args, options) => {
+  const child = childProcess.spawn("yt-dlp", args, { cwd: options?.cwd });
 
   let stderr = "";
   child.stderr.setEncoding("utf8");
@@ -233,6 +256,32 @@ function toYtDlpError(message: string, cause?: unknown): YtDlpError {
   return { type: "YT_DLP_ERROR", message, cause };
 }
 
+/** A "Video unavailable" with no reason, and nothing else in stderr that says why. */
+function isBareUnavailable(message: string): boolean {
+  return (
+    BARE_UNAVAILABLE_PATTERN.test(message) &&
+    !BOT_CHALLENGE_PATTERN.test(message) &&
+    classifyUnprocessable(message) === null
+  );
+}
+
+/**
+ * YouTube gives the reason behind a bare "Video unavailable" in
+ * `playerInterstitialRenderer`, which yt-dlp doesn't read, so it only shows in
+ * the raw responses. A dump that can't be read counts as not saying so.
+ */
+async function pagesSayEmbeddingDisabled(pagesDir: string): Promise<boolean> {
+  try {
+    for (const name of await fsp.readdir(pagesDir)) {
+      const page = await fsp.readFile(path.join(pagesDir, name), "utf8");
+      if (page.includes(EMBEDDING_DISABLED_MESSAGE)) return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 function resolveCookiesFile(logger: Logger): string | undefined {
   const cookiesB64 = process.env["YTDLP_COOKIES_B64"];
   if (!cookiesB64) return undefined;
@@ -341,27 +390,60 @@ export class YtDlpClient {
   private async runChecked(
     url: string,
     remainingArgs: string[],
+    { diagnoseUnavailable = false }: ExecJsonOptions = {},
   ): Promise<Result<string[], YtDlpError | UnprocessableVideoError>> {
-    const args = this.composeArgs(url, remainingArgs);
-    const command = `yt-dlp ${args.join(" ")}`;
-    const { stdout, ...exit } = await collect(this.spawn(args));
-    const { exitCode, stderr } = exit;
+    const pagesDir = diagnoseUnavailable
+      ? await fsp.mkdtemp(path.join(os.tmpdir(), "ytdlp-pages-"))
+      : undefined;
 
-    const message = failureMessage(exit);
-    if (message !== undefined) {
-      const failure = toYtDlpFailure(message);
-      if (failure.type === "YT_DLP_ERROR") {
-        this.logger.error({
-          message: `yt-dlp execution failed with code ${exitCode}`,
-          context: { stderr, command },
-        });
+    try {
+      const args = this.composeArgs(
+        url,
+        pagesDir === undefined
+          ? remainingArgs
+          : [...remainingArgs, "--write-pages"],
+      );
+      const command = `yt-dlp ${args.join(" ")}`;
+      const { stdout, ...exit } = await collect(
+        this.spawn(args, { cwd: pagesDir }),
+      );
+      const { exitCode, stderr } = exit;
+
+      const message = failureMessage(exit);
+      if (message !== undefined) {
+        const failure: YtDlpError | UnprocessableVideoError =
+          pagesDir !== undefined &&
+          isBareUnavailable(message) &&
+          (await pagesSayEmbeddingDisabled(pagesDir))
+            ? {
+                type: "EMBEDDING_DISABLED_VIDEO",
+                message: `${message.trimEnd()}\nYouTube: ${EMBEDDING_DISABLED_MESSAGE}`,
+              }
+            : toYtDlpFailure(message);
+        if (failure.type === "YT_DLP_ERROR") {
+          this.logger.error({
+            message: `yt-dlp execution failed with code ${exitCode}`,
+            context: { stderr, command },
+          });
+        }
+        return Failure(failure);
       }
-      return Failure(failure);
+
+      this.logWarnings(command, stderr);
+
+      return Success(stdout);
+    } finally {
+      if (pagesDir !== undefined) {
+        // Failing to clean up must not replace the run's result.
+        await fsp
+          .rm(pagesDir, { recursive: true, force: true })
+          .catch((error) =>
+            this.logger.warn(
+              `Failed to remove yt-dlp pages folder ${pagesDir}: ${error}`,
+            ),
+          );
+      }
     }
-
-    this.logWarnings(command, stderr);
-
-    return Success(stdout);
   }
 
   /** Surfaces what yt-dlp wrote to stderr on a successful run (its WARNING lines). */
@@ -375,6 +457,7 @@ export class YtDlpClient {
    */
   async execJson<T>(
     args: string[],
+    options: ExecJsonOptions = {},
   ): Promise<Result<T[], YtDlpError | UnprocessableVideoError>> {
     try {
       this.logger.info(`Running yt-dlp with args: ${args.join(" ")}`);
@@ -387,7 +470,7 @@ export class YtDlpClient {
         });
       }
 
-      const run = await this.runChecked(url, remainingArgs);
+      const run = await this.runChecked(url, remainingArgs, options);
       if (!run.ok) return run;
 
       const results: T[] = [];

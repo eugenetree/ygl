@@ -77,7 +77,10 @@ export class YoutubeApiGetVideo {
       "--no-playlist",
     ];
 
-    const execResult = await this.ytDlpClient.execJson<unknown>([url, ...args]);
+    const execResult = await this.ytDlpClient.execJson<unknown>(
+      [url, ...args],
+      { diagnoseUnavailable: true },
+    );
     await this.responseRecorder?.record(videoId, execResult);
 
     if (!execResult.ok) {

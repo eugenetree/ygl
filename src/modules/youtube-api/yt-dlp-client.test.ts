@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import assert from "node:assert/strict";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { describe, it, mock } from "node:test";
 import { Logger } from "../_common/logger/logger.js";
 import {
@@ -244,6 +246,181 @@ describe("YtDlpClient.execJson()", () => {
     assert.equal(result.error.type, "YT_DLP_ERROR");
     assert.match(result.error.message, /^YouTube bot challenge/);
     assert.ok(result.error.message.endsWith(stderr), "full stderr kept");
+  });
+});
+
+const BARE_UNAVAILABLE_STDERR =
+  "ERROR: [youtube] GOBE0yqiMHo: Video unavailable\n";
+
+const EMBEDDING_DISABLED_PAGE = JSON.stringify({
+  playabilityStatus: {
+    status: "UNPLAYABLE",
+    reason: "Video unavailable",
+    errorScreen: {
+      playerInterstitialRenderer: {
+        content: {
+          interstitialViewModel: {
+            title: { content: "Video unavailable" },
+            description: {
+              content:
+                "Playback on other websites has been disabled by the video owner",
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
+function pageWritingSpawn(stderr: string, pages: Record<string, string>) {
+  const calls: string[][] = [];
+  const cwds: (string | undefined)[] = [];
+  const spawn: YtDlpSpawn = (args, options) => {
+    calls.push(args);
+    cwds.push(options?.cwd);
+    if (options?.cwd) {
+      for (const [name, content] of Object.entries(pages)) {
+        fs.writeFileSync(path.join(options.cwd, name), content);
+      }
+    }
+    return fakeProcess({ exitCode: 1, stderr });
+  };
+  return { spawn, calls, cwds };
+}
+
+describe("YtDlpClient.execJson() diagnosing an unavailable video", () => {
+  it("skips a video whose owner disabled playback on other websites", async () => {
+    const { spawn } = pageWritingSpawn(BARE_UNAVAILABLE_STDERR, {
+      "GOBE0yqiMHo_5ba6_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump":
+        EMBEDDING_DISABLED_PAGE,
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson(
+      ["https://youtube.com/watch?v=GOBE0yqiMHo", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.equal(result.error.type, "EMBEDDING_DISABLED_VIDEO");
+    assert.match(result.error.message, /Video unavailable/);
+    assert.match(
+      result.error.message,
+      /Playback on other websites has been disabled by the video owner/,
+    );
+  });
+
+  it("keeps a bare unavailable a failure when YouTube's responses don't say why", async () => {
+    const { spawn } = pageWritingSpawn(BARE_UNAVAILABLE_STDERR, {
+      "GOBE0yqiMHo_watch.dump": '{"playabilityStatus":{"status":"OK"}}',
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson(
+      ["https://youtube.com/watch?v=GOBE0yqiMHo", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.deepEqual(result, {
+      ok: false,
+      error: {
+        type: "YT_DLP_ERROR",
+        message: BARE_UNAVAILABLE_STDERR,
+        cause: undefined,
+      },
+    });
+  });
+
+  it("looks for a reason only behind a bare unavailable, not behind a bot challenge", async () => {
+    const stderr =
+      "ERROR: [youtube] GOBE0yqiMHo: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.\n";
+    const { spawn } = pageWritingSpawn(stderr, {
+      "GOBE0yqiMHo_player.dump": EMBEDDING_DISABLED_PAGE,
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson(
+      ["https://youtube.com/watch?v=GOBE0yqiMHo", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.equal(result.error.type, "YT_DLP_ERROR");
+    assert.match(result.error.message, /^YouTube bot challenge/);
+  });
+
+  it("keeps a bot challenge a failure when a bare unavailable follows it", async () => {
+    const stderr = [
+      "WARNING: [youtube] GOBE0yqiMHo: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.",
+      BARE_UNAVAILABLE_STDERR,
+    ].join("\n");
+    const { spawn } = pageWritingSpawn(stderr, {
+      "GOBE0yqiMHo_player.dump": EMBEDDING_DISABLED_PAGE,
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson(
+      ["https://youtube.com/watch?v=GOBE0yqiMHo", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.equal(result.error.type, "YT_DLP_ERROR");
+    assert.match(result.error.message, /^YouTube bot challenge/);
+  });
+
+  it("runs yt-dlp with --write-pages in a folder it removes afterwards", async () => {
+    const { spawn, calls, cwds } = pageWritingSpawn(BARE_UNAVAILABLE_STDERR, {
+      "GOBE0yqiMHo_player.dump": EMBEDDING_DISABLED_PAGE,
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    await client.execJson(
+      ["https://youtube.com/watch?v=GOBE0yqiMHo", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.match(calls[0]?.join(" ") ?? "", /--write-pages/);
+    const cwd = cwds[0];
+    assert.ok(cwd, "ran in a folder of its own");
+    assert.equal(fs.existsSync(cwd), false, "folder removed");
+  });
+
+  it("removes the folder after a successful run too", async () => {
+    const cwds: (string | undefined)[] = [];
+    const spawn: YtDlpSpawn = (_args, options) => {
+      cwds.push(options?.cwd);
+      return fakeProcess({ stdout: '{"id":"GG3qo-O8VJE"}\n' });
+    };
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson(
+      ["https://youtube.com/watch?v=GG3qo-O8VJE", "--dump-json"],
+      { diagnoseUnavailable: true },
+    );
+
+    assert.deepEqual(result, { ok: true, value: [{ id: "GG3qo-O8VJE" }] });
+    assert.ok(cwds[0]);
+    assert.equal(fs.existsSync(cwds[0]), false);
+  });
+
+  it("leaves runs that don't ask for a diagnosis as they were", async () => {
+    const { spawn, calls, cwds } = pageWritingSpawn(BARE_UNAVAILABLE_STDERR, {
+      "GOBE0yqiMHo_player.dump": EMBEDDING_DISABLED_PAGE,
+    });
+    const client = new YtDlpClient(testLogger(), spawn);
+
+    const result = await client.execJson([
+      "https://youtube.com/watch?v=GOBE0yqiMHo",
+      "--dump-json",
+    ]);
+
+    assert.doesNotMatch(calls[0]?.join(" ") ?? "", /--write-pages/);
+    assert.equal(cwds[0], undefined);
+    assert.equal(result.ok ? undefined : result.error.type, "YT_DLP_ERROR");
   });
 });
 

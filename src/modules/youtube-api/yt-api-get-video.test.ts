@@ -7,6 +7,7 @@ import { Failure, Result } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import {
+  type ExecJsonOptions,
   MembersOnlyVideoError,
   YtDlpClient,
   YtDlpError,
@@ -57,11 +58,15 @@ class MockYtDlpClient {
     manual: null,
   };
 
+  execJsonOptions: ExecJsonOptions | undefined;
+
   constructor(private readonly ytDlpResponse: unknown) {}
 
   async execJson<T>(
     _args: string[],
+    options?: ExecJsonOptions,
   ): Promise<Result<T[], YtDlpError | MembersOnlyVideoError>> {
+    this.execJsonOptions = options;
     return { ok: true, value: [this.ytDlpResponse as T] };
   }
 
@@ -123,6 +128,14 @@ describe("YoutubeApiGetVideo - which video yt-dlp returned", () => {
     const result = await service.getVideo("testVideoId");
 
     assert.equal(!result.ok && result.error.type, "PREMIUM_ONLY_VIDEO");
+  });
+
+  it("asks yt-dlp to find out why YouTube calls the video unavailable", async () => {
+    const { service, mockClient } = createService(baseYtData());
+
+    await service.getVideo("testVideoId");
+
+    assert.deepEqual(mockClient.execJsonOptions, { diagnoseUnavailable: true });
   });
 });
 

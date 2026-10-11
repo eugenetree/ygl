@@ -24,7 +24,8 @@ export type VideoJobSkipCause =
   | "PREMIERE"
   | "REMOVED_BY_UPLOADER"
   | "CLAIMED_CONTENT"
-  | "PREMIUM_ONLY";
+  | "PREMIUM_ONLY"
+  | "EMBEDDING_DISABLED";
 
 export type VideoDiscoveryJobStatus =
   | "PENDING"

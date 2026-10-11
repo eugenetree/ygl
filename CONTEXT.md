@@ -20,6 +20,16 @@ _Avoid_: Boost, prioritize
 The name a channel shows on YouTube, under its videos and on its page.
 _Avoid_: Username, handle (the `@` identifier in the channel's URL, a different thing)
 
+### Scraping
+
+**Skip**:
+A video left unscraped because YouTube says why a viewer in the scraper's position (signed in, age not verified, in the scraper's country) can't watch it: members-only, Premium-only, age-restricted, removed by the uploader, and the like. It is a fact about the video, not about the scraper.
+_Avoid_: Skippable error
+
+**Failure**:
+A video that couldn't be scraped for any other reason: YouTube refused the scraper, something on our side broke, or YouTube didn't say why the video can't be watched. It may be the video's fault or the scraper's.
+_Avoid_: Unskippable error, error
+
 ### Videos
 
 **Spoken language**:
