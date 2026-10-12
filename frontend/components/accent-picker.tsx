@@ -20,30 +20,45 @@ import {
 } from "@/lib/accent";
 import { useShortcuts } from "@/lib/use-shortcuts";
 
-type Look = "hero" | "header";
+type TriggerProps = React.ComponentProps<"button"> & { accent: Accent };
 
-const TRIGGER_CLASS: Record<Look, string> = {
-  // Inside home's search box, after the input.
-  hero: "h-[34px] gap-1.5 border-l px-2.5",
-  // A chip inside the search box on phones, the name inside it on tablets,
-  // and a button beside it in the side-list header.
-  header:
-    "rounded-md border px-[7px] py-[3px] text-xs sm:gap-1.5 sm:rounded-none sm:border-0 sm:border-l sm:px-2.5 sm:py-0 sm:text-[13px] side:h-9 side:rounded-md side:border side:bg-surface side:text-sm side:hover:bg-tint",
-};
+/** The accent picker inside home's search box, after the input. */
+export function HeroAccentPicker() {
+  return <AccentPicker trigger={(accent) => <HeroTrigger accent={accent} />} />;
+}
+
+/**
+ * The accent picker of the search page's header: a chip inside the search
+ * box on phones, the name inside it on tablets, and a button beside it in
+ * the side-list layout.
+ */
+export function HeaderAccentPicker() {
+  return (
+    <AccentPicker trigger={(accent) => <HeaderTrigger accent={accent} />} />
+  );
+}
 
 /**
  * The accent button and its menu, also picked with keys 1–5. The accent lives
  * in the URL, which only the browser reads, so the server renders American.
  */
-export function AccentPicker({ look }: { look: Look }) {
+function AccentPicker({
+  trigger,
+}: {
+  trigger: (accent: Accent) => React.ReactElement;
+}) {
   return (
-    <Suspense fallback={<AccentTrigger look={look} accent={DEFAULT_ACCENT} />}>
-      <AccentMenu look={look} />
+    <Suspense fallback={trigger(DEFAULT_ACCENT)}>
+      <AccentMenu trigger={trigger} />
     </Suspense>
   );
 }
 
-function AccentMenu({ look }: { look: Look }) {
+function AccentMenu({
+  trigger,
+}: {
+  trigger: (accent: Accent) => React.ReactElement;
+}) {
   const accent = useAccent();
   useShortcuts(
     Object.fromEntries(
@@ -56,9 +71,7 @@ function AccentMenu({ look }: { look: Look }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <AccentTrigger look={look} accent={accent} />
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{trigger(accent)}</DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
         className="w-[200px] rounded-lg border bg-surface shadow-pop ring-0"
@@ -94,38 +107,49 @@ function AccentMenu({ look }: { look: Look }) {
   );
 }
 
-function AccentTrigger({
-  look,
-  accent,
-  className,
-  ...props
-}: React.ComponentProps<"button"> & { look: Look; accent: Accent }) {
+function HeroTrigger({ accent, className, ...props }: TriggerProps) {
+  return (
+    <TriggerButton
+      accent={accent}
+      className={cn("h-[34px] gap-1.5 border-l px-2.5", className)}
+      {...props}
+    >
+      {accent.name}
+      <ChevronDownIcon aria-hidden className="size-3.5 text-faint" />
+    </TriggerButton>
+  );
+}
+
+function HeaderTrigger({ accent, className, ...props }: TriggerProps) {
+  return (
+    <TriggerButton
+      accent={accent}
+      className={cn(
+        "rounded-md border px-[7px] py-[3px] text-xs sm:gap-1.5 sm:rounded-none sm:border-0 sm:border-l sm:px-2.5 sm:py-0 sm:text-[13px] side:h-9 side:rounded-md side:border side:bg-surface side:text-sm side:hover:bg-tint",
+        className,
+      )}
+      {...props}
+    >
+      <span className="uppercase sm:hidden">{accent.code}</span>
+      <span className="max-sm:hidden">{accent.name}</span>
+      <ChevronDownIcon
+        aria-hidden
+        className="size-3.5 text-faint max-sm:hidden"
+      />
+    </TriggerButton>
+  );
+}
+
+function TriggerButton({ accent, className, ...props }: TriggerProps) {
   return (
     <button
       type="button"
       aria-label={`Accent: ${accent.name}`}
       className={cn(
         "flex shrink-0 items-center font-medium whitespace-nowrap text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-        TRIGGER_CLASS[look],
         className,
       )}
       {...props}
-    >
-      {look === "header" ? (
-        <>
-          <span className="uppercase sm:hidden">{accent.code}</span>
-          <span className="max-sm:hidden">{accent.name}</span>
-          <ChevronDownIcon
-            aria-hidden
-            className="size-3.5 text-faint max-sm:hidden"
-          />
-        </>
-      ) : (
-        <>
-          {accent.name}
-          <ChevronDownIcon aria-hidden className="size-3.5 text-faint" />
-        </>
-      )}
-    </button>
+    />
   );
 }
