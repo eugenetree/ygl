@@ -5,6 +5,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
+import { useTheme } from "@/lib/theme";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -27,6 +29,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={getQueryClient()}>
       {children}
+      <ThemedToaster />
     </QueryClientProvider>
   );
+}
+
+// Always mounted, so its `useTheme` also keeps the html element's class in
+// step with the system and other tabs on pages without a theme toggle.
+function ThemedToaster() {
+  return <Toaster theme={useTheme()} />;
 }
