@@ -7,6 +7,7 @@ import { PlaybackProvider, usePlayback } from "@/components/player/playback";
 import { PlayerVideo } from "@/components/player/player-video";
 import { ClipRow } from "@/components/search/clip-row";
 import type { SearchClips } from "@/components/search/use-search-clips";
+import { Button } from "@/components/ui/button";
 import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
 
 export function SearchResults({
@@ -42,7 +43,7 @@ export function SearchResults({
 function ClipList({ query }: { query: string }) {
   const {
     state,
-    actions: { playClip },
+    actions: { playClip, showMoreClips },
   } = usePlayback();
 
   return (
@@ -65,6 +66,17 @@ function ClipList({ query }: { query: string }) {
           </li>
         ))}
       </ol>
+      {state.hasMoreClips && (
+        // Left enabled while loading: disabling it would drop its focus.
+        <Button
+          variant="outline"
+          className="mt-2 h-10 w-full rounded-lg bg-surface hover:bg-tint dark:bg-surface dark:hover:bg-tint"
+          aria-busy={state.isLoadingMoreClips}
+          onClick={showMoreClips}
+        >
+          {state.isLoadingMoreClips ? "Loading clips…" : "Show more clips"}
+        </Button>
+      )}
     </section>
   );
 }

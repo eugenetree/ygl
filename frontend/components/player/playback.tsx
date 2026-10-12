@@ -25,7 +25,9 @@ import { playedPastClipEnd } from "@/lib/clip-loop";
 type Direction = 1 | -1;
 
 export type PlaybackState = SearchClips & {
+  /** More clips exist than are loaded. */
   hasMoreClips: boolean;
+  isLoadingMoreClips: boolean;
   currentIndex: number;
   currentClip: HighlightedClip;
   hasPrevious: boolean;
@@ -40,7 +42,10 @@ export type PlaybackActions = {
   /** Makes a clip current and plays it from its play-from point. */
   playClip: (index: number) => void;
   previous: () => void;
+  /** Past the last loaded clip, loads the next batch and plays into it. */
   next: () => void;
+  /** Loads the next batch without changing the clip. */
+  showMoreClips: () => void;
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
@@ -89,13 +94,15 @@ export function PlaybackProvider({
   firstBatch: ClipBatch;
   children: React.ReactNode;
 }) {
-  const { data: search, hasNextPage } = useSearchClips({
+  const { search, hasNextPage, isFetchingNextPage, loadMore } = useSearchClips({
     query,
     queryWords,
     firstBatch,
   });
   const { clips } = search;
   const [currentIndex, setCurrentIndex] = useState(0);
+  // The clip Next was pressed on while the batch after it loads.
+  const [waitingFrom, setWaitingFrom] = useState<number | null>(null);
   const [isLooping, setLooping] = useState(true);
   const [needsTap, setNeedsTap] = useState(false);
   const direction = useRef<Direction>(1);
@@ -124,11 +131,16 @@ export function PlaybackProvider({
     onError: (code) => {
       if (!UNPLAYABLE_ERRORS.has(code)) return;
       const target = currentIndex + direction.current;
-      if (!clips[target]) return;
+      const canLoadTarget = direction.current === 1 && hasNextPage;
+      if (!clips[target] && !canLoadTarget) return;
       toast("Skipped a video that can't be played here", {
         id: "unplayable-video",
       });
-      startClip(target, direction.current);
+      if (clips[target]) {
+        startClip(target, direction.current);
+      } else {
+        continuePastLoaded(currentIndex);
+      }
     },
     onAutoplayBlocked: () => {
       isAutoplayBlocked.current = true;
@@ -163,15 +175,42 @@ export function PlaybackProvider({
       isAutoplayBlocked.current = false;
       lastTimeMs.current = clip.playFrom;
       hideTapHint();
+      setWaitingFrom(null);
       setCurrentIndex(index);
       controls.playAt(positionOf(clip));
     },
     [clips, controls, hideTapHint],
   );
 
+  const continuePastLoaded = useCallback(
+    (from: number) => {
+      setWaitingFrom(from);
+      loadMore().then((loaded) => {
+        // Nothing new to move to: a failure, or a batch of clips already seen.
+        if (!loaded?.clips[from + 1]) {
+          setWaitingFrom((waiting) => (waiting === from ? null : waiting));
+        }
+      });
+    },
+    [loadMore],
+  );
+
+  // In an effect, not after loadMore resolves: the new clips must have
+  // rendered before the index can point at one.
+  useEffect(() => {
+    if (waitingFrom !== null && clips[waitingFrom + 1]) {
+      startClip(waitingFrom + 1, 1);
+    }
+  }, [waitingFrom, clips, startClip]);
+
+  const isOnLastLoadedClip = currentIndex === clips.length - 1;
+  useEffect(() => {
+    if (isOnLastLoadedClip && hasNextPage) loadMore();
+  }, [isOnLastLoadedClip, hasNextPage, loadMore]);
+
   const isPlaying = isPlayingState(player.state);
   const hasPrevious = currentIndex > 0;
-  const hasNext = currentIndex < clips.length - 1;
+  const hasNext = !isOnLastLoadedClip || hasNextPage;
 
   const playClip = useCallback(
     (index: number) => startClip(index, index < currentIndex ? -1 : 1),
@@ -181,8 +220,21 @@ export function PlaybackProvider({
     if (hasPrevious) startClip(currentIndex - 1, -1);
   }, [hasPrevious, startClip, currentIndex]);
   const next = useCallback(() => {
-    if (hasNext) startClip(currentIndex + 1, 1);
-  }, [hasNext, startClip, currentIndex]);
+    if (!isOnLastLoadedClip) {
+      startClip(currentIndex + 1, 1);
+    } else if (hasNextPage) {
+      continuePastLoaded(currentIndex);
+    }
+  }, [
+    isOnLastLoadedClip,
+    hasNextPage,
+    startClip,
+    continuePastLoaded,
+    currentIndex,
+  ]);
+  const showMoreClips = useCallback(() => {
+    loadMore();
+  }, [loadMore]);
 
   const play = useCallback(() => {
     if (isAutoplayBlocked.current) {
@@ -209,6 +261,7 @@ export function PlaybackProvider({
       state: {
         ...search,
         hasMoreClips: hasNextPage,
+        isLoadingMoreClips: isFetchingNextPage,
         currentIndex,
         currentClip,
         hasPrevious,
@@ -221,6 +274,7 @@ export function PlaybackProvider({
         playClip,
         previous,
         next,
+        showMoreClips,
         play,
         pause,
         togglePlay,
@@ -231,6 +285,7 @@ export function PlaybackProvider({
     [
       search,
       hasNextPage,
+      isFetchingNextPage,
       currentIndex,
       currentClip,
       hasPrevious,
@@ -241,6 +296,7 @@ export function PlaybackProvider({
       playClip,
       previous,
       next,
+      showMoreClips,
       play,
       pause,
       togglePlay,
