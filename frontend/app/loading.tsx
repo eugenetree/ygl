@@ -1,4 +1,4 @@
-import { ClipListSkeleton } from "@/components/search/clip-list-skeleton";
+import { SearchResultsSkeleton } from "@/components/search/search-results-skeleton";
 import { SearchShell } from "@/components/search/search-shell";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -10,7 +10,7 @@ export default function Loading() {
     <SearchShell
       search={<Skeleton className="h-9 min-w-0 flex-1 sm:max-w-[520px]" />}
     >
-      <ClipListSkeleton />
+      <SearchResultsSkeleton />
     </SearchShell>
   );
 }
