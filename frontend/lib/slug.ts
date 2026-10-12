@@ -1,18 +1,11 @@
 import "server-only";
 
-// ADR-0012. Browsers segment differently from the server: Chrome splits
-// "a.m" and "a:b", which Node keeps whole. Slugs are computed on the server
-// only, so every path for a search names the same canonical slug.
-const segmenter = new Intl.Segmenter("en", { granularity: "word" });
+import { words } from "@/lib/words";
 
-export function words(text: string): string[] {
-  return [...segmenter.segment(text.normalize("NFC").toLowerCase())]
-    .filter((segment) => segment.isWordLike)
-    .map((segment) => segment.segment);
-}
-
+// ADR-0012. Slugs are built on the server only, so every path for a search
+// names the same canonical slug whatever the browser.
 export function slug(query: string): string {
-  return words(query.replaceAll("’", "'")).join("-");
+  return words(query).join("-");
 }
 
 export function unslug(slug: string): string {

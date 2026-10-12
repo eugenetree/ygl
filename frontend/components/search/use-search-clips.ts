@@ -40,7 +40,7 @@ export function useSearchClips({
   firstBatch,
 }: {
   query: string;
-  /** The query's words as the server segments them (see lib/highlight). */
+  /** The query's words as the server segments them (see lib/words). */
   queryWords: readonly string[];
   firstBatch: ClipBatch;
 }) {

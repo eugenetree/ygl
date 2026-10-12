@@ -6,7 +6,7 @@ import { toClipBatch } from "@/lib/clip-batch";
 import { searchMetadata } from "@/lib/metadata";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { getSearchPage } from "@/lib/search.server";
-import { words } from "@/lib/slug";
+import { words } from "@/lib/words";
 
 // ISR (ADR-0011): rendered on the first request for a path, then cached for
 // an hour and refreshed in the background. The empty list is what makes

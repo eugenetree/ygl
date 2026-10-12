@@ -1,13 +1,6 @@
+import { foldCase, segmentWords } from "@/lib/words";
+
 export type TextPart = { text: string; isMatch: boolean };
-
-// The same segmentation as the slug (ADR-0012). Browsers split some words the
-// server keeps whole, so text highlighted on the server must reach the browser
-// as parts rather than be highlighted again there.
-const segmenter = new Intl.Segmenter("en", { granularity: "word" });
-
-function wordKey(word: string): string {
-  return word.toLowerCase().replaceAll("’", "'");
-}
 
 /**
  * Splits text into parts, marking every word equal to one of `queryWords`.
@@ -18,24 +11,22 @@ export function highlight(
   text: string,
   queryWords: readonly string[],
 ): TextPart[] {
-  const wanted = new Set(queryWords.map(wordKey));
+  const wanted = new Set(queryWords.map(foldCase));
   const parts: TextPart[] = [];
   let gap = "";
 
-  for (const { segment, isWordLike } of segmenter.segment(
-    text.normalize("NFC"),
-  )) {
-    const isMatch = Boolean(isWordLike) && wanted.has(wordKey(segment));
+  for (const segment of segmentWords(text)) {
+    const isMatch = segment.isWord && wanted.has(foldCase(segment.text));
     const last = parts.at(-1);
     if (isMatch && last?.isMatch && /^\s+$/.test(gap)) {
-      last.text += gap + segment;
+      last.text += gap + segment.text;
       gap = "";
     } else if (isMatch) {
       if (gap) parts.push({ text: gap, isMatch: false });
-      parts.push({ text: segment, isMatch: true });
+      parts.push({ text: segment.text, isMatch: true });
       gap = "";
     } else {
-      gap += segment;
+      gap += segment.text;
     }
   }
   if (gap) parts.push({ text: gap, isMatch: false });

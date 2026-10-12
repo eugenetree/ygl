@@ -49,6 +49,13 @@ link finds the same clips. Examples:
   segment like Node: Chrome splits `a.m`, `u.s`, `e.g` and `a:b`, so in Chrome
   `9 a.m.` would become `9-a-m` and search for `9 a m`. The search box asks the
   server for the slug before it navigates.
+- Highlighting uses the same segmentation, and it runs in the browser too, for
+  clips past the first batch and the captions around a clip. So the shared
+  segmentation joins back two words separated by one of the characters that
+  UAX #29 keeps between letters (`.`, `:`, `'`, `’` and the like), as Node
+  already does. Chrome then highlights `a.m` in `9 a.m.` like the server. Slugs
+  still stay on the server, so a browser that differs in some way this doesn't
+  cover can't build a different URL.
 - Old `/{query}` URLs get a 404.
 - The query in the URL is lowercase, so the page shows it lowercase
   (`i don't know`).
