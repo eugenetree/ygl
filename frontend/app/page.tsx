@@ -4,6 +4,10 @@ import { SiteFooter } from "@/components/site-footer";
 import { TryLinks } from "@/components/try-links";
 import { YouTubeLogo } from "@/components/youtube-logo";
 
+// Rendered per request: a static home would keep the build's PUBLIC_ORIGIN in
+// its preview image URL. Home makes no API call, so this is cheap.
+export const dynamic = "force-dynamic";
+
 const STEPS = [
   {
     title: "Type a word or phrase",
