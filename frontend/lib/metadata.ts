@@ -3,6 +3,11 @@ import type { Metadata } from "next";
 import { formatTotal } from "@/lib/clip-batch";
 import { PREVIEW_SIZE } from "@/lib/preview-image";
 import type { SearchPage } from "@/lib/search.server";
+import {
+  noClipsTitle,
+  pronounceHeading,
+  TOO_LONG_TITLE,
+} from "@/lib/search-copy";
 
 export const HOME_HEADING = "Hear how it's actually said.";
 export const HOME_SUBHEADING =
@@ -35,9 +40,9 @@ export function siteMetadata(origin: URL): Metadata {
 export function searchMetadata(page: SearchPage): Metadata {
   switch (page.status) {
     case "too-long":
-      return { title: "This search is too long", robots: { index: false } };
+      return { title: TOO_LONG_TITLE, robots: { index: false } };
     case "no-clips": {
-      const title = `No clips for “${page.query}”`;
+      const title = noClipsTitle(page.query);
       const description = `No YouTube clips say “${page.query}” yet.`;
       // A segment with no words names no search to point at.
       const { slug } = page;
@@ -56,7 +61,7 @@ export function searchMetadata(page: SearchPage): Metadata {
     }
     case "clips": {
       const { total, isTotalExact } = page.firstBatch;
-      const title = `How to pronounce “${page.query}”: ${realExamples(page.firstBatch)}`;
+      const title = `${pronounceHeading(page.query)}: ${exampleCount(page.firstBatch)}`;
       const clips =
         total === 1
           ? "1 real YouTube clip, starting"
@@ -90,6 +95,6 @@ function previewImageOf(slug: string) {
 }
 
 /** The count in a search's title, and its preview image's count line. */
-export function realExamples({ total, isTotalExact }: SearchResponse): string {
+export function exampleCount({ total, isTotalExact }: SearchResponse): string {
   return `${formatTotal(total, isTotalExact)} real ${total === 1 ? "example" : "examples"}`;
 }

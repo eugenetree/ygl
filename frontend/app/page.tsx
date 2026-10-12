@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TryLinks } from "@/components/try-links";
 import { YouTubeLogo } from "@/components/youtube-logo";
+import { HOME_HEADING } from "@/lib/metadata";
 
 // Rendered per request: a static home would keep the build's PUBLIC_ORIGIN in
 // its preview image URL. Home makes no API call, so this is cheap.
@@ -43,7 +44,7 @@ export default function HomePage() {
               English · 5 accents
             </p>
             <h1 className="text-[32px] leading-[1.05] font-bold tracking-[-0.035em] text-balance sm:text-[44px]">
-              Hear how it's actually said.
+              {HOME_HEADING}
             </h1>
             <p className="flex flex-wrap items-center justify-center gap-x-1.5 text-base text-muted-foreground">
               <span>Search</span>

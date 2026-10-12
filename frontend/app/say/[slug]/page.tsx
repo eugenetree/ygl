@@ -6,6 +6,7 @@ import { toClipBatch } from "@/lib/clip-batch";
 import { searchMetadata } from "@/lib/metadata";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { getSearchPage } from "@/lib/search.server";
+import { noClipsTitle, TOO_LONG_TITLE } from "@/lib/search-copy";
 import { words } from "@/lib/words";
 
 // ISR (ADR-0011): rendered on the first request for a path, then cached for
@@ -31,13 +32,13 @@ export default async function SearchPage({ params }: PageProps<"/say/[slug]">) {
   switch (page.status) {
     case "too-long":
       return (
-        <SearchMessage title="This search is too long">
+        <SearchMessage title={TOO_LONG_TITLE}>
           <p>Searches stop at {MAX_QUERY_LENGTH} characters.</p>
         </SearchMessage>
       );
     case "no-clips":
       return (
-        <SearchMessage title={`No clips for “${page.query}”`}>
+        <SearchMessage title={noClipsTitle(page.query)}>
           <TryLinks />
         </SearchMessage>
       );

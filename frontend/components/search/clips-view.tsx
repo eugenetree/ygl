@@ -22,6 +22,7 @@ import type { SearchClips } from "@/components/search/use-search-clips";
 import { Button } from "@/components/ui/button";
 import { useAccentSwitch } from "@/lib/accent";
 import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
+import { pronounceHeading } from "@/lib/search-copy";
 
 export function ClipsView({
   query,
@@ -78,7 +79,7 @@ function ListHeading({ query }: { query: string }) {
   return (
     <>
       <h1 className="text-base leading-[1.3] font-semibold sm:text-[17px]">
-        How to pronounce “{query}”
+        {pronounceHeading(query)}
       </h1>
       <p className="text-xs text-muted-foreground sm:text-[13px]">
         {countLine(state)}

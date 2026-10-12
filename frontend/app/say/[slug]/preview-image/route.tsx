@@ -1,4 +1,4 @@
-import { HOME_HEADING, HOME_SUBHEADING, realExamples } from "@/lib/metadata";
+import { exampleCount, HOME_HEADING, HOME_SUBHEADING } from "@/lib/metadata";
 import { previewImage } from "@/lib/preview-image";
 import { getSearchPage } from "@/lib/search.server";
 
@@ -25,7 +25,7 @@ export async function GET(
     case "clips":
       return previewImage({
         heading: `“${page.query}”`,
-        line: realExamples(page.firstBatch),
+        line: exampleCount(page.firstBatch),
       });
   }
 }
