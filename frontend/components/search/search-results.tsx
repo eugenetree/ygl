@@ -1,5 +1,6 @@
 "use client";
 
+import { CaptionCard } from "@/components/player/caption-card";
 import { ClipProgress } from "@/components/player/clip-progress";
 import { ClipTitle } from "@/components/player/clip-title";
 import { ControlBar } from "@/components/player/control-bar";
@@ -32,6 +33,7 @@ export function SearchResults({
             <ClipProgress />
             <ControlBar />
           </div>
+          <CaptionCard queryWords={queryWords} />
         </div>
         <ClipList query={query} />
       </div>
