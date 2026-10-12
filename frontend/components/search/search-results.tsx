@@ -131,7 +131,8 @@ function countLine({
   hasMoreClips,
 }: SearchClips & { hasMoreClips: boolean }): string {
   const loaded = clips.length.toLocaleString("en-US");
-  if (hasMoreClips) {
+  // Paging stops at 10,000 clips, short of a total that isn't exact.
+  if (hasMoreClips || !isTotalExact) {
     return `First ${loaded} of ${formatTotal(total, isTotalExact)} clips`;
   }
   const all = `${loaded} ${clips.length === 1 ? "clip" : "clips"}`;
