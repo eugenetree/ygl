@@ -5,6 +5,10 @@
 /* shadcn's `(&:is(.dark *))` would miss the html element the class sits on. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* The search page's layouts. Outside `side`, the player is pinned on top. */
+@custom-variant side (@media (min-width: 960px) and (orientation: landscape));
+@custom-variant short (@media (max-height: 499px));
+
 @theme inline {
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;

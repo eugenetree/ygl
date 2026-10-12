@@ -10,7 +10,7 @@ const secondaryButton =
   "h-[34px] rounded-md bg-surface px-3 hover:bg-tint dark:bg-surface dark:hover:bg-tint";
 
 /** The control bar of the side-list layout. */
-export function ControlBar() {
+export function ControlBar({ speed }: { speed?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5 border-t px-3 py-2.5">
       <PreviousButton />
@@ -18,6 +18,7 @@ export function ControlBar() {
       <NextButton />
       <span aria-hidden className="mx-1.5 h-5 w-px bg-border" />
       <LoopSwitch />
+      {speed}
       <PlaybackTime />
     </div>
   );

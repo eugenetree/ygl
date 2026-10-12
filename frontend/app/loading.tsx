@@ -8,7 +8,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Loading() {
   return (
     <SearchShell
-      search={<Skeleton className="h-9 min-w-0 flex-1 sm:max-w-[520px]" />}
+      search={
+        <Skeleton className="h-9 min-w-0 flex-1 rounded-lg sm:h-[38px] sm:max-w-[440px] side:h-9 side:max-w-[520px]" />
+      }
     >
       <SearchResultsSkeleton />
     </SearchShell>

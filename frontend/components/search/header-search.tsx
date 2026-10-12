@@ -5,16 +5,23 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { useSearchSubmit } from "@/lib/use-search-submit";
 
-/** The search form in the header of `/say/{slug}`, prefilled with its query. */
-export function HeaderSearch() {
+/**
+ * The search form in the header of `/say/{slug}`, prefilled with its query.
+ * `accent` sits inside the search box, or beside it in the side-list layout.
+ */
+export function HeaderSearch({ accent }: { accent?: React.ReactNode }) {
   const query = queryOf(useSelectedLayoutSegment());
   const handleSubmit = useSearchSubmit();
 
   return (
-    <search className="min-w-0 flex-1 sm:max-w-[520px]">
+    <search className="flex min-w-0 flex-1 sm:max-w-[440px] side:max-w-[520px]">
       {/* Keyed so going back to another search shows its query. */}
-      <form key={query} onSubmit={handleSubmit}>
-        <div className="flex h-9 items-center gap-2 rounded-md border bg-surface pr-0.5 pl-2.5 shadow-input focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
+      <form
+        key={query}
+        onSubmit={handleSubmit}
+        className="flex h-9 min-w-0 flex-1 items-center rounded-lg border bg-surface pr-1 pl-2.5 has-[input:focus]:border-ring has-[input:focus]:ring-3 has-[input:focus]:ring-ring/50 sm:h-[38px] sm:pl-3 side:h-9 side:gap-1.5 side:border-0 side:bg-transparent side:p-0 side:has-[input:focus]:ring-0"
+      >
+        <div className="flex h-full min-w-0 flex-1 items-center gap-2 side:rounded-md side:border side:bg-surface side:pr-0.5 side:pl-2.5 side:shadow-input side:has-[input:focus]:border-ring side:has-[input:focus]:ring-3 side:has-[input:focus]:ring-ring/50">
           <SearchIcon aria-hidden className="size-3.5 shrink-0 text-faint" />
           <input
             type="search"
@@ -26,9 +33,16 @@ export function HeaderSearch() {
             autoComplete="off"
             spellCheck={false}
             enterKeyHint="search"
-            className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+            className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground side:text-sm [&::-webkit-search-cancel-button]:hidden"
           />
+          <kbd
+            aria-hidden
+            className="mr-1.5 hidden rounded-sm border bg-kbd px-[5px] font-mono text-[11px] text-muted-foreground side:pointer-fine:inline"
+          >
+            /
+          </kbd>
         </div>
+        {accent}
       </form>
     </search>
   );

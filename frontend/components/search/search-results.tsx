@@ -1,12 +1,16 @@
 "use client";
 
 import { CaptionCard } from "@/components/player/caption-card";
+import { ClipPosition } from "@/components/player/clip-position";
 import { ClipProgress } from "@/components/player/clip-progress";
 import { ClipTitle } from "@/components/player/clip-title";
 import { ControlBar } from "@/components/player/control-bar";
 import { PlaybackProvider, usePlayback } from "@/components/player/playback";
 import { PlayerVideo } from "@/components/player/player-video";
+import { TouchControlBar } from "@/components/player/touch-control-bar";
 import { ClipRow } from "@/components/search/clip-row";
+import { InHeader } from "@/components/search/header-slot";
+import { ResultsLayout } from "@/components/search/results-layout";
 import type { SearchClips } from "@/components/search/use-search-clips";
 import { Button } from "@/components/ui/button";
 import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
@@ -26,60 +30,78 @@ export function SearchResults({
       queryWords={queryWords}
       firstBatch={firstBatch}
     >
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 px-1">
-          <ClipTitle />
-          <div className="overflow-hidden rounded-xl border shadow-card">
+      <InHeader>
+        <ClipPosition
+          separator=" / "
+          className="mr-2.5 hidden font-mono text-xs whitespace-nowrap text-muted-foreground sm:inline side:hidden"
+        />
+      </InHeader>
+      <ResultsLayout
+        title={<ClipTitle />}
+        video={
+          <>
             <PlayerVideo />
             <ClipProgress />
-            <ControlBar />
-          </div>
-          <CaptionCard queryWords={queryWords} />
-        </div>
-        <ClipList query={query} />
-      </div>
+          </>
+        }
+        controls={<ControlBar />}
+        touchControls={<TouchControlBar />}
+        caption={<CaptionCard queryWords={queryWords} />}
+        heading={<ListHeading query={query} />}
+        clips={<ClipItems />}
+        more={<ShowMoreClips />}
+      />
     </PlaybackProvider>
   );
 }
 
-function ClipList({ query }: { query: string }) {
-  const {
-    state,
-    actions: { playClip, showMoreClips },
-  } = usePlayback();
-
+function ListHeading({ query }: { query: string }) {
+  const { state } = usePlayback();
   return (
-    <section>
-      <header className="flex flex-col gap-0.5 px-1 pt-1 pb-2.5">
-        <h1 className="text-[17px] leading-[1.3] font-semibold">
-          How to pronounce “{query}”
-        </h1>
-        <p className="text-[13px] text-muted-foreground">{countLine(state)}</p>
-      </header>
-      <ol className="flex flex-col gap-0.5">
-        {state.clips.map((clip, index) => (
-          <li key={clip.captionId}>
-            <ClipRow
-              clip={clip}
-              number={index + 1}
-              aria-current={index === state.currentIndex || undefined}
-              onClick={() => playClip(index)}
-            />
-          </li>
-        ))}
-      </ol>
-      {state.hasMoreClips && (
-        // Left enabled while loading: disabling it would drop its focus.
-        <Button
-          variant="outline"
-          className="mt-2 h-10 w-full rounded-lg bg-surface hover:bg-tint dark:bg-surface dark:hover:bg-tint"
-          aria-busy={state.isLoadingMoreClips}
-          onClick={showMoreClips}
-        >
-          {state.isLoadingMoreClips ? "Loading clips…" : "Show more clips"}
-        </Button>
-      )}
-    </section>
+    <>
+      <h1 className="text-base leading-[1.3] font-semibold sm:text-[17px]">
+        How to pronounce “{query}”
+      </h1>
+      <p className="text-xs text-muted-foreground sm:text-[13px]">
+        {countLine(state)}
+      </p>
+    </>
+  );
+}
+
+function ClipItems() {
+  const {
+    state: { clips, currentIndex },
+    actions: { playClip },
+  } = usePlayback();
+  return clips.map((clip, index) => (
+    <li key={clip.captionId}>
+      <ClipRow
+        clip={clip}
+        number={index + 1}
+        aria-current={index === currentIndex || undefined}
+        onClick={() => playClip(index)}
+      />
+    </li>
+  ));
+}
+
+function ShowMoreClips() {
+  const {
+    state: { hasMoreClips, isLoadingMoreClips },
+    actions: { showMoreClips },
+  } = usePlayback();
+  if (!hasMoreClips) return null;
+  return (
+    // Left enabled while loading: disabling it would drop its focus.
+    <Button
+      variant="outline"
+      className="mt-2 h-10 w-full rounded-lg bg-surface hover:bg-tint dark:bg-surface dark:hover:bg-tint"
+      aria-busy={isLoadingMoreClips}
+      onClick={showMoreClips}
+    >
+      {isLoadingMoreClips ? "Loading clips…" : "Show more clips"}
+    </Button>
   );
 }
 

@@ -5,6 +5,7 @@ import { memo, useState } from "react";
 import { HighlightedText } from "@/components/highlighted-text";
 import { usePlayback, usePlaybackTime } from "@/components/player/playback";
 import { useVideoCaptions } from "@/components/player/use-video-captions";
+import { Skeleton } from "@/components/ui/skeleton";
 import { captionWindow, isInClip } from "@/lib/caption-window";
 import type { HighlightedClip } from "@/lib/clip-batch";
 import { highlight, type TextPart } from "@/lib/highlight";
@@ -46,39 +47,74 @@ export function CaptionCard({
   );
 
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-2 rounded-xl border px-6 py-5 shadow-card",
-        className,
-      )}
-    >
-      <p className="min-h-lh truncate text-[15px] text-faint">
-        {before && (
+    <CaptionLines
+      className={className}
+      before={
+        before && (
           <CaptionText
             line={before}
             clip={currentClip}
             queryWords={queryWords}
           />
-        )}
-      </p>
-      <div className="grid min-h-[3lh] items-center text-[24px] leading-[1.35] font-medium tracking-[-0.015em]">
-        <p>
-          <CaptionText
-            line={current}
-            clip={currentClip}
-            queryWords={queryWords}
-          />
-        </p>
-      </div>
-      <p className="min-h-lh truncate text-[15px] text-faint">
-        {after && (
+        )
+      }
+      current={
+        <CaptionText
+          line={current}
+          clip={currentClip}
+          queryWords={queryWords}
+        />
+      }
+      after={
+        after && (
           <CaptionText
             line={after}
             clip={currentClip}
             queryWords={queryWords}
           />
-        )}
-      </p>
+        )
+      }
+    />
+  );
+}
+
+export function CaptionCardSkeleton() {
+  return (
+    <CaptionLines
+      before={<Skeleton className="h-lh w-2/3" />}
+      current={<Skeleton className="h-lh w-full" />}
+      after={<Skeleton className="h-lh w-1/2" />}
+    />
+  );
+}
+
+const faintLine =
+  "min-h-lh truncate text-[13px] text-faint sm:text-[14px] side:text-[15px]";
+
+/** The card's frame. The main line is a band of 3 lines on phones, else 2. */
+function CaptionLines({
+  before,
+  current,
+  after,
+  className,
+}: {
+  before: React.ReactNode;
+  current: React.ReactNode;
+  after: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-1.5 px-4 pb-3 sm:px-0 sm:pt-1 sm:pb-3.5 side:rounded-xl side:border side:px-6 side:py-3.5 side:shadow-card",
+        className,
+      )}
+    >
+      <div className={faintLine}>{before}</div>
+      <div className="grid min-h-[3lh] items-center text-[20px] leading-[1.35] font-medium tracking-[-0.01em] sm:min-h-[2lh] sm:text-[24px] side:tracking-[-0.015em]">
+        <div>{current}</div>
+      </div>
+      <div className={faintLine}>{after}</div>
     </div>
   );
 }
@@ -116,7 +152,7 @@ function MarkedText({ parts }: { parts: readonly TextPart[] }) {
   return (
     <HighlightedText
       parts={parts}
-      markClassName="rounded-mark bg-mark box-decoration-clone px-1.5 text-mark-foreground shadow-[inset_0_-2px_0_var(--mark-line)]"
+      markClassName="rounded-mark bg-mark box-decoration-clone px-1 side:px-1.5 text-mark-foreground shadow-[inset_0_-2px_0_var(--mark-line)]"
     />
   );
 }

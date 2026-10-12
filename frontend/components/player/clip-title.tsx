@@ -12,7 +12,7 @@ export function ClipTitle() {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
       <div className="flex min-w-0 flex-col gap-0.5">
-        <p className="text-lg font-semibold tracking-[-0.01em]">
+        <p className="text-lg leading-6 font-semibold tracking-[-0.01em]">
           {currentClip.video.title}
         </p>
         <p className="text-muted-foreground">
