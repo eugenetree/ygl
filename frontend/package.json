@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.2",
+    "better-auth": "^1.7.7",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "geist": "^1.7.2",

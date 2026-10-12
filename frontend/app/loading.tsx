@@ -1,3 +1,4 @@
+import { AccountControl } from "@/components/account/account-control";
 import { SearchResultsSkeleton } from "@/components/search/search-results-skeleton";
 import { SearchShell } from "@/components/search/search-shell";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +12,7 @@ export default function Loading() {
       search={
         <Skeleton className="h-9 min-w-0 flex-1 rounded-lg sm:h-[38px] sm:max-w-[440px] side:h-9 side:max-w-[520px]" />
       }
+      account={<AccountControl />}
     >
       <SearchResultsSkeleton />
     </SearchShell>
