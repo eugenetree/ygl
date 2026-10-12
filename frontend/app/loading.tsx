@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Leaving home for a search page that the router knows nothing about yet
 // falls back to this boundary, since home has no say layout to wait in. Home
-// itself is static and prefetched, so it never shows this.
+// renders per request, so going back to it briefly shows this too.
 export default function Loading() {
   return (
     <SearchShell
