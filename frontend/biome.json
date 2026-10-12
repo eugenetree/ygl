@@ -1,0 +1,18 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "extends": "//",
+  "files": {
+    "includes": ["**", "!.next", "!node_modules", "!next-env.d.ts"]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "linter": {
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  }
+}
