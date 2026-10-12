@@ -1,24 +1,12 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { startTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
-import { resolveSearchPath } from "@/lib/search-actions";
+import { useSearchSubmit } from "@/lib/use-search-submit";
 
 export function HeroSearch() {
-  const router = useRouter();
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const query = new FormData(event.currentTarget).get("q");
-    if (typeof query !== "string" || !query.trim()) return;
-    startTransition(async () => {
-      const path = await resolveSearchPath(query);
-      if (path) router.push(path);
-    });
-  }
+  const handleSubmit = useSearchSubmit();
 
   return (
     <search className="w-full max-w-[620px]">

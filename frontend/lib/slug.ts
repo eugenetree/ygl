@@ -5,7 +5,7 @@ import "server-only";
 // only, so every path for a search names the same canonical slug.
 const segmenter = new Intl.Segmenter("en", { granularity: "word" });
 
-function words(text: string): string[] {
+export function words(text: string): string[] {
   return [...segmenter.segment(text.normalize("NFC").toLowerCase())]
     .filter((segment) => segment.isWordLike)
     .map((segment) => segment.segment);
