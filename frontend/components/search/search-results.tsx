@@ -4,10 +4,17 @@ import { CaptionCard } from "@/components/player/caption-card";
 import { ClipPosition } from "@/components/player/clip-position";
 import { ClipProgress } from "@/components/player/clip-progress";
 import { ClipTitle } from "@/components/player/clip-title";
-import { ControlBar } from "@/components/player/control-bar";
+import { ControlBar, SpeedMenu } from "@/components/player/control-bar";
 import { PlaybackProvider, usePlayback } from "@/components/player/playback";
+import {
+  PlaybackShortcuts,
+  ShortcutHints,
+} from "@/components/player/playback-shortcuts";
 import { PlayerVideo } from "@/components/player/player-video";
-import { TouchControlBar } from "@/components/player/touch-control-bar";
+import {
+  SpeedToggle,
+  TouchControlBar,
+} from "@/components/player/touch-control-bar";
 import { ClipRow } from "@/components/search/clip-row";
 import { InHeader } from "@/components/search/header-slot";
 import { ResultsLayout } from "@/components/search/results-layout";
@@ -30,6 +37,7 @@ export function SearchResults({
       queryWords={queryWords}
       firstBatch={firstBatch}
     >
+      <PlaybackShortcuts />
       <InHeader>
         <ClipPosition
           separator=" / "
@@ -44,9 +52,10 @@ export function SearchResults({
             <ClipProgress />
           </>
         }
-        controls={<ControlBar />}
-        touchControls={<TouchControlBar />}
+        controls={<ControlBar speed={<SpeedMenu />} />}
+        touchControls={<TouchControlBar speed={<SpeedToggle />} />}
         caption={<CaptionCard queryWords={queryWords} />}
+        shortcuts={<ShortcutHints />}
         heading={<ListHeading query={query} />}
         clips={<ClipItems />}
         more={<ShowMoreClips />}

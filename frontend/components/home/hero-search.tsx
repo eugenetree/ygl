@@ -1,18 +1,28 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { useSearchSubmit } from "@/lib/use-search-submit";
+import { useShortcuts } from "@/lib/use-shortcuts";
 
 export function HeroSearch() {
   const handleSubmit = useSearchSubmit();
+  const input = useRef<HTMLInputElement>(null);
+  useShortcuts({
+    "/": () => {
+      input.current?.focus();
+      input.current?.select();
+    },
+  });
 
   return (
     <search className="w-full max-w-[620px]">
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="flex h-11 min-w-0 flex-1 items-center rounded-lg border bg-surface pr-1 pl-3 shadow-input focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
           <input
+            ref={input}
             type="search"
             name="q"
             aria-label="Word or phrase"

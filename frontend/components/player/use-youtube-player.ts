@@ -45,16 +45,37 @@ export type TimeChange = {
 };
 
 /** The live player, and the video it has loaded. */
-type Session = { player: YT.Player | null; videoId: string | null };
+type Session = {
+  player: YT.Player | null;
+  videoId: string | null;
+  /** The player's rate, as last asked for or reported. */
+  rate: number;
+  /**
+   * The rate last asked for, until YouTube reports it. Reports for earlier
+   * requests can arrive after a newer request and mustn't count as the
+   * listener's choice.
+   */
+  requestedRate: number | null;
+};
+
+const NEW_SESSION: Session = {
+  player: null,
+  videoId: null,
+  rate: 1,
+  requestedRate: null,
+};
 
 /**
  * A YouTube player with its own controls, mounted into the element passed to
- * `ref`. It starts cued at `initialPosition`. The controls are stable and do
- * nothing until the player is ready. The handlers see the latest render's
- * values. The API has no time event, so the time is polled.
+ * `ref`. It starts cued at `initialPosition` and plays every video at `rate`.
+ * The controls are stable and do nothing until the player is ready. The
+ * handlers see the latest render's values. The API has no time event, so the
+ * time is polled.
  */
 export function useYouTubePlayer({
   initialPosition,
+  rate,
+  onRateChange,
   onReady,
   onStateChange,
   onError,
@@ -62,6 +83,9 @@ export function useYouTubePlayer({
   onTimeChange,
 }: {
   initialPosition: VideoPosition;
+  rate: number;
+  /** The listener picked another speed in YouTube's own menu. */
+  onRateChange?: (rate: number) => void;
   onReady?: () => void;
   onStateChange?: (state: PlayerState) => void;
   /** YouTube's error code, e.g. 101 when the owner blocks embedding. */
@@ -70,12 +94,12 @@ export function useYouTubePlayer({
   onTimeChange?: (change: TimeChange) => void;
 }) {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
-  const session = useRef<Session>({ player: null, videoId: null });
+  const session = useRef<Session>({ ...NEW_SESSION });
   const [controls] = useState(() => controlsFor(session));
   const [isReady, setReady] = useState(false);
   const [state, setState] = useState<PlayerState>("unstarted");
   const [time, setTime] = useState(0);
-  const [rate, setRate] = useState(1);
+  const [actualRate, setActualRate] = useState(1);
 
   const getInitialPosition = useEffectEvent(() => initialPosition);
   const handleReady = useEffectEvent((target: YT.Player) => {
@@ -86,6 +110,12 @@ export function useYouTubePlayer({
   });
   const handleStateChange = useEffectEvent((code: number) => {
     const next = PLAYER_STATES[code] ?? "unstarted";
+    // YouTube documents that loading a video resets its rate to 1, maybe
+    // without reporting it.
+    const { player } = session.current;
+    if (next === "playing" && player && player.getPlaybackRate() !== rate) {
+      requestRate(session.current, rate);
+    }
     setState(next);
     onStateChange?.(next);
   });
@@ -93,6 +123,16 @@ export function useYouTubePlayer({
     // Seeking within a video that failed wouldn't report the error again.
     session.current.videoId = null;
     onError?.(code);
+  });
+  const handleRateChange = useEffectEvent((next: number) => {
+    setActualRate(next);
+    const current = session.current;
+    if (current.requestedRate !== null) {
+      if (next === current.requestedRate) current.requestedRate = null;
+      return;
+    }
+    current.rate = next;
+    if (next !== rate) onRateChange?.(next);
   });
   const handleAutoplayBlocked = useEffectEvent(() => onAutoplayBlocked?.());
   const handleTimeChange = useEffectEvent((change: TimeChange) => {
@@ -124,7 +164,7 @@ export function useYouTubePlayer({
             onStateChange: (event) => handleStateChange(event.data),
             onError: (event) => handleError(event.data),
             onAutoplayBlocked: () => handleAutoplayBlocked(),
-            onPlaybackRateChange: (event) => setRate(event.data),
+            onPlaybackRateChange: (event) => handleRateChange(event.data),
           },
         });
       },
@@ -135,11 +175,18 @@ export function useYouTubePlayer({
       isCancelled = true;
       created?.destroy();
       mount.replaceChildren();
-      session.current = { player: null, videoId: null };
+      session.current = { ...NEW_SESSION };
       setReady(false);
       setState("unstarted");
+      setActualRate(1);
     };
   }, [mount]);
+
+  useEffect(() => {
+    if (isReady && session.current.rate !== rate) {
+      requestRate(session.current, rate);
+    }
+  }, [isReady, rate]);
 
   useEffect(() => {
     const { player } = session.current;
@@ -158,7 +205,16 @@ export function useYouTubePlayer({
     return () => window.clearInterval(interval);
   }, [isReady]);
 
-  return { ref: setMount, controls, isReady, state, time, rate };
+  return { ref: setMount, controls, isReady, state, time, rate: actualRate };
+}
+
+// YouTube may refuse a rate, but 0.25 to 2 are always offered, so every
+// request gets reported back.
+function requestRate(session: Session, rate: number) {
+  if (!session.player) return;
+  session.rate = rate;
+  session.requestedRate = rate;
+  session.player.setPlaybackRate(rate);
 }
 
 function controlsFor(session: { current: Session }): PlayerControls {

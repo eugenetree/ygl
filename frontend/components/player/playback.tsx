@@ -11,6 +11,10 @@ import {
 } from "react";
 import { toast } from "sonner";
 import {
+  nextSpeed,
+  usePlaybackSpeed,
+} from "@/components/player/playback-speed";
+import {
   type PlayerState,
   useYouTubePlayer,
   type VideoPosition,
@@ -36,6 +40,8 @@ export type PlaybackState = SearchClips & {
   isLooping: boolean;
   /** Our Play didn't start the video; some touch browsers want a tap on it first. */
   needsTap: boolean;
+  /** The playback rate, kept across clips and visits. */
+  speed: number;
 };
 
 export type PlaybackActions = {
@@ -49,7 +55,12 @@ export type PlaybackActions = {
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
+  /** Plays the current clip again from its play-from point. */
+  replay: () => void;
   setLooping: (isLooping: boolean) => void;
+  setSpeed: (speed: number) => void;
+  /** Moves to the next of our speeds, from 1× to slower. */
+  cycleSpeed: () => void;
 };
 
 export type PlaybackMeta = {
@@ -105,6 +116,7 @@ export function PlaybackProvider({
   const [waitingFrom, setWaitingFrom] = useState<number | null>(null);
   const [isLooping, setLooping] = useState(true);
   const [needsTap, setNeedsTap] = useState(false);
+  const [speed, setSpeed] = usePlaybackSpeed();
   const direction = useRef<Direction>(1);
   const isAutoplayBlocked = useRef(false);
   const lastTimeMs = useRef(0);
@@ -114,6 +126,8 @@ export function PlaybackProvider({
 
   const player = useYouTubePlayer({
     initialPosition: positionOf(currentClip),
+    rate: speed,
+    onRateChange: setSpeed,
     onReady: () => startClip(currentIndex, direction.current),
     onStateChange: (state) => {
       if (isPlayingState(state)) {
@@ -254,6 +268,14 @@ export function PlaybackProvider({
     () => (isPlaying ? pause() : play()),
     [isPlaying, pause, play],
   );
+  const replay = useCallback(
+    () => startClip(currentIndex, direction.current),
+    [startClip, currentIndex],
+  );
+  const cycleSpeed = useCallback(
+    () => setSpeed(nextSpeed(speed)),
+    [setSpeed, speed],
+  );
 
   // Kept stable between time polls.
   const value = useMemo(
@@ -269,6 +291,7 @@ export function PlaybackProvider({
         isPlaying,
         isLooping,
         needsTap,
+        speed,
       },
       actions: {
         playClip,
@@ -278,7 +301,10 @@ export function PlaybackProvider({
         play,
         pause,
         togglePlay,
+        replay,
         setLooping,
+        setSpeed,
+        cycleSpeed,
       },
       meta: { playerRef: player.ref },
     }),
@@ -293,6 +319,7 @@ export function PlaybackProvider({
       isPlaying,
       isLooping,
       needsTap,
+      speed,
       playClip,
       previous,
       next,
@@ -300,6 +327,9 @@ export function PlaybackProvider({
       play,
       pause,
       togglePlay,
+      replay,
+      setSpeed,
+      cycleSpeed,
       player.ref,
     ],
   );

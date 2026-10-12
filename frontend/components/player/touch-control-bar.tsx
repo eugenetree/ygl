@@ -4,6 +4,7 @@ import { ArrowLeftIcon, ArrowRightIcon, RepeatIcon } from "lucide-react";
 import { ClipPosition } from "@/components/player/clip-position";
 import { PlaybackTime } from "@/components/player/control-bar";
 import { usePlayback } from "@/components/player/playback";
+import { formatSpeed } from "@/components/player/playback-speed";
 import { Button } from "@/components/ui/button";
 
 const touchButton =
@@ -79,6 +80,23 @@ function TouchPlayPauseButton() {
       onClick={togglePlay}
     >
       {isPlaying ? "Pause" : "Play"}
+    </Button>
+  );
+}
+
+export function SpeedToggle() {
+  const {
+    state: { speed },
+    actions: { cycleSpeed },
+  } = usePlayback();
+  return (
+    <Button
+      variant="outline"
+      aria-label={`Speed ${formatSpeed(speed)}`}
+      className={`${touchButton} px-2 font-mono text-[13px] font-normal`}
+      onClick={cycleSpeed}
+    >
+      {formatSpeed(speed)}
     </Button>
   );
 }

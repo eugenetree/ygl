@@ -2,8 +2,10 @@
 
 import { SearchIcon } from "lucide-react";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { useRef } from "react";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { useSearchSubmit } from "@/lib/use-search-submit";
+import { useShortcuts } from "@/lib/use-shortcuts";
 
 /**
  * The search form in the header of `/say/{slug}`, prefilled with its query.
@@ -12,6 +14,13 @@ import { useSearchSubmit } from "@/lib/use-search-submit";
 export function HeaderSearch({ accent }: { accent?: React.ReactNode }) {
   const query = queryOf(useSelectedLayoutSegment());
   const handleSubmit = useSearchSubmit();
+  const input = useRef<HTMLInputElement>(null);
+  useShortcuts({
+    "/": () => {
+      input.current?.focus();
+      input.current?.select();
+    },
+  });
 
   return (
     <search className="flex min-w-0 flex-1 sm:max-w-[440px] side:max-w-[520px]">
@@ -24,6 +33,7 @@ export function HeaderSearch({ accent }: { accent?: React.ReactNode }) {
         <div className="flex h-full min-w-0 flex-1 items-center gap-2 side:rounded-md side:border side:bg-surface side:pr-0.5 side:pl-2.5 side:shadow-input side:has-[input:focus]:border-ring side:has-[input:focus]:ring-3 side:has-[input:focus]:ring-ring/50">
           <SearchIcon aria-hidden className="size-3.5 shrink-0 text-faint" />
           <input
+            ref={input}
             type="search"
             name="q"
             aria-label="Word or phrase"
