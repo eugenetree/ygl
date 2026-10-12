@@ -20,8 +20,8 @@ export function SearchShell({
   children,
 }: {
   search: React.ReactNode;
-  theme?: React.ReactNode;
-  account?: React.ReactNode;
+  theme: React.ReactNode;
+  account: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (

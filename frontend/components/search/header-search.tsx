@@ -11,7 +11,7 @@ import { useShortcuts } from "@/lib/use-shortcuts";
  * The search form in the header of `/say/{slug}`, prefilled with its query.
  * `accent` sits inside the search box, or beside it in the side-list layout.
  */
-export function HeaderSearch({ accent }: { accent?: React.ReactNode }) {
+export function HeaderSearch({ accent }: { accent: React.ReactNode }) {
   const query = queryOf(useSelectedLayoutSegment());
   const handleSubmit = useSearchSubmit();
   const input = useRef<HTMLInputElement>(null);

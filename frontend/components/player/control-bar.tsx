@@ -2,6 +2,11 @@
 
 import { useId } from "react";
 import { usePlayback, usePlaybackTime } from "@/components/player/playback";
+import {
+  NextButton,
+  PlayPauseButton,
+  PreviousButton,
+} from "@/components/player/playback-buttons";
 import { formatSpeed, SPEEDS } from "@/components/player/playback-speed";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +24,12 @@ const secondaryButton =
   "h-[34px] rounded-md bg-surface px-3 hover:bg-tint dark:bg-surface dark:hover:bg-tint";
 
 /** The control bar of the side-list layout. */
-export function ControlBar({ speed }: { speed?: React.ReactNode }) {
+export function ControlBar({ speed }: { speed: React.ReactNode }) {
   return (
     <div className="@container flex flex-wrap items-center gap-1.5 border-t px-3 py-2.5">
-      <PreviousButton />
-      <PlayPauseButton />
-      <NextButton />
+      <PreviousButton className={secondaryButton}>Previous</PreviousButton>
+      <PlayPauseButton className="h-[34px] min-w-[84px] rounded-md px-3.5 hover:bg-primary hover:opacity-88" />
+      <NextButton className={secondaryButton}>Next</NextButton>
       <span aria-hidden className="mx-1.5 h-5 w-px bg-border" />
       <LoopSwitch />
       {speed}
@@ -33,56 +38,7 @@ export function ControlBar({ speed }: { speed?: React.ReactNode }) {
   );
 }
 
-export function PreviousButton() {
-  const {
-    state: { hasPrevious },
-    actions: { previous },
-  } = usePlayback();
-  return (
-    <Button
-      variant="outline"
-      className={secondaryButton}
-      disabled={!hasPrevious}
-      onClick={previous}
-    >
-      Previous
-    </Button>
-  );
-}
-
-export function NextButton() {
-  const {
-    state: { hasNext },
-    actions: { next },
-  } = usePlayback();
-  return (
-    <Button
-      variant="outline"
-      className={secondaryButton}
-      disabled={!hasNext}
-      onClick={next}
-    >
-      Next
-    </Button>
-  );
-}
-
-export function PlayPauseButton() {
-  const {
-    state: { isPlaying },
-    actions: { togglePlay },
-  } = usePlayback();
-  return (
-    <Button
-      className="h-[34px] min-w-[84px] rounded-md px-3.5 hover:bg-primary hover:opacity-88"
-      onClick={togglePlay}
-    >
-      {isPlaying ? "Pause" : "Play"}
-    </Button>
-  );
-}
-
-export function LoopSwitch() {
+function LoopSwitch() {
   const id = useId();
   const {
     state: { isLooping },
