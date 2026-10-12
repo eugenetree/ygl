@@ -45,6 +45,10 @@ link finds the same clips. Examples:
   search.
 - A query with no word-like segments (`!!!`) has an empty slug and finds no
   clips.
+- Slugs are built on the server only, never in the browser. Browsers don't all
+  segment like Node: Chrome splits `a.m`, `u.s`, `e.g` and `a:b`, so in Chrome
+  `9 a.m.` would become `9-a-m` and search for `9 a m`. The search box asks the
+  server for the slug before it navigates.
 - Old `/{query}` URLs get a 404.
 - The query in the URL is lowercase, so the page shows it lowercase
   (`i don't know`).
