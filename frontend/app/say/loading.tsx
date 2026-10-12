@@ -1,5 +1,5 @@
-import { SearchResultsSkeleton } from "@/components/search/search-results-skeleton";
+import { ClipsSkeleton } from "@/components/search/clips-skeleton";
 
 export default function SearchLoading() {
-  return <SearchResultsSkeleton />;
+  return <ClipsSkeleton />;
 }

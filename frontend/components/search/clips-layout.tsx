@@ -11,7 +11,7 @@
  *   list, letting go when it ends. No title row and no shortcuts.
  * - Short screens: nothing is pinned.
  */
-export function ResultsLayout({
+export function ClipsLayout({
   title,
   video,
   controls,

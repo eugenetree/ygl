@@ -1,17 +1,17 @@
 import { CaptionCardSkeleton } from "@/components/player/caption-card";
-import { ResultsLayout } from "@/components/search/results-layout";
+import { ClipsLayout } from "@/components/search/clips-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ROWS = 8;
 
-/** Placeholders in the shape of SearchResults, in every layout. */
-export function SearchResultsSkeleton() {
+/** Placeholders in the shape of ClipsView, in every layout. */
+export function ClipsSkeleton() {
   return (
     <div aria-busy="true">
       <p className="sr-only" role="status">
         Loading clips…
       </p>
-      <ResultsLayout
+      <ClipsLayout
         title={
           <div className="flex flex-col gap-1.5">
             <Skeleton className="h-6 w-96 max-w-full" />

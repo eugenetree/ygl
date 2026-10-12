@@ -8,8 +8,8 @@ import { SiteFooter } from "@/components/site-footer";
 /**
  * A search page's frame: the header, then the page, then the footer.
  *
- * The header has three looks. In the side-list layout it is the sticky,
- * blurred results header. Otherwise it scrolls away: on tablets with a border
+ * The header has three looks. In the side-list layout it is sticky and
+ * blurred. Otherwise it scrolls away: on tablets with a border
  * and the page's `InHeader` content at the right, on phones without either.
  * `theme` and `account` sit at its right end in every look.
  */

@@ -12,8 +12,9 @@ import { highlight, type TextPart } from "@/lib/highlight";
 import { cn } from "@/lib/utils";
 
 /**
- * The line being spoken, between the lines before and after it. Its height
- * doesn't follow the lines, so changing them doesn't move what's below.
+ * The caption being spoken, between the captions before and after it. Its
+ * height doesn't follow the captions, so changing them doesn't move what's
+ * below.
  */
 export function CaptionCard({
   queryWords,
@@ -47,12 +48,12 @@ export function CaptionCard({
   );
 
   return (
-    <CaptionLines
+    <CaptionRows
       className={className}
       before={
         before && (
           <CaptionText
-            line={before}
+            caption={before}
             clip={currentClip}
             queryWords={queryWords}
           />
@@ -60,7 +61,7 @@ export function CaptionCard({
       }
       current={
         <CaptionText
-          line={current}
+          caption={current}
           clip={currentClip}
           queryWords={queryWords}
         />
@@ -68,7 +69,7 @@ export function CaptionCard({
       after={
         after && (
           <CaptionText
-            line={after}
+            caption={after}
             clip={currentClip}
             queryWords={queryWords}
           />
@@ -80,7 +81,7 @@ export function CaptionCard({
 
 export function CaptionCardSkeleton() {
   return (
-    <CaptionLines
+    <CaptionRows
       before={<Skeleton className="h-lh w-2/3" />}
       current={<Skeleton className="h-lh w-full" />}
       after={<Skeleton className="h-lh w-1/2" />}
@@ -88,11 +89,11 @@ export function CaptionCardSkeleton() {
   );
 }
 
-const faintLine =
+const faintCaption =
   "min-h-lh truncate text-[13px] text-faint sm:text-[14px] side:text-[15px]";
 
-/** The card's frame. The main line is a band of 3 lines on phones, else 2. */
-function CaptionLines({
+/** The card's frame. The main caption is a band of 3 lines on phones, else 2. */
+function CaptionRows({
   before,
   current,
   after,
@@ -110,35 +111,35 @@ function CaptionLines({
         className,
       )}
     >
-      <div className={faintLine}>{before}</div>
+      <div className={faintCaption}>{before}</div>
       <div className="grid min-h-[3lh] items-center text-[20px] leading-[1.35] font-medium tracking-[-0.01em] sm:min-h-[2lh] sm:text-[24px] side:tracking-[-0.015em]">
         <div>{current}</div>
       </div>
-      <div className={faintLine}>{after}</div>
+      <div className={faintCaption}>{after}</div>
     </div>
   );
 }
 
 function CaptionText({
-  line,
+  caption,
   clip,
   queryWords,
 }: {
-  line: Pick<VideoCaption, "captionId" | "text">;
+  caption: Pick<VideoCaption, "captionId" | "text">;
   clip: HighlightedClip;
   queryWords: readonly string[];
 }) {
-  // The clip's line is highlighted on the server, where it was rendered
+  // The clip's caption is highlighted on the server, where it was rendered
   // first (ADR-0012).
-  return line.captionId === clip.captionId ? (
+  return caption.captionId === clip.captionId ? (
     <MarkedText parts={clip.textParts} />
   ) : (
-    <HighlightedLine text={line.text} queryWords={queryWords} />
+    <HighlightedCaption text={caption.text} queryWords={queryWords} />
   );
 }
 
-// The card re-renders with every time poll; the lines rarely change.
-const HighlightedLine = memo(function HighlightedLine({
+// The card re-renders with every time poll; the captions rarely change.
+const HighlightedCaption = memo(function HighlightedCaption({
   text,
   queryWords,
 }: {

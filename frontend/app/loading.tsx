@@ -1,5 +1,5 @@
 import { AccountControl } from "@/components/account/account-control";
-import { SearchResultsSkeleton } from "@/components/search/search-results-skeleton";
+import { ClipsSkeleton } from "@/components/search/clips-skeleton";
 import { SearchShell } from "@/components/search/search-shell";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,7 +16,7 @@ export default function Loading() {
       theme={<ThemeToggle />}
       account={<AccountControl />}
     >
-      <SearchResultsSkeleton />
+      <ClipsSkeleton />
     </SearchShell>
   );
 }

@@ -20,8 +20,8 @@ const START_SLACK_MS = 2000;
 const LOOP_SLACK_MS = 1000;
 
 /**
- * Whether `timeMs` belongs to the clip: from its lead-in to its caption's
- * end, where the card shows the clip's own line.
+ * Whether `timeMs` belongs to the clip: from its play-from point to its
+ * caption's end, where the card shows the clip's own caption.
  */
 export function isInClip(
   clip: WindowClip,
@@ -34,9 +34,10 @@ export function isInClip(
 
 /**
  * The caption being spoken at `timeMs`, with the ones before and after it.
- * Within the clip, that's the clip's caption, lead-in included. Elsewhere
- * it's the last caption to have started. Without the video's captions, or
- * when they don't hold the clip's, it's the clip's caption alone.
+ * Within the clip, from its play-from point on, that's the clip's caption.
+ * Elsewhere it's the last caption to have started. Without the video's
+ * captions, or when they don't hold the clip's, it's the clip's caption
+ * alone.
  */
 export function captionWindow(
   captions: readonly VideoCaption[] | undefined,

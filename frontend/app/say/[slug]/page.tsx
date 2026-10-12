@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { ClipsView } from "@/components/search/clips-view";
 import { SearchMessage } from "@/components/search/search-message";
-import { SearchResults } from "@/components/search/search-results";
 import { TryLinks } from "@/components/try-links";
 import { toClipBatch } from "@/lib/clip-batch";
 import { searchMetadata } from "@/lib/metadata";
@@ -44,7 +44,7 @@ export default async function SearchPage({ params }: PageProps<"/say/[slug]">) {
     case "clips": {
       const queryWords = words(page.query);
       return (
-        <SearchResults
+        <ClipsView
           query={page.query}
           queryWords={queryWords}
           firstBatch={toClipBatch(page.firstBatch, queryWords)}

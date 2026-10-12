@@ -16,14 +16,14 @@ import {
   TouchControlBar,
 } from "@/components/player/touch-control-bar";
 import { ClipRow } from "@/components/search/clip-row";
+import { ClipsLayout } from "@/components/search/clips-layout";
 import { InHeader } from "@/components/search/header-slot";
-import { ResultsLayout } from "@/components/search/results-layout";
 import type { SearchClips } from "@/components/search/use-search-clips";
 import { Button } from "@/components/ui/button";
 import { useAccentSwitch } from "@/lib/accent";
 import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
 
-export function SearchResults({
+export function ClipsView({
   query,
   queryWords,
   firstBatch,
@@ -46,7 +46,7 @@ export function SearchResults({
           className="mr-2.5 hidden font-mono text-xs whitespace-nowrap text-muted-foreground sm:inline side:hidden"
         />
       </InHeader>
-      <ResultsLayout
+      <ClipsLayout
         title={<ClipTitle />}
         video={
           <>
