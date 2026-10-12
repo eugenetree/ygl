@@ -16,7 +16,7 @@ touch layout.
 
 **Blocked by:** 02 — The server renders a search page's clips
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Our own hook wraps the YouTube IFrame API:
   - the API script loads once;

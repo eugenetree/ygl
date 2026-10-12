@@ -11,7 +11,7 @@ line by line as the video plays, highlighting query words wherever they appear.
 
 **Blocked by:** 03 — Play clips
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] When a clip becomes current, its video's captions are fetched from the API's video captions route and cached per video, so returning to the video doesn't refetch.
 - [ ] The middle row is the caption being spoken at the current time.

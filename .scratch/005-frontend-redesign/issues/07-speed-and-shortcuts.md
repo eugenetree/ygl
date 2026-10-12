@@ -6,7 +6,7 @@ control has a key. On desktop, a row of hints under the player teaches the keys.
 
 **Blocked by:** 05 — Desktop, tablet and phone layouts
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] A speed control with 0.5×, 0.75× and 1× is in both control bars:
   - in the side-list bar, after the Loop switch and before the time;

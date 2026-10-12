@@ -15,7 +15,7 @@ The designs are in this folder's design directory:
 
 **Blocked by:** 03 — Play clips, 04 — The caption card follows the speech
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] One page structure serves every layout, and CSS alone switches between them. Resizing or rotating while a clip plays keeps it playing: the iframe isn't remounted.
 - [ ] **Side list** (at least 960px wide and wider than tall):

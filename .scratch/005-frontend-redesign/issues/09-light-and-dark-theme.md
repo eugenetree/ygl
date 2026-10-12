@@ -6,7 +6,7 @@ The page never flashes the wrong theme on load.
 
 **Blocked by:** 05 — Desktop, tablet and phone layouts
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] An inline script in the root layout's head runs before first paint. It reads the stored choice, or falls back to `prefers-color-scheme`, and sets the `dark` class on the html element.
 - [ ] The html element suppresses the hydration warning for that class.

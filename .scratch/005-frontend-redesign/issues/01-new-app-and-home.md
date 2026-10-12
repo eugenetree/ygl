@@ -18,7 +18,7 @@ settings and palettes are listed in the spec.
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The old frontend's files are deleted, and the new app lives in the same folder.
 - [ ] The new app runs on the latest stable Next.js with the App Router, React 19, strict TypeScript and standalone output, managed with npm.

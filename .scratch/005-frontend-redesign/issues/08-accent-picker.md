@@ -12,7 +12,7 @@ stay the same.
 
 **Blocked by:** 05 — Desktop, tablet and phone layouts, 07 — Speed and keyboard shortcuts
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The accents are American (US), British (UK), Australian (AU), Canadian (CA) and Irish (IE). American is the default.
 - [ ] One menu serves every picker: an "Accent" heading, then each accent's name and code, with ✓ by the current one. There are no counts.

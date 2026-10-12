@@ -10,7 +10,7 @@ batch that fails to load doesn't end the results.
 
 **Blocked by:** 03 — Play clips
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Later batches of 20 come from `/api/search` by offset, fetched in the browser on top of the server's first batch.
 - [ ] Clips are deduplicated by caption id across batches.

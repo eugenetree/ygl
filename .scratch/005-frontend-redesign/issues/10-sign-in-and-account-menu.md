@@ -9,7 +9,7 @@ handles better-auth's "session too old" case with a "Sign in again" path
 
 **Blocked by:** 05 — Desktop, tablet and phone layouts
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
 - [ ] The signed-in user comes from `/api/me` through TanStack Query in the browser. A 401 with NOT_SIGNED_IN means signed out.
 - [ ] The sign-in slot is reserved until `/api/me` answers, so a signed-in listener never sees "Sign in" flash.
@@ -27,3 +27,11 @@ handles better-auth's "session too old" case with a "Sign in again" path
   A successful deletion leaves the listener signed out.
 - [ ] The control appears in home's header and in every search page header, icon-sized on tablets and phones.
 - [ ] Checked against the local API with Google sign-in configured and `PUBLIC_ORIGIN` at `http://localhost:3000`.
+
+## Comments
+
+Implemented on `feature/redesign`. The signed-in flows were checked against a faked `/api/me` and auth endpoints, because no real Google session was available. What's left is the last criterion, checked by hand on `http://localhost:3000`:
+- real Google sign-in returns to the same `/say/...?accent=...` URL with the avatar showing; a cancelled sign-in returns there too;
+- real sign-out;
+- real deletion with a session signed in within the last day;
+- real `SESSION_EXPIRED` (a session older than a day, or its `created_at` changed), then "Sign in again" lands on the same page.

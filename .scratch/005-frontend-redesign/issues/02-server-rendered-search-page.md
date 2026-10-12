@@ -16,7 +16,7 @@ layouts. Nothing plays yet; ticket 03 adds playback.
 
 **Blocked by:** 01 — Replace the old app with the new one and build home
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] `/say/{segment}` searches for the canonical slug, `slug(unslug(decoded segment))`, read back as the query.
   - `/say/No%20Worries` finds the same clips as `/say/no-worries`.

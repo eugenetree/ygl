@@ -13,7 +13,7 @@
 
 **Blocked by:** 02 — The server renders a search page's clips
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The search page's title is `How to pronounce “{query}”: {n} real examples · saythis`, with `{n}` formatted for en-US and `10,000+` when the total isn't exact.
 - [ ] With no clips, the title is `No clips for “{query}”`, followed by ` · saythis`.
