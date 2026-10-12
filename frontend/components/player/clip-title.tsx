@@ -1,13 +1,14 @@
 "use client";
 
+import { useClipPosition } from "@/components/player/clip-position";
 import { usePlayback } from "@/components/player/playback";
-import { formatTotal } from "@/lib/clip-batch";
 
 /** The playing clip's video title and channel name, and where it sits in the search. */
 export function ClipTitle() {
   const {
-    state: { currentClip, currentIndex, total, isTotalExact },
+    state: { currentClip },
   } = usePlayback();
+  const { number, total } = useClipPosition();
 
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -20,10 +21,7 @@ export function ClipTitle() {
         </p>
       </div>
       <p className="font-mono text-[13px] whitespace-nowrap text-muted-foreground">
-        <b className="font-medium text-foreground">
-          {(currentIndex + 1).toLocaleString("en-US")}
-        </b>{" "}
-        of {formatTotal(total, isTotalExact)}
+        <b className="font-medium text-foreground">{number}</b> of {total}
       </p>
     </div>
   );

@@ -3,7 +3,18 @@
 import { usePlayback } from "@/components/player/playback";
 import { formatTotal } from "@/lib/clip-batch";
 
-/** "{n}{separator}{total}": where the playing clip sits in the search. */
+/** Where the playing clip sits in the search: its number and the total. */
+export function useClipPosition(): { number: string; total: string } {
+  const {
+    state: { currentIndex, total, isTotalExact },
+  } = usePlayback();
+  return {
+    number: (currentIndex + 1).toLocaleString("en-US"),
+    total: formatTotal(total, isTotalExact),
+  };
+}
+
+/** "{n}{separator}{total}". */
 export function ClipPosition({
   separator,
   className,
@@ -11,14 +22,12 @@ export function ClipPosition({
   separator: string;
   className?: string;
 }) {
-  const {
-    state: { currentIndex, total, isTotalExact },
-  } = usePlayback();
+  const { number, total } = useClipPosition();
   return (
     <span className={className}>
-      {(currentIndex + 1).toLocaleString("en-US")}
+      {number}
       {separator}
-      {formatTotal(total, isTotalExact)}
+      {total}
     </span>
   );
 }

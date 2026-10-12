@@ -97,7 +97,7 @@ function ClipItems() {
     <li key={clip.captionId}>
       <ClipRow
         clip={clip}
-        number={index + 1}
+        position={index + 1}
         aria-current={index === currentIndex || undefined}
         onClick={() => playClip(index)}
       />

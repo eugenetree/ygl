@@ -6,9 +6,9 @@ import { formatVideoTime } from "@/lib/time";
 /** A clip in the list. `aria-current` marks the playing one. */
 export function ClipRow({
   clip,
-  number,
+  position,
   ...props
-}: { clip: HighlightedClip; number: number } & Omit<
+}: { clip: HighlightedClip; position: number } & Omit<
   React.ComponentProps<"button">,
   "children"
 >) {
@@ -19,7 +19,7 @@ export function ClipRow({
       {...props}
     >
       <span className="font-mono text-xs text-faint">
-        <span className="group-aria-[current=true]/row:hidden">{number}</span>
+        <span className="group-aria-[current=true]/row:hidden">{position}</span>
         <PlayIcon
           aria-hidden
           className="hidden size-3 fill-mark-line text-mark-line group-aria-[current=true]/row:inline"
