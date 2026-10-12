@@ -50,6 +50,7 @@ const HINTS: { keys: React.ReactNode; label: string }[] = [
   { keys: <Kbd>L</Kbd>, label: "Loop" },
   { keys: <Kbd>R</Kbd>, label: "Replay" },
   { keys: <Kbd>S</Kbd>, label: "Speed" },
+  { keys: <Kbd>1–5</Kbd>, label: "Accent" },
 ];
 
 /**

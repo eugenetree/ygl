@@ -20,6 +20,7 @@ import { InHeader } from "@/components/search/header-slot";
 import { ResultsLayout } from "@/components/search/results-layout";
 import type { SearchClips } from "@/components/search/use-search-clips";
 import { Button } from "@/components/ui/button";
+import { useAccentSwitch } from "@/lib/accent";
 import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
 
 export function SearchResults({
@@ -38,6 +39,7 @@ export function SearchResults({
       firstBatch={firstBatch}
     >
       <PlaybackShortcuts />
+      <RestartOnAccentSwitch />
       <InHeader>
         <ClipPosition
           separator=" / "
@@ -62,6 +64,13 @@ export function SearchResults({
       />
     </PlaybackProvider>
   );
+}
+
+// The clips don't depend on the accent yet, so the same ones play again.
+function RestartOnAccentSwitch() {
+  const { actions } = usePlayback();
+  useAccentSwitch(() => actions.playClip(0));
+  return null;
 }
 
 function ListHeading({ query }: { query: string }) {

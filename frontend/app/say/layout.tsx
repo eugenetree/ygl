@@ -1,3 +1,4 @@
+import { AccentPicker } from "@/components/accent-picker";
 import { AccountControl } from "@/components/account/account-control";
 import { HeaderSearch } from "@/components/search/header-search";
 import { SearchShell } from "@/components/search/search-shell";
@@ -8,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export default function SearchLayout({ children }: LayoutProps<"/say">) {
   return (
     <SearchShell
-      search={<HeaderSearch />}
+      search={<HeaderSearch accent={<AccentPicker look="header" />} />}
       theme={<ThemeToggle />}
       account={<AccountControl />}
     >

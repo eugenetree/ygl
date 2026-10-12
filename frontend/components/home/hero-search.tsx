@@ -2,6 +2,7 @@
 
 import { SearchIcon } from "lucide-react";
 import { useRef } from "react";
+import { AccentPicker } from "@/components/accent-picker";
 import { Button } from "@/components/ui/button";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { useSearchSubmit } from "@/lib/use-search-submit";
@@ -33,6 +34,7 @@ export function HeroSearch() {
             enterKeyHint="search"
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground sm:text-[15px] [&::-webkit-search-cancel-button]:hidden"
           />
+          <AccentPicker look="hero" />
         </div>
         <Button
           type="submit"
