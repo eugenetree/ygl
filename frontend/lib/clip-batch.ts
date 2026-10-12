@@ -39,17 +39,21 @@ export function nextBatchOffset(
   return next < Math.min(batch.total, MAX_SEARCH_WINDOW) ? next : undefined;
 }
 
+/**
+ * The batch at `offset` from the API at `origin`: the browser's own by
+ * default, which is the site's (ADR-0008).
+ */
 export async function fetchClipBatch(
   query: string,
   offset: number,
-  signal: AbortSignal,
+  { origin = "", ...init }: RequestInit & { origin?: string },
 ): Promise<SearchResponse> {
   const params = new URLSearchParams({
     q: query,
     offset: String(offset),
     limit: String(Math.min(SEARCH_BATCH_SIZE, MAX_SEARCH_WINDOW - offset)),
   });
-  const response = await fetch(`/api/search?${params}`, { signal });
+  const response = await fetch(`${origin}/api/search?${params}`, init);
   if (!response.ok) throw new Error(`Search failed with ${response.status}`);
   return response.json();
 }

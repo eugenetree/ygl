@@ -48,7 +48,10 @@ export function useSearchClips({
     useInfiniteQuery({
       queryKey: ["search", query],
       queryFn: async ({ pageParam, signal }) =>
-        toClipBatch(await fetchClipBatch(query, pageParam, signal), queryWords),
+        toClipBatch(
+          await fetchClipBatch(query, pageParam, { signal }),
+          queryWords,
+        ),
       initialPageParam: 0,
       getNextPageParam: (lastBatch, _batches, lastOffset) =>
         nextBatchOffset(lastBatch, lastOffset),

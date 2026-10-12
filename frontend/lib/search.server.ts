@@ -3,8 +3,8 @@ import "server-only";
 import type { SearchResponse } from "@api/contract";
 import { cache } from "react";
 import { apiUrl } from "@/lib/api-url";
-import { SEARCH_BATCH_SIZE } from "@/lib/clip-batch";
-import { MAX_QUERY_LENGTH } from "@/lib/query";
+import { fetchClipBatch } from "@/lib/clip-batch";
+import { decodeSegment, MAX_QUERY_LENGTH } from "@/lib/query";
 import { slug, unslug } from "@/lib/slug";
 
 export type SearchPage =
@@ -50,27 +50,12 @@ function readSearchSegment(
   return { query, slug: canonicalSlug };
 }
 
-const getFirstBatch = cache(async (query: string): Promise<SearchResponse> => {
-  const params = new URLSearchParams({
-    q: query,
-    offset: "0",
-    limit: String(SEARCH_BATCH_SIZE),
-  });
-  // Must stay cacheable: no-store here would make every search page dynamic.
-  const response = await fetch(`${apiUrl()}/api/search?${params}`, {
+// Throwing on a failed search gives an uncached 500, and a cached page keeps
+// its last good version when its refresh fails (ADR-0011).
+const getFirstBatch = cache((query: string) =>
+  fetchClipBatch(query, 0, {
+    origin: apiUrl(),
+    // Must stay cacheable: no-store here would make every search page dynamic.
     next: { revalidate: 3600 },
-  });
-  // Throwing gives an uncached 500, and a cached page keeps its last good
-  // version when its refresh fails (ADR-0011).
-  if (!response.ok) throw new Error(`Search failed with ${response.status}`);
-  return response.json();
-});
-
-function decodeSegment(segment: string): string {
-  // Next leaves dynamic segments percent-encoded.
-  try {
-    return decodeURIComponent(segment);
-  } catch {
-    return segment;
-  }
-}
+  }),
+);
