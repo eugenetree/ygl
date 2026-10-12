@@ -1,17 +1,19 @@
 import { HOME_HEADING, HOME_SUBHEADING, realExamples } from "@/lib/metadata";
-import { PREVIEW_SIZE, previewImage } from "@/lib/preview-image";
+import { previewImage } from "@/lib/preview-image";
 import { getSearchPage } from "@/lib/search.server";
 
-export const size = PREVIEW_SIZE;
-export const contentType = "image/png";
-export const alt =
-  "A phrase and how many real YouTube clips say it, on saythis";
+// Not an opengraph-image file: Next would point a non-canonical path's
+// og:image at that path, and metadata can't override a file's image.
+export const revalidate = 3600;
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function generateStaticParams() {
+  return [];
+}
+
+export async function GET(
+  _request: Request,
+  { params }: RouteContext<"/say/[slug]/preview-image">,
+) {
   const { slug } = await params;
   const page = await getSearchPage(slug);
 

@@ -1,6 +1,7 @@
 import type { SearchResponse } from "@api/contract";
 import type { Metadata } from "next";
 import { formatTotal } from "@/lib/clip-batch";
+import { PREVIEW_SIZE } from "@/lib/preview-image";
 import type { SearchPage } from "@/lib/search.server";
 
 export const HOME_HEADING = "Hear how it's actually said.";
@@ -38,13 +39,19 @@ export function searchMetadata(page: SearchPage): Metadata {
     case "no-clips": {
       const title = `No clips for “${page.query}”`;
       const description = `No YouTube clips say “${page.query}” yet.`;
+      // A segment with no words names no search to point at.
+      const { slug } = page;
       return {
         title,
         description,
-        openGraph: { ...SITE_OPEN_GRAPH, title, description },
+        openGraph: {
+          ...SITE_OPEN_GRAPH,
+          title,
+          description,
+          images: slug ? previewImageOf(slug) : undefined,
+        },
         robots: { index: false },
-        // A segment with no words names no search to point at.
-        alternates: page.slug ? { canonical: `/say/${page.slug}` } : undefined,
+        alternates: slug ? { canonical: `/say/${slug}` } : undefined,
       };
     }
     case "clips": {
@@ -60,10 +67,26 @@ export function searchMetadata(page: SearchPage): Metadata {
         title,
         description,
         alternates: { canonical: url },
-        openGraph: { ...SITE_OPEN_GRAPH, title, description, url },
+        openGraph: {
+          ...SITE_OPEN_GRAPH,
+          title,
+          description,
+          url,
+          images: previewImageOf(page.slug),
+        },
       };
     }
   }
+}
+
+/** A search's preview image, at its canonical slug. */
+function previewImageOf(slug: string) {
+  return {
+    url: `/say/${slug}/preview-image`,
+    ...PREVIEW_SIZE,
+    type: "image/png",
+    alt: "A phrase and how many real YouTube clips say it, on saythis",
+  };
 }
 
 /** The count in a search's title, and its preview image's count line. */
