@@ -1,6 +1,8 @@
+import { AccountControl } from "@/components/account/account-control";
 import { HeroSearch } from "@/components/home/hero-search";
 import { Logo } from "@/components/logo";
 import { SiteFooter } from "@/components/site-footer";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { TryLinks } from "@/components/try-links";
 import { YouTubeLogo } from "@/components/youtube-logo";
 
@@ -28,6 +30,10 @@ export default function HomePage() {
     <div className="flex min-h-dvh flex-col">
       <header className="flex h-14 shrink-0 items-center justify-between border-b px-[max(24px,calc((100%-912px)/2))]">
         <Logo />
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <AccountControl />
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col">
