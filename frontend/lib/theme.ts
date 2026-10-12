@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { THEME_COLOR_META, THEME_COLORS } from "@/lib/theme-colors";
 
 export type Theme = "light" | "dark";
 
@@ -7,9 +8,9 @@ const DARK_QUERY = "(prefers-color-scheme: dark)";
 
 /**
  * Runs in the head before the first paint, so a dark page never shows a light
- * frame. Keep it in step with `currentTheme`.
+ * frame. Keep it in step with `currentTheme` and `applyTheme`.
  */
-export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem(${JSON.stringify(STORAGE_KEY)});var d=t==="dark"||(t!=="light"&&matchMedia(${JSON.stringify(DARK_QUERY)}).matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})()`;
+export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem(${JSON.stringify(STORAGE_KEY)});var d=t==="dark"||(t!=="light"&&matchMedia(${JSON.stringify(DARK_QUERY)}).matches);document.documentElement.classList.toggle("dark",d);document.querySelectorAll(${JSON.stringify(THEME_COLOR_META)}).forEach(function(m){m.content=d?${JSON.stringify(THEME_COLORS.dark)}:${JSON.stringify(THEME_COLORS.light)}})}catch(e){}})()`;
 
 function storedTheme(): Theme | null {
   try {
@@ -24,8 +25,16 @@ function currentTheme(): Theme {
   return storedTheme() ?? (matchMedia(DARK_QUERY).matches ? "dark" : "light");
 }
 
+// The theme-color tags name each system theme's color, which a stored choice
+// overrides.
 function applyTheme() {
-  document.documentElement.classList.toggle("dark", currentTheme() === "dark");
+  const theme = currentTheme();
+  document.documentElement.classList.toggle("dark", theme === "dark");
+  for (const meta of document.querySelectorAll<HTMLMetaElement>(
+    THEME_COLOR_META,
+  )) {
+    meta.content = THEME_COLORS[theme];
+  }
 }
 
 const listeners = new Set<() => void>();
