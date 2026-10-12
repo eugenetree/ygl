@@ -1,4 +1,6 @@
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { toast } from "sonner";
 import {
   type ClipBatch,
   fetchClipBatch,
@@ -42,17 +44,35 @@ export function useSearchClips({
   queryWords: readonly string[];
   firstBatch: ClipBatch;
 }) {
-  return useInfiniteQuery({
-    queryKey: ["search", query],
-    queryFn: async ({ pageParam, signal }) =>
-      toClipBatch(await fetchClipBatch(query, pageParam, signal), queryWords),
-    initialPageParam: 0,
-    getNextPageParam: (lastBatch, _batches, lastOffset) =>
-      nextBatchOffset(lastBatch, lastOffset),
-    initialData: { pages: [firstBatch], pageParams: [0] },
-    // Any staleTime short of this would refetch the seeded batch on mount,
-    // and every loaded batch on window focus.
-    staleTime: Number.POSITIVE_INFINITY,
-    select: selectClips,
-  });
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["search", query],
+      queryFn: async ({ pageParam, signal }) =>
+        toClipBatch(await fetchClipBatch(query, pageParam, signal), queryWords),
+      initialPageParam: 0,
+      getNextPageParam: (lastBatch, _batches, lastOffset) =>
+        nextBatchOffset(lastBatch, lastOffset),
+      initialData: { pages: [firstBatch], pageParams: [0] },
+      // Any staleTime short of this would refetch the seeded batch on mount,
+      // and every loaded batch on window focus.
+      staleTime: Number.POSITIVE_INFINITY,
+      // The listener retries by asking again, so a failure is reported quickly.
+      retry: 1,
+      select: selectClips,
+    });
+
+  /**
+   * Loads the next batch, or joins the load already under way. Resolves to
+   * the clips after it, or null when it failed.
+   */
+  const loadMore = useCallback(async (): Promise<SearchClips | null> => {
+    const result = await fetchNextPage({ cancelRefetch: false });
+    if (result.isFetchNextPageError || !result.data) {
+      toast("Couldn't load more clips", { id: "clip-batch-failed" });
+      return null;
+    }
+    return result.data;
+  }, [fetchNextPage]);
+
+  return { search: data, hasNextPage, isFetchingNextPage, loadMore };
 }
