@@ -9,7 +9,7 @@ import { slug, unslug } from "@/lib/slug";
 
 export type SearchPage =
   | { status: "too-long" }
-  | { status: "no-clips"; query: string }
+  | { status: "no-clips"; query: string; slug: string }
   | {
       status: "clips";
       query: string;
@@ -25,11 +25,11 @@ export const getSearchPage = cache(
   async (segment: string): Promise<SearchPage> => {
     const search = readSearchSegment(segment);
     if (!search) return { status: "too-long" };
-    if (!search.slug) return { status: "no-clips", query: search.query };
+    if (!search.slug) return { status: "no-clips", ...search };
 
     const firstBatch = await getFirstBatch(search.query);
     if (firstBatch.clips.length === 0) {
-      return { status: "no-clips", query: search.query };
+      return { status: "no-clips", ...search };
     }
     return { status: "clips", ...search, firstBatch };
   },

@@ -3,13 +3,15 @@ import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { siteMetadata } from "@/lib/metadata";
+import { publicOrigin } from "@/lib/public-origin";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "saythis — Hear how it's actually said.",
-  description:
-    "Search YouTube captions and jump straight to the moment a word or phrase is said.",
-};
+// A function, not a const, so pages rendered per request read the runtime
+// PUBLIC_ORIGIN rather than the build's.
+export function generateMetadata(): Metadata {
+  return siteMetadata(publicOrigin());
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

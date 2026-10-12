@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import { SearchMessage } from "@/components/search/search-message";
 import { SearchResults } from "@/components/search/search-results";
 import { TryLinks } from "@/components/try-links";
 import { toClipBatch } from "@/lib/clip-batch";
+import { searchMetadata } from "@/lib/metadata";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
 import { getSearchPage } from "@/lib/search.server";
 import { words } from "@/lib/slug";
@@ -13,6 +15,13 @@ export const revalidate = 3600;
 
 export async function generateStaticParams() {
   return [];
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/say/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  return searchMetadata(await getSearchPage(slug));
 }
 
 export default async function SearchPage({ params }: PageProps<"/say/[slug]">) {
