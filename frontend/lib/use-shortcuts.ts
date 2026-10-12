@@ -13,6 +13,58 @@ const OWNS_KEYS =
 const PRESSABLE =
   "button, a[href], summary, [role=button], [role=switch], [role=checkbox], [role=menuitem]";
 
+/** Runs the shortcut for a key, if it has one. Whether it did. */
+type KeyHandler = (
+  event: KeyboardEvent,
+  isFocusFromPointer: boolean,
+) => boolean;
+
+// Every useShortcuts on the page shares one set of window listeners.
+const handlers = new Set<KeyHandler>();
+let isPointerInput = false;
+let isFocusFromPointer = false;
+let isSpaceTaken = false;
+
+const onPointerDown = () => {
+  isPointerInput = true;
+};
+const onFocusIn = () => {
+  isFocusFromPointer = isPointerInput;
+};
+// Before the focused element's own handlers, which would open a menu whose
+// trigger was clicked.
+const onKeyDown = (event: KeyboardEvent) => {
+  let isTaken = false;
+  for (const handle of handlers) {
+    isTaken = handle(event, isFocusFromPointer);
+    if (isTaken) break;
+  }
+  isPointerInput = false;
+  if (event.key === " ") isSpaceTaken = isTaken;
+};
+// A focused button is pressed when Space comes back up.
+const onKeyUp = (event: KeyboardEvent) => {
+  if (event.key !== " " || !isSpaceTaken) return;
+  isSpaceTaken = false;
+  event.preventDefault();
+};
+
+const OPTIONS = { capture: true };
+
+function listen() {
+  window.addEventListener("pointerdown", onPointerDown, OPTIONS);
+  window.addEventListener("focusin", onFocusIn, OPTIONS);
+  window.addEventListener("keydown", onKeyDown, OPTIONS);
+  window.addEventListener("keyup", onKeyUp, OPTIONS);
+}
+
+function stopListening() {
+  window.removeEventListener("pointerdown", onPointerDown, OPTIONS);
+  window.removeEventListener("focusin", onFocusIn, OPTIONS);
+  window.removeEventListener("keydown", onKeyDown, OPTIONS);
+  window.removeEventListener("keyup", onKeyUp, OPTIONS);
+}
+
 /**
  * Runs a shortcut for a key pressed anywhere on the page. Keys are left alone
  * with Ctrl, Alt or Meta held, and where focus needs them: a text field, a
@@ -44,40 +96,11 @@ export function useShortcuts(shortcuts: Shortcuts) {
   );
 
   useEffect(() => {
-    let isPointerInput = false;
-    let isFocusFromPointer = false;
-    let isSpaceTaken = false;
-
-    const onPointerDown = () => {
-      isPointerInput = true;
-    };
-    const onFocusIn = () => {
-      isFocusFromPointer = isPointerInput;
-    };
-    // Before the focused element's own handlers, which would open a menu
-    // whose trigger was clicked.
-    const onKeyDown = (event: KeyboardEvent) => {
-      const isTaken = handleKeyDown(event, isFocusFromPointer);
-      isPointerInput = false;
-      if (event.key === " ") isSpaceTaken = isTaken;
-    };
-    // A focused button is pressed when Space comes back up.
-    const onKeyUp = (event: KeyboardEvent) => {
-      if (event.key !== " " || !isSpaceTaken) return;
-      isSpaceTaken = false;
-      event.preventDefault();
-    };
-
-    const options = { capture: true };
-    window.addEventListener("pointerdown", onPointerDown, options);
-    window.addEventListener("focusin", onFocusIn, options);
-    window.addEventListener("keydown", onKeyDown, options);
-    window.addEventListener("keyup", onKeyUp, options);
+    if (handlers.size === 0) listen();
+    handlers.add(handleKeyDown);
     return () => {
-      window.removeEventListener("pointerdown", onPointerDown, options);
-      window.removeEventListener("focusin", onFocusIn, options);
-      window.removeEventListener("keydown", onKeyDown, options);
-      window.removeEventListener("keyup", onKeyUp, options);
+      handlers.delete(handleKeyDown);
+      if (handlers.size === 0) stopListening();
     };
   }, []);
 }
