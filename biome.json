@@ -33,7 +33,16 @@
     }
   },
   "files": {
-    "includes": ["src/**", "biome.json", "package.json", "tsconfig.json"]
+    "includes": [
+      "src/**",
+      "frontend/**",
+      "!frontend/.next",
+      "!frontend/node_modules",
+      "!frontend/next-env.d.ts",
+      "biome.json",
+      "package.json",
+      "tsconfig.json"
+    ]
   },
   "overrides": [
     {

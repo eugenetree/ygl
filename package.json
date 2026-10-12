@@ -28,7 +28,7 @@
     "node": ">=24 <25"
   },
   "lint-staged": {
-    "*.{ts,js,json}": "biome check --write --no-errors-on-unmatched"
+    "*.{ts,tsx,js,json,css}": "biome check --write --no-errors-on-unmatched"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",
