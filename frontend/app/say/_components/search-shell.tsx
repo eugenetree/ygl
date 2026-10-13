@@ -2,16 +2,14 @@ import {
   HeaderSlot,
   HeaderSlotProvider,
 } from "@/app/say/_components/header-slot";
-import { Logo } from "@/components/logo";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteFooter, SiteHeader } from "@/components/site-frame";
 
 /**
  * A search page's frame: the header, then the page, then the footer.
  *
- * The header has three looks. In the side-list layout it is sticky and
- * blurred. Otherwise it scrolls away: on tablets with a border
- * and the page's `InHeader` content at the right, on phones without either.
- * `theme` and `account` sit at its right end in every look.
+ * In the side-list layout the header is sticky and blurred; otherwise it
+ * scrolls away. The page's `InHeader` content sits before `theme` and
+ * `account` at the header's right end.
  */
 export function SearchShell({
   search,
@@ -27,17 +25,16 @@ export function SearchShell({
   return (
     <HeaderSlotProvider>
       <div className="flex min-h-dvh flex-col">
-        <header className="flex shrink-0 items-center gap-2.5 px-4 py-2 sm:gap-3.5 sm:border-b sm:px-5 sm:py-2.5 side:sticky side:top-0 side:z-20 side:h-14 side:gap-4 side:bg-header side:px-[max(24px,calc((100%-1232px)/2))] side:py-0 side:backdrop-blur-[8px]">
-          <Logo />
+        <SiteHeader className="side:sticky side:top-0 side:z-20 side:bg-header side:backdrop-blur-[8px]">
           {search}
           <div className="ml-auto flex shrink-0 items-center gap-1">
             <HeaderSlot />
             {theme}
             {account}
           </div>
-        </header>
+        </SiteHeader>
         <main className="flex-1">{children}</main>
-        <SiteFooter className="px-4 sm:px-5 side:px-[max(24px,calc((100%-1232px)/2))]" />
+        <SiteFooter />
       </div>
     </HeaderSlotProvider>
   );

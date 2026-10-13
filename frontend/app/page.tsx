@@ -1,8 +1,7 @@
 import { HeroSearch } from "@/app/_components/hero-search";
 import { YouTubeLogo } from "@/app/_components/youtube-logo";
 import { AccountControl } from "@/components/account/account-control";
-import { Logo } from "@/components/logo";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteFooter, SiteHeader } from "@/components/site-frame";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TryLinks } from "@/components/try-links";
 import { HOME_HEADING } from "@/lib/metadata";
@@ -29,13 +28,12 @@ const STEPS = [
 export default function HomePage() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="flex h-14 shrink-0 items-center justify-between border-b px-[max(24px,calc((100%-912px)/2))]">
-        <Logo />
-        <div className="flex items-center gap-1">
+      <SiteHeader>
+        <div className="ml-auto flex items-center gap-1">
           <ThemeToggle />
           <AccountControl />
         </div>
-      </header>
+      </SiteHeader>
 
       <main className="flex flex-1 flex-col">
         <section className="flex flex-col items-center gap-6 px-6 pt-[14vh] pb-[72px] max-sm:px-4">

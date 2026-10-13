@@ -470,6 +470,10 @@ tablet doesn't reload the video.
     It offers "Sign in again", which returns to the same page.
 - **Home's header** shows only the logo, the theme toggle and sign-in. The
   design's Docs and API links are dropped.
+- **One frame:** every page's header and footer share the search page's width
+  (content at most 1232px), gutters (16px on phones, 20px on tablets, 24px in
+  the side-list layout), 56px height and border, so nothing shifts between
+  home and a search. Only the search page's side-list header is sticky.
 
 ### Theme
 
