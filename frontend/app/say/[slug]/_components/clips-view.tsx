@@ -2,7 +2,10 @@
 
 import { InHeader } from "@/app/say/_components/header-slot";
 import { ClipRow } from "@/app/say/[slug]/_components/clip-row";
-import { ClipsLayout } from "@/app/say/[slug]/_components/clips-layout";
+import {
+  ClipsLayout,
+  revealInList,
+} from "@/app/say/[slug]/_components/clips-layout";
 import { CaptionCard } from "@/app/say/[slug]/_components/player/caption-card";
 import { ClipPosition } from "@/app/say/[slug]/_components/player/clip-position";
 import { ClipProgress } from "@/app/say/[slug]/_components/player/clip-progress";
@@ -100,7 +103,10 @@ function ClipItems() {
     actions: { playClip },
   } = usePlayback();
   return clips.map((clip, index) => (
-    <li key={clip.captionId}>
+    <li
+      key={clip.captionId}
+      ref={index === currentIndex ? revealInList : undefined}
+    >
       <ClipRow
         clip={clip}
         position={index + 1}

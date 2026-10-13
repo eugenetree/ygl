@@ -45,8 +45,8 @@ theme.
   - The page shows the YouTube player with our control bar, a caption card that
     follows the speech line by line, and the list of clips. The listener can
     scan the list and play any clip from it.
-  - The list sits in a pinned side column on wide screens and under a pinned
-    player on phones and portrait tablets.
+  - The list scrolls in its own box beside the player on wide screens, and
+    under a pinned player on phones and portrait tablets.
 - **Clips play** from their play-from point. Each one tries to autoplay. Loop
   repeats the clip until the listener moves on, and speed can be slowed to 0.5×.
   Everything has a keyboard shortcut.
@@ -131,7 +131,7 @@ theme.
 ### Layouts
 
 54. As a desktop listener, I want the player, caption and shortcuts to fit in my window, so that I never scroll to see the line being spoken.
-55. As a desktop or landscape-tablet listener, I want the clip list beside the player, with the player pinned while the list scrolls, so that I can browse clips while one plays.
+55. As a desktop or landscape-tablet listener, I want the clip list beside the player, scrolling in a box as tall as the player, so that I can browse clips while one plays.
 56. As a phone or portrait-tablet listener, I want the player pinned at the top while the list scrolls under it, so that the video stays in view while I browse.
 57. As a phone listener, I want the pinned player to let go when the list ends, so that the footer reads normally.
 58. As a listener on a phone held sideways, I want the player not pinned, so that it doesn't cover the whole screen.
@@ -335,10 +335,11 @@ tablet doesn't reload the video.
   desktop and landscape tablets.
   - **Two columns:** the player column on the left, and the clip list on the
     right at 300–360px. The page is up to 1280px wide.
-  - **Pinned player:** the player column (title row, video, control bar,
-    caption card, shortcuts row) is pinned while the list scrolls with the page.
-    The list doesn't scroll inside its own box, unlike the desktop design's side
-    queue.
+  - **List box:** the list column is exactly as tall as the player column
+    (title row, video, control bar, caption card, shortcuts row), like the
+    desktop design's side queue. The H1 and count line stay at its top, and the
+    rows and "Show more clips" scroll inside it. When the playing clip changes,
+    its row scrolls into view within the box, never moving the page.
   - **Fit to screen:** the video's width is capped so the whole player column
     fits the window height. The width is at most (window height − 380px) × 16/9
     and at least 472px.
