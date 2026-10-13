@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { loadYouTubeIframeApi } from "@/lib/youtube-iframe-api";
+import { loadYouTubeIframeApi } from "@/app/say/[slug]/_lib/youtube-iframe-api";
 
 export type PlayerState =
   | "unstarted"

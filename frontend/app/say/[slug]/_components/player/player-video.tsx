@@ -1,6 +1,6 @@
 "use client";
 
-import { usePlayback } from "@/components/player/playback";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
 
 /** The YouTube player's 16:9 frame. Moving it with CSS keeps the video playing. */
 export function PlayerVideo() {

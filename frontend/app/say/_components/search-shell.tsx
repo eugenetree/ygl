@@ -1,8 +1,8 @@
-import { Logo } from "@/components/logo";
 import {
   HeaderSlot,
   HeaderSlotProvider,
-} from "@/components/search/header-slot";
+} from "@/app/say/_components/header-slot";
+import { Logo } from "@/components/logo";
 import { SiteFooter } from "@/components/site-footer";
 
 /**

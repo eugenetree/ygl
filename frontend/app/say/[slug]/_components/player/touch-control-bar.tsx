@@ -1,15 +1,15 @@
 "use client";
 
 import { ArrowLeftIcon, ArrowRightIcon, RepeatIcon } from "lucide-react";
-import { ClipPosition } from "@/components/player/clip-position";
-import { PlaybackTime } from "@/components/player/control-bar";
-import { usePlayback } from "@/components/player/playback";
+import { ClipPosition } from "@/app/say/[slug]/_components/player/clip-position";
+import { PlaybackTime } from "@/app/say/[slug]/_components/player/control-bar";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
 import {
   NextButton,
   PlayPauseButton,
   PreviousButton,
-} from "@/components/player/playback-buttons";
-import { formatSpeed } from "@/components/player/playback-speed";
+} from "@/app/say/[slug]/_components/player/playback-buttons";
+import { formatSpeed } from "@/app/say/[slug]/_components/player/playback-speed";
 import { Button } from "@/components/ui/button";
 
 const touchButton =

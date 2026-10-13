@@ -1,4 +1,4 @@
-import type { TextPart } from "@/lib/highlight";
+import type { TextPart } from "@/app/say/[slug]/_lib/highlight";
 
 export function HighlightedText({
   parts,

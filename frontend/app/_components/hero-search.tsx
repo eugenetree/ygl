@@ -1,13 +1,14 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
+import { Loader2Icon, SearchIcon } from "lucide-react";
 import { HeroAccentPicker } from "@/components/accent-picker";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import { useSearchSubmit } from "@/lib/use-search-submit";
+import { cn } from "@/lib/utils";
 
 export function HeroSearch() {
-  const handleSubmit = useSearchSubmit();
+  const { handleSubmit, isPending } = useSearchSubmit();
 
   return (
     <search className="w-full max-w-[620px]">
@@ -16,13 +17,24 @@ export function HeroSearch() {
           <SearchInput className="sm:text-[15px]" />
           <HeroAccentPicker />
         </div>
+        {/* The spinner covers the label rather than replacing it, so the
+            button keeps its width. */}
         <Button
           type="submit"
           aria-label="Search"
-          className="h-11 rounded-lg px-[18px] text-sm hover:bg-primary hover:opacity-[.88] max-[399px]:w-11 max-[399px]:px-0"
+          aria-busy={isPending}
+          className="relative h-11 rounded-lg px-[18px] text-sm hover:bg-primary hover:opacity-[.88] max-[399px]:w-11 max-[399px]:px-0"
         >
-          <SearchIcon aria-hidden className="min-[400px]:hidden" />
-          <span className="max-[399px]:hidden">Search</span>
+          <SearchIcon
+            aria-hidden
+            className={cn("min-[400px]:hidden", isPending && "invisible")}
+          />
+          <span className={cn("max-[399px]:hidden", isPending && "invisible")}>
+            Search
+          </span>
+          {isPending && (
+            <Loader2Icon aria-hidden className="absolute animate-spin" />
+          )}
         </Button>
       </form>
     </search>

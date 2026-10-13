@@ -1,7 +1,7 @@
 "use client";
 
-import { useClipPosition } from "@/components/player/clip-position";
-import { usePlayback } from "@/components/player/playback";
+import { useClipPosition } from "@/app/say/[slug]/_components/player/clip-position";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
 
 /** The playing clip's video title and channel name, and where it sits in the search. */
 export function ClipTitle() {

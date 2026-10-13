@@ -1,5 +1,5 @@
-import { CaptionCardSkeleton } from "@/components/player/caption-card";
-import { ClipsLayout } from "@/components/search/clips-layout";
+import { ClipsLayout } from "@/app/say/[slug]/_components/clips-layout";
+import { CaptionCardSkeleton } from "@/app/say/[slug]/_components/player/caption-card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ROWS = 8;

@@ -2,8 +2,8 @@ import "server-only";
 
 import type { SearchResponse } from "@api/contract";
 import { cache } from "react";
+import { fetchClipBatch } from "@/app/say/[slug]/_lib/clip-batch";
 import { apiUrl } from "@/lib/api-url";
-import { fetchClipBatch } from "@/lib/clip-batch";
 import { decodeSegment, MAX_QUERY_LENGTH } from "@/lib/query";
 import { slug, unslug } from "@/lib/slug";
 

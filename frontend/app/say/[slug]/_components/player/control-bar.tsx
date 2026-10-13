@@ -1,13 +1,19 @@
 "use client";
 
 import { useId } from "react";
-import { usePlayback, usePlaybackTime } from "@/components/player/playback";
+import {
+  usePlayback,
+  usePlaybackTime,
+} from "@/app/say/[slug]/_components/player/playback";
 import {
   NextButton,
   PlayPauseButton,
   PreviousButton,
-} from "@/components/player/playback-buttons";
-import { formatSpeed, SPEEDS } from "@/components/player/playback-speed";
+} from "@/app/say/[slug]/_components/player/playback-buttons";
+import {
+  formatSpeed,
+  SPEEDS,
+} from "@/app/say/[slug]/_components/player/playback-speed";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

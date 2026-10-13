@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchMessage } from "@/components/search/search-message";
+import { SearchMessage } from "@/app/say/[slug]/_components/search-message";
 import { Button } from "@/components/ui/button";
 
 export default function SearchError({ retry }: { retry: () => void }) {

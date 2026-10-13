@@ -1,10 +1,10 @@
+import { HeroSearch } from "@/app/_components/hero-search";
+import { YouTubeLogo } from "@/app/_components/youtube-logo";
 import { AccountControl } from "@/components/account/account-control";
-import { HeroSearch } from "@/components/home/hero-search";
 import { Logo } from "@/components/logo";
 import { SiteFooter } from "@/components/site-footer";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TryLinks } from "@/components/try-links";
-import { YouTubeLogo } from "@/components/youtube-logo";
 import { HOME_HEADING } from "@/lib/metadata";
 
 // Rendered per request: a static home would keep the build's PUBLIC_ORIGIN in

@@ -1,7 +1,7 @@
 "use client";
 
-import { usePlayback } from "@/components/player/playback";
-import { formatTotal } from "@/lib/clip-batch";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
+import { formatTotal } from "@/app/say/[slug]/_lib/clip-batch";
 
 /** Where the playing clip sits in the search: its number and the total. */
 export function useClipPosition(): { number: string; total: string } {

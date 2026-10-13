@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { ClipsView } from "@/components/search/clips-view";
-import { SearchMessage } from "@/components/search/search-message";
+import { ClipsView } from "@/app/say/[slug]/_components/clips-view";
+import { SearchMessage } from "@/app/say/[slug]/_components/search-message";
+import { toClipBatch } from "@/app/say/[slug]/_lib/clip-batch";
+import { searchMetadata } from "@/app/say/[slug]/_lib/metadata";
+import { getSearchPage } from "@/app/say/[slug]/_lib/search.server";
+import {
+  noClipsTitle,
+  TOO_LONG_TITLE,
+} from "@/app/say/[slug]/_lib/search-copy";
 import { TryLinks } from "@/components/try-links";
-import { toClipBatch } from "@/lib/clip-batch";
-import { searchMetadata } from "@/lib/metadata";
 import { MAX_QUERY_LENGTH } from "@/lib/query";
-import { getSearchPage } from "@/lib/search.server";
-import { noClipsTitle, TOO_LONG_TITLE } from "@/lib/search-copy";
 import { words } from "@/lib/words";
 
 // ISR (ADR-0011): rendered on the first request for a path, then cached for

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { usePlayback } from "@/components/player/playback";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
 import { useShortcuts } from "@/lib/use-shortcuts";
 
 /** The playback keys. Renders nothing. */

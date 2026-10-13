@@ -1,6 +1,6 @@
 import { PlayIcon } from "lucide-react";
-import { HighlightedText } from "@/components/highlighted-text";
-import type { HighlightedClip } from "@/lib/clip-batch";
+import { HighlightedText } from "@/app/say/[slug]/_components/highlighted-text";
+import type { HighlightedClip } from "@/app/say/[slug]/_lib/clip-batch";
 import { formatVideoTime } from "@/lib/time";
 
 /** A clip in the list. `aria-current` marks the playing one. */

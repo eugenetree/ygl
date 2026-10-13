@@ -13,18 +13,21 @@ import { toast } from "sonner";
 import {
   nextSpeed,
   usePlaybackSpeed,
-} from "@/components/player/playback-speed";
+} from "@/app/say/[slug]/_components/player/playback-speed";
 import {
   type PlayerState,
   useYouTubePlayer,
   type VideoPosition,
-} from "@/components/player/use-youtube-player";
+} from "@/app/say/[slug]/_components/player/use-youtube-player";
+import type {
+  ClipBatch,
+  HighlightedClip,
+} from "@/app/say/[slug]/_lib/clip-batch";
+import { playedPastClipEnd } from "@/app/say/[slug]/_lib/clip-loop";
 import {
   type SearchClips,
   useSearchClips,
-} from "@/components/search/use-search-clips";
-import type { ClipBatch, HighlightedClip } from "@/lib/clip-batch";
-import { playedPastClipEnd } from "@/lib/clip-loop";
+} from "@/app/say/[slug]/_lib/use-search-clips";
 
 type Direction = 1 | -1;
 

@@ -13,7 +13,7 @@ import { foldCase } from "@/lib/words";
  */
 export function HeaderSearch({ accent }: { accent: React.ReactNode }) {
   const query = queryOf(useSelectedLayoutSegment());
-  const handleSubmit = useSearchSubmit();
+  const { handleSubmit } = useSearchSubmit();
 
   return (
     <search className="flex min-w-0 flex-1 sm:max-w-[440px] side:max-w-[520px]">

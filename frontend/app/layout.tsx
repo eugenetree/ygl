@@ -1,8 +1,8 @@
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
-import { Providers } from "@/components/providers";
-import { ThemeScript } from "@/components/theme-script";
+import { Providers } from "@/app/providers";
+import { ThemeScript } from "@/app/theme-script";
 import { siteMetadata } from "@/lib/metadata";
 import { publicOrigin } from "@/lib/public-origin";
 import { THEME_COLORS } from "@/lib/theme-colors";

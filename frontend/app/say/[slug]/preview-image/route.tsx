@@ -1,6 +1,7 @@
-import { exampleCount, HOME_HEADING, HOME_SUBHEADING } from "@/lib/metadata";
+import { exampleCount } from "@/app/say/[slug]/_lib/metadata";
+import { getSearchPage } from "@/app/say/[slug]/_lib/search.server";
+import { HOME_HEADING, HOME_SUBHEADING } from "@/lib/metadata";
 import { previewImage } from "@/lib/preview-image";
-import { getSearchPage } from "@/lib/search.server";
 
 // Not an opengraph-image file: Next would point a non-canonical path's
 // og:image at that path, and metadata can't override a file's image.

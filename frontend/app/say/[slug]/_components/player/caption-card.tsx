@@ -2,13 +2,16 @@
 
 import type { VideoCaption } from "@api/contract";
 import { memo, useState } from "react";
-import { HighlightedText } from "@/components/highlighted-text";
-import { usePlayback, usePlaybackTime } from "@/components/player/playback";
-import { useVideoCaptions } from "@/components/player/use-video-captions";
+import { HighlightedText } from "@/app/say/[slug]/_components/highlighted-text";
+import {
+  usePlayback,
+  usePlaybackTime,
+} from "@/app/say/[slug]/_components/player/playback";
+import { useVideoCaptions } from "@/app/say/[slug]/_components/player/use-video-captions";
+import { captionWindow, isInClip } from "@/app/say/[slug]/_lib/caption-window";
+import type { HighlightedClip } from "@/app/say/[slug]/_lib/clip-batch";
+import { highlight, type TextPart } from "@/app/say/[slug]/_lib/highlight";
 import { Skeleton } from "@/components/ui/skeleton";
-import { captionWindow, isInClip } from "@/lib/caption-window";
-import type { HighlightedClip } from "@/lib/clip-batch";
-import { highlight, type TextPart } from "@/lib/highlight";
 import { cn } from "@/lib/utils";
 
 /**

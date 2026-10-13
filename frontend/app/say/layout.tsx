@@ -1,7 +1,7 @@
+import { HeaderSearch } from "@/app/say/_components/header-search";
+import { SearchShell } from "@/app/say/_components/search-shell";
 import { HeaderAccentPicker } from "@/components/accent-picker";
 import { AccountControl } from "@/components/account/account-control";
-import { HeaderSearch } from "@/components/search/header-search";
-import { SearchShell } from "@/components/search/search-shell";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // Above the [slug] segment, so the header stays put while loading.tsx shows a

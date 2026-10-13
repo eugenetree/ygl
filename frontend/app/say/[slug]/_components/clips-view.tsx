@@ -1,28 +1,34 @@
 "use client";
 
-import { CaptionCard } from "@/components/player/caption-card";
-import { ClipPosition } from "@/components/player/clip-position";
-import { ClipProgress } from "@/components/player/clip-progress";
-import { ClipTitle } from "@/components/player/clip-title";
-import { ControlBar, SpeedMenu } from "@/components/player/control-bar";
-import { PlaybackProvider, usePlayback } from "@/components/player/playback";
+import { InHeader } from "@/app/say/_components/header-slot";
+import { ClipRow } from "@/app/say/[slug]/_components/clip-row";
+import { ClipsLayout } from "@/app/say/[slug]/_components/clips-layout";
+import { CaptionCard } from "@/app/say/[slug]/_components/player/caption-card";
+import { ClipPosition } from "@/app/say/[slug]/_components/player/clip-position";
+import { ClipProgress } from "@/app/say/[slug]/_components/player/clip-progress";
+import { ClipTitle } from "@/app/say/[slug]/_components/player/clip-title";
+import {
+  ControlBar,
+  SpeedMenu,
+} from "@/app/say/[slug]/_components/player/control-bar";
+import {
+  PlaybackProvider,
+  usePlayback,
+} from "@/app/say/[slug]/_components/player/playback";
 import {
   PlaybackShortcuts,
   ShortcutHints,
-} from "@/components/player/playback-shortcuts";
-import { PlayerVideo } from "@/components/player/player-video";
+} from "@/app/say/[slug]/_components/player/playback-shortcuts";
+import { PlayerVideo } from "@/app/say/[slug]/_components/player/player-video";
 import {
   SpeedToggle,
   TouchControlBar,
-} from "@/components/player/touch-control-bar";
-import { ClipRow } from "@/components/search/clip-row";
-import { ClipsLayout } from "@/components/search/clips-layout";
-import { InHeader } from "@/components/search/header-slot";
-import type { SearchClips } from "@/components/search/use-search-clips";
+} from "@/app/say/[slug]/_components/player/touch-control-bar";
+import { type ClipBatch, formatTotal } from "@/app/say/[slug]/_lib/clip-batch";
+import { pronounceHeading } from "@/app/say/[slug]/_lib/search-copy";
+import type { SearchClips } from "@/app/say/[slug]/_lib/use-search-clips";
 import { Button } from "@/components/ui/button";
 import { useAccentSwitch } from "@/lib/accent";
-import { type ClipBatch, formatTotal } from "@/lib/clip-batch";
-import { pronounceHeading } from "@/lib/search-copy";
 
 export function ClipsView({
   query,

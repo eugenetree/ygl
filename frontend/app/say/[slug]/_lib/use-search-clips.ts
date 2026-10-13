@@ -7,7 +7,7 @@ import {
   type HighlightedClip,
   nextBatchOffset,
   toClipBatch,
-} from "@/lib/clip-batch";
+} from "@/app/say/[slug]/_lib/clip-batch";
 
 export type SearchClips = {
   clips: HighlightedClip[];

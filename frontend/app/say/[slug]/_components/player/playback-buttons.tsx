@@ -1,6 +1,6 @@
 "use client";
 
-import { usePlayback } from "@/components/player/playback";
+import { usePlayback } from "@/app/say/[slug]/_components/player/playback";
 import { Button } from "@/components/ui/button";
 
 type ButtonProps = Omit<

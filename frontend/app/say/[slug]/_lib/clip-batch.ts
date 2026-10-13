@@ -3,7 +3,7 @@ import type {
   Clip,
   SearchResponse,
 } from "@api/contract";
-import { highlight, type TextPart } from "@/lib/highlight";
+import { highlight, type TextPart } from "@/app/say/[slug]/_lib/highlight";
 
 export const SEARCH_BATCH_SIZE = 20;
 

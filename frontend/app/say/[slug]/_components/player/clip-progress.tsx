@@ -1,7 +1,10 @@
 "use client";
 
-import { usePlayback, usePlaybackTime } from "@/components/player/playback";
-import { clipProgress } from "@/lib/clip-loop";
+import {
+  usePlayback,
+  usePlaybackTime,
+} from "@/app/say/[slug]/_components/player/playback";
+import { clipProgress } from "@/app/say/[slug]/_lib/clip-loop";
 
 export function ClipProgress() {
   const {
