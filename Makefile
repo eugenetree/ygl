@@ -93,8 +93,8 @@ r2-download-latest: guard-R2_BUCKET guard-R2_FOLDER guard-R2_ENDPOINT guard-R2_A
 		-e AWS_ACCESS_KEY_ID=$(R2_ACCESS_KEY_ID) \
 		-e AWS_SECRET_ACCESS_KEY=$(R2_SECRET_ACCESS_KEY) \
 		-v $(PWD)/db/dump:/data \
-		amazon/aws-cli s3 cp s3://$(R2_BUCKET)/$(R2_FOLDER)/$$LATEST /data/$$LATEST \
-		--endpoint-url $(R2_ENDPOINT) && \
+		amazon/aws-cli s3api get-object --bucket $(R2_BUCKET) --key $(R2_FOLDER)/$$LATEST /data/$$LATEST \
+		--endpoint-url $(R2_ENDPOINT) --query ContentLength --output text && \
 	echo "Saved to db/dump/$$LATEST"
 
 # Rebuild all containers and wipe volumes (fresh DB)
