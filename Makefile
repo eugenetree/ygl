@@ -97,6 +97,19 @@ r2-download-latest: guard-R2_BUCKET guard-R2_FOLDER guard-R2_ENDPOINT guard-R2_A
 		--endpoint-url $(R2_ENDPOINT) --query ContentLength --output text && \
 	echo "Saved to db/dump/$$LATEST"
 
+# Replace the local DB with a downloaded R2 dump (newest in db/dump/ by default)
+# make r2-restore [dump=db/dump/<file>.sql.gz]
+r2-restore: guard-POSTGRES_USER guard-POSTGRES_DB
+	@DUMP="$(dump)"; \
+	[ -n "$$DUMP" ] || DUMP=$$(ls db/dump/*.sql.gz 2>/dev/null | sort | tail -1); \
+	[ -f "$$DUMP" ] || { echo "No dump found — run make r2-download-latest"; exit 1; }; \
+	docker compose stop bot api scraper sync-elastic && \
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "DROP DATABASE IF EXISTS \"$(POSTGRES_DB)\" WITH (FORCE);" && \
+	docker exec db psql -U $(POSTGRES_USER) -d postgres -c "CREATE DATABASE \"$(POSTGRES_DB)\"" && \
+	echo "Restoring $$DUMP..." && \
+	gunzip -c "$$DUMP" | docker exec -i db pg_restore -U $(POSTGRES_USER) -d $(POSTGRES_DB) --no-owner --no-acl --verbose && \
+	echo "Done."
+
 # Rebuild all containers and wipe volumes (fresh DB)
 rebuild-fresh:
 	docker compose down -v
