@@ -1,3 +1,7 @@
+# Fixed so every worktree shares one set of volumes; the container names are fixed too,
+# so only one worktree's stack can run at a time anyway.
+name: saythis
+
 # ── Shared environment blocks ───────────────────────────────────────────────
 x-postgres-env: &postgres-env
   POSTGRES_USER: ${POSTGRES_USER:?set it in .env — see .env.example}

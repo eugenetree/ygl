@@ -7,8 +7,9 @@ endif
 guard-%:
 	@test -n "$($*)" || { echo "$* is not set — see .env.example"; exit 1; }
 
+# Builds every time because the image tag is shared by all worktrees
 up:
-	docker compose up -d
+	docker compose up -d --build
 
 down:
 	docker compose down
