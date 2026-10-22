@@ -1,0 +1,353 @@
+{
+  "events": [
+    {
+      "tStartMs": 2103280,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "through"
+        },
+        {
+          "utf8": " time",
+          "tOffsetMs": 240
+        },
+        {
+          "utf8": " or",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " over",
+          "tOffsetMs": 1200
+        },
+        {
+          "utf8": " time.",
+          "tOffsetMs": 1520
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 2960
+        },
+        {
+          "utf8": " so",
+          "tOffsetMs": 3200
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 3520
+        }
+      ]
+    },
+    {
+      "tStartMs": 2107030,
+      "dDurationMs": 2010,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2107040,
+      "dDurationMs": 4480,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Sierra"
+        },
+        {
+          "utf8": " Leon",
+          "tOffsetMs": 400
+        },
+        {
+          "utf8": " now",
+          "tOffsetMs": 799
+        },
+        {
+          "utf8": " that",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1280
+        },
+        {
+          "utf8": " implemented",
+          "tOffsetMs": 1520
+        }
+      ]
+    },
+    {
+      "tStartMs": 2109030,
+      "dDurationMs": 2490,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2109040,
+      "dDurationMs": 4640,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "newborn"
+        },
+        {
+          "utf8": " screening",
+          "tOffsetMs": 480
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 1280
+        },
+        {
+          "utf8": " have",
+          "tOffsetMs": 1520
+        },
+        {
+          "utf8": " an",
+          "tOffsetMs": 1600
+        },
+        {
+          "utf8": " obligation",
+          "tOffsetMs": 1840
+        }
+      ]
+    },
+    {
+      "tStartMs": 2111510,
+      "dDurationMs": 2170,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2111520,
+      "dDurationMs": 3280,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "to"
+        },
+        {
+          "utf8": " provide",
+          "tOffsetMs": 240
+        },
+        {
+          "utf8": " care",
+          "tOffsetMs": 559
+        },
+        {
+          "utf8": " for",
+          "tOffsetMs": 720
+        },
+        {
+          "utf8": " these",
+          "tOffsetMs": 880
+        },
+        {
+          "utf8": " children.",
+          "tOffsetMs": 1120
+        },
+        {
+          "utf8": " And",
+          "tOffsetMs": 1839
+        }
+      ]
+    },
+    {
+      "tStartMs": 2113670,
+      "dDurationMs": 1130,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2113680,
+      "dDurationMs": 2880,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "so"
+        },
+        {
+          "utf8": " we",
+          "tOffsetMs": 720
+        },
+        {
+          "utf8": " were",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " fortunate",
+          "tOffsetMs": 1120
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 1600
+        },
+        {
+          "utf8": " get",
+          "tOffsetMs": 1840
+        },
+        {
+          "utf8": " uh",
+          "tOffsetMs": 2240
+        },
+        {
+          "utf8": " funding",
+          "tOffsetMs": 2399
+        }
+      ]
+    },
+    {
+      "tStartMs": 2114790,
+      "dDurationMs": 1770,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2114800,
+      "dDurationMs": 2400,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "fortunate"
+        },
+        {
+          "utf8": " to",
+          "tOffsetMs": 480
+        },
+        {
+          "utf8": " get",
+          "tOffsetMs": 720
+        },
+        {
+          "utf8": " uh",
+          "tOffsetMs": 1120
+        },
+        {
+          "utf8": " funding",
+          "tOffsetMs": 1279
+        },
+        {
+          "utf8": " about",
+          "tOffsetMs": 1760
+        },
+        {
+          "utf8": " half",
+          "tOffsetMs": 2000
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 2160
+        }
+      ]
+    },
+    {
+      "tStartMs": 2116550,
+      "dDurationMs": 650,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2116560,
+      "dDurationMs": 1760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "about"
+        },
+        {
+          "utf8": " half",
+          "tOffsetMs": 240
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 400
+        },
+        {
+          "utf8": " million",
+          "tOffsetMs": 640
+        },
+        {
+          "utf8": " dollars",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 1440
+        },
+        {
+          "utf8": " know",
+          "tOffsetMs": 1600
+        }
+      ]
+    },
+    {
+      "tStartMs": 2117190,
+      "dDurationMs": 1130,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 2117200,
+      "dDurationMs": 1919,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "million"
+        },
+        {
+          "utf8": " dollars",
+          "tOffsetMs": 320
+        },
+        {
+          "utf8": " you",
+          "tOffsetMs": 800
+        },
+        {
+          "utf8": " know",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " from",
+          "tOffsetMs": 1120
+        },
+        {
+          "utf8": " noon",
+          "tOffsetMs": 1520
+        }
+      ]
+    }
+  ]
+}

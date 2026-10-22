@@ -33,6 +33,24 @@ const eventSchema = z.object({
   ),
 });
 
+function lastWordEnd({
+  wordStart,
+  lineEnd,
+  nextLineStart,
+}: {
+  wordStart: number;
+  lineEnd: number;
+  nextLineStart: number | undefined;
+}): number {
+  const nextLineStartsLater =
+    nextLineStart !== undefined && nextLineStart > wordStart;
+  const end = nextLineStartsLater ? Math.min(nextLineStart, lineEnd) : lineEnd;
+  if (end >= wordStart) return end;
+
+  // YouTube sometimes places a line's last word after the line's own end.
+  return nextLineStartsLater ? nextLineStart : wordStart;
+}
+
 class CaptionsExtractor {
   extractFromJson({
     jsonResponse,
@@ -48,14 +66,13 @@ class CaptionsExtractor {
       });
     }
 
-    for (const event of jsonParseResult.data.events) {
+    const lines = jsonParseResult.data.events.flatMap((event) => {
       const eventParseResult = eventSchema.safeParse(event);
+      return eventParseResult.success ? [eventParseResult.data] : [];
+    });
 
-      if (!eventParseResult.success) {
-        continue;
-      }
-
-      const { tStartMs, dDurationMs, segs } = eventParseResult.data;
+    for (const [lineIndex, line] of lines.entries()) {
+      const { tStartMs, dDurationMs, segs } = line;
 
       if (type === "manual") {
         const caption: Caption = {
@@ -72,13 +89,28 @@ class CaptionsExtractor {
         continue;
       }
 
+      // Auto tracks group words into on-screen lines and give each word only an
+      // offset from its line's start, so a word ends where a later word starts.
+      // Words that share an offset (block-level tracks give none) say nothing
+      // about each other's end. A line's duration is how long it stays on
+      // screen, which often runs past the next line's start, so a word with no
+      // later word in its line ends at whichever comes first.
+      const lineEnd = tStartMs + dDurationMs;
+      const nextLineStart = lines[lineIndex + 1]?.tStartMs;
+
       for (let i = 0; i < segs.length; i++) {
         const currentSeg = segs[i];
-        const nextSeg = segs[i + 1];
+        const offset = currentSeg.tOffsetMs ?? 0;
+        const laterSeg = segs
+          .slice(i + 1)
+          .find((seg) => (seg.tOffsetMs ?? 0) > offset);
 
-        const startTime = Math.round(tStartMs + (currentSeg?.tOffsetMs ?? 0));
+        const wordStart = tStartMs + offset;
+        const startTime = Math.round(wordStart);
         const endTime = Math.round(
-          tStartMs + (nextSeg?.tOffsetMs ?? tStartMs + dDurationMs),
+          laterSeg
+            ? tStartMs + (laterSeg.tOffsetMs ?? 0)
+            : lastWordEnd({ wordStart, lineEnd, nextLineStart }),
         );
 
         const caption: Caption = {

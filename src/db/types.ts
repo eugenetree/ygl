@@ -76,6 +76,15 @@ export interface Database {
   scrapingProcess: ScrapingProcessRow;
   boostedChannels: BoostedChannelsRow;
   channelPriorityScores: ChannelPriorityScoresRow;
+  captionRepairFollowups: CaptionRepairFollowupsRow;
+}
+
+export type CaptionRepairFollowupReason = "block_level";
+
+export interface CaptionRepairFollowupsRow {
+  videoId: string;
+  reason: CaptionRepairFollowupReason;
+  createdAt: Generated<Date>;
 }
 
 export interface ScraperConfigRow {

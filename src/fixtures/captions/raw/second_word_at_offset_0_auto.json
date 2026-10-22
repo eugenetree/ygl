@@ -1,0 +1,360 @@
+{
+  "events": [
+    {
+      "tStartMs": 409860,
+      "dDurationMs": 4020,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "pounds"
+        }
+      ]
+    },
+    {
+      "tStartMs": 411290,
+      "dDurationMs": 2590,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 411300,
+      "dDurationMs": 6360,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "that's"
+        },
+        {
+          "utf8": " more",
+          "tOffsetMs": 420
+        },
+        {
+          "utf8": " payload",
+          "tOffsetMs": 660
+        },
+        {
+          "utf8": " capacity",
+          "tOffsetMs": 1200
+        },
+        {
+          "utf8": " than",
+          "tOffsetMs": 1679
+        },
+        {
+          "utf8": " Ford's",
+          "tOffsetMs": 2100
+        }
+      ]
+    },
+    {
+      "tStartMs": 413870,
+      "dDurationMs": 3790,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 413880,
+      "dDurationMs": 5939,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "F-150"
+        },
+        {
+          "utf8": " Lightning",
+          "tOffsetMs": 480
+        },
+        {
+          "utf8": " rivian's",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " r1t",
+          "tOffsetMs": 1920
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 2520
+        },
+        {
+          "utf8": " GM's",
+          "tOffsetMs": 3180
+        }
+      ]
+    },
+    {
+      "tStartMs": 417650,
+      "dDurationMs": 2169,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 417660,
+      "dDurationMs": 4740,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "Silverado"
+        },
+        {
+          "utf8": " EV",
+          "tOffsetMs": 720
+        }
+      ]
+    },
+    {
+      "tStartMs": 419809,
+      "dDurationMs": 2591,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 419819,
+      "dDurationMs": 4921,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "IL"
+        },
+        {
+          "utf8": " when"
+        },
+        {
+          "utf8": " it",
+          "tOffsetMs": 301
+        },
+        {
+          "utf8": " was",
+          "tOffsetMs": 481
+        },
+        {
+          "utf8": " unveiled",
+          "tOffsetMs": 541
+        },
+        {
+          "utf8": " in",
+          "tOffsetMs": 1021
+        },
+        {
+          "utf8": " 2019",
+          "tOffsetMs": 1141
+        },
+        {
+          "utf8": " Tesla",
+          "tOffsetMs": 1621
+        }
+      ]
+    },
+    {
+      "tStartMs": 422390,
+      "dDurationMs": 2350,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 422400,
+      "dDurationMs": 5519,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "said"
+        },
+        {
+          "utf8": " three",
+          "tOffsetMs": 180
+        },
+        {
+          "utf8": " versions",
+          "tOffsetMs": 480
+        },
+        {
+          "utf8": " would",
+          "tOffsetMs": 960
+        },
+        {
+          "utf8": " be",
+          "tOffsetMs": 1320
+        },
+        {
+          "utf8": " available",
+          "tOffsetMs": 1440
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 1620
+        }
+      ]
+    },
+    {
+      "tStartMs": 424730,
+      "dDurationMs": 3189,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 424740,
+      "dDurationMs": 5760,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "rear"
+        },
+        {
+          "utf8": " drive",
+          "tOffsetMs": 299
+        },
+        {
+          "utf8": " single",
+          "tOffsetMs": 480
+        },
+        {
+          "utf8": " motor",
+          "tOffsetMs": 1019
+        },
+        {
+          "utf8": " dual",
+          "tOffsetMs": 1140
+        },
+        {
+          "utf8": " motor",
+          "tOffsetMs": 1860
+        },
+        {
+          "utf8": " and",
+          "tOffsetMs": 2040
+        },
+        {
+          "utf8": " a",
+          "tOffsetMs": 2880
+        }
+      ]
+    },
+    {
+      "tStartMs": 427909,
+      "dDurationMs": 2591,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 427919,
+      "dDurationMs": 4861,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "new"
+        },
+        {
+          "utf8": " tri-motor",
+          "tOffsetMs": 181
+        },
+        {
+          "utf8": " with",
+          "tOffsetMs": 1081
+        },
+        {
+          "utf8": " two",
+          "tOffsetMs": 1560
+        },
+        {
+          "utf8": " Motors",
+          "tOffsetMs": 1741
+        },
+        {
+          "utf8": " on",
+          "tOffsetMs": 2161
+        },
+        {
+          "utf8": " the",
+          "tOffsetMs": 2461
+        }
+      ]
+    },
+    {
+      "tStartMs": 430490,
+      "dDurationMs": 2290,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    },
+    {
+      "tStartMs": 430500,
+      "dDurationMs": 4560,
+      "wWinId": 1,
+      "segs": [
+        {
+          "utf8": "rear"
+        },
+        {
+          "utf8": " axle",
+          "tOffsetMs": 240
+        },
+        {
+          "utf8": " but",
+          "tOffsetMs": 660
+        },
+        {
+          "utf8": " many",
+          "tOffsetMs": 1319
+        },
+        {
+          "utf8": " basic",
+          "tOffsetMs": 1560
+        },
+        {
+          "utf8": " questions",
+          "tOffsetMs": 2039
+        }
+      ]
+    },
+    {
+      "tStartMs": 432770,
+      "dDurationMs": 2290,
+      "wWinId": 1,
+      "aAppend": 1,
+      "segs": [
+        {
+          "utf8": "\n"
+        }
+      ]
+    }
+  ]
+}
