@@ -4,7 +4,7 @@
 
 **Blocked by:** None for building. Running the network test, the local demo and the deploy need 01.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] `<videoId>/video-info.json.gz` holds `{ videoId, fetchedAt, result }` for saved, skipped and failed fetches, with the full untrimmed yt-dlp output or its error
 - [ ] `<videoId>/auto-track.json.gz` and `<videoId>/manual-track.json.gz` hold `{ videoId, fetchedAt, trackKey, track }` when both tracks were downloaded, and nothing is written for them otherwise
