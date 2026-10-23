@@ -448,15 +448,15 @@ export class YoutubeApiGetVideo {
         });
       }
 
-      const autoTrack = JSON.parse(await readFile(autoFile, "utf-8"));
-      const manualTrack = JSON.parse(await readFile(manualFile, "utf-8"));
+      const autoJson = await this.readJsonFile(autoFile);
+      const manualJson = await this.readJsonFile(manualFile);
 
       const storeAutoResult = await this.rawDataStore.storeRawCaptionTrack(
         videoId,
         "auto",
         fetchedAt,
         autoLang,
-        autoTrack,
+        autoJson.ok ? autoJson.value : autoJson.error.text,
       );
       if (!storeAutoResult.ok) return storeAutoResult;
 
@@ -465,9 +465,26 @@ export class YoutubeApiGetVideo {
         "manual",
         fetchedAt,
         manualLang,
-        manualTrack,
+        manualJson.ok ? manualJson.value : manualJson.error.text,
       );
       if (!storeManualResult.ok) return storeManualResult;
+
+      if (!autoJson.ok) {
+        return Failure({
+          type: "VALIDATION_ERROR",
+          message: `The auto caption track of video ${videoId} isn't valid JSON`,
+          cause: autoJson.error.cause,
+        });
+      }
+      if (!manualJson.ok) {
+        return Failure({
+          type: "VALIDATION_ERROR",
+          message: `The manual caption track of video ${videoId} isn't valid JSON`,
+          cause: manualJson.error.cause,
+        });
+      }
+      const autoTrack = autoJson.value;
+      const manualTrack = manualJson.value;
 
       const autoCaptions = this.parseCaptionTrack(autoTrack, "auto");
       if (!autoCaptions.ok) return autoCaptions;
@@ -491,6 +508,17 @@ export class YoutubeApiGetVideo {
       return json3File ? path.join(dir, json3File) : null;
     } catch {
       return null;
+    }
+  }
+
+  private async readJsonFile(
+    file: string,
+  ): Promise<Result<unknown, { text: string; cause: unknown }>> {
+    const text = await readFile(file, "utf-8");
+    try {
+      return Success(JSON.parse(text));
+    } catch (cause) {
+      return Failure({ text, cause });
     }
   }
 

@@ -65,6 +65,11 @@ class MockYtDlpClient {
 
   execJsonOptions: ExecJsonOptions | undefined;
 
+  captionFiles: Record<CaptionTrackKind, string> = {
+    auto: MINIMAL_JSON3,
+    manual: MINIMAL_JSON3,
+  };
+
   constructor(
     private readonly ytDlpResponse: unknown,
     private readonly execJsonFailure?: YtDlpError | MembersOnlyVideoError,
@@ -94,7 +99,8 @@ class MockYtDlpClient {
       const outTemplate = args[oIdx + 1]!;
       const outDir = path.dirname(outTemplate);
       await mkdir(outDir, { recursive: true });
-      await writeFile(path.join(outDir, "video.json3"), MINIMAL_JSON3);
+      const kind = args.includes("--write-auto-subs") ? "auto" : "manual";
+      await writeFile(path.join(outDir, "video.json3"), this.captionFiles[kind]);
     }
 
     return { ok: true, value: undefined };
@@ -799,6 +805,29 @@ describe("YoutubeApiGetVideo - raw data", () => {
       "testVideoId/auto": { fetchedAt, trackKey: "en-orig", track },
       "testVideoId/manual": { fetchedAt, trackKey: "en-uYU-mmqFLq8", track },
     });
+  });
+
+  it("stores a caption track that isn't valid JSON as its text and fails with a validation error", async () => {
+    const { service, mockClient, rawDataStore } = createService(
+      baseYtData({
+        automatic_captions: { "en-orig": captionEntry() },
+        subtitles: { en: captionEntry() },
+      }),
+    );
+    const truncated = MINIMAL_JSON3.slice(0, 20);
+    mockClient.captionFiles.auto = truncated;
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.equal(!result.ok && result.error.type, "VALIDATION_ERROR");
+    assert.equal(
+      rawDataStore.captionTracks.get("testVideoId/auto")?.track,
+      truncated,
+    );
+    assert.deepEqual(
+      rawDataStore.captionTracks.get("testVideoId/manual")?.track,
+      JSON.parse(MINIMAL_JSON3),
+    );
   });
 
   for (const [video, captions] of [
