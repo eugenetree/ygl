@@ -1,7 +1,7 @@
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
@@ -9,6 +9,12 @@ import { ValidationError } from "../_common/validation/errors.js";
 import { validator } from "../_common/validation/validator.js";
 import { isValidLanguageCode, type LanguageCode } from "../i18n/index.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
+import {
+  type CaptionTrackKind,
+  RAW_DATA_STORE,
+  type RawDataStorageError,
+  type RawDataStore,
+} from "./raw-data-store.js";
 import { Caption, CaptionTrackState, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
 import {
@@ -49,11 +55,18 @@ export class YoutubeApiGetVideo {
   constructor(
     private readonly logger: Logger,
     private readonly ytDlpClient: YtDlpClient,
+    @inject(RAW_DATA_STORE) private readonly rawDataStore: RawDataStore,
     private readonly responseRecorder?: YtDlpResponseRecorder,
   ) {
     this.logger.setContext(YoutubeApiGetVideo.name);
   }
 
+  /**
+   * Fetches a video and, before returning, stores its raw video info (on every
+   * outcome) and, when both were downloaded, its raw caption tracks in the raw
+   * data store. A storage failure is returned as a RawDataStorageError, even
+   * when the video would otherwise have been returned or skipped.
+   */
   public async getVideo(
     videoId: string,
   ): Promise<
@@ -63,6 +76,7 @@ export class YoutubeApiGetVideo {
       | UnprocessableVideoError
       | ValidationError
       | AmbiguousVideoLanguageError
+      | RawDataStorageError
     >
   > {
     this.logger.info(`Processing video ${videoId}...`);
@@ -82,6 +96,16 @@ export class YoutubeApiGetVideo {
       { diagnoseUnavailable: true },
     );
     await this.responseRecorder?.record(videoId, execResult);
+
+    const fetchedAt = new Date().toISOString();
+    const storeResult = await this.rawDataStore.storeRawVideoInfo(
+      videoId,
+      fetchedAt,
+      execResult,
+    );
+    if (!storeResult.ok) {
+      return storeResult;
+    }
 
     if (!execResult.ok) {
       return execResult;
@@ -235,6 +259,7 @@ export class YoutubeApiGetVideo {
 
     const captionsResult = await this.downloadCaptions(
       videoId,
+      fetchedAt,
       autoKey,
       manualKey,
     );
@@ -359,12 +384,16 @@ export class YoutubeApiGetVideo {
 
   private async downloadCaptions(
     videoId: string,
+    fetchedAt: string,
     autoLang: string,
     manualLang: string,
   ): Promise<
     Result<
       { autoCaptions: Caption[]; manualCaptions: Caption[] },
-      YtDlpError | UnprocessableVideoError | ValidationError
+      | YtDlpError
+      | UnprocessableVideoError
+      | ValidationError
+      | RawDataStorageError
     >
   > {
     const tmpDir = await mkdtemp(path.join(tmpdir(), "ygl-subs-"));
@@ -419,10 +448,31 @@ export class YoutubeApiGetVideo {
         });
       }
 
-      const autoCaptions = await this.parseCaptionFile(autoFile, "auto");
+      const autoTrack = JSON.parse(await readFile(autoFile, "utf-8"));
+      const manualTrack = JSON.parse(await readFile(manualFile, "utf-8"));
+
+      const storeAutoResult = await this.rawDataStore.storeRawCaptionTrack(
+        videoId,
+        "auto",
+        fetchedAt,
+        autoLang,
+        autoTrack,
+      );
+      if (!storeAutoResult.ok) return storeAutoResult;
+
+      const storeManualResult = await this.rawDataStore.storeRawCaptionTrack(
+        videoId,
+        "manual",
+        fetchedAt,
+        manualLang,
+        manualTrack,
+      );
+      if (!storeManualResult.ok) return storeManualResult;
+
+      const autoCaptions = this.parseCaptionTrack(autoTrack, "auto");
       if (!autoCaptions.ok) return autoCaptions;
 
-      const manualCaptions = await this.parseCaptionFile(manualFile, "manual");
+      const manualCaptions = this.parseCaptionTrack(manualTrack, "manual");
       if (!manualCaptions.ok) return manualCaptions;
 
       return Success({
@@ -444,15 +494,12 @@ export class YoutubeApiGetVideo {
     }
   }
 
-  private async parseCaptionFile(
-    filePath: string,
-    type: "auto" | "manual",
-  ): Promise<Result<Caption[], ValidationError>> {
-    const content = await readFile(filePath, "utf-8");
-    const json = JSON.parse(content);
-
+  private parseCaptionTrack(
+    track: unknown,
+    type: CaptionTrackKind,
+  ): Result<Caption[], ValidationError> {
     const extractResult = captionsExtractor.extractFromJson({
-      jsonResponse: json,
+      jsonResponse: track,
       type,
     });
     if (!extractResult.ok) {

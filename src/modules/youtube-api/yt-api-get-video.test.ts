@@ -3,8 +3,13 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { after, before, describe, it } from "node:test";
-import { Failure, Result } from "../../types/index.js";
+import { Failure, Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
+import type {
+  CaptionTrackKind,
+  RawDataStorageError,
+  RawDataStore,
+} from "./raw-data-store.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import {
   type ExecJsonOptions,
@@ -60,13 +65,17 @@ class MockYtDlpClient {
 
   execJsonOptions: ExecJsonOptions | undefined;
 
-  constructor(private readonly ytDlpResponse: unknown) {}
+  constructor(
+    private readonly ytDlpResponse: unknown,
+    private readonly execJsonFailure?: YtDlpError | MembersOnlyVideoError,
+  ) {}
 
   async execJson<T>(
     _args: string[],
     options?: ExecJsonOptions,
   ): Promise<Result<T[], YtDlpError | MembersOnlyVideoError>> {
     this.execJsonOptions = options;
+    if (this.execJsonFailure) return Failure(this.execJsonFailure);
     return { ok: true, value: [this.ytDlpResponse as T] };
   }
 
@@ -92,14 +101,59 @@ class MockYtDlpClient {
   }
 }
 
-function createService(ytDlpData: unknown) {
+const STORAGE_ERROR: RawDataStorageError = {
+  type: "RAW_DATA_STORAGE_ERROR",
+  message: "R2 is down",
+};
+
+class FakeRawDataStore implements RawDataStore {
+  videoInfos = new Map<string, { fetchedAt: string; result: unknown }>();
+  captionTracks = new Map<
+    string,
+    { fetchedAt: string; trackKey: string; track: unknown }
+  >();
+  failOn: "raw video info" | "raw caption track" | null = null;
+
+  async storeRawVideoInfo(
+    videoId: string,
+    fetchedAt: string,
+    result: unknown,
+  ): Promise<Result<void, RawDataStorageError>> {
+    if (this.failOn === "raw video info") return Failure(STORAGE_ERROR);
+    this.videoInfos.set(videoId, { fetchedAt, result });
+    return Success(undefined);
+  }
+
+  async storeRawCaptionTrack(
+    videoId: string,
+    kind: CaptionTrackKind,
+    fetchedAt: string,
+    trackKey: string,
+    track: unknown,
+  ): Promise<Result<void, RawDataStorageError>> {
+    if (this.failOn === "raw caption track") return Failure(STORAGE_ERROR);
+    this.captionTracks.set(`${videoId}/${kind}`, {
+      fetchedAt,
+      trackKey,
+      track,
+    });
+    return Success(undefined);
+  }
+}
+
+function createService(
+  ytDlpData: unknown,
+  execJsonFailure?: YtDlpError | MembersOnlyVideoError,
+) {
   const logger = new Logger({ context: "test", category: "test" });
-  const mockClient = new MockYtDlpClient(ytDlpData);
+  const mockClient = new MockYtDlpClient(ytDlpData, execJsonFailure);
+  const rawDataStore = new FakeRawDataStore();
   const service = new YoutubeApiGetVideo(
     logger,
     mockClient as unknown as YtDlpClient,
+    rawDataStore,
   );
-  return { service, mockClient };
+  return { service, mockClient, rawDataStore };
 }
 
 // ── Skip delays introduced by getVideo / downloadCaptions ─────────────────────
@@ -666,5 +720,140 @@ describe("YoutubeApiGetVideo - language key selection", () => {
         }),
       );
     });
+  });
+});
+
+describe("YoutubeApiGetVideo - raw data", () => {
+  it("stores the raw video info of a saved video", async () => {
+    const ytData = baseYtData({
+      automatic_captions: { "en-orig": captionEntry() },
+      subtitles: { en: captionEntry() },
+    });
+    const { service, rawDataStore } = createService(ytData);
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.ok(result.ok);
+    assert.deepEqual(rawDataStore.videoInfos.get("testVideoId")?.result, {
+      ok: true,
+      value: [ytData],
+    });
+  });
+
+  it("stores the raw video info of a skipped video with yt-dlp's error", async () => {
+    const membersOnly: MembersOnlyVideoError = {
+      type: "MEMBERS_ONLY_VIDEO",
+      message: "Join this channel to get access to members-only content",
+    };
+    const { service, rawDataStore } = createService(undefined, membersOnly);
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.deepEqual(result, Failure(membersOnly));
+    assert.deepEqual(
+      rawDataStore.videoInfos.get("testVideoId")?.result,
+      Failure(membersOnly),
+    );
+  });
+
+  for (const [failure, ytData] of [
+    ["a schema validation error", { id: "testVideoId" }],
+    ["a Premium-only video", baseYtData({ id: "trailerId" })],
+    [
+      "an ambiguous video language",
+      baseYtData({
+        automatic_captions: {
+          "en-orig": captionEntry(),
+          "es-orig": captionEntry(),
+        },
+      }),
+    ],
+  ] as const) {
+    it(`stores the raw video info of a video that failed with ${failure}`, async () => {
+      const { service, rawDataStore } = createService(ytData);
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.equal(result.ok, false);
+      assert.deepEqual(rawDataStore.videoInfos.get("testVideoId")?.result, {
+        ok: true,
+        value: [ytData],
+      });
+    });
+  }
+
+  it("stores both raw caption tracks with the picked track keys and the raw video info's fetch time", async () => {
+    const { service, rawDataStore } = createService(
+      baseYtData({
+        automatic_captions: { "en-orig": captionEntry() },
+        subtitles: { fr: captionEntry(), "en-uYU-mmqFLq8": captionEntry() },
+      }),
+    );
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.ok(result.ok);
+    const { fetchedAt } = rawDataStore.videoInfos.get("testVideoId")!;
+    const track = JSON.parse(MINIMAL_JSON3);
+    assert.deepEqual(Object.fromEntries(rawDataStore.captionTracks), {
+      "testVideoId/auto": { fetchedAt, trackKey: "en-orig", track },
+      "testVideoId/manual": { fetchedAt, trackKey: "en-uYU-mmqFLq8", track },
+    });
+  });
+
+  for (const [video, captions] of [
+    [
+      "an English video with only auto captions",
+      { automatic_captions: { "en-orig": captionEntry() }, subtitles: {} },
+    ],
+    [
+      "an English video with only manual captions",
+      { formats: [originalAudio("en")], subtitles: { en: captionEntry() } },
+    ],
+    [
+      "a non-English video with both kinds",
+      {
+        automatic_captions: { "es-orig": captionEntry() },
+        subtitles: { es: captionEntry() },
+      },
+    ],
+  ] as const) {
+    it(`stores no raw caption tracks for ${video}`, async () => {
+      const { service, rawDataStore } = createService(baseYtData(captions));
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.ok(result.ok);
+      assert.ok(rawDataStore.videoInfos.has("testVideoId"));
+      assert.equal(rawDataStore.captionTracks.size, 0);
+    });
+  }
+
+  for (const failOn of ["raw video info", "raw caption track"] as const) {
+    it(`fails a would-be saved video when its ${failOn} can't be stored`, async () => {
+      const { service, rawDataStore } = createService(
+        baseYtData({
+          automatic_captions: { "en-orig": captionEntry() },
+          subtitles: { en: captionEntry() },
+        }),
+      );
+      rawDataStore.failOn = failOn;
+
+      const result = await service.getVideo("testVideoId");
+
+      assert.deepEqual(result, Failure(STORAGE_ERROR));
+    });
+  }
+
+  it("fails a would-be skipped video when its raw video info can't be stored", async () => {
+    const { service, rawDataStore } = createService(undefined, {
+      type: "MEMBERS_ONLY_VIDEO",
+      message: "Join this channel to get access to members-only content",
+    });
+    rawDataStore.failOn = "raw video info";
+
+    const result = await service.getVideo("testVideoId");
+
+    assert.deepEqual(result, Failure(STORAGE_ERROR));
   });
 });

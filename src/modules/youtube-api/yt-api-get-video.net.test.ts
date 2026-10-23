@@ -2,6 +2,7 @@ import "reflect-metadata";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { Logger } from "../_common/logger/logger.js";
+import { DisabledRawDataStore } from "./raw-data-store.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import { YtDlpClient } from "./yt-dlp-client.js";
 
@@ -12,7 +13,11 @@ const TIMEOUT = 120_000;
 function createService(): YoutubeApiGetVideo {
   const logger = new Logger({ context: "test", category: "test" });
   const ytDlpClient = new YtDlpClient(logger);
-  return new YoutubeApiGetVideo(logger, ytDlpClient);
+  return new YoutubeApiGetVideo(
+    logger,
+    ytDlpClient,
+    new DisabledRawDataStore(),
+  );
 }
 
 describe("YoutubeApiGetVideo.getVideo()", () => {

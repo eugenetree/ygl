@@ -147,6 +147,10 @@ services:
       YTDLP_COOKIES_B64: ${YTDLP_COOKIES_B64:-}
       YTDLP_POT_PROVIDER_URL: ${YTDLP_POT_PROVIDER_URL-http://127.0.0.1:4416}
       YTDLP_RAW_DIR: /var/lib/ytdlp-raw
+      RAW_DATA_R2_ENDPOINT: ${RAW_DATA_R2_ENDPOINT:-}
+      RAW_DATA_R2_ACCESS_KEY_ID: ${RAW_DATA_R2_ACCESS_KEY_ID:-}
+      RAW_DATA_R2_SECRET_ACCESS_KEY: ${RAW_DATA_R2_SECRET_ACCESS_KEY:-}
+      RAW_DATA_R2_BUCKET: ${RAW_DATA_R2_BUCKET:-}
     volumes:
       - ytdlp_raw:/var/lib/ytdlp-raw
     depends_on:
