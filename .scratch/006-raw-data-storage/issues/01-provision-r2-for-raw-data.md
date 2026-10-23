@@ -8,6 +8,6 @@
 
 - [ ] A private R2 bucket for raw data exists, separate from the `saythis` database backup bucket, with no lifecycle rule
 - [ ] An R2 API token scoped to *Object Read & Write* on that bucket only exists, and cannot touch the backup bucket
-- [ ] A dev bucket and token exist for local runs and the network test
-- [ ] The scraper's raw data variables (endpoint, access key id, secret access key, bucket) are set in Dokploy, and the dev values in the local `.env`
+- [ ] The token has no client IP filter: the scraper reaches R2 through its VPN, whose exit IP isn't the server's and can change
+- [ ] The scraper's raw data variables (endpoint, access key id, secret access key, bucket) are set in Dokploy. There is no dev bucket, and local runs leave them unset so storage is off
 - [ ] `APP_ENV=production` is set for the scraper in Dokploy (it may be unset today)

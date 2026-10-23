@@ -53,13 +53,12 @@ saved from now on is guaranteed to have its raw data.
 15. As the maintainer, I want a failed upload during a Skip to turn into a Failure, so that the rule that R2 failures are fatal has no exceptions.
 16. As the maintainer, I want the scraper to refuse to start in production when R2 isn't configured, so that a missing variable in Dokploy can't quietly turn storage off.
 17. As a developer, I want the scraper to run locally without R2 credentials and log once at startup that raw data storage is off, so that working on the scraper doesn't require a bucket.
-18. As a developer, I want to point my local scraper at a dev bucket, so that I can see the raw data it writes before deploying.
-19. As the maintainer, I want raw data in its own bucket with a token scoped to that bucket, so that the scraper's credentials can never overwrite or delete the database backups.
-20. As the maintainer, I want raw data kept forever with no lifecycle rule, so that a bug found months later can still be fixed from data fetched months ago.
-21. As the maintainer, I want raw data to stay out of Postgres, so that the database and the dumps I restore locally don't grow by gigabytes of data the app never reads.
-22. As the maintainer, I want raw caption tracks stored only for videos whose auto and manual tracks were both fetched, so that we don't spend extra yt-dlp requests downloading tracks we would never use.
-23. As the maintainer, I want the 14-day recorder to keep working unchanged while this rolls out, so that I don't lose my on-server diagnostics before the R2 path has proven itself.
-24. As the maintainer, I want the storage behaviour documented on the fetch itself, so that a future reader knows that getting a video also stores its raw data and can fail because of it.
+18. As the maintainer, I want raw data in its own bucket with a token scoped to that bucket, so that the scraper's credentials can never overwrite or delete the database backups.
+19. As the maintainer, I want raw data kept forever with no lifecycle rule, so that a bug found months later can still be fixed from data fetched months ago.
+20. As the maintainer, I want raw data to stay out of Postgres, so that the database and the dumps I restore locally don't grow by gigabytes of data the app never reads.
+21. As the maintainer, I want raw caption tracks stored only for videos whose auto and manual tracks were both fetched, so that we don't spend extra yt-dlp requests downloading tracks we would never use.
+22. As the maintainer, I want the 14-day recorder to keep working unchanged while this rolls out, so that I don't lose my on-server diagnostics before the R2 path has proven itself.
+23. As the maintainer, I want the storage behaviour documented on the fetch itself, so that a future reader knows that getting a video also stores its raw data and can fail because of it.
 
 ## Implementation Decisions
 
@@ -91,7 +90,7 @@ saved from now on is guaranteed to have its raw data.
   - No raw caption tracks are stored when only one kind exists, or when the video isn't English.
   - A failing store turns a would-be success into a Failure, and turns a would-be Skip into a Failure.
   - Prior art: the existing YouTube video fetch tests and their mock yt-dlp client.
-- **R2 implementation:** a network test, part of the existing `test:net` group and not run by `npm test`. It writes and reads back an object in a dev bucket, and is skipped when the R2 variables aren't set. Prior art: the existing yt-dlp client and video fetch network tests.
+- **R2 implementation:** no automated test, because there is only the prod bucket and no dev bucket. The first prod fetch after the deploy is its first real run. Uploads are fatal, so a misconfigured bucket or token shows up straight away as a Scraper failure alert.
 - **Configuration rule:** a unit test of the function that builds the store from the environment. It covers production with everything set, production with a variable missing (refuses), development with nothing set (disabled store), and development fully set (R2 store).
 - **Video worker:** no new tests. The storage error is a non-skip error, which the worker already treats as a Failure.
 

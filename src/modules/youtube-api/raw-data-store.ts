@@ -57,7 +57,7 @@ const RAW_DATA_VARIABLES = {
 } as const satisfies Record<keyof R2Config, string>;
 
 /** Fails with the names of the variables that aren't set. */
-export function readR2Config(
+function readR2Config(
   env: Record<string, string | undefined>,
 ): Result<R2Config, string[]> {
   const config: Partial<R2Config> = {};

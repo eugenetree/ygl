@@ -18,17 +18,6 @@ export type R2Config = {
   bucket: string;
 };
 
-export function createR2Client(config: R2Config): S3Client {
-  return new S3Client({
-    region: "auto",
-    endpoint: config.endpoint,
-    credentials: {
-      accessKeyId: config.accessKeyId,
-      secretAccessKey: config.secretAccessKey,
-    },
-  });
-}
-
 /**
  * Keeps raw data in its own R2 bucket (ADR-0014), one gzipped JSON object per
  * video and kind, overwritten by a later fetch.
@@ -38,7 +27,17 @@ export class R2RawDataStore implements RawDataStore {
   private readonly bucket: string;
 
   constructor(config: R2Config) {
-    this.client = createR2Client(config);
+    this.client = new S3Client({
+      region: "auto",
+      endpoint: config.endpoint,
+      credentials: {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+      },
+      // The SDK's default request checksums have broken uploads to R2, and
+      // nothing exercises this client against R2 before the first prod fetch.
+      requestChecksumCalculation: "WHEN_REQUIRED",
+    });
     this.bucket = config.bucket;
   }
 
