@@ -3,9 +3,10 @@ import { gzip } from "node:zlib";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { Failure, type Result, Success } from "../../types/index.js";
 import type {
-  CaptionTrackKind,
   RawDataStorageError,
   RawDataStore,
+  StoreRawCaptionTrackParams,
+  StoreRawVideoInfoParams,
 } from "./raw-data-store.js";
 
 const gzipAsync = promisify(gzip);
@@ -17,33 +18,35 @@ export type R2Config = {
   bucket: string;
 };
 
+export function createR2Client(config: R2Config): S3Client {
+  return new S3Client({
+    region: "auto",
+    endpoint: config.endpoint,
+    credentials: {
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+    },
+  });
+}
+
 /**
  * Keeps raw data in its own R2 bucket (ADR-0014), one gzipped JSON object per
- * video and kind, overwritten by a later fetch:
- * `<videoId>/video-info.json.gz`, `<videoId>/auto-track.json.gz` and
- * `<videoId>/manual-track.json.gz`.
+ * video and kind, overwritten by a later fetch.
  */
 export class R2RawDataStore implements RawDataStore {
   private readonly client: S3Client;
   private readonly bucket: string;
 
   constructor(config: R2Config) {
-    this.client = new S3Client({
-      region: "auto",
-      endpoint: config.endpoint,
-      credentials: {
-        accessKeyId: config.accessKeyId,
-        secretAccessKey: config.secretAccessKey,
-      },
-    });
+    this.client = createR2Client(config);
     this.bucket = config.bucket;
   }
 
-  public storeRawVideoInfo(
-    videoId: string,
-    fetchedAt: string,
-    result: unknown,
-  ): Promise<Result<void, RawDataStorageError>> {
+  public storeRawVideoInfo({
+    videoId,
+    fetchedAt,
+    result,
+  }: StoreRawVideoInfoParams): Promise<Result<void, RawDataStorageError>> {
     return this.put(`${videoId}/video-info.json.gz`, {
       videoId,
       fetchedAt,
@@ -51,13 +54,13 @@ export class R2RawDataStore implements RawDataStore {
     });
   }
 
-  public storeRawCaptionTrack(
-    videoId: string,
-    kind: CaptionTrackKind,
-    fetchedAt: string,
-    trackKey: string,
-    track: unknown,
-  ): Promise<Result<void, RawDataStorageError>> {
+  public storeRawCaptionTrack({
+    videoId,
+    kind,
+    fetchedAt,
+    trackKey,
+    track,
+  }: StoreRawCaptionTrackParams): Promise<Result<void, RawDataStorageError>> {
     return this.put(`${videoId}/${kind}-track.json.gz`, {
       videoId,
       fetchedAt,

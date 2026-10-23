@@ -28,6 +28,8 @@ type Format = NonNullable<
   z.infer<typeof inputSchemas.ytDlpJson>["formats"]
 >[number];
 
+type JsonFile = Result<unknown, { text: string; cause: unknown }>;
+
 export type AmbiguousVideoLanguageError = {
   type: "AMBIGUOUS_VIDEO_LANGUAGE";
   videoId: string;
@@ -62,10 +64,8 @@ export class YoutubeApiGetVideo {
   }
 
   /**
-   * Fetches a video and, before returning, stores its raw video info (on every
-   * outcome) and, when both were downloaded, its raw caption tracks in the raw
-   * data store. A storage failure is returned as a RawDataStorageError, even
-   * when the video would otherwise have been returned or skipped.
+   * A raw data storage failure is returned as a Failure even when the video
+   * would otherwise have been returned or skipped.
    */
   public async getVideo(
     videoId: string,
@@ -98,11 +98,11 @@ export class YoutubeApiGetVideo {
     await this.responseRecorder?.record(videoId, execResult);
 
     const fetchedAt = new Date().toISOString();
-    const storeResult = await this.rawDataStore.storeRawVideoInfo(
+    const storeResult = await this.rawDataStore.storeRawVideoInfo({
       videoId,
       fetchedAt,
-      execResult,
-    );
+      result: execResult,
+    });
     if (!storeResult.ok) {
       return storeResult;
     }
@@ -385,8 +385,8 @@ export class YoutubeApiGetVideo {
   private async downloadCaptions(
     videoId: string,
     fetchedAt: string,
-    autoLang: string,
-    manualLang: string,
+    autoKey: string,
+    manualKey: string,
   ): Promise<
     Result<
       { autoCaptions: Caption[]; manualCaptions: Caption[] },
@@ -412,7 +412,7 @@ export class YoutubeApiGetVideo {
         "--sub-format",
         "json3",
         "--sub-langs",
-        autoLang,
+        autoKey,
         "--skip-download",
         "-o",
         path.join(autoDir, "%(id)s"),
@@ -425,7 +425,7 @@ export class YoutubeApiGetVideo {
         "--sub-format",
         "json3",
         "--sub-langs",
-        manualLang,
+        manualKey,
         "--skip-download",
         "-o",
         path.join(manualDir, "%(id)s"),
@@ -448,48 +448,38 @@ export class YoutubeApiGetVideo {
         });
       }
 
-      const autoJson = await this.readJsonFile(autoFile);
-      const manualJson = await this.readJsonFile(manualFile);
+      const tracks = {
+        auto: { trackKey: autoKey, file: await this.readJsonFile(autoFile) },
+        manual: {
+          trackKey: manualKey,
+          file: await this.readJsonFile(manualFile),
+        },
+      };
 
-      const storeAutoResult = await this.rawDataStore.storeRawCaptionTrack(
+      for (const kind of ["auto", "manual"] as const) {
+        const { trackKey, file } = tracks[kind];
+        const storeResult = await this.rawDataStore.storeRawCaptionTrack({
+          videoId,
+          kind,
+          fetchedAt,
+          trackKey,
+          track: file.ok ? file.value : file.error.text,
+        });
+        if (!storeResult.ok) return storeResult;
+      }
+
+      const autoCaptions = this.parseCaptionTrack(
         videoId,
+        tracks.auto.file,
         "auto",
-        fetchedAt,
-        autoLang,
-        autoJson.ok ? autoJson.value : autoJson.error.text,
       );
-      if (!storeAutoResult.ok) return storeAutoResult;
-
-      const storeManualResult = await this.rawDataStore.storeRawCaptionTrack(
-        videoId,
-        "manual",
-        fetchedAt,
-        manualLang,
-        manualJson.ok ? manualJson.value : manualJson.error.text,
-      );
-      if (!storeManualResult.ok) return storeManualResult;
-
-      if (!autoJson.ok) {
-        return Failure({
-          type: "VALIDATION_ERROR",
-          message: `The auto caption track of video ${videoId} isn't valid JSON`,
-          cause: autoJson.error.cause,
-        });
-      }
-      if (!manualJson.ok) {
-        return Failure({
-          type: "VALIDATION_ERROR",
-          message: `The manual caption track of video ${videoId} isn't valid JSON`,
-          cause: manualJson.error.cause,
-        });
-      }
-      const autoTrack = autoJson.value;
-      const manualTrack = manualJson.value;
-
-      const autoCaptions = this.parseCaptionTrack(autoTrack, "auto");
       if (!autoCaptions.ok) return autoCaptions;
 
-      const manualCaptions = this.parseCaptionTrack(manualTrack, "manual");
+      const manualCaptions = this.parseCaptionTrack(
+        videoId,
+        tracks.manual.file,
+        "manual",
+      );
       if (!manualCaptions.ok) return manualCaptions;
 
       return Success({
@@ -511,10 +501,8 @@ export class YoutubeApiGetVideo {
     }
   }
 
-  private async readJsonFile(
-    file: string,
-  ): Promise<Result<unknown, { text: string; cause: unknown }>> {
-    const text = await readFile(file, "utf-8");
+  private async readJsonFile(filePath: string): Promise<JsonFile> {
+    const text = await readFile(filePath, "utf-8");
     try {
       return Success(JSON.parse(text));
     } catch (cause) {
@@ -523,12 +511,21 @@ export class YoutubeApiGetVideo {
   }
 
   private parseCaptionTrack(
-    track: unknown,
-    type: CaptionTrackKind,
+    videoId: string,
+    file: JsonFile,
+    kind: CaptionTrackKind,
   ): Result<Caption[], ValidationError> {
+    if (!file.ok) {
+      return Failure({
+        type: "VALIDATION_ERROR",
+        message: `The ${kind} caption track of video ${videoId} isn't valid JSON`,
+        cause: file.error.cause,
+      });
+    }
+
     const extractResult = captionsExtractor.extractFromJson({
-      jsonResponse: track,
-      type,
+      jsonResponse: file.value,
+      type: kind,
     });
     if (!extractResult.ok) {
       return extractResult;

@@ -9,6 +9,8 @@ import type {
   CaptionTrackKind,
   RawDataStorageError,
   RawDataStore,
+  StoreRawCaptionTrackParams,
+  StoreRawVideoInfoParams,
 } from "./raw-data-store.js";
 import { YoutubeApiGetVideo } from "./yt-api-get-video.js";
 import {
@@ -100,7 +102,10 @@ class MockYtDlpClient {
       const outDir = path.dirname(outTemplate);
       await mkdir(outDir, { recursive: true });
       const kind = args.includes("--write-auto-subs") ? "auto" : "manual";
-      await writeFile(path.join(outDir, "video.json3"), this.captionFiles[kind]);
+      await writeFile(
+        path.join(outDir, "video.json3"),
+        this.captionFiles[kind],
+      );
     }
 
     return { ok: true, value: undefined };
@@ -112,37 +117,35 @@ const STORAGE_ERROR: RawDataStorageError = {
   message: "R2 is down",
 };
 
+const MEMBERS_ONLY: MembersOnlyVideoError = {
+  type: "MEMBERS_ONLY_VIDEO",
+  message: "Join this channel to get access to members-only content",
+};
+
 class FakeRawDataStore implements RawDataStore {
-  videoInfos = new Map<string, { fetchedAt: string; result: unknown }>();
+  videoInfos = new Map<string, Omit<StoreRawVideoInfoParams, "videoId">>();
   captionTracks = new Map<
     string,
-    { fetchedAt: string; trackKey: string; track: unknown }
+    Omit<StoreRawCaptionTrackParams, "videoId" | "kind">
   >();
   failOn: "raw video info" | "raw caption track" | null = null;
 
-  async storeRawVideoInfo(
-    videoId: string,
-    fetchedAt: string,
-    result: unknown,
-  ): Promise<Result<void, RawDataStorageError>> {
+  async storeRawVideoInfo({
+    videoId,
+    ...info
+  }: StoreRawVideoInfoParams): Promise<Result<void, RawDataStorageError>> {
     if (this.failOn === "raw video info") return Failure(STORAGE_ERROR);
-    this.videoInfos.set(videoId, { fetchedAt, result });
+    this.videoInfos.set(videoId, info);
     return Success(undefined);
   }
 
-  async storeRawCaptionTrack(
-    videoId: string,
-    kind: CaptionTrackKind,
-    fetchedAt: string,
-    trackKey: string,
-    track: unknown,
-  ): Promise<Result<void, RawDataStorageError>> {
+  async storeRawCaptionTrack({
+    videoId,
+    kind,
+    ...track
+  }: StoreRawCaptionTrackParams): Promise<Result<void, RawDataStorageError>> {
     if (this.failOn === "raw caption track") return Failure(STORAGE_ERROR);
-    this.captionTracks.set(`${videoId}/${kind}`, {
-      fetchedAt,
-      trackKey,
-      track,
-    });
+    this.captionTracks.set(`${videoId}/${kind}`, track);
     return Success(undefined);
   }
 }
@@ -747,18 +750,14 @@ describe("YoutubeApiGetVideo - raw data", () => {
   });
 
   it("stores the raw video info of a skipped video with yt-dlp's error", async () => {
-    const membersOnly: MembersOnlyVideoError = {
-      type: "MEMBERS_ONLY_VIDEO",
-      message: "Join this channel to get access to members-only content",
-    };
-    const { service, rawDataStore } = createService(undefined, membersOnly);
+    const { service, rawDataStore } = createService(undefined, MEMBERS_ONLY);
 
     const result = await service.getVideo("testVideoId");
 
-    assert.deepEqual(result, Failure(membersOnly));
+    assert.deepEqual(result, Failure(MEMBERS_ONLY));
     assert.deepEqual(
       rawDataStore.videoInfos.get("testVideoId")?.result,
-      Failure(membersOnly),
+      Failure(MEMBERS_ONLY),
     );
   });
 
@@ -875,10 +874,7 @@ describe("YoutubeApiGetVideo - raw data", () => {
   }
 
   it("fails a would-be skipped video when its raw video info can't be stored", async () => {
-    const { service, rawDataStore } = createService(undefined, {
-      type: "MEMBERS_ONLY_VIDEO",
-      message: "Join this channel to get access to members-only content",
-    });
+    const { service, rawDataStore } = createService(undefined, MEMBERS_ONLY);
     rawDataStore.failOn = "raw video info";
 
     const result = await service.getVideo("testVideoId");
