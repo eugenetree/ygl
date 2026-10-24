@@ -12,11 +12,7 @@ import { StartScraperUseCase } from "./modules/scraping/lifecycle/start-scraper.
 import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
-import {
-  createRawDataStore,
-  RAW_DATA_STORE,
-  type RawDataStore,
-} from "./modules/youtube-api/raw-data-store.js";
+import { RawDataStore } from "./modules/youtube-api/raw-data-store.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
 import { YtDlpResponseRecorder } from "./modules/youtube-api/yt-dlp-response-recorder.js";
 
@@ -30,14 +26,7 @@ async function main() {
   container.bind(HttpClient).toConstantValue(httpClient);
   container.bind(YtDlpClient).toSelf().inSingletonScope();
   container.bind(YtDlpResponseRecorder).toSelf().inSingletonScope();
-  container
-    .bind<RawDataStore>(RAW_DATA_STORE)
-    .toConstantValue(
-      createRawDataStore(
-        process.env,
-        new Logger({ context: "raw-data-store", category: "main" }),
-      ),
-    );
+  container.bind(RawDataStore).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
 

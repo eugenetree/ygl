@@ -122,7 +122,7 @@ const MEMBERS_ONLY: MembersOnlyVideoError = {
   message: "Join this channel to get access to members-only content",
 };
 
-class FakeRawDataStore implements RawDataStore {
+class FakeRawDataStore implements Pick<RawDataStore, keyof RawDataStore> {
   videoInfos = new Map<string, Omit<StoreRawVideoInfoParams, "videoId">>();
   captionTracks = new Map<
     string,
@@ -160,7 +160,7 @@ function createService(
   const service = new YoutubeApiGetVideo(
     logger,
     mockClient as unknown as YtDlpClient,
-    rawDataStore,
+    rawDataStore as unknown as RawDataStore,
   );
   return { service, mockClient, rawDataStore };
 }

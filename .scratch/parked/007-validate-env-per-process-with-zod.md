@@ -11,14 +11,14 @@ Env handling is inconsistent, and some of it fails late or silently:
 - `DB_*` / `POSTGRES_*` are read, unvalidated, in three files. `Number(process.env.DB_PORT)` is `NaN` when unset, and the error only appears at the first connection.
 - `ES_NODE` has a hardcoded fallback in `captions.service.ts` and is also validated by `api-config.ts`, so it's read twice in two ways.
 - `APP_ENV` means two things: the seeder treats anything except `"development"` (unset included) as prod, while the raw data store treats only `"production"` as prod.
-- `raw-data-store.ts` (`readR2Config` + `createRawDataStore`) added another hand-rolled check rather than a zod schema.
+- `RawDataStore` (`raw-data-store.ts`) added another hand-rolled check in its constructor rather than a zod schema.
 - `entrypoint.scraper.sh` skips the VPN when any of `VPN_USER` / `VPN_PASS` / `VPN_CONFIG_B64` is missing, and the scraper then runs on the server's own IP, which ADR-0004 says YouTube's bot check rejects.
 
 The user chose to keep env handling as it is for now and come back to it.
 
 ## Sanity check
 
-**holds**: `grep process.env src` (non-test) shows the reads above: `db/client.ts:14-18`, `scraper-command.listener.ts:30-34`, `scraper-status-watcher.ts:29-33`, `telegram-notifier.ts:19-20`, `captions.service.ts:38`, `search-channel-queries.seeder.ts:57`, `telegram-bot.ts:33,50`. Only `main-api.ts:22` goes through a zod config; `main-scraper.ts:37` passes `process.env` to `createRawDataStore`.
+**holds**: `grep process.env src` (non-test) shows the reads above: `db/client.ts:14-18`, `scraper-command.listener.ts:30-34`, `scraper-status-watcher.ts:29-33`, `telegram-notifier.ts:19-20`, `captions.service.ts:38`, `search-channel-queries.seeder.ts:57`, `telegram-bot.ts:33,50`. Only `main-api.ts:22` goes through a zod config; `RawDataStore`'s constructor reads `process.env` itself.
 
 ## Context
 

@@ -1,7 +1,7 @@
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
@@ -11,9 +11,8 @@ import { isValidLanguageCode, type LanguageCode } from "../i18n/index.js";
 import { captionsExtractor } from "./extractors/captions.extractor.js";
 import {
   type CaptionTrackKind,
-  RAW_DATA_STORE,
   type RawDataStorageError,
-  type RawDataStore,
+  RawDataStore,
 } from "./raw-data-store.js";
 import { Caption, CaptionTrackState, Video } from "./youtube-api.types.js";
 import { inputSchemas } from "./yt-api-get-video.schemas.js";
@@ -57,7 +56,7 @@ export class YoutubeApiGetVideo {
   constructor(
     private readonly logger: Logger,
     private readonly ytDlpClient: YtDlpClient,
-    @inject(RAW_DATA_STORE) private readonly rawDataStore: RawDataStore,
+    private readonly rawDataStore: RawDataStore,
     private readonly responseRecorder?: YtDlpResponseRecorder,
   ) {
     this.logger.setContext(YoutubeApiGetVideo.name);
