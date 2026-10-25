@@ -1,6 +1,6 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { injectable, unmanaged } from "inversify";
-import { getConstructionPlans, PgBoss } from "pg-boss";
+import { getConstructionPlans, type JobWithMetadata, PgBoss } from "pg-boss";
 
 import {
   connectionConfigFromEnv,
@@ -42,6 +42,17 @@ type RunEndedAt<Time> = {
 export type RunEnded = RunEndedAt<Date>;
 
 export type RunEndedHandler = (run: RunEnded) => Promise<void>;
+
+export type RunState = "queued" | "running" | "completed" | "failed";
+
+export type LatestRun = {
+  task: string;
+  runId: RunId;
+  state: RunState;
+  requestedAt: Date;
+  startedAt: Date | null;
+  endedAt: Date | null;
+};
 
 export type TasksOptions = {
   connection: DatabaseConnectionConfig;
@@ -142,6 +153,34 @@ export class Tasks {
       return Failure({ type: "TASK_ALREADY_RUNNING" } as const);
     }
     return Success(result.value);
+  }
+
+  /** One entry per task that has a run, among the runs pg-boss still keeps. */
+  async latestRuns(): Promise<Result<LatestRun[], DatabaseError>> {
+    const result = await tryCatch(
+      Promise.all(this.tasks.map((task) => this.boss.findJobs(task.name))),
+    );
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error } as const);
+    }
+
+    const latestRuns: LatestRun[] = [];
+    for (const [index, runs] of result.value.entries()) {
+      // findJobs lists oldest first, up to 1000: far more than a task's runs
+      // in the week pg-boss keeps them.
+      const run = runs.at(-1);
+      if (run) {
+        latestRuns.push({
+          task: this.tasks[index].name,
+          runId: run.id,
+          state: toRunState(run.state),
+          requestedAt: run.createdOn,
+          startedAt: run.startedOn ?? null,
+          endedAt: run.completedOn,
+        });
+      }
+    }
+    return Success(latestRuns);
   }
 
   async work<Data extends object, Output>(
@@ -279,6 +318,21 @@ function failureMessage(output: object | null): string {
     return failure.message;
   }
   return JSON.stringify(output);
+}
+
+function toRunState(state: JobWithMetadata["state"]): RunState {
+  switch (state) {
+    case "created":
+    case "retry":
+      return "queued";
+    case "active":
+      return "running";
+    case "completed":
+      return "completed";
+    case "failed":
+    case "cancelled":
+      return "failed";
+  }
 }
 
 const SCHEMA_UPGRADE_POLL_MS = 1_000;

@@ -97,6 +97,7 @@ export class TelegramBot {
         command: "recalculate_priorities",
         description: "Recalculate priority scores for all channels",
       },
+      { command: "tasks", description: "Show each task's latest run" },
     ]);
   }
 
