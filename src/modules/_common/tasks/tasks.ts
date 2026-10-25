@@ -59,6 +59,14 @@ export type TasksOptions = {
   tasks?: readonly AnyTask[];
   /** How often runs whose worker died are failed. pg-boss's default is 60. */
   monitorIntervalSeconds?: number;
+  /** When an `onRunEnded` handler that throws gets the run again. */
+  runEndedRetries?: RunEndedRetries;
+};
+
+type RunEndedRetries = {
+  retryLimit: number;
+  retryDelay: number;
+  retryBackoff: boolean;
 };
 
 const RUN_ENDED_EVENT = "task-run-ended";
@@ -66,7 +74,7 @@ const RUN_ENDED_EVENT = "task-run-ended";
 const FAILED_RUNS_QUEUE = "task-failed-runs";
 // An `onRunEnded` handler that throws, say while Telegram is unreachable, gets
 // the run again later: 30 s, then doubling, for about two hours.
-const RUN_ENDED_RETRIES = {
+const RUN_ENDED_RETRIES: RunEndedRetries = {
   retryLimit: 8,
   retryDelay: 30,
   retryBackoff: true,
@@ -88,6 +96,7 @@ const STOP_TIMEOUT_MS = 5_000;
 export class Tasks {
   private readonly boss: PgBoss;
   private readonly tasks: readonly AnyTask[];
+  private readonly runEndedRetries: RunEndedRetries;
 
   constructor(
     private readonly logger: Logger,
@@ -96,6 +105,7 @@ export class Tasks {
   ) {
     this.logger.setContext(Tasks.name);
     this.tasks = options.tasks ?? TASKS;
+    this.runEndedRetries = options.runEndedRetries ?? RUN_ENDED_RETRIES;
     this.boss = new PgBoss({
       ...options.connection,
       migrate: false,
@@ -118,9 +128,9 @@ export class Tasks {
     await this.boss.start();
     // Every process subscribes, not only the bot: a publish with no
     // subscription is dropped, and the bot may be down when a run ends.
-    await this.boss.createQueue(RUN_ENDED_EVENT, RUN_ENDED_RETRIES);
+    await this.boss.createQueue(RUN_ENDED_EVENT, this.runEndedRetries);
     await this.boss.subscribe(RUN_ENDED_EVENT, RUN_ENDED_EVENT);
-    await this.boss.createQueue(FAILED_RUNS_QUEUE, RUN_ENDED_RETRIES);
+    await this.boss.createQueue(FAILED_RUNS_QUEUE, this.runEndedRetries);
     for (const task of this.tasks) {
       const settings = {
         retryLimit: 0,
@@ -242,14 +252,18 @@ export class Tasks {
 
   async onRunEnded(handler: RunEndedHandler): Promise<void> {
     // The event arrives as JSON, so its dates arrive as strings.
-    await this.boss.work<RunEndedAt<string>>(RUN_ENDED_EVENT, async ([job]) => {
-      await handler({
-        ...job.data,
-        requestedAt: new Date(job.data.requestedAt),
-        startedAt: new Date(job.data.startedAt),
-        endedAt: new Date(job.data.endedAt),
-      });
-    });
+    await this.boss.work<RunEndedAt<string>, void, { includeMetadata: true }>(
+      RUN_ENDED_EVENT,
+      { includeMetadata: true },
+      async ([job]) => {
+        await this.deliver(job, handler, {
+          ...job.data,
+          requestedAt: new Date(job.data.requestedAt),
+          startedAt: new Date(job.data.startedAt),
+          endedAt: new Date(job.data.endedAt),
+        });
+      },
+    );
 
     await this.boss.work(
       FAILED_RUNS_QUEUE,
@@ -262,7 +276,7 @@ export class Tasks {
         const [run] = await this.boss.findJobs(job.sourceName, {
           id: job.sourceId,
         });
-        await handler({
+        await this.deliver(job, handler, {
           task: job.sourceName,
           runId: job.sourceId,
           requestedAt: job.sourceCreatedOn ?? job.createdOn,
@@ -274,6 +288,30 @@ export class Tasks {
         });
       },
     );
+  }
+
+  /** Hands `run` to `handler`, logging the attempt after which pg-boss gives up. */
+  private async deliver(
+    job: Pick<JobWithMetadata, "retryCount" | "retryLimit">,
+    handler: RunEndedHandler,
+    run: RunEnded,
+  ): Promise<void> {
+    try {
+      await handler(run);
+    } catch (error) {
+      const attempts = job.retryCount + 1;
+      if (job.retryCount >= job.retryLimit) {
+        this.logger.error({
+          message: `Gave up on the end of ${run.task} run ${run.runId} after ${attempts} attempts`,
+          error,
+        });
+      } else {
+        this.logger.warn(
+          `Attempt ${attempts} at the end of ${run.task} run ${run.runId} failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+      throw error;
+    }
   }
 
   private async publishRunEnded(run: RunEnded): Promise<void> {

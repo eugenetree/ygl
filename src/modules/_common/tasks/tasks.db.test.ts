@@ -423,6 +423,48 @@ describe("Tasks.onRunEnded()", () => {
   });
 });
 
+// Its own database: createQueue keeps the retry settings a queue was made with.
+describe("Tasks.onRunEnded() giving up", () => {
+  const connection = useTestDatabaseConnection();
+
+  it("logs an error naming the run once its handler has thrown on every attempt", {
+    timeout: 30_000,
+  }, async () => {
+    const logger = createLoggerMock();
+    const tasks = new Tasks(logger as unknown as Logger, {
+      connection,
+      tasks: [exampleTask],
+      runEndedRetries: { retryLimit: 1, retryDelay: 1, retryBackoff: false },
+    });
+    await tasks.start();
+    try {
+      let attempts = 0;
+      await tasks.onRunEnded(async () => {
+        attempts++;
+        throw new Error("Telegram unreachable");
+      });
+      await tasks.work(exampleTask, async ({ input }) => ({ echoed: input }));
+      const requested = await tasks.request(exampleTask, { input: "a" });
+      assert.ok(requested.ok);
+
+      const gaveUp = () =>
+        logger.error.mock.calls
+          .map((call) => call.arguments[0].message ?? "")
+          .filter((message) => message.includes("Gave up"));
+      const deadline = Date.now() + 20_000;
+      while (gaveUp().length === 0 && Date.now() < deadline) {
+        await sleep(200);
+      }
+
+      assert.equal(attempts, 2);
+      assert.equal(gaveUp().length, 1);
+      assert.match(gaveUp()[0], new RegExp(`example run ${requested.value}`));
+    } finally {
+      await tasks.stop();
+    }
+  });
+});
+
 describe("Tasks.start()", () => {
   it("refuses to start on a database without the task schema", async () => {
     const { baseDatabase: _, ...server } = readTestServer();
