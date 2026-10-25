@@ -148,8 +148,10 @@ export class SearchIndexes {
     const result = await tryCatch(
       (async () => {
         const { live, others } = await this.state();
+        // Names sort by when the index was created, and a rebuild's index is
+        // the newest. One older than the live index awaits deletion.
         const building = others.at(-1);
-        if (!building) return null;
+        if (!building || (live !== null && building < live)) return null;
         return {
           indexed: await this.count(building),
           liveSize: live ? await this.count(live) : null,
