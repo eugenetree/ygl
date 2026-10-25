@@ -6,6 +6,7 @@ import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
 import { Tasks } from "./modules/_common/tasks/tasks.js";
 import { ScraperStatusWatcher } from "./modules/telegram/scraper-status-watcher.js";
+import { formatRunEnded } from "./modules/telegram/task-run-messages.js";
 import { TelegramBot } from "./modules/telegram/telegram-bot.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 
@@ -36,6 +37,12 @@ async function main() {
   process.on("SIGINT", () => shutdown());
 
   await tasks.start();
+  await tasks.onRunEnded(async (run) => {
+    const sent = await telegramNotifier.sendMessage(formatRunEnded(run));
+    if (!sent.ok) {
+      throw new Error(`Failed to report the end of run ${run.runId}`);
+    }
+  });
   await telegramBot.start();
   await scraperStatusWatcher.start();
 
