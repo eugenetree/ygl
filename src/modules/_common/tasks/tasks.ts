@@ -21,10 +21,53 @@ export type TaskHandler<Data extends object, Output> = (
   signal: AbortSignal,
 ) => Promise<Output>;
 
+export type RunError =
+  | { type: "HANDLER_THREW"; message: string }
+  | { type: "WORKER_STOPPED_RESPONDING" }
+  | { type: "TIMED_OUT" }
+  | { type: "WORKER_SHUT_DOWN" };
+
+export type RunOutcome =
+  | { outcome: "completed"; output: unknown }
+  | { outcome: "failed"; error: RunError };
+
+type RunEndedAt<Time> = {
+  task: string;
+  runId: RunId;
+  requestedAt: Time;
+  startedAt: Time;
+  endedAt: Time;
+} & RunOutcome;
+
+export type RunEnded = RunEndedAt<Date>;
+
+export type RunEndedHandler = (run: RunEnded) => Promise<void>;
+
 export type TasksOptions = {
   connection: DatabaseConnectionConfig;
   tasks?: readonly AnyTask[];
+  /** How often runs whose worker died are failed. pg-boss's default is 60. */
+  monitorIntervalSeconds?: number;
 };
+
+const RUN_ENDED_EVENT = "task-run-ended";
+// pg-boss copies every run that fails here, whatever failed it.
+const FAILED_RUNS_QUEUE = "task-failed-runs";
+// An `onRunEnded` handler that throws, say while Telegram is unreachable, gets
+// the run again later: 30 s, then doubling, for about two hours.
+const RUN_ENDED_RETRIES = {
+  retryLimit: 8,
+  retryDelay: 30,
+  retryBackoff: true,
+};
+
+// Marks a failure the wrapper has already published, so the failed runs
+// worker doesn't report it a second time.
+const PUBLISHED_RUN_ERROR = "PublishedRunError";
+
+class PublishedRunError extends Error {
+  override name = PUBLISHED_RUN_ERROR;
+}
 
 // Docker gives a container 10 seconds between SIGTERM and SIGKILL. A run still
 // active after this is failed by pg-boss rather than left to its heartbeat.
@@ -46,6 +89,11 @@ export class Tasks {
       ...options.connection,
       migrate: false,
       schedule: false,
+      // pg-boss rejects an interval given as undefined.
+      ...(options.monitorIntervalSeconds && {
+        superviseIntervalSeconds: options.monitorIntervalSeconds,
+        monitorIntervalSeconds: options.monitorIntervalSeconds,
+      }),
     });
     this.boss.on("error", (error) => {
       this.logger.error({ message: "pg-boss error", error });
@@ -57,13 +105,24 @@ export class Tasks {
 
   async start(): Promise<void> {
     await this.boss.start();
+    // Every process subscribes, not only the bot: a publish with no
+    // subscription is dropped, and the bot may be down when a run ends.
+    await this.boss.createQueue(RUN_ENDED_EVENT, RUN_ENDED_RETRIES);
+    await this.boss.subscribe(RUN_ENDED_EVENT, RUN_ENDED_EVENT);
+    await this.boss.createQueue(FAILED_RUNS_QUEUE, RUN_ENDED_RETRIES);
     for (const task of this.tasks) {
-      await this.boss.createQueue(task.name, {
-        policy: "exclusive",
+      const settings = {
         retryLimit: 0,
         heartbeatSeconds: task.heartbeatSeconds,
         expireInSeconds: task.expireInSeconds,
+        deadLetter: FAILED_RUNS_QUEUE,
+      };
+      await this.boss.createQueue(task.name, {
+        ...settings,
+        policy: "exclusive",
       });
+      // createQueue leaves an existing queue's settings as they were.
+      await this.boss.updateQueue(task.name, settings);
     }
   }
 
@@ -89,21 +148,137 @@ export class Tasks {
     task: Task<Data, Output>,
     handler: TaskHandler<Data, Output>,
   ): Promise<void> {
-    await this.boss.work<Data, Output>(task.name, async ([job]) => {
-      this.logger.info(`Run ${job.id} of ${task.name} started`);
-      try {
-        const output = await handler(job.data, job.signal);
+    await this.boss.work<Data, Output, { includeMetadata: true }>(
+      task.name,
+      { includeMetadata: true },
+      async ([job]) => {
+        const run = {
+          task: task.name,
+          runId: job.id,
+          requestedAt: job.createdOn,
+          startedAt: job.startedOn,
+        };
+        this.logger.info(`Run ${job.id} of ${task.name} started`);
+        // pg-boss aborts the signal once it has failed the run itself, on
+        // stop(), expiry or a lost claim. The failed runs worker reports those.
+        const failedByPgBoss = () => job.signal.aborted;
+        let output: Output;
+        try {
+          output = await handler(job.data, job.signal);
+        } catch (error) {
+          this.logger.error({
+            message: `Run ${job.id} of ${task.name} failed`,
+            error,
+          });
+          if (failedByPgBoss()) {
+            throw error;
+          }
+          await this.publishRunEnded({
+            ...run,
+            endedAt: new Date(),
+            outcome: "failed",
+            error: {
+              type: "HANDLER_THREW",
+              message: error instanceof Error ? error.message : String(error),
+            },
+          });
+          throw new PublishedRunError(`Run ${job.id} failed`, {
+            cause: error,
+          });
+        }
+        if (failedByPgBoss()) {
+          return output;
+        }
         this.logger.info(`Run ${job.id} of ${task.name} completed`);
+        await this.publishRunEnded({
+          ...run,
+          endedAt: new Date(),
+          outcome: "completed",
+          output,
+        });
         return output;
-      } catch (error) {
-        this.logger.error({
-          message: `Run ${job.id} of ${task.name} failed`,
+      },
+    );
+  }
+
+  async onRunEnded(handler: RunEndedHandler): Promise<void> {
+    // The event arrives as JSON, so its dates arrive as strings.
+    await this.boss.work<RunEndedAt<string>>(RUN_ENDED_EVENT, async ([job]) => {
+      await handler({
+        ...job.data,
+        requestedAt: new Date(job.data.requestedAt),
+        startedAt: new Date(job.data.startedAt),
+        endedAt: new Date(job.data.endedAt),
+      });
+    });
+
+    await this.boss.work(
+      FAILED_RUNS_QUEUE,
+      { includeMetadata: true },
+      async ([job]) => {
+        const error = failedRunError(job.sourceOutput);
+        if (job.sourceName === null || job.sourceId === null || !error) {
+          return;
+        }
+        const [run] = await this.boss.findJobs(job.sourceName, {
+          id: job.sourceId,
+        });
+        await handler({
+          task: job.sourceName,
+          runId: job.sourceId,
+          requestedAt: job.sourceCreatedOn ?? job.createdOn,
+          // pg-boss deletes a run 7 days after it ends.
+          startedAt: run?.startedOn ?? job.createdOn,
+          endedAt: run?.completedOn ?? job.createdOn,
+          outcome: "failed",
           error,
         });
-        throw error;
-      }
-    });
+      },
+    );
   }
+
+  private async publishRunEnded(run: RunEnded): Promise<void> {
+    await this.boss.publish(RUN_ENDED_EVENT, run);
+  }
+}
+
+/** Why a failed run failed, from its stored output, or null if already published. */
+function failedRunError(output: object | null): RunError | null {
+  if (output && "name" in output && output.name === PUBLISHED_RUN_ERROR) {
+    return null;
+  }
+  const message = failureMessage(output);
+  // The messages pg-boss fails a run with itself.
+  if (message === "job heartbeat timeout") {
+    return { type: "WORKER_STOPPED_RESPONDING" };
+  }
+  if (
+    message === "job timed out" ||
+    message.startsWith("handler execution exceeded")
+  ) {
+    return { type: "TIMED_OUT" };
+  }
+  if (message.startsWith("pg-boss shut down")) {
+    return { type: "WORKER_SHUT_DOWN" };
+  }
+  return { type: "HANDLER_THREW", message };
+}
+
+// pg-boss stores a thrown error as is, and wraps anything else in `value`.
+function failureMessage(output: object | null): string {
+  const failure = output && "value" in output ? output.value : output;
+  if (typeof failure === "string") {
+    return failure;
+  }
+  if (
+    typeof failure === "object" &&
+    failure !== null &&
+    "message" in failure &&
+    typeof failure.message === "string"
+  ) {
+    return failure.message;
+  }
+  return JSON.stringify(output);
 }
 
 const SCHEMA_UPGRADE_POLL_MS = 1_000;

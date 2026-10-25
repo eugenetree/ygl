@@ -1,18 +1,34 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import path from "node:path";
 import { afterEach, beforeEach, describe, it } from "node:test";
+import type { DatabaseConnectionConfig } from "../../../db/client.js";
 import { useTestDatabaseConnection } from "../../../db/testing/test-database.js";
 import { readTestServer } from "../../../db/testing/test-server.js";
 import type { Logger } from "../logger/logger.js";
 import { createLoggerMock } from "../logger/testing/logger-mock.js";
-import { defineTask } from "./task-definitions.js";
-import { installTaskSchema, Tasks } from "./tasks.js";
+import { type AnyTask, defineTask } from "./task-definitions.js";
+import { installTaskSchema, type RunEnded, Tasks } from "./tasks.js";
 
 // ---- Fixtures ---------------------------------------------------------------
 
 const exampleTask = defineTask<{ input: string }, { echoed: string }>({
   name: "example",
   expireInSeconds: 60,
+  heartbeatSeconds: 10,
 });
+
+const expiringTask = defineTask<Record<string, never>, void>({
+  name: "expiring",
+  expireInSeconds: 1,
+  heartbeatSeconds: 10,
+});
+
+function untilAborted(signal: AbortSignal): Promise<never> {
+  return new Promise((_, reject) => {
+    signal.addEventListener("abort", () => reject(new Error("aborted")));
+  });
+}
 
 function deferred() {
   let resolve!: () => void;
@@ -20,6 +36,62 @@ function deferred() {
     resolve = r;
   });
   return { promise, resolve };
+}
+
+async function listenForRunsEnded(tasks: Tasks) {
+  const received: RunEnded[] = [];
+  let arrived = () => {};
+  await tasks.onRunEnded(async (run) => {
+    received.push(run);
+    arrived();
+  });
+
+  return {
+    async next(timeoutMs = 10_000): Promise<RunEnded> {
+      const index = received.length;
+      const deadline = Date.now() + timeoutMs;
+      while (received.length <= index) {
+        const left = deadline - Date.now();
+        if (left <= 0) {
+          throw new Error(`No run ended within ${timeoutMs}ms`);
+        }
+        await new Promise<void>((resolve) => {
+          const timer = setTimeout(resolve, left);
+          arrived = () => {
+            clearTimeout(timer);
+            resolve();
+          };
+        });
+      }
+      return received[index];
+    },
+  };
+}
+
+/** A worker in its own process, which the test can kill while it holds a run. */
+function startHangingWorker(
+  connection: DatabaseConnectionConfig,
+  task: AnyTask,
+) {
+  const worker = spawn(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      path.join(__dirname, "testing", "hanging-worker.ts"),
+      JSON.stringify({ connection, task }),
+    ],
+    { stdio: ["ignore", "pipe", "inherit"] },
+  );
+  const started = new Promise<void>((resolve, reject) => {
+    worker.stdout.on("data", (chunk) => {
+      if (String(chunk).includes("started")) resolve();
+    });
+    worker.on("exit", (code) => {
+      reject(new Error(`Worker exited with ${code}`));
+    });
+  });
+  return { started, kill: () => worker.kill("SIGKILL") };
 }
 
 // ---- Tests ------------------------------------------------------------------
@@ -99,6 +171,144 @@ describe("Tasks", () => {
 
       assert.deepEqual(await received, { input: "hello" });
     });
+  });
+});
+
+describe("Tasks.onRunEnded()", () => {
+  const connection = useTestDatabaseConnection();
+  let tasks: Tasks;
+
+  async function startTasks(): Promise<Tasks> {
+    const started = new Tasks(createLoggerMock() as unknown as Logger, {
+      connection,
+      tasks: [exampleTask, expiringTask],
+      monitorIntervalSeconds: 1,
+    });
+    await started.start();
+    return started;
+  }
+
+  beforeEach(async () => {
+    tasks = await startTasks();
+  });
+
+  afterEach(async () => {
+    await tasks.stop();
+  });
+
+  it("reports a run whose handler returns as completed, with its output", {
+    timeout: 15_000,
+  }, async () => {
+    const runsEnded = await listenForRunsEnded(tasks);
+    await tasks.work(exampleTask, async ({ input }) => ({ echoed: input }));
+    const requested = await tasks.request(exampleTask, { input: "hello" });
+    assert.ok(requested.ok);
+
+    const run = await runsEnded.next();
+
+    assert.ok(run.outcome === "completed");
+    assert.deepEqual(
+      { task: run.task, runId: run.runId, output: run.output },
+      { task: "example", runId: requested.value, output: { echoed: "hello" } },
+    );
+    assert.ok(run.requestedAt <= run.startedAt);
+    assert.ok(run.startedAt <= run.endedAt);
+  });
+
+  it("reports a run whose handler throws once, as failed with the error", {
+    timeout: 20_000,
+  }, async () => {
+    const runsEnded = await listenForRunsEnded(tasks);
+    await tasks.work(exampleTask, async () => {
+      throw new Error("boom");
+    });
+    const requested = await tasks.request(exampleTask, { input: "a" });
+    assert.ok(requested.ok);
+
+    const run = await runsEnded.next();
+    await assert.rejects(runsEnded.next(5_000), /No run ended/);
+
+    assert.ok(run.outcome === "failed");
+    assert.equal(run.runId, requested.value);
+    assert.deepEqual(run.error, { type: "HANDLER_THREW", message: "boom" });
+  });
+
+  it("reports a run whose worker died as the worker stopping responding", {
+    timeout: 40_000,
+  }, async () => {
+    const runsEnded = await listenForRunsEnded(tasks);
+    const worker = startHangingWorker(connection, exampleTask);
+    const requested = await tasks.request(exampleTask, { input: "a" });
+    assert.ok(requested.ok);
+    await worker.started;
+
+    worker.kill();
+    const run = await runsEnded.next(30_000);
+
+    assert.ok(run.outcome === "failed");
+    assert.equal(run.runId, requested.value);
+    assert.deepEqual(run.error, { type: "WORKER_STOPPED_RESPONDING" });
+    assert.ok(run.startedAt <= run.endedAt);
+  });
+
+  it("reports a run that outlives its expiry once, as timed out", {
+    timeout: 20_000,
+  }, async () => {
+    const runsEnded = await listenForRunsEnded(tasks);
+    await tasks.work(expiringTask, (_, signal) => untilAborted(signal));
+    const requested = await tasks.request(expiringTask, {});
+    assert.ok(requested.ok);
+
+    const run = await runsEnded.next();
+    await assert.rejects(runsEnded.next(5_000), /No run ended/);
+
+    assert.ok(run.outcome === "failed");
+    assert.equal(run.runId, requested.value);
+    assert.deepEqual(run.error, { type: "TIMED_OUT" });
+  });
+
+  it("reports a run whose worker shut down during it once, as shut down", {
+    timeout: 30_000,
+  }, async () => {
+    const runsEnded = await listenForRunsEnded(tasks);
+    const worker = await startTasks();
+    const running = deferred();
+    await worker.work(exampleTask, (_, signal) => {
+      running.resolve();
+      return untilAborted(signal);
+    });
+    const requested = await tasks.request(exampleTask, { input: "a" });
+    assert.ok(requested.ok);
+    await running.promise;
+
+    await worker.stop();
+    const run = await runsEnded.next();
+    await assert.rejects(runsEnded.next(5_000), /No run ended/);
+
+    assert.ok(run.outcome === "failed");
+    assert.equal(run.runId, requested.value);
+    assert.deepEqual(run.error, { type: "WORKER_SHUT_DOWN" });
+  });
+
+  it("delivers a run that ended while nobody listened once someone does", {
+    timeout: 20_000,
+  }, async () => {
+    const worker = await startTasks();
+    const returned = deferred();
+    await worker.work(exampleTask, async ({ input }) => {
+      returned.resolve();
+      return { echoed: input };
+    });
+    const requested = await tasks.request(exampleTask, { input: "a" });
+    assert.ok(requested.ok);
+    await returned.promise;
+    await worker.stop();
+
+    const runsEnded = await listenForRunsEnded(tasks);
+    const run = await runsEnded.next();
+
+    assert.ok(run.outcome === "completed");
+    assert.equal(run.runId, requested.value);
   });
 });
 
