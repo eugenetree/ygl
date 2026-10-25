@@ -4,7 +4,10 @@ import { Container } from "inversify";
 import { DatabaseClient } from "./db/client.js";
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
-import { recalculatePriorities } from "./modules/_common/tasks/task-definitions.js";
+import {
+  recalculatePriorities,
+  reprocessCaptions,
+} from "./modules/_common/tasks/task-definitions.js";
 import { Tasks } from "./modules/_common/tasks/tasks.js";
 import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
 import { RecalculateAllPrioritiesUseCase } from "./modules/scraping/channel-priority/recalculate-all-priorities.use-case.js";
@@ -14,6 +17,7 @@ import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-statu
 import { StartScraperUseCase } from "./modules/scraping/lifecycle/start-scraper.use-case.js";
 import { ScraperOrchestrator } from "./modules/scraping/scraper.orchestrator.js";
 import { SearchChannelQueriesSeeder } from "./modules/scraping/scrapers/channel-discovery/search-channel-queries.seeder.js";
+import { ReprocessCaptionsUseCase } from "./modules/scraping/scrapers/video/use-cases/reprocess-captions/reprocess-captions.use-case.js";
 import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { RawDataStore } from "./modules/youtube-api/raw-data-store.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
@@ -48,6 +52,7 @@ async function main() {
   const recalculateAllPrioritiesUseCase = container.get(
     RecalculateAllPrioritiesUseCase,
   );
+  const reprocessCaptionsUseCase = container.get(ReprocessCaptionsUseCase);
 
   const shutdown = async () => {
     scraperHeartbeat.stop();
@@ -84,6 +89,13 @@ async function main() {
   await tasks.work(recalculatePriorities, () =>
     recalculateAllPrioritiesUseCase.execute(),
   );
+  await tasks.work(reprocessCaptions, async (_data, signal) => {
+    const result = await reprocessCaptionsUseCase.execute(signal);
+    if (!result.ok) {
+      throw result.error.error;
+    }
+    return result.value;
+  });
 
   // Reconcile status on startup — process may have crashed with stale RUNNING state
   await scraperStatusService.updateStatus({ actual: "STOPPED" });

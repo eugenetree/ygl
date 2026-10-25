@@ -5,9 +5,11 @@ import { Logger } from "../_common/logger/logger.js";
 import {
   type AnyTask,
   recalculatePriorities,
+  reprocessCaptions,
   TASKS,
 } from "../_common/tasks/task-definitions.js";
 import { Tasks } from "../_common/tasks/tasks.js";
+import { VideoRepository } from "../scraping/scrapers/video/video.repository.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
 import { TelegramController } from "./telegram-controller.js";
 
@@ -20,17 +22,22 @@ type ProgressLine = () => Promise<string>;
 
 @injectable()
 export class TasksController implements TelegramController {
-  private readonly progressLines: ReadonlyMap<string, ProgressLine> = new Map();
+  private readonly progressLines: ReadonlyMap<string, ProgressLine>;
 
   constructor(
     private readonly logger: Logger,
     private readonly tasks: Tasks,
+    private readonly videoRepository: VideoRepository,
   ) {
     this.logger.setContext(TasksController.name);
+    this.progressLines = new Map([
+      [reprocessCaptions.name, () => this.videosLeftToReprocess()],
+    ]);
   }
 
   public register(bot: Telegraf): void {
     this.registerRequest(bot, "recalculate_priorities", recalculatePriorities);
+    this.registerRequest(bot, "reprocess_captions", reprocessCaptions);
     this.registerOverview(bot);
   }
 
@@ -87,5 +94,17 @@ export class TasksController implements TelegramController {
 
       await ctx.reply(formatTasksOverview(overviews, new Date()));
     });
+  }
+
+  private async videosLeftToReprocess(): Promise<string> {
+    const result = await this.videoRepository.countVideosForReprocessing();
+    if (!result.ok) {
+      this.logger.error({
+        message: "Failed to count the videos left to reprocess",
+        error: result.error.error,
+      });
+      return "Videos left: unknown, the count failed.";
+    }
+    return `Videos left: ${result.value}`;
   }
 }

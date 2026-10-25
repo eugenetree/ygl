@@ -70,21 +70,7 @@ export class VideoRepository {
     let lastVideoId: string | null = null;
 
     while (true) {
-      let query = this.db
-        .selectFrom("videos")
-        .selectAll()
-        .where("autoCaptionsStatus", "!=", "CAPTIONS_ABSENT")
-        .where("manualCaptionsStatus", "!=", "CAPTIONS_ABSENT")
-        .where((eb) =>
-          eb.or([
-            eb("captionsProcessingAlgorithmVersion", "is", null),
-            eb(
-              "captionsProcessingAlgorithmVersion",
-              "!=",
-              CAPTIONS_PROCESSING_ALGORITHM_VERSION,
-            ),
-          ]),
-        );
+      let query = this.videosForReprocessing().selectAll();
 
       if (lastVideoId) {
         query = query.where("id", ">", lastVideoId);
@@ -126,6 +112,37 @@ export class VideoRepository {
         manualCaptions: captions.filter((c) => c.type === "manual"),
       });
     }
+  }
+
+  async countVideosForReprocessing(): Promise<Result<number, DatabaseError>> {
+    const result = await tryCatch(
+      this.videosForReprocessing()
+        .select((eb) => eb.fn.countAll<string>().as("count"))
+        .executeTakeFirstOrThrow(),
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(Number(result.value.count));
+  }
+
+  private videosForReprocessing() {
+    return this.db
+      .selectFrom("videos")
+      .where("autoCaptionsStatus", "!=", "CAPTIONS_ABSENT")
+      .where("manualCaptionsStatus", "!=", "CAPTIONS_ABSENT")
+      .where((eb) =>
+        eb.or([
+          eb("captionsProcessingAlgorithmVersion", "is", null),
+          eb(
+            "captionsProcessingAlgorithmVersion",
+            "!=",
+            CAPTIONS_PROCESSING_ALGORITHM_VERSION,
+          ),
+        ]),
+      );
   }
 
   async getLastScraped(

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
+import type { DatabaseError } from "../../../../../../db/types.js";
 import { Result, Success } from "../../../../../../types/index.js";
-import { BaseError } from "../../../../../_common/errors.js";
 import { Logger } from "../../../../../_common/logger/logger.js";
 import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
 import { VideoRepository } from "../../video.repository.js";
@@ -25,7 +25,9 @@ export class ReprocessCaptionsUseCase {
     this.logger.setContext(ReprocessCaptionsUseCase.name);
   }
 
-  async execute(): Promise<Result<ReprocessCaptionsResult, BaseError>> {
+  async execute(
+    signal: AbortSignal,
+  ): Promise<Result<ReprocessCaptionsResult, DatabaseError>> {
     this.logger.info(
       `Starting captions reprocessing to version ${CAPTIONS_PROCESSING_ALGORITHM_VERSION}.`,
     );
@@ -38,6 +40,11 @@ export class ReprocessCaptionsUseCase {
     const becameInvalid: string[] = [];
 
     for await (const result of this.videoRepository.getVideosForReprocessing()) {
+      if (signal.aborted) {
+        this.logger.info("Reprocessing stopped: its signal fired.");
+        break;
+      }
+
       if (!result.ok) {
         this.logger.error({
           message: "Failed to fetch next video for reprocessing.",
@@ -88,6 +95,8 @@ export class ReprocessCaptionsUseCase {
     this.logger.info(
       `Reprocessing complete. Processed: ${processedCount}, failed: ${failedCount}. Both CAPTIONS_VALID — before: ${bothValidBefore}, after: ${bothValidAfter}. Became valid: ${becameValid.length}, became invalid: ${becameInvalid.length}.`,
     );
+    this.logger.info(`Became valid: ${becameValid.join(", ")}`);
+    this.logger.info(`Became invalid: ${becameInvalid.join(", ")}`);
 
     return Success({
       processedCount,
