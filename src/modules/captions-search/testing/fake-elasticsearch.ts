@@ -17,6 +17,8 @@ export class FakeElasticsearch {
   private readonly indices = new Map<string, Map<string, Document>>();
   private readonly aliases = new Map<string, string>();
   private failingWrites = false;
+  private failingDeletes = false;
+  private failingAliasUpdates = false;
 
   /** Runs before each bulk write lands, as if it happened during that write. */
   beforeEachWrite: () => Promise<void> = async () => {};
@@ -32,6 +34,9 @@ export class FakeElasticsearch {
       },
       delete: async ({ index }: { index: string }) => {
         this.concrete(index);
+        if (this.failingDeletes) {
+          throw new Error(`process_cluster_event_timeout_exception: ${index}`);
+        }
         this.indices.delete(index);
         this.dropAliasesOf(index);
         return { acknowledged: true };
@@ -59,6 +64,9 @@ export class FakeElasticsearch {
         return response;
       },
       updateAliases: async ({ actions }: { actions: AliasAction[] }) => {
+        if (this.failingAliasUpdates) {
+          throw new Error("process_cluster_event_timeout_exception");
+        }
         const indices = new Map(this.indices);
         const aliases = new Map(this.aliases);
         for (const action of actions) {
@@ -143,6 +151,14 @@ export class FakeElasticsearch {
 
   failWrites(): void {
     this.failingWrites = true;
+  }
+
+  failDeletes(): void {
+    this.failingDeletes = true;
+  }
+
+  failAliasUpdates(): void {
+    this.failingAliasUpdates = true;
   }
 
   indexNames(): string[] {

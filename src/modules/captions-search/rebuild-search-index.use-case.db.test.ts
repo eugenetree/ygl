@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { Kysely } from "kysely";
+import { type Kysely, sql } from "kysely";
 import type { DatabaseClient } from "../../db/client.js";
 import { useTestDatabase } from "../../db/testing/test-database.js";
 import type { Database } from "../../db/types.js";
@@ -247,5 +247,61 @@ describe("RebuildSearchIndexUseCase", () => {
 
     assert.equal(elasticsearch.aliasTarget("captions"), undefined);
     assert.deepEqual(ids(elasticsearch.documents("captions")), [uuid(7)]);
+  });
+
+  it("leaves the index searches run against as it was when recording the sync fails", async (t) => {
+    await seedChannel(db, "UC-rick");
+    await seedVideo(db, { id: "searchable1", channelId: "UC-rick" });
+    await seedCaption(db, { id: uuid(1), videoId: "searchable1" });
+    const elasticsearch = new FakeElasticsearch();
+    elasticsearch.createIndex("captions", [{ id: uuid(7) }]);
+    await sql`ALTER TABLE elastic_captions_sync ADD CONSTRAINT no_success CHECK (sync_status <> 'SUCCESS')`.execute(
+      db,
+    );
+    t.after(() =>
+      sql`ALTER TABLE elastic_captions_sync DROP CONSTRAINT no_success`.execute(
+        db,
+      ),
+    );
+
+    await assert.rejects(buildSut(db, elasticsearch).execute());
+
+    assert.equal(elasticsearch.aliasTarget("captions"), undefined);
+    assert.deepEqual(ids(elasticsearch.documents("captions")), [uuid(7)]);
+  });
+
+  it("leaves the incremental sync going on from the last sync when the switch fails", async () => {
+    await seedChannel(db, "UC-rick");
+    await seedVideo(db, { id: "searchable1", channelId: "UC-rick" });
+    await seedCaption(db, { id: uuid(1), videoId: "searchable1" });
+    const repository = new ElasticCaptionsSyncRepository(db);
+    const elasticsearch = new FakeElasticsearch();
+    const sut = buildSut(db, elasticsearch);
+    await sut.execute();
+    const before = await repository.getLastSuccessfulSync();
+    await seedCaption(db, { id: uuid(2), videoId: "searchable1" });
+    elasticsearch.failAliasUpdates();
+
+    await assert.rejects(sut.execute());
+
+    assert.deepEqual(await repository.getLastSuccessfulSync(), before);
+  });
+
+  it("completes with the new index live when deleting the old one fails", async () => {
+    await seedChannel(db, "UC-rick");
+    await seedVideo(db, { id: "searchable1", channelId: "UC-rick" });
+    await seedCaption(db, { id: uuid(1), videoId: "searchable1" });
+    const elasticsearch = new FakeElasticsearch();
+    const sut = buildSut(db, elasticsearch);
+    await sut.execute();
+    const previous = elasticsearch.aliasTarget("captions");
+    elasticsearch.failDeletes();
+
+    const output = await sut.execute();
+
+    assert.equal(output.newIndexSize, 1);
+    const live = elasticsearch.aliasTarget("captions");
+    assert.notEqual(live, previous);
+    assert.deepEqual(elasticsearch.indexNames(), [previous, live]);
   });
 });

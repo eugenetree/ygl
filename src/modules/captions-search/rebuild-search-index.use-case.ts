@@ -99,9 +99,8 @@ export class RebuildSearchIndexUseCase {
     const oldIndexSize = live ? await this.searchIndexes.count(live) : null;
 
     signal.throwIfAborted();
-    await this.searchIndexes.makeLive(index, live);
-    this.logger.info(`Searches now run against ${index}`);
-
+    // Recorded before the swap, so the swap is the last step that can fail the
+    // run.
     unwrap(
       await this.elasticCaptionsSyncRepository.update(syncId, {
         syncStatus: "SUCCESS",
@@ -109,15 +108,39 @@ export class RebuildSearchIndexUseCase {
         latestSyncedCaptionId: watermark,
       }),
     );
+    try {
+      await this.searchIndexes.makeLive(index, live);
+    } catch (error) {
+      // The old index may lack captions up to this watermark, so the
+      // incremental sync goes on from the sync before this one.
+      await this.elasticCaptionsSyncRepository.update(syncId, {
+        syncStatus: "FAIL",
+      });
+      throw error;
+    }
+    this.logger.info(`Searches now run against ${index}`);
 
     // The first time, the old index went with the request that made the new
     // one live.
     if (live && live !== SEARCH_INDEX) {
       await sleep(this.options.oldIndexGraceMs);
-      await this.searchIndexes.delete(live);
+      await this.deleteOldIndex(live);
     }
 
     return { indexed, oldIndexSize, newIndexSize };
+  }
+
+  // The new index is live by now, so a failure here doesn't fail the run: the
+  // next rebuild deletes the old index with the other leftovers.
+  private async deleteOldIndex(index: string): Promise<void> {
+    try {
+      await this.searchIndexes.delete(index);
+    } catch (error) {
+      this.logger.error({
+        message: `Failed to delete the old search index ${index}`,
+        error,
+      });
+    }
   }
 }
 
