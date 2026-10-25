@@ -17,7 +17,7 @@ indexed, and the old and new index sizes. See spec `.scratch/007-tasks/spec.md`,
 
 **Blocked by:** 02 — Messages when a run ends; 03 — `/tasks`
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Checked once by hand against a local Elasticsearch, before relying on it:
       searches never fail through a switch-over. Later rebuilds swap the

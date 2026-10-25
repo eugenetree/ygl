@@ -11,7 +11,7 @@ working while a task's worker is down. See spec `.scratch/007-tasks/spec.md`,
 
 **Blocked by:** 01 — Tasks on pg-boss, first task: recalculate priorities
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] `/tasks` lists every task in the task constants, each with its latest
       run's state and times, or "no runs in the last 7 days".

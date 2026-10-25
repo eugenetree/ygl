@@ -17,7 +17,7 @@ captions".
 
 **Blocked by:** 02 — Messages when a run ends; 03 — `/tasks`
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] `/reprocess_captions` replies with the run id, or "already running".
 - [ ] The scraper works the run whether scraping is started or stopped.

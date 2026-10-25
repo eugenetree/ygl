@@ -16,7 +16,7 @@ summary. See spec `.scratch/007-tasks/spec.md`, "Runs ending".
 
 **Blocked by:** 01 — Tasks on pg-boss, first task: recalculate priorities
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The event carries the task, the run id, the outcome (`completed` or
       `failed`), the requested, started and ended times, and the output or the

@@ -16,7 +16,7 @@ The recalculate-priorities use case stays unaware that it runs as a task.
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The migrate step installs pg-boss's schema in the app database, and a
       second run of it is a no-op.
