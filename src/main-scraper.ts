@@ -4,7 +4,10 @@ import { Container } from "inversify";
 import { DatabaseClient } from "./db/client.js";
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
+import { recalculatePriorities } from "./modules/_common/tasks/task-definitions.js";
+import { Tasks } from "./modules/_common/tasks/tasks.js";
 import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
+import { RecalculateAllPrioritiesUseCase } from "./modules/scraping/channel-priority/recalculate-all-priorities.use-case.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
 import { ScraperHeartbeat } from "./modules/scraping/lifecycle/scraper-heartbeat.js";
 import { ScraperStatusService } from "./modules/scraping/lifecycle/scraper-status.service.js";
@@ -29,6 +32,7 @@ async function main() {
   container.bind(RawDataStore).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
+  container.bind(Tasks).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);
   const ytDlpClient = container.get(YtDlpClient);
@@ -40,12 +44,17 @@ async function main() {
   const scraperHeartbeat = container.get(ScraperHeartbeat);
   const channelPriorityScheduler = container.get(ChannelPriorityScheduler);
   const telegramNotifier = container.get(TelegramNotifier);
+  const tasks = container.get(Tasks);
+  const recalculateAllPrioritiesUseCase = container.get(
+    RecalculateAllPrioritiesUseCase,
+  );
 
   const shutdown = async () => {
     scraperHeartbeat.stop();
     channelPriorityScheduler.stop();
     await scraperOrchestrator.stop();
     await scraperCommandListener.stop();
+    await tasks.stop();
 
     const currentStatus = await scraperStatusService.getRequestedStatus();
     if (!currentStatus.ok) {
@@ -71,6 +80,10 @@ async function main() {
   await seeder.seedIfNeeded();
   scraperHeartbeat.start();
   channelPriorityScheduler.start();
+  await tasks.start();
+  await tasks.work(recalculatePriorities, () =>
+    recalculateAllPrioritiesUseCase.execute(),
+  );
 
   // Reconcile status on startup — process may have crashed with stale RUNNING state
   await scraperStatusService.updateStatus({ actual: "STOPPED" });

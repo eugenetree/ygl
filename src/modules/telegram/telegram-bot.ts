@@ -7,10 +7,10 @@ import { FindController } from "./find.controller.js";
 import { LastVideosController } from "./last-videos.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { PushChannelController } from "./push-channel.controller.js";
-import { RecalculatePriorityController } from "./recalculate-priority.controller.js";
 import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
 import { ResyncCaptionsController } from "./resync-captions.controller.js";
 import { StatsController } from "./stats.controller.js";
+import { TasksController } from "./tasks.controller.js";
 
 @injectable()
 export class TelegramBot {
@@ -26,7 +26,7 @@ export class TelegramBot {
     private readonly reprocessCaptionsController: ReprocessCaptionsController,
     private readonly resyncCaptionsController: ResyncCaptionsController,
     private readonly pushChannelController: PushChannelController,
-    private readonly recalculatePriorityController: RecalculatePriorityController,
+    private readonly tasksController: TasksController,
   ) {
     this.logger.setContext(TelegramBot.name);
 
@@ -72,7 +72,7 @@ export class TelegramBot {
     this.reprocessCaptionsController.register(this.bot);
     this.resyncCaptionsController.register(this.bot);
     this.pushChannelController.register(this.bot);
-    this.recalculatePriorityController.register(this.bot);
+    this.tasksController.register(this.bot);
   }
 
   private async syncCommands(): Promise<void> {
@@ -94,7 +94,7 @@ export class TelegramBot {
       },
       { command: "push_channel", description: "Push channel with priority" },
       {
-        command: "recalculate_priority",
+        command: "recalculate_priorities",
         description: "Recalculate priority scores for all channels",
       },
     ]);
