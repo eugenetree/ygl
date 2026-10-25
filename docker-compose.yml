@@ -86,7 +86,7 @@ services:
     container_name: bot
     <<: *app-image
     environment:
-      # Elasticsearch because the bot's /find and /resync commands search captions
+      # Elasticsearch because the bot's /find searches captions and /tasks counts them
       <<: [*postgres-env, *es-env, *telegram-env]
     command: npm run start:bot
     depends_on:

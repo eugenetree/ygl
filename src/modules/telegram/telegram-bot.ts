@@ -8,7 +8,6 @@ import { LastVideosController } from "./last-videos.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { PushChannelController } from "./push-channel.controller.js";
 import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
-import { ResyncCaptionsController } from "./resync-captions.controller.js";
 import { StatsController } from "./stats.controller.js";
 import { TasksController } from "./tasks.controller.js";
 
@@ -24,7 +23,6 @@ export class TelegramBot {
     private readonly findController: FindController,
     private readonly lastVideosController: LastVideosController,
     private readonly reprocessCaptionsController: ReprocessCaptionsController,
-    private readonly resyncCaptionsController: ResyncCaptionsController,
     private readonly pushChannelController: PushChannelController,
     private readonly tasksController: TasksController,
   ) {
@@ -70,7 +68,6 @@ export class TelegramBot {
     this.findController.register(this.bot);
     this.lastVideosController.register(this.bot);
     this.reprocessCaptionsController.register(this.bot);
-    this.resyncCaptionsController.register(this.bot);
     this.pushChannelController.register(this.bot);
     this.tasksController.register(this.bot);
   }
@@ -88,14 +85,14 @@ export class TelegramBot {
         command: "reprocess_captions",
         description: "Reprocess captions for all videos",
       },
-      {
-        command: "resync_captions",
-        description: "Resync captions index in Elasticsearch",
-      },
       { command: "push_channel", description: "Push channel with priority" },
       {
         command: "recalculate_priorities",
         description: "Recalculate priority scores for all channels",
+      },
+      {
+        command: "rebuild_search_index",
+        description: "Rebuild the search index from the database",
       },
       { command: "tasks", description: "Show each task's latest run" },
     ]);

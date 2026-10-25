@@ -1,7 +1,10 @@
 import { randomUUID } from "crypto";
 import { injectable } from "inversify";
+import type { ExpressionBuilder } from "kysely";
 import { DatabaseClient } from "../../db/client.js";
 import {
+  type CaptionRow,
+  type Database,
   DatabaseError,
   UpdateableElasticCaptionsSyncRow,
 } from "../../db/types.js";
@@ -11,6 +14,16 @@ import {
   ElasticCaptionsSync,
   ElasticCaptionsSyncProps,
 } from "./elastic-captions-sync.js";
+
+export type CaptionToIndex = CaptionRow & { channelSearchScore: number | null };
+
+function isSearchable(eb: ExpressionBuilder<Database, "videos">) {
+  return eb.and([
+    eb("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID"),
+    eb("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID"),
+    eb("videos.captionsSimilarityScore", ">=", 0.9),
+  ]);
+}
 
 @injectable()
 export class ElasticCaptionsSyncRepository {
@@ -86,9 +99,7 @@ export class ElasticCaptionsSyncRepository {
         "videos.channelId",
       )
       .where("captions.type", "=", "manual")
-      .where("videos.manualCaptionsStatus", "=", "CAPTIONS_VALID")
-      .where("videos.autoCaptionsStatus", "=", "CAPTIONS_VALID")
-      .where("videos.captionsSimilarityScore", ">=", 0.9)
+      .where(isSearchable)
       .selectAll("captions")
       .select("channelPriorityScores.searchScore as channelSearchScore")
       .orderBy("captions.createdAt", "asc");
@@ -109,6 +120,74 @@ export class ElasticCaptionsSyncRepository {
         type: "DATABASE",
         error: result.error,
       });
+    }
+
+    return Success(result.value);
+  }
+
+  async newestCaptionId(): Promise<Result<string | null, DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .selectFrom("captions")
+        .select("id")
+        .orderBy("createdAt", "desc")
+        .limit(1)
+        .executeTakeFirst(),
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(result.value?.id ?? null);
+  }
+
+  /** A page of searchable videos' ids, in id order, after `afterId`. */
+  async searchableVideoIds(
+    afterId: string | null,
+    limit: number,
+  ): Promise<Result<string[], DatabaseError>> {
+    let query = this.db
+      .selectFrom("videos")
+      .select("videos.id")
+      .where(isSearchable)
+      .orderBy("videos.id", "asc")
+      .limit(limit);
+
+    if (afterId !== null) {
+      query = query.where("videos.id", ">", afterId);
+    }
+
+    const result = await tryCatch(query.execute());
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
+    }
+
+    return Success(result.value.map(({ id }) => id));
+  }
+
+  async manualCaptionsOfVideo(
+    videoId: string,
+  ): Promise<Result<CaptionToIndex[], DatabaseError>> {
+    const result = await tryCatch(
+      this.db
+        .selectFrom("captions")
+        .innerJoin("videos", "videos.id", "captions.videoId")
+        .leftJoin(
+          "channelPriorityScores",
+          "channelPriorityScores.channelId",
+          "videos.channelId",
+        )
+        .where("captions.videoId", "=", videoId)
+        .where("captions.type", "=", "manual")
+        .selectAll("captions")
+        .select("channelPriorityScores.searchScore as channelSearchScore")
+        .execute(),
+    );
+
+    if (!result.ok) {
+      return Failure({ type: "DATABASE", error: result.error });
     }
 
     return Success(result.value);

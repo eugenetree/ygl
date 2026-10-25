@@ -1,5 +1,7 @@
 import {
+  type RebuildSearchIndexOutput,
   type RecalculatePrioritiesOutput,
+  rebuildSearchIndex,
   recalculatePriorities,
 } from "../_common/tasks/task-definitions.js";
 import type { RunEnded, RunError } from "../_common/tasks/tasks.js";
@@ -19,9 +21,22 @@ export function formatRunEnded(run: RunEnded): string {
       const { total, failed } = run.output as RecalculatePrioritiesOutput;
       return `${completed} Recalculated ${total - failed} of ${total} channels, ${failed} failed.`;
     }
+    case rebuildSearchIndex.name: {
+      const { indexed, oldIndexSize, newIndexSize } =
+        run.output as RebuildSearchIndexOutput;
+      const old =
+        oldIndexSize === null
+          ? "There was no old index"
+          : `The old index held ${formatCount(oldIndexSize)}`;
+      return `${completed} Indexed ${formatCount(indexed)} captions. ${old}, the new one holds ${formatCount(newIndexSize)}.`;
+    }
     default:
       return completed;
   }
+}
+
+function formatCount(count: number): string {
+  return count.toLocaleString("en-US");
 }
 
 function describeError(error: RunError): string {

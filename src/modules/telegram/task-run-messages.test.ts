@@ -36,6 +36,40 @@ describe("formatRunEnded()", () => {
     );
   });
 
+  it("reports a completed rebuild with the captions indexed and both index sizes", () => {
+    const run = runEnded(
+      {
+        outcome: "completed",
+        output: {
+          indexed: 8_204_311,
+          oldIndexSize: 8_150_002,
+          newIndexSize: 8_204_311,
+        },
+      },
+      { task: "rebuild-search-index", ranForMs: (62 * 60 + 5) * 1000 },
+    );
+
+    assert.equal(
+      formatRunEnded(run),
+      "rebuild-search-index run run-1 completed in 1h 2m. Indexed 8,204,311 captions. The old index held 8,150,002, the new one holds 8,204,311.",
+    );
+  });
+
+  it("reports a completed rebuild that had no old index to replace", () => {
+    const run = runEnded(
+      {
+        outcome: "completed",
+        output: { indexed: 120, oldIndexSize: null, newIndexSize: 120 },
+      },
+      { task: "rebuild-search-index" },
+    );
+
+    assert.equal(
+      formatRunEnded(run),
+      "rebuild-search-index run run-1 completed in 1m 32s. Indexed 120 captions. There was no old index, the new one holds 120.",
+    );
+  });
+
   it("reports a completed run of any other task with its duration", () => {
     const run = runEnded(
       { outcome: "completed", output: null },

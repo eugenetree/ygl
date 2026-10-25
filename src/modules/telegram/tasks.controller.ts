@@ -4,10 +4,12 @@ import { Telegraf } from "telegraf";
 import { Logger } from "../_common/logger/logger.js";
 import {
   type AnyTask,
+  rebuildSearchIndex,
   recalculatePriorities,
   TASKS,
 } from "../_common/tasks/task-definitions.js";
 import { Tasks } from "../_common/tasks/tasks.js";
+import { SearchIndexes } from "../captions-search/search-indexes.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
 import { TelegramController } from "./telegram-controller.js";
 
@@ -20,17 +22,21 @@ type ProgressLine = () => Promise<string>;
 
 @injectable()
 export class TasksController implements TelegramController {
-  private readonly progressLines: ReadonlyMap<string, ProgressLine> = new Map();
+  private readonly progressLines: ReadonlyMap<string, ProgressLine> = new Map([
+    [rebuildSearchIndex.name, () => this.rebuildProgressLine()],
+  ]);
 
   constructor(
     private readonly logger: Logger,
     private readonly tasks: Tasks,
+    private readonly searchIndexes: SearchIndexes,
   ) {
     this.logger.setContext(TasksController.name);
   }
 
   public register(bot: Telegraf): void {
     this.registerRequest(bot, "recalculate_priorities", recalculatePriorities);
+    this.registerRequest(bot, "rebuild_search_index", rebuildSearchIndex);
     this.registerOverview(bot);
   }
 
@@ -87,5 +93,25 @@ export class TasksController implements TelegramController {
 
       await ctx.reply(formatTasksOverview(overviews, new Date()));
     });
+  }
+
+  private async rebuildProgressLine(): Promise<string> {
+    const result = await this.searchIndexes.rebuildProgress();
+    if (!result.ok) {
+      this.logger.error({
+        message: "Failed to read the rebuild's progress",
+        error: result.error.error,
+      });
+      return "Progress unavailable: Elasticsearch did not answer.";
+    }
+    if (!result.value) {
+      return "No new index yet.";
+    }
+    const { indexed, liveSize } = result.value;
+    const of =
+      liveSize === null
+        ? ""
+        : ` of about ${liveSize.toLocaleString("en-US")} in the live index`;
+    return `Indexed ${indexed.toLocaleString("en-US")}${of}.`;
   }
 }

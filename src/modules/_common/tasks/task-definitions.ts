@@ -38,4 +38,21 @@ export const recalculatePriorities = defineTask<
   expireInSeconds: 30 * 60,
 });
 
-export const TASKS: readonly AnyTask[] = [recalculatePriorities];
+export type RebuildSearchIndexOutput = {
+  indexed: number;
+  oldIndexSize: number | null;
+  newIndexSize: number;
+};
+
+export const rebuildSearchIndex = defineTask<
+  Record<string, never>,
+  RebuildSearchIndexOutput
+>({
+  name: "rebuild-search-index",
+  expireInSeconds: 8 * 60 * 60,
+});
+
+export const TASKS: readonly AnyTask[] = [
+  recalculatePriorities,
+  rebuildSearchIndex,
+];
