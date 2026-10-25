@@ -1,4 +1,5 @@
-import { dbClient } from "../client.js";
+import { installTaskSchema } from "../../modules/_common/tasks/tasks.js";
+import { connectionConfigFromEnv, dbClient } from "../client.js";
 import { migrateToLatest } from "../migrator.js";
 
 async function runMigrations() {
@@ -19,6 +20,15 @@ async function runMigrations() {
   });
 
   await dbClient.destroy();
+
+  try {
+    await installTaskSchema(connectionConfigFromEnv());
+    console.log("task schema is up to date");
+  } catch (error) {
+    console.error("failed to install the task schema");
+    console.error(error);
+    process.exit(1);
+  }
 }
 
 runMigrations();

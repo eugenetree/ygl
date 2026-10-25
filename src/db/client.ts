@@ -9,7 +9,7 @@ export type DatabaseConnectionConfig = Pick<
   "host" | "port" | "database" | "user" | "password"
 >;
 
-function connectionConfigFromEnv(): DatabaseConnectionConfig {
+export function connectionConfigFromEnv(): DatabaseConnectionConfig {
   return {
     database: process.env.POSTGRES_DB,
     host: process.env.DB_HOST,

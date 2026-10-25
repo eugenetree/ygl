@@ -8,7 +8,7 @@ import {
 } from "kysely";
 import { escapeIdentifier } from "pg";
 
-import { DatabaseClient } from "../client.js";
+import { DatabaseClient, type DatabaseConnectionConfig } from "../client.js";
 import { readTestServer, withAdminClient } from "./test-server.js";
 
 /**
@@ -16,9 +16,22 @@ import { readTestServer, withAdminClient } from "./test-server.js";
  * hooks, and the returned client connects lazily, once its database exists.
  */
 export function useTestDatabase(): DatabaseClient {
+  return registerTestDatabase().db;
+}
+
+/** As `useTestDatabase`, for code that opens its own connections. */
+export function useTestDatabaseConnection(): DatabaseConnectionConfig {
+  return registerTestDatabase().connection;
+}
+
+function registerTestDatabase(): {
+  db: DatabaseClient;
+  connection: DatabaseConnectionConfig;
+} {
   const { baseDatabase, ...server } = readTestServer();
   const name = `test_${randomUUID().replaceAll("-", "")}`;
-  const db = new DatabaseClient({ ...server, database: name });
+  const connection = { ...server, database: name };
+  const db = new DatabaseClient(connection);
   let truncateAll: RawBuilder<unknown> | undefined;
 
   before(async () => {
@@ -34,13 +47,18 @@ export function useTestDatabase(): DatabaseClient {
       );
     });
 
-    const { rows } = await sql<{ tablename: string }>`
-      SELECT tablename FROM pg_tables
-      WHERE schemaname = 'public'
+    const { rows } = await sql<{ schemaname: string; tablename: string }>`
+      SELECT schemaname, tablename FROM pg_tables
+      WHERE (
+        schemaname = 'public'
         AND tablename NOT IN (${DEFAULT_MIGRATION_TABLE}, ${DEFAULT_MIGRATION_LOCK_TABLE})
+      ) OR (schemaname = 'pgboss' AND tablename = 'job')
     `.execute(db);
     if (rows.length > 0) {
-      const tables = rows.map((row) => escapeIdentifier(row.tablename));
+      const tables = rows.map(
+        (row) =>
+          `${escapeIdentifier(row.schemaname)}.${escapeIdentifier(row.tablename)}`,
+      );
       truncateAll = sql.raw(
         `TRUNCATE ${tables.join(", ")} RESTART IDENTITY CASCADE`,
       );
@@ -61,5 +79,5 @@ export function useTestDatabase(): DatabaseClient {
     );
   });
 
-  return db;
+  return { db, connection };
 }
