@@ -29,7 +29,7 @@ const BASE_ALREADY_BUILT = new Set(["42P04", "23505"]);
 // tripping Kysely's "corrupted migrations" check, and an edit in place is seen.
 // The task schema is hashed too, so a pg-boss upgrade builds a new base rather
 // than reusing one that `Tasks` would refuse to start on.
-async function hashSchema(): Promise<string> {
+async function hashMigrationsAndTaskSchema(): Promise<string> {
   const hash = createHash("sha256");
   hash.update(taskSchemaDefinition());
   for (const file of (await readdir(MIGRATIONS_FOLDER)).sort()) {
@@ -94,7 +94,7 @@ export async function startTestServer(): Promise<void> {
     user: container.getUsername(),
     password: container.getPassword(),
   };
-  const baseDatabase = `base_${await hashSchema()}`;
+  const baseDatabase = `base_${await hashMigrationsAndTaskSchema()}`;
   await ensureBaseDatabase(server, baseDatabase);
 
   publishTestServer({ ...server, baseDatabase });
