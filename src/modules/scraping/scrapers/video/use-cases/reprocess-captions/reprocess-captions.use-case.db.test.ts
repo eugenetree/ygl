@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
-import { describe, it, mock } from "node:test";
+import { describe, it } from "node:test";
 import type { Kysely } from "kysely";
 import type { DatabaseClient } from "../../../../../../db/client.js";
 import { useTestDatabase } from "../../../../../../db/testing/test-database.js";
 import type { Database } from "../../../../../../db/types.js";
 import type { Logger } from "../../../../../_common/logger/logger.js";
 import { createLoggerMock } from "../../../../../_common/logger/testing/logger-mock.js";
+import { CAPTIONS_PROCESSING_ALGORITHM_VERSION } from "../../config.js";
 import { VideoRepository } from "../../video.repository.js";
 import { AutoCaptionsValidator } from "../process-video-entry/auto-captions.validator.js";
 import { CaptionAnalysisService } from "../process-video-entry/caption-analysis.service.js";
@@ -26,7 +27,6 @@ function buildSut(db: DatabaseClient) {
   );
   const videoRepository = new VideoRepository(logger, db);
   return {
-    captionAnalysisService,
     videoRepository,
     useCase: new ReprocessCaptionsUseCase(
       logger,
@@ -38,7 +38,11 @@ function buildSut(db: DatabaseClient) {
 
 // ---- Fixtures ---------------------------------------------------------------
 
-async function seedVideo(db: Kysely<Database>, id: string) {
+async function seedVideo(
+  db: Kysely<Database>,
+  id: string,
+  captionsProcessingAlgorithmVersion: string | null = null,
+) {
   await db
     .insertInto("channels")
     .values({
@@ -66,29 +70,14 @@ async function seedVideo(db: Kysely<Database>, id: string) {
       autoCaptionsStatus: "CAPTIONS_VALID",
       manualCaptionsStatus: "CAPTIONS_VALID",
       categories: [],
+      captionsProcessingAlgorithmVersion,
     })
     .execute();
 }
 
-async function seedVideos(db: Kysely<Database>) {
-  await seedVideo(db, "video000001");
-  await seedVideo(db, "video000002");
-  await seedVideo(db, "video000003");
-}
-
-function abortOnFirstVideo(
-  captionAnalysisService: CaptionAnalysisService,
-): AbortSignal {
+function abortedSignal(): AbortSignal {
   const controller = new AbortController();
-  const analyze = captionAnalysisService.analyze.bind(captionAnalysisService);
-  mock.method(
-    captionAnalysisService,
-    "analyze",
-    (...args: Parameters<typeof analyze>) => {
-      controller.abort();
-      return analyze(...args);
-    },
-  );
+  controller.abort();
   return controller.signal;
 }
 
@@ -97,16 +86,15 @@ function abortOnFirstVideo(
 describe("ReprocessCaptionsUseCase", () => {
   const db = useTestDatabase();
 
-  it("stops at the next video once its signal fires", async () => {
-    const { useCase, captionAnalysisService, videoRepository } = buildSut(db);
-    await seedVideos(db);
+  it("stops before the next video once its signal has fired", async () => {
+    const { useCase, videoRepository } = buildSut(db);
+    await seedVideo(db, "video000001");
+    await seedVideo(db, "video000002");
 
-    const result = await useCase.execute(
-      abortOnFirstVideo(captionAnalysisService),
-    );
+    const result = await useCase.execute(abortedSignal());
 
     assert.ok(result.ok);
-    assert.equal(result.value.processedCount, 1);
+    assert.equal(result.value.processedCount, 0);
     assert.deepEqual(await videoRepository.countVideosForReprocessing(), {
       ok: true,
       value: 2,
@@ -114,14 +102,18 @@ describe("ReprocessCaptionsUseCase", () => {
   });
 
   it("goes on from the videos a stopped run left", async () => {
-    const { useCase, captionAnalysisService } = buildSut(db);
-    await seedVideos(db);
-    await useCase.execute(abortOnFirstVideo(captionAnalysisService));
-    mock.restoreAll();
+    const { useCase, videoRepository } = buildSut(db);
+    await seedVideo(db, "video000001", CAPTIONS_PROCESSING_ALGORITHM_VERSION);
+    await seedVideo(db, "video000002");
+    await seedVideo(db, "video000003");
 
     const result = await useCase.execute(new AbortController().signal);
 
     assert.ok(result.ok);
     assert.equal(result.value.processedCount, 2);
+    assert.deepEqual(await videoRepository.countVideosForReprocessing(), {
+      ok: true,
+      value: 0,
+    });
   });
 });
