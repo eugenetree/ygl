@@ -22,6 +22,10 @@ _Avoid_: Username, handle (the `@` identifier in the channel's URL, a different 
 
 ### Scraping
 
+**Job**:
+One unit of scraping work waiting in a queue, such as a channel to fetch or a video to scrape. Scraping works through jobs continuously.
+_Avoid_: Task (a task is requested on demand and runs once)
+
 **Skip**:
 A video left unscraped because YouTube says why a viewer in the scraper's position (signed in, age not verified, in the scraper's country) can't watch it: members-only, Premium-only, age-restricted, removed by the uploader, and the like. It is a fact about the video, not about the scraper.
 _Avoid_: Skippable error
@@ -29,6 +33,16 @@ _Avoid_: Skippable error
 **Failure**:
 A video that couldn't be scraped for any other reason: YouTube refused the scraper, something on our side broke, or YouTube didn't say why the video can't be watched. It may be the video's fault or the scraper's.
 _Avoid_: Unskippable error, error
+
+### Tasks
+
+**Task**:
+A kind of work requested on demand that runs once to completion, such as reprocessing captions or rebuilding the search index.
+_Avoid_: Job (a scraping queue item), command (the Telegram message that requests a task), migration (deploy-time changes)
+
+**Run**:
+One occurrence of a task: when it was requested, when it started and ended, and how it ended.
+_Avoid_: Execution, instance, job
 
 ### Videos
 
@@ -69,6 +83,10 @@ _Avoid_: Match rate, accuracy
 **Searchable**:
 A video is searchable when its auto and manual captions are both valid and its similarity score reaches the search threshold. Only a searchable video's manual captions are searched.
 _Avoid_: Indexed, synced (those describe the search index catching up, not whether the video qualifies)
+
+**Search index**:
+The copy of every searchable video's manual captions that searches run against. It can lag behind which videos are searchable.
+_Avoid_: Elastic, ES (the technology, not the concept)
 
 **Search**:
 A word or phrase looked up across every searchable caption, answered with clips.
