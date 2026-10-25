@@ -263,14 +263,21 @@ Postgres (ADR 0015).
   mappings. It goes through searchable videos in id order and loads each
   video's manual captions with the captions' video id index, so memory stays
   flat. It bulk-writes in batches sized for a 512 MB heap.
-- At the end, one atomic alias request points the `captions` alias at the new
-  index and deletes the old index. The first time, the old index is the one
-  literally named `captions`, deleted by a `remove_index` action in the same
-  request, so even the first switch-over has no gap.
-- It then records a successful sync whose watermark is the caption recorded at
-  start. The next incremental pass picks up captions created during the
-  rebuild; indexing a caption twice is harmless because documents are keyed by
-  caption id.
+- At the end, it records a successful sync whose watermark is the caption
+  recorded at start. The next incremental pass picks up captions created during
+  the rebuild; indexing a caption twice is harmless because documents are keyed
+  by caption id.
+- Then one atomic alias request points the `captions` alias at the new index,
+  the last step that can fail the run. If it fails, the sync is marked failed
+  again, so the incremental sync goes on from the sync before.
+- After a 5-second grace period for searches still running on it, it deletes
+  the old index. Deleting it in the alias request would fail those searches.
+  A failed delete is logged, not a failed run: the next rebuild removes it with
+  the other leftovers.
+- The first time, the old index is the one literally named `captions`, which
+  has to go in the alias request, by a `remove_index` action. Searches in flight
+  then fail with index-not-found or `no_shard_available_action_exception`, so
+  searches retry once on those: the retry resolves `captions` to the new index.
 - Searches and the incremental sync address the index by the `captions` alias,
   so neither changes.
 

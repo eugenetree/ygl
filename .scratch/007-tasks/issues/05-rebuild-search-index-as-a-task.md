@@ -20,8 +20,10 @@ indexed, and the old and new index sizes. See spec `.scratch/007-tasks/spec.md`,
 **Status:** ready-for-agent
 
 - [ ] Checked once by hand against a local Elasticsearch, before relying on it:
-      one alias request can delete the index named `captions` and add the
-      alias `captions` pointing at another index, with searches never failing.
+      searches never fail through a switch-over. Later rebuilds swap the
+      alias, then delete the old index after a grace period. The first one
+      deletes the index named `captions` in the alias request that adds the
+      alias, and searches retry once on the errors that causes.
 - [ ] Only the manual captions of searchable videos are indexed, so captions of
       videos that are no longer searchable are gone after the rebuild.
 - [ ] The rebuild goes through searchable videos in id order and loads each
@@ -29,8 +31,8 @@ indexed, and the old and new index sizes. See spec `.scratch/007-tasks/spec.md`,
       to the captions table.
 - [ ] It writes into a new dated index with the existing settings and mappings,
       in bulk batches sized for a 512 MB heap.
-- [ ] At the end, one atomic alias request points `captions` at the new index
-      and deletes the old one.
+- [ ] At the end, one atomic alias request points `captions` at the new index,
+      and the old one is deleted after a short grace period.
 - [ ] At start, it deletes any half-built index left by an earlier failed
       rebuild.
 - [ ] It records a successful sync whose watermark is the newest caption at the
@@ -47,3 +49,15 @@ indexed, and the old and new index sizes. See spec `.scratch/007-tasks/spec.md`,
       - [ ] removing a leftover index;
       - [ ] the recorded watermark.
 - [ ] The completion message's formatting has unit tests.
+
+## Comments
+
+**Hand check against a local Elasticsearch (2026-10-25)**
+
+- Deleting the old index inside the alias request failed the searches running
+  on it: 6–9 failed searches per run. Swapping the alias, then deleting the old
+  index after a short grace period: 0 failed searches in 5 runs.
+- The first switch-over can't be done that way: an alias can't be added while
+  an index of the same name exists, so `remove_index` stays in the request.
+  Searches in flight then fail with index-not-found or
+  `no_shard_available_action_exception`, and searches retry once on those.
