@@ -46,7 +46,7 @@ export function formatRunEnded(run: RunEnded): string {
   }
 }
 
-function formatCount(count: number): string {
+export function formatCount(count: number): string {
   return count.toLocaleString("en-US");
 }
 

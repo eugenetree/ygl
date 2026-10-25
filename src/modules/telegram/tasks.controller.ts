@@ -12,6 +12,7 @@ import {
 import { Tasks } from "../_common/tasks/tasks.js";
 import { SearchIndexes } from "../captions-search/search-indexes.js";
 import { VideoRepository } from "../scraping/scrapers/video/video.repository.js";
+import { formatCount } from "./task-run-messages.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
 import { TelegramController } from "./telegram-controller.js";
 
@@ -20,11 +21,11 @@ import { TelegramController } from "./telegram-controller.js";
  * query in the feature module that owns that data. A query that fails says so
  * in its line rather than throwing, so `/tasks` still lists every run.
  */
-type ProgressLine = () => Promise<string>;
+type FetchProgressLine = () => Promise<string>;
 
 @injectable()
 export class TasksController implements TelegramController {
-  private readonly progressLines: ReadonlyMap<string, ProgressLine>;
+  private readonly progressLineFetchers: ReadonlyMap<string, FetchProgressLine>;
 
   constructor(
     private readonly logger: Logger,
@@ -33,7 +34,7 @@ export class TasksController implements TelegramController {
     private readonly searchIndexes: SearchIndexes,
   ) {
     this.logger.setContext(TasksController.name);
-    this.progressLines = new Map([
+    this.progressLineFetchers = new Map([
       [reprocessCaptions.name, () => this.videosLeftToReprocess()],
       [rebuildSearchIndex.name, () => this.rebuildProgressLine()],
     ]);
@@ -88,10 +89,10 @@ export class TasksController implements TelegramController {
       const overviews = await Promise.all(
         TASKS.map(async (task): Promise<TaskOverview> => {
           const latestRun = result.value.find((run) => run.task === task.name);
-          const progressLine = this.progressLines.get(task.name);
+          const fetchProgressLine = this.progressLineFetchers.get(task.name);
           const progress =
-            progressLine && latestRun?.state === "running"
-              ? await progressLine()
+            fetchProgressLine && latestRun?.state === "running"
+              ? await fetchProgressLine()
               : undefined;
           return { task: task.name, latestRun, progress };
         }),
@@ -129,7 +130,7 @@ export class TasksController implements TelegramController {
     const of =
       liveSize === null
         ? ""
-        : ` of about ${liveSize.toLocaleString("en-US")} in the live index`;
-    return `Indexed ${indexed.toLocaleString("en-US")}${of}.`;
+        : ` of about ${formatCount(liveSize)} in the live index`;
+    return `Indexed ${formatCount(indexed)}${of}.`;
   }
 }
