@@ -1,5 +1,8 @@
-import { Client } from "@elastic/elasticsearch";
-import type { SearchTotalHits } from "@elastic/elasticsearch/lib/api/types.js";
+import { Client, errors } from "@elastic/elasticsearch";
+import type {
+  SearchRequest,
+  SearchTotalHits,
+} from "@elastic/elasticsearch/lib/api/types.js";
 import { injectable, unmanaged } from "inversify";
 import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
@@ -12,6 +15,16 @@ import {
   SEARCH_INDEX_MAPPINGS,
   SEARCH_INDEX_SETTINGS,
 } from "./search-indexes.js";
+
+const INDEX_GONE =
+  /index_not_found_exception|no_shard_available_action_exception/;
+
+// A response error's message holds its type and the types it was caused by.
+function isIndexGone(error: unknown): boolean {
+  return (
+    error instanceof errors.ResponseError && INDEX_GONE.test(error.message)
+  );
+}
 
 const MAX_TRACKED_TOTAL = 10000;
 // Elasticsearch's default max_result_window; hours of captions fit well under it.
@@ -74,32 +87,30 @@ export class CaptionsService {
     query: string,
     { offset, limit }: { offset: number; limit: number },
   ): Promise<Result<CaptionSearchResult, SearchUnavailableError>> {
-    const searchResult = await tryCatch(
-      this.esClient.search({
-        index: "captions",
-        from: offset,
-        size: limit,
-        sort: [{ _score: { order: "desc" } }, { id: { order: "asc" } }],
-        track_total_hits: MAX_TRACKED_TOTAL,
-        query: {
-          bool: {
-            must: {
-              match: {
-                text: {
-                  query,
-                  operator: "and",
-                },
-              },
-            },
-            should: {
-              match_phrase: {
-                text: query,
+    const searchResult = await this.searchCaptions({
+      index: "captions",
+      from: offset,
+      size: limit,
+      sort: [{ _score: { order: "desc" } }, { id: { order: "asc" } }],
+      track_total_hits: MAX_TRACKED_TOTAL,
+      query: {
+        bool: {
+          must: {
+            match: {
+              text: {
+                query,
+                operator: "and",
               },
             },
           },
+          should: {
+            match_phrase: {
+              text: query,
+            },
+          },
         },
-      }),
-    );
+      },
+    });
 
     if (!searchResult.ok) {
       return Failure({ type: "SEARCH_UNAVAILABLE", error: searchResult.error });
@@ -129,14 +140,12 @@ export class CaptionsService {
   async findByVideo(
     videoId: string,
   ): Promise<Result<VideoCaption[], SearchUnavailableError>> {
-    const searchResult = await tryCatch(
-      this.esClient.search({
-        index: "captions",
-        size: MAX_CAPTIONS_PER_VIDEO,
-        sort: [{ startTime: { order: "asc" } }, { id: { order: "asc" } }],
-        query: { term: { "videoId.keyword": videoId } },
-      }),
-    );
+    const searchResult = await this.searchCaptions({
+      index: "captions",
+      size: MAX_CAPTIONS_PER_VIDEO,
+      sort: [{ startTime: { order: "asc" } }, { id: { order: "asc" } }],
+      query: { term: { "videoId.keyword": videoId } },
+    });
 
     if (!searchResult.ok) {
       return Failure({ type: "SEARCH_UNAVAILABLE", error: searchResult.error });
@@ -156,6 +165,15 @@ export class CaptionsService {
     }
 
     return Success(captions);
+  }
+
+  // The first rebuild deletes the index named `captions` in the request that
+  // makes `captions` an alias, failing the searches running on it. Searched
+  // again, the name resolves to the new index.
+  private async searchCaptions(request: SearchRequest) {
+    const first = await tryCatch(this.esClient.search(request));
+    if (first.ok || !isIndexGone(first.error)) return first;
+    return tryCatch(this.esClient.search(request));
   }
 
   private async createIndex() {

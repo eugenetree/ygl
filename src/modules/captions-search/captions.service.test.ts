@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it, mock } from "node:test";
-import type { Client } from "@elastic/elasticsearch";
+import { type Client, errors } from "@elastic/elasticsearch";
 import type { Logger } from "../_common/logger/logger.js";
 import { CaptionsService } from "./captions.service.js";
 
@@ -37,6 +37,25 @@ const searchResponse = (
     })),
   },
 });
+
+const responseError = (type: string, rootCause = type) =>
+  new errors.ResponseError({
+    body: { error: { type, root_cause: [{ type: rootCause, reason: "" }] } },
+    statusCode: 404,
+    headers: {},
+    warnings: null,
+    meta: {} as never,
+  });
+
+// What Elasticsearch answers a search whose index is deleted under it.
+const INDEX_GONE = {
+  "index not found": () => responseError("index_not_found_exception"),
+  "no shard available": () =>
+    responseError(
+      "search_phase_execution_exception",
+      "no_shard_available_action_exception",
+    ),
+};
 
 // ---- Factory ----------------------------------------------------------------
 
@@ -160,10 +179,59 @@ describe("CaptionsService.search", () => {
       ok: false,
       error: { type: "SEARCH_UNAVAILABLE", error: cause },
     });
+    assert.equal(mocks.esClient.search.mock.callCount(), 1);
+  });
+
+  for (const [answer, indexGone] of Object.entries(INDEX_GONE)) {
+    it(`searches again once when Elasticsearch answers ${answer}`, async () => {
+      const mocks = createMocks(searchResponse([storedCaption()]));
+      mocks.esClient.search.mock.mockImplementationOnce(async () => {
+        throw indexGone();
+      });
+
+      const result = await buildSut(mocks).search("give you up", {
+        offset: 0,
+        limit: 20,
+      });
+
+      assert.ok(result.ok);
+      assert.equal(result.value.total, 1);
+    });
+  }
+
+  it("returns a search-unavailable failure when the second search fails too", async () => {
+    const mocks = createMocks();
+    const cause = INDEX_GONE["index not found"]();
+    mocks.esClient.search.mock.mockImplementation(async () => {
+      throw cause;
+    });
+
+    const result = await buildSut(mocks).search("give you up", {
+      offset: 0,
+      limit: 20,
+    });
+
+    assert.deepEqual(result, {
+      ok: false,
+      error: { type: "SEARCH_UNAVAILABLE", error: cause },
+    });
+    assert.equal(mocks.esClient.search.mock.callCount(), 2);
   });
 });
 
 describe("CaptionsService.findByVideo", () => {
+  it("searches again once when the index went away mid-search", async () => {
+    const mocks = createMocks(searchResponse([storedCaption()]));
+    mocks.esClient.search.mock.mockImplementationOnce(async () => {
+      throw INDEX_GONE["index not found"]();
+    });
+
+    const result = await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
+
+    assert.ok(result.ok);
+    assert.equal(result.value.length, 1);
+  });
+
   it("returns the video's stored captions with their times and text", async () => {
     const mocks = createMocks(
       searchResponse([
