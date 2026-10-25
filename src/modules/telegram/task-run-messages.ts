@@ -3,6 +3,7 @@ import {
   recalculatePriorities,
 } from "../_common/tasks/task-definitions.js";
 import type { RunEnded, RunError } from "../_common/tasks/tasks.js";
+import { formatDuration } from "./format-duration.js";
 
 export function formatRunEnded(run: RunEnded): string {
   const took = formatDuration(run.endedAt.getTime() - run.startedAt.getTime());
@@ -34,17 +35,4 @@ function describeError(error: RunError): string {
     case "WORKER_SHUT_DOWN":
       return "its worker shut down.";
   }
-}
-
-function formatDuration(ms: number): string {
-  const seconds = Math.floor(ms / 1000);
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  if (minutes > 0) {
-    return `${minutes}m ${seconds % 60}s`;
-  }
-  return `${seconds}s`;
 }
