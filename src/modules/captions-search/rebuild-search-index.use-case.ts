@@ -1,7 +1,10 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { injectable, unmanaged } from "inversify";
-import type { Result } from "../../types/index.js";
+import type { DatabaseError } from "../../db/types.js";
+import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
+import { tryCatch } from "../_common/try-catch.js";
+import type { SearchUnavailableError } from "./captions.service.js";
 import {
   type CaptionToIndex,
   ElasticCaptionsSyncRepository,
@@ -14,6 +17,13 @@ export type RebuildSearchIndexResult = {
   oldIndexSize: number | null;
   newIndexSize: number;
 };
+
+export type RebuildStoppedError = { type: "REBUILD_STOPPED"; error: unknown };
+
+export type RebuildSearchIndexError =
+  | DatabaseError
+  | SearchUnavailableError
+  | RebuildStoppedError;
 
 export type RebuildSearchIndexOptions = {
   /** How long searches already running on the old index get to finish. */
@@ -39,86 +49,69 @@ export class RebuildSearchIndexUseCase {
     this.logger.setContext(RebuildSearchIndexUseCase.name);
   }
 
-  /** Throws on failure, leaving the index searches run against as it was. */
+  /** A failure leaves the index searches run against as it was. */
   async execute(
     signal: AbortSignal = new AbortController().signal,
-  ): Promise<RebuildSearchIndexResult> {
+  ): Promise<Result<RebuildSearchIndexResult, RebuildSearchIndexError>> {
     const startedAt = new Date();
-    const { live, others } = await this.searchIndexes.state();
+    const state = await search(this.searchIndexes.state());
+    if (!state.ok) return state;
+    const { live, others } = state.value;
     for (const leftover of others) {
-      await this.searchIndexes.delete(leftover);
+      const deleted = await search(this.searchIndexes.delete(leftover));
+      if (!deleted.ok) return deleted;
     }
-    const watermark = unwrap(
-      await this.elasticCaptionsSyncRepository.newestCaptionId(),
+    const watermark =
+      await this.elasticCaptionsSyncRepository.newestCaptionId();
+    if (!watermark.ok) return watermark;
+    const syncId = await this.elasticCaptionsSyncRepository.create({
+      syncStatus: "IN_PROGRESS",
+      syncStartedAt: startedAt,
+    });
+    if (!syncId.ok) return syncId;
+
+    const index = await search(this.searchIndexes.createDated(startedAt));
+    if (!index.ok) return index;
+    this.logger.info(`Rebuilding the search index into ${index.value}`);
+
+    const indexed = await this.indexSearchableCaptions(index.value, signal);
+    if (!indexed.ok) return indexed;
+
+    const sizes = await search(
+      (async () => {
+        await this.searchIndexes.refresh(index.value);
+        return {
+          newIndexSize: await this.searchIndexes.count(index.value),
+          oldIndexSize: live ? await this.searchIndexes.count(live) : null,
+        };
+      })(),
     );
-    const syncId = unwrap(
-      await this.elasticCaptionsSyncRepository.create({
-        syncStatus: "IN_PROGRESS",
-        syncStartedAt: startedAt,
-      }),
-    );
+    if (!sizes.ok) return sizes;
 
-    const index = await this.searchIndexes.createDated(startedAt);
-    this.logger.info(`Rebuilding the search index into ${index}`);
-
-    let indexed = 0;
-    let batch: CaptionToIndex[] = [];
-    const flush = async () => {
-      await this.searchIndexes.write(index, batch);
-      indexed += batch.length;
-      batch = [];
-    };
-
-    let afterId: string | null = null;
-    while (true) {
-      const videoIds: string[] = unwrap(
-        await this.elasticCaptionsSyncRepository.searchableVideoIds(
-          afterId,
-          VIDEOS_PAGE_SIZE,
-        ),
-      );
-      if (videoIds.length === 0) break;
-
-      for (const videoId of videoIds) {
-        signal.throwIfAborted();
-        const captions = unwrap(
-          await this.elasticCaptionsSyncRepository.manualCaptionsOfVideo(
-            videoId,
-          ),
-        );
-        batch.push(...captions);
-        if (batch.length >= BULK_BATCH_SIZE) await flush();
-      }
-      afterId = videoIds[videoIds.length - 1];
-      this.logger.info(`Indexed ${indexed} captions, up to video ${afterId}`);
-    }
-    if (batch.length > 0) await flush();
-
-    await this.searchIndexes.refresh(index);
-    const newIndexSize = await this.searchIndexes.count(index);
-    const oldIndexSize = live ? await this.searchIndexes.count(live) : null;
-
-    signal.throwIfAborted();
+    if (signal.aborted) return stopped(signal);
     // Recorded before the swap, so the swap is the last step that can fail the
     // run.
-    unwrap(
-      await this.elasticCaptionsSyncRepository.update(syncId, {
+    const recorded = await this.elasticCaptionsSyncRepository.update(
+      syncId.value,
+      {
         syncStatus: "SUCCESS",
         syncCompletedAt: new Date(),
-        latestSyncedCaptionId: watermark,
-      }),
+        latestSyncedCaptionId: watermark.value,
+      },
     );
-    try {
-      await this.searchIndexes.makeLive(index, live);
-    } catch (error) {
+    if (!recorded.ok) return recorded;
+    const madeLive = await search(
+      this.searchIndexes.makeLive(index.value, live),
+    );
+    if (!madeLive.ok) {
       // The old index may lack captions up to this watermark, so the
       // incremental sync goes on from the sync before this one.
-      await this.elasticCaptionsSyncRepository.update(syncId, {
+      await this.elasticCaptionsSyncRepository.update(syncId.value, {
         syncStatus: "FAIL",
       });
-      throw error;
+      return madeLive;
     }
-    this.logger.info(`Searches now run against ${index}`);
+    this.logger.info(`Searches now run against ${index.value}`);
 
     // The first time, the old index went with the request that made the new
     // one live.
@@ -127,26 +120,81 @@ export class RebuildSearchIndexUseCase {
       await this.deleteOldIndex(live);
     }
 
-    return { indexed, oldIndexSize, newIndexSize };
+    return Success({ indexed: indexed.value, ...sizes.value });
+  }
+
+  /** Writes every searchable video's manual captions to `index`, returning how many. */
+  private async indexSearchableCaptions(
+    index: string,
+    signal: AbortSignal,
+  ): Promise<Result<number, RebuildSearchIndexError>> {
+    let indexed = 0;
+    let batch: CaptionToIndex[] = [];
+    const flush = async () => {
+      const written = await search(this.searchIndexes.write(index, batch));
+      if (written.ok) {
+        indexed += batch.length;
+        batch = [];
+      }
+      return written;
+    };
+
+    let afterId: string | null = null;
+    while (true) {
+      const videoIds: Result<string[], DatabaseError> =
+        await this.elasticCaptionsSyncRepository.searchableVideoIds(
+          afterId,
+          VIDEOS_PAGE_SIZE,
+        );
+      if (!videoIds.ok) return videoIds;
+      if (videoIds.value.length === 0) break;
+
+      for (const videoId of videoIds.value) {
+        if (signal.aborted) return stopped(signal);
+        const captions =
+          await this.elasticCaptionsSyncRepository.manualCaptionsOfVideo(
+            videoId,
+          );
+        if (!captions.ok) return captions;
+        batch.push(...captions.value);
+        if (batch.length >= BULK_BATCH_SIZE) {
+          const written = await flush();
+          if (!written.ok) return written;
+        }
+      }
+      afterId = videoIds.value[videoIds.value.length - 1];
+      this.logger.info(`Indexed ${indexed} captions, up to video ${afterId}`);
+    }
+    if (batch.length > 0) {
+      const written = await flush();
+      if (!written.ok) return written;
+    }
+    return Success(indexed);
   }
 
   // The new index is live by now, so a failure here doesn't fail the run: the
   // next rebuild deletes the old index with the other leftovers.
   private async deleteOldIndex(index: string): Promise<void> {
-    try {
-      await this.searchIndexes.delete(index);
-    } catch (error) {
+    const deleted = await search(this.searchIndexes.delete(index));
+    if (!deleted.ok) {
       this.logger.error({
         message: `Failed to delete the old search index ${index}`,
-        error,
+        error: deleted.error.error,
       });
     }
   }
 }
 
-function unwrap<T>(result: Result<T, { type: string; error?: unknown }>): T {
+async function search<T>(
+  promise: Promise<T>,
+): Promise<Result<T, SearchUnavailableError>> {
+  const result = await tryCatch(promise);
   if (!result.ok) {
-    throw result.error.error ?? new Error(result.error.type);
+    return Failure({ type: "SEARCH_UNAVAILABLE", error: result.error });
   }
-  return result.value;
+  return result;
+}
+
+function stopped(signal: AbortSignal): Result<never, RebuildStoppedError> {
+  return Failure({ type: "REBUILD_STOPPED", error: signal.reason });
 }

@@ -134,7 +134,7 @@ describe("RebuildSearchIndexUseCase", () => {
     const elasticsearch = new FakeElasticsearch();
     elasticsearch.createIndex("captions", [{ id: uuid(4) }]);
 
-    const output = await buildSut(db, elasticsearch).execute();
+    const result = await buildSut(db, elasticsearch).execute();
 
     assert.deepEqual(ids(elasticsearch.documents("captions")), [
       uuid(1),
@@ -152,10 +152,9 @@ describe("RebuildSearchIndexUseCase", () => {
         channelSearchScore: 0.87,
       },
     );
-    assert.deepEqual(output, {
-      indexed: 2,
-      oldIndexSize: 1,
-      newIndexSize: 2,
+    assert.deepEqual(result, {
+      ok: true,
+      value: { indexed: 2, oldIndexSize: 1, newIndexSize: 2 },
     });
   });
 
@@ -243,8 +242,27 @@ describe("RebuildSearchIndexUseCase", () => {
     elasticsearch.createIndex("captions", [{ id: uuid(7) }]);
     elasticsearch.failWrites();
 
-    await assert.rejects(buildSut(db, elasticsearch).execute());
+    const result = await buildSut(db, elasticsearch).execute();
 
+    assert.ok(!result.ok);
+    assert.equal(result.error.type, "SEARCH_UNAVAILABLE");
+    assert.equal(elasticsearch.aliasTarget("captions"), undefined);
+    assert.deepEqual(ids(elasticsearch.documents("captions")), [uuid(7)]);
+  });
+
+  it("leaves the index searches run against as it was when its signal fires", async () => {
+    await seedChannel(db, "UC-rick");
+    await seedVideo(db, { id: "searchable1", channelId: "UC-rick" });
+    await seedCaption(db, { id: uuid(1), videoId: "searchable1" });
+    const elasticsearch = new FakeElasticsearch();
+    elasticsearch.createIndex("captions", [{ id: uuid(7) }]);
+    const controller = new AbortController();
+    controller.abort();
+
+    const result = await buildSut(db, elasticsearch).execute(controller.signal);
+
+    assert.ok(!result.ok);
+    assert.equal(result.error.type, "REBUILD_STOPPED");
     assert.equal(elasticsearch.aliasTarget("captions"), undefined);
     assert.deepEqual(ids(elasticsearch.documents("captions")), [uuid(7)]);
   });
@@ -264,8 +282,10 @@ describe("RebuildSearchIndexUseCase", () => {
       ),
     );
 
-    await assert.rejects(buildSut(db, elasticsearch).execute());
+    const result = await buildSut(db, elasticsearch).execute();
 
+    assert.ok(!result.ok);
+    assert.equal(result.error.type, "DATABASE");
     assert.equal(elasticsearch.aliasTarget("captions"), undefined);
     assert.deepEqual(ids(elasticsearch.documents("captions")), [uuid(7)]);
   });
@@ -282,8 +302,9 @@ describe("RebuildSearchIndexUseCase", () => {
     await seedCaption(db, { id: uuid(2), videoId: "searchable1" });
     elasticsearch.failAliasUpdates();
 
-    await assert.rejects(sut.execute());
+    const result = await sut.execute();
 
+    assert.ok(!result.ok);
     assert.deepEqual(await repository.getLastSuccessfulSync(), before);
   });
 
@@ -297,9 +318,9 @@ describe("RebuildSearchIndexUseCase", () => {
     const previous = elasticsearch.aliasTarget("captions");
     elasticsearch.failDeletes();
 
-    const output = await sut.execute();
+    const result = await sut.execute();
 
-    assert.equal(output.newIndexSize, 1);
+    assert.ok(result.ok);
     const live = elasticsearch.aliasTarget("captions");
     assert.notEqual(live, previous);
     assert.deepEqual(elasticsearch.indexNames(), [previous, live]);

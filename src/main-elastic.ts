@@ -35,9 +35,13 @@ async function main() {
 
   await tasks.start();
   await tasks.work(rebuildSearchIndex, (_data, signal) =>
-    searchSyncLoop.runBetweenPasses(() =>
-      rebuildSearchIndexUseCase.execute(signal),
-    ),
+    searchSyncLoop.runBetweenPasses(async () => {
+      const result = await rebuildSearchIndexUseCase.execute(signal);
+      if (!result.ok) {
+        throw result.error.error;
+      }
+      return result.value;
+    }),
   );
 
   logger.info("Elastic sync process started, running first sync...");
