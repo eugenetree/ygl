@@ -6,10 +6,12 @@ import {
   type AnyTask,
   rebuildSearchIndex,
   recalculatePriorities,
+  reprocessCaptions,
   TASKS,
 } from "../_common/tasks/task-definitions.js";
 import { Tasks } from "../_common/tasks/tasks.js";
 import { SearchIndexes } from "../captions-search/search-indexes.js";
+import { VideoRepository } from "../scraping/scrapers/video/video.repository.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
 import { TelegramController } from "./telegram-controller.js";
 
@@ -22,20 +24,24 @@ type ProgressLine = () => Promise<string>;
 
 @injectable()
 export class TasksController implements TelegramController {
-  private readonly progressLines: ReadonlyMap<string, ProgressLine> = new Map([
-    [rebuildSearchIndex.name, () => this.rebuildProgressLine()],
-  ]);
+  private readonly progressLines: ReadonlyMap<string, ProgressLine>;
 
   constructor(
     private readonly logger: Logger,
     private readonly tasks: Tasks,
+    private readonly videoRepository: VideoRepository,
     private readonly searchIndexes: SearchIndexes,
   ) {
     this.logger.setContext(TasksController.name);
+    this.progressLines = new Map([
+      [reprocessCaptions.name, () => this.videosLeftToReprocess()],
+      [rebuildSearchIndex.name, () => this.rebuildProgressLine()],
+    ]);
   }
 
   public register(bot: Telegraf): void {
     this.registerRequest(bot, "recalculate_priorities", recalculatePriorities);
+    this.registerRequest(bot, "reprocess_captions", reprocessCaptions);
     this.registerRequest(bot, "rebuild_search_index", rebuildSearchIndex);
     this.registerOverview(bot);
   }
@@ -93,6 +99,18 @@ export class TasksController implements TelegramController {
 
       await ctx.reply(formatTasksOverview(overviews, new Date()));
     });
+  }
+
+  private async videosLeftToReprocess(): Promise<string> {
+    const result = await this.videoRepository.countVideosForReprocessing();
+    if (!result.ok) {
+      this.logger.error({
+        message: "Failed to count the videos left to reprocess",
+        error: result.error.error,
+      });
+      return "Videos left: unknown, the count failed.";
+    }
+    return `Videos left: ${result.value}`;
   }
 
   private async rebuildProgressLine(): Promise<string> {

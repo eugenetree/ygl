@@ -36,6 +36,36 @@ describe("formatRunEnded()", () => {
     );
   });
 
+  it("reports a completed reprocessing run with its counts and no video ids", () => {
+    const run = runEnded(
+      {
+        outcome: "completed",
+        output: {
+          processedCount: 57_990,
+          failedCount: 10,
+          bothValidBefore: 41_200,
+          bothValidAfter: 41_203,
+          becameValid: [
+            "aaaaaaaaaaa",
+            "bbbbbbbbbbb",
+            "ccccccccccc",
+            "ddddddddddd",
+          ],
+          becameInvalid: ["eeeeeeeeeee"],
+        },
+      },
+      { task: "reprocess-captions", ranForMs: (90 * 60 + 12) * 1000 },
+    );
+
+    assert.equal(
+      formatRunEnded(run),
+      "reprocess-captions run run-1 completed in 1h 30m.\n" +
+        "Processed 57990, failed 10.\n" +
+        "Both valid before 41200, after 41203.\n" +
+        "Became valid 4, became invalid 1.",
+    );
+  });
+
   it("reports a completed rebuild with the captions indexed and both index sizes", () => {
     const run = runEnded(
       {

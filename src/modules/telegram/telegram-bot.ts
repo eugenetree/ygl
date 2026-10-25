@@ -7,7 +7,6 @@ import { FindController } from "./find.controller.js";
 import { LastVideosController } from "./last-videos.controller.js";
 import { LifecycleController } from "./lifecycle.controller.js";
 import { PushChannelController } from "./push-channel.controller.js";
-import { ReprocessCaptionsController } from "./reprocess-captions.controller.js";
 import { StatsController } from "./stats.controller.js";
 import { TasksController } from "./tasks.controller.js";
 
@@ -22,7 +21,6 @@ export class TelegramBot {
     private readonly configController: ConfigController,
     private readonly findController: FindController,
     private readonly lastVideosController: LastVideosController,
-    private readonly reprocessCaptionsController: ReprocessCaptionsController,
     private readonly pushChannelController: PushChannelController,
     private readonly tasksController: TasksController,
   ) {
@@ -67,7 +65,6 @@ export class TelegramBot {
     this.configController.register(this.bot);
     this.findController.register(this.bot);
     this.lastVideosController.register(this.bot);
-    this.reprocessCaptionsController.register(this.bot);
     this.pushChannelController.register(this.bot);
     this.tasksController.register(this.bot);
   }

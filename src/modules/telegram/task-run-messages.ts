@@ -1,8 +1,10 @@
 import {
   type RebuildSearchIndexOutput,
   type RecalculatePrioritiesOutput,
+  type ReprocessCaptionsOutput,
   rebuildSearchIndex,
   recalculatePriorities,
+  reprocessCaptions,
 } from "../_common/tasks/task-definitions.js";
 import type { RunEnded, RunError } from "../_common/tasks/tasks.js";
 import { formatDuration } from "./format-duration.js";
@@ -20,6 +22,15 @@ export function formatRunEnded(run: RunEnded): string {
     case recalculatePriorities.name: {
       const { total, failed } = run.output as RecalculatePrioritiesOutput;
       return `${completed} Recalculated ${total - failed} of ${total} channels, ${failed} failed.`;
+    }
+    case reprocessCaptions.name: {
+      const output = run.output as ReprocessCaptionsOutput;
+      return [
+        completed,
+        `Processed ${output.processedCount}, failed ${output.failedCount}.`,
+        `Both valid before ${output.bothValidBefore}, after ${output.bothValidAfter}.`,
+        `Became valid ${output.becameValid.length}, became invalid ${output.becameInvalid.length}.`,
+      ].join("\n");
     }
     case rebuildSearchIndex.name: {
       const { indexed, oldIndexSize, newIndexSize } =

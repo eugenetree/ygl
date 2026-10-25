@@ -38,6 +38,23 @@ export const recalculatePriorities = defineTask<
   expireInSeconds: 30 * 60,
 });
 
+export type ReprocessCaptionsOutput = {
+  processedCount: number;
+  failedCount: number;
+  bothValidBefore: number;
+  bothValidAfter: number;
+  becameValid: string[];
+  becameInvalid: string[];
+};
+
+export const reprocessCaptions = defineTask<
+  Record<string, never>,
+  ReprocessCaptionsOutput
+>({
+  name: "reprocess-captions",
+  expireInSeconds: 6 * 60 * 60,
+});
+
 export type RebuildSearchIndexOutput = {
   indexed: number;
   oldIndexSize: number | null;
@@ -54,5 +71,6 @@ export const rebuildSearchIndex = defineTask<
 
 export const TASKS: readonly AnyTask[] = [
   recalculatePriorities,
+  reprocessCaptions,
   rebuildSearchIndex,
 ];
