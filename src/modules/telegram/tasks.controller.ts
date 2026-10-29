@@ -1,43 +1,35 @@
 import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
+import type { DatabaseError } from "../../db/types.js";
+import type { Result } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { TASKS } from "../_common/messaging/definitions.js";
-import { type AnyTask, TaskQueue } from "../_common/messaging/task-queue.js";
+import type { AnyTask, TaskQueue } from "../_common/messaging/task-queue.js";
+import type { SearchUnavailableError } from "../captions-search/captions.service.js";
+import { GetRebuildSearchIndexStatusUseCase } from "../captions-search/get-rebuild-search-index-status.use-case.js";
 import { RequestRebuildSearchIndexUseCase } from "../captions-search/request-rebuild-search-index.use-case.js";
-import { SearchIndexes } from "../captions-search/search-indexes.js";
+import type { RebuildProgress } from "../captions-search/search-indexes.js";
+import { GetRecalculatePrioritiesStatusUseCase } from "../scraping/channel-priority/get-recalculate-priorities-status.use-case.js";
 import { RequestRecalculatePrioritiesUseCase } from "../scraping/channel-priority/request-recalculate-priorities.use-case.js";
+import { GetReprocessCaptionsStatusUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/get-reprocess-captions-status.use-case.js";
 import { RequestReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/request-reprocess-captions.use-case.js";
-import { VideoRepository } from "../scraping/scrapers/video/video.repository.js";
 import { formatCount } from "./task-run-messages.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
 import { TelegramController } from "./telegram-controller.js";
 
-/**
- * Reads a running run's progress from the data its task changes, through a
- * query in the feature module that owns that data. A query that fails says so
- * in its line rather than throwing, so `/tasks` still lists every run.
- */
-type FetchProgressLine = () => Promise<string>;
-
 @injectable()
 export class TasksController implements TelegramController {
-  private readonly progressLineFetchers: ReadonlyMap<string, FetchProgressLine>;
-
   constructor(
     private readonly logger: Logger,
     private readonly requestRecalculatePrioritiesUseCase: RequestRecalculatePrioritiesUseCase,
     private readonly requestReprocessCaptionsUseCase: RequestReprocessCaptionsUseCase,
     private readonly requestRebuildSearchIndexUseCase: RequestRebuildSearchIndexUseCase,
-    private readonly taskQueue: TaskQueue,
-    private readonly videoRepository: VideoRepository,
-    private readonly searchIndexes: SearchIndexes,
+    private readonly getRecalculatePrioritiesStatusUseCase: GetRecalculatePrioritiesStatusUseCase,
+    private readonly getReprocessCaptionsStatusUseCase: GetReprocessCaptionsStatusUseCase,
+    private readonly getRebuildSearchIndexStatusUseCase: GetRebuildSearchIndexStatusUseCase,
   ) {
     this.logger.setContext(TasksController.name);
-    this.progressLineFetchers = new Map([
-      [TASKS.REPROCESS_CAPTIONS.name, () => this.videosLeftToReprocess()],
-      [TASKS.REBUILD_SEARCH_INDEX.name, () => this.rebuildProgressLine()],
-    ]);
   }
 
   public register(bot: Telegraf): void {
@@ -102,58 +94,75 @@ export class TasksController implements TelegramController {
     bot.command("tasks", async (ctx) => {
       this.logger.info("Received /tasks command");
 
-      const tasks = Object.values(TASKS);
-      const result = await this.taskQueue.latestRuns(tasks);
-      if (!result.ok) {
-        this.logger.error({
-          message: "Failed to read the latest runs",
-          error: result.error.error,
-        });
+      const [recalculate, reprocess, rebuild] = await Promise.all([
+        this.getRecalculatePrioritiesStatusUseCase.execute(),
+        this.getReprocessCaptionsStatusUseCase.execute(),
+        this.getRebuildSearchIndexStatusUseCase.execute(),
+      ]);
+      if (!recalculate.ok || !reprocess.ok || !rebuild.ok) {
+        for (const status of [recalculate, reprocess, rebuild]) {
+          if (!status.ok) {
+            this.logger.error({
+              message: "Failed to read the latest runs",
+              error: status.error.error,
+            });
+          }
+        }
         await ctx.reply("Issue with database.");
         return;
       }
 
-      const overviews = await Promise.all(
-        tasks.map(async (task): Promise<TaskOverview> => {
-          const latestRun = result.value.find((run) => run.task === task.name);
-          const fetchProgressLine = this.progressLineFetchers.get(task.name);
-          const progress =
-            fetchProgressLine && latestRun?.state === "running"
-              ? await fetchProgressLine()
-              : undefined;
-          return { task: task.name, latestRun, progress };
-        }),
-      );
-
+      const overviews: TaskOverview[] = [
+        {
+          task: TASKS.RECALCULATE_PRIORITIES.name,
+          latestRun: recalculate.value.latestRun,
+        },
+        {
+          task: TASKS.REPROCESS_CAPTIONS.name,
+          latestRun: reprocess.value.latestRun,
+          progress:
+            reprocess.value.videosLeft &&
+            this.videosLeftLine(reprocess.value.videosLeft),
+        },
+        {
+          task: TASKS.REBUILD_SEARCH_INDEX.name,
+          latestRun: rebuild.value.latestRun,
+          progress:
+            rebuild.value.progress &&
+            this.rebuildProgressLine(rebuild.value.progress),
+        },
+      ];
       await ctx.reply(formatTasksOverview(overviews, new Date()));
     });
   }
 
-  private async videosLeftToReprocess(): Promise<string> {
-    const result = await this.videoRepository.countVideosForReprocessing();
-    if (!result.ok) {
+  // A progress read that fails says so in its line rather than failing the
+  // reply, so `/tasks` still lists every run.
+  private videosLeftLine(videosLeft: Result<number, DatabaseError>): string {
+    if (!videosLeft.ok) {
       this.logger.error({
         message: "Failed to count the videos left to reprocess",
-        error: result.error.error,
+        error: videosLeft.error.error,
       });
       return "Videos left: unknown, the count failed.";
     }
-    return `Videos left: ${result.value}`;
+    return `Videos left: ${videosLeft.value}`;
   }
 
-  private async rebuildProgressLine(): Promise<string> {
-    const result = await this.searchIndexes.rebuildProgress();
-    if (!result.ok) {
+  private rebuildProgressLine(
+    progress: Result<RebuildProgress | null, SearchUnavailableError>,
+  ): string {
+    if (!progress.ok) {
       this.logger.error({
         message: "Failed to read the rebuild's progress",
-        error: result.error.error,
+        error: progress.error.error,
       });
       return "Progress unavailable: Elasticsearch did not answer.";
     }
-    if (!result.value) {
+    if (!progress.value) {
       return "No new index yet.";
     }
-    const { indexed, liveSize } = result.value;
+    const { indexed, liveSize } = progress.value;
     const of =
       liveSize === null
         ? ""

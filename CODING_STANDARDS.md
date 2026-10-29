@@ -2,6 +2,18 @@
 
 Judgement calls a reviewer applies to a diff. Biome and `tsc` enforce the rest.
 
+## Module boundaries
+
+A transport module (`telegram/`, `api/`) reaches a feature module only through
+the feature's use cases: `TasksController` calls
+`GetReprocessCaptionsStatusUseCase`, never `VideoRepository`. The use cases are
+the feature's public API, so a Telegram command and an HTTP route asking the
+same thing run the same code. Importing a feature's types for their shape is
+fine (`RebuildProgress`). What belongs to the transport stays in it: the reply's
+wording and formatting, and `_common/` tools like `Logger`. A feature's task is
+requested and read through that feature's use cases, even though `TaskQueue`
+lives in `_common/`.
+
 ## Test files
 
 A test file sits beside the file it tests and takes its name, plus the suffix
