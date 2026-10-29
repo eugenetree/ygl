@@ -9,7 +9,11 @@ import {
   type CaptionToIndex,
   ElasticCaptionsSyncRepository,
 } from "./elastic-captions-sync.repository.js";
-import { SEARCH_INDEX, SearchIndexes } from "./search-indexes.js";
+import {
+  BULK_BATCH_SIZE,
+  SEARCH_INDEX,
+  SearchIndexes,
+} from "./search-indexes.js";
 
 export type RebuildSearchIndexResult = {
   indexed: number;
@@ -31,9 +35,6 @@ export type RebuildSearchIndexOptions = {
 };
 
 const VIDEOS_PAGE_SIZE = 1000;
-// About 1,000 × 350 bytes ≈ 0.35 MB per request, far under the 10% of a
-// 512 MB heap Elasticsearch lets in-flight writes take, so searches keep room.
-const BULK_BATCH_SIZE = 1000;
 
 @injectable()
 export class RebuildSearchIndexUseCase {
