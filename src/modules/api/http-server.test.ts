@@ -104,7 +104,9 @@ function stubAuth(
     auth.api,
     "getSession",
     async ({ headers }: { headers: Headers }) => ({
-      headers: new Headers(cookies.map((cookie) => ["set-cookie", cookie])),
+      headers: new Headers(
+        cookies.map((cookie): [string, string] => ["set-cookie", cookie]),
+      ),
       response: headers.get("cookie") === SESSION_COOKIE ? session : null,
     }),
   );
