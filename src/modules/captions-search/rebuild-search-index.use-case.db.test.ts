@@ -36,15 +36,6 @@ describe("RebuildSearchIndexUseCase", () => {
 
   it("indexes only the manual captions of searchable videos, dropping the rest", async () => {
     await seedChannel(db, "UC-rick");
-    await db
-      .insertInto("channelPriorityScores")
-      .values({
-        channelId: "UC-rick",
-        scrapingScore: 0.5,
-        searchScore: 0.87,
-        components: {},
-      })
-      .execute();
     await seedVideo(db, { id: "searchable1", channelId: "UC-rick" });
     await seedVideo(db, {
       id: "lowsimilary",
@@ -74,21 +65,79 @@ describe("RebuildSearchIndexUseCase", () => {
       uuid(1),
       uuid(2),
     ]);
-    const [{ videoId, startTime, endTime, text, channelSearchScore }] =
-      elasticsearch.documents("captions");
-    assert.deepEqual(
-      { videoId, startTime, endTime, text, channelSearchScore },
-      {
-        videoId: "searchable1",
-        startTime: 2500,
-        endTime: 4200,
-        text: `caption ${uuid(1)}`,
-        channelSearchScore: 0.87,
-      },
-    );
     assert.deepEqual(result, {
       ok: true,
       value: { indexed: 2, oldIndexSize: 1, newIndexSize: 2 },
+    });
+  });
+
+  it("writes each caption with its features and its video's channel", async () => {
+    await seedChannel(db, "UC-rick");
+    await seedChannel(db, "UC-tame");
+    await seedVideo(db, { id: "rickroll001", channelId: "UC-rick" });
+    await seedVideo(db, { id: "letitallhap", channelId: "UC-tame" });
+    await seedCaption(db, {
+      id: uuid(1),
+      videoId: "rickroll001",
+      text: "Never gonna give you up.",
+    });
+    await seedCaption(db, {
+      id: uuid(2),
+      videoId: "letitallhap",
+      text: "let it happen",
+    });
+    const elasticsearch = new FakeElasticsearch();
+
+    await buildSut(db, elasticsearch).execute();
+
+    assert.deepEqual(elasticsearch.documents("captions"), [
+      {
+        id: uuid(1),
+        videoId: "rickroll001",
+        channelId: "UC-rick",
+        startTime: 2500,
+        endTime: 4200,
+        text: "Never gonna give you up.",
+        wordCount: 5,
+        startsSentence: true,
+        endsSentence: true,
+      },
+      {
+        id: uuid(2),
+        videoId: "letitallhap",
+        channelId: "UC-tame",
+        startTime: 2500,
+        endTime: 4200,
+        text: "let it happen",
+        wordCount: 3,
+        startsSentence: false,
+        endsSentence: false,
+      },
+    ]);
+  });
+
+  it("creates the new index with one shard, no replicas and a strict mapping of the document", async () => {
+    const elasticsearch = new FakeElasticsearch();
+
+    await buildSut(db, elasticsearch).execute();
+
+    const live = elasticsearch.aliasTarget("captions") ?? "";
+    assert.deepEqual(elasticsearch.createdWith(live), {
+      settings: { number_of_shards: 1, number_of_replicas: 0 },
+      mappings: {
+        dynamic: "strict",
+        properties: {
+          id: { type: "keyword" },
+          videoId: { type: "keyword" },
+          channelId: { type: "keyword" },
+          startTime: { type: "long" },
+          endTime: { type: "long" },
+          text: { type: "text", analyzer: "standard", norms: false },
+          wordCount: { type: "short" },
+          startsSentence: { type: "boolean" },
+          endsSentence: { type: "boolean" },
+        },
+      },
     });
   });
 

@@ -15,7 +15,19 @@ import {
   ElasticCaptionsSyncProps,
 } from "./elastic-captions-sync.js";
 
-export type CaptionToIndex = CaptionRow & { channelSearchScore: number | null };
+export type CaptionToIndex = Pick<
+  CaptionRow,
+  "id" | "videoId" | "startTime" | "endTime" | "text"
+> & { channelId: string };
+
+const CAPTION_TO_INDEX_COLUMNS = [
+  "captions.id",
+  "captions.videoId",
+  "captions.startTime",
+  "captions.endTime",
+  "captions.text",
+  "videos.channelId",
+] as const;
 
 function isSearchable(eb: ExpressionBuilder<Database, "videos">) {
   return eb.and([
@@ -93,15 +105,9 @@ export class ElasticCaptionsSyncRepository {
     let query = this.db
       .selectFrom("captions")
       .innerJoin("videos", "videos.id", "captions.videoId")
-      .leftJoin(
-        "channelPriorityScores",
-        "channelPriorityScores.channelId",
-        "videos.channelId",
-      )
       .where("captions.type", "=", "manual")
       .where(isSearchable)
-      .selectAll("captions")
-      .select("channelPriorityScores.searchScore as channelSearchScore")
+      .select(CAPTION_TO_INDEX_COLUMNS)
       .orderBy("captions.createdAt", "asc");
 
     if (lastSyncedCaptionId) {
@@ -174,15 +180,9 @@ export class ElasticCaptionsSyncRepository {
       this.db
         .selectFrom("captions")
         .innerJoin("videos", "videos.id", "captions.videoId")
-        .leftJoin(
-          "channelPriorityScores",
-          "channelPriorityScores.channelId",
-          "videos.channelId",
-        )
         .where("captions.videoId", "=", videoId)
         .where("captions.type", "=", "manual")
-        .selectAll("captions")
-        .select("channelPriorityScores.searchScore as channelSearchScore")
+        .select(CAPTION_TO_INDEX_COLUMNS)
         .execute(),
     );
 

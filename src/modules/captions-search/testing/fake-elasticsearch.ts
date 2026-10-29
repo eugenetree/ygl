@@ -9,6 +9,8 @@ type AliasAction =
 
 type BulkOperation = { index: { _id: string } } | Document;
 
+type IndexDefinition = { settings?: object; mappings?: object };
+
 /**
  * An in-memory stand-in for the part of Elasticsearch the search index uses:
  * indices holding documents by id, and aliases naming one index each.
@@ -16,6 +18,7 @@ type BulkOperation = { index: { _id: string } } | Document;
 export class FakeElasticsearch {
   private readonly indices = new Map<string, Map<string, Document>>();
   private readonly aliases = new Map<string, string>();
+  private readonly definitions = new Map<string, IndexDefinition>();
   private failingWrites = false;
   private failingDeletes = false;
   private failingAliasUpdates = false;
@@ -25,11 +28,20 @@ export class FakeElasticsearch {
 
   readonly client = {
     indices: {
-      create: async ({ index }: { index: string }) => {
+      create: async ({
+        index,
+        settings,
+        mappings,
+      }: {
+        index: string;
+        settings?: object;
+        mappings?: object;
+      }) => {
         if (this.indices.has(index) || this.aliases.has(index)) {
           throw new Error(`resource_already_exists_exception: ${index}`);
         }
         this.indices.set(index, new Map());
+        this.definitions.set(index, { settings, mappings });
         return { acknowledged: true, index };
       },
       delete: async ({ index }: { index: string }) => {
@@ -173,6 +185,11 @@ export class FakeElasticsearch {
   /** The index an alias points at, or undefined when it isn't an alias. */
   aliasTarget(alias: string): string | undefined {
     return this.aliases.get(alias);
+  }
+
+  /** The settings and mappings an index was created with. */
+  createdWith(index: string): IndexDefinition | undefined {
+    return this.definitions.get(index);
   }
 
   /** The documents an index or alias holds, by id. */

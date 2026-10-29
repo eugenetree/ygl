@@ -5,10 +5,11 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { tryCatch } from "../_common/try-catch.js";
 import type { SearchUnavailableError } from "./captions.service.js";
+import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 import {
-  type CaptionToIndex,
-  ElasticCaptionsSyncRepository,
-} from "./elastic-captions-sync.repository.js";
+  type SearchIndexDocument,
+  toSearchIndexDocument,
+} from "./search-index-document.js";
 import {
   BULK_BATCH_SIZE,
   SEARCH_INDEX,
@@ -130,7 +131,7 @@ export class RebuildSearchIndexUseCase {
     signal: AbortSignal,
   ): Promise<Result<number, RebuildSearchIndexError>> {
     let indexed = 0;
-    let batch: CaptionToIndex[] = [];
+    let batch: SearchIndexDocument[] = [];
     const flush = async () => {
       const written = await search(this.searchIndexes.write(index, batch));
       if (written.ok) {
@@ -157,7 +158,11 @@ export class RebuildSearchIndexUseCase {
             videoId,
           );
         if (!captions.ok) return captions;
-        batch.push(...captions.value);
+        batch.push(
+          ...captions.value.map((caption) =>
+            toSearchIndexDocument(caption, caption.channelId),
+          ),
+        );
         if (batch.length >= BULK_BATCH_SIZE) {
           const written = await flush();
           if (!written.ok) return written;

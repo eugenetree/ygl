@@ -60,20 +60,59 @@ describe("SyncDataToElasticUseCase", () => {
       uuid(2),
       uuid(3),
     ]);
-    const [, { videoId, startTime, endTime, text }] =
-      elasticsearch.documents("captions");
-    assert.deepEqual(
-      { videoId, startTime, endTime, text },
-      {
-        videoId: "searchable1",
-        startTime: 2500,
-        endTime: 4200,
-        text: `caption ${uuid(2)}`,
-      },
-    );
     const lastSync = await repository.getLastSuccessfulSync();
     assert.ok(lastSync.ok);
     assert.equal(lastSync.value?.latestSyncedCaptionId, uuid(3));
+  });
+
+  it("writes each new caption with its features and its video's channel", async () => {
+    await seedChannel(db, "UC-rick");
+    await seedChannel(db, "UC-tame");
+    await seedVideo(db, { id: "rickroll001", channelId: "UC-rick" });
+    await seedVideo(db, { id: "letitallhap", channelId: "UC-tame" });
+    await seedCaption(db, { id: uuid(1), videoId: "rickroll001" });
+    const elasticsearch = new FakeElasticsearch();
+    elasticsearch.createIndex("captions");
+    const sut = buildSut(db, elasticsearch);
+    await sut.execute();
+    await seedCaption(db, {
+      id: uuid(2),
+      videoId: "rickroll001",
+      text: "Never gonna give you up.",
+    });
+    await seedCaption(db, {
+      id: uuid(3),
+      videoId: "letitallhap",
+      text: "let it happen",
+    });
+
+    await sut.execute();
+
+    const [, ...written] = elasticsearch.documents("captions");
+    assert.deepEqual(written, [
+      {
+        id: uuid(2),
+        videoId: "rickroll001",
+        channelId: "UC-rick",
+        startTime: 2500,
+        endTime: 4200,
+        text: "Never gonna give you up.",
+        wordCount: 5,
+        startsSentence: true,
+        endsSentence: true,
+      },
+      {
+        id: uuid(3),
+        videoId: "letitallhap",
+        channelId: "UC-tame",
+        startTime: 2500,
+        endTime: 4200,
+        text: "let it happen",
+        wordCount: 3,
+        startsSentence: false,
+        endsSentence: false,
+      },
+    ]);
   });
 
   it("leaves creating the search index to the rebuild", async () => {
