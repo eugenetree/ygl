@@ -11,11 +11,14 @@ class JsonFromHtmlExtractor {
       });
     }
 
-    const pattern =
-      /<script[^>]*>\s*var\s+ytInitialData\s*=\s*(\{.*?\});\s*<\/script>/;
+    const patterns = [
+      /<script[^>]*\bid="yt-initial-data"[^>]*>(\{.*?\})<\/script>/,
+      /<script[^>]*>\s*var\s+ytInitialData\s*=\s*(\{.*?\});\s*<\/script>/,
+    ];
 
-    const match = html.match(pattern);
-    const jsonString = match?.[1];
+    const jsonString = patterns
+      .map((pattern) => html.match(pattern)?.[1])
+      .find((match) => match !== undefined);
 
     if (!jsonString) {
       return Failure({
