@@ -20,7 +20,6 @@ import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { RawDataStore } from "./modules/youtube-api/raw-data-store.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
 import { YtDlpResponseRecorder } from "./modules/youtube-api/yt-dlp-response-recorder.js";
-import { Success } from "./types/index.js";
 
 async function main() {
   const container = new Container({ autobind: true });
@@ -86,8 +85,8 @@ async function main() {
   scraperHeartbeat.start();
   channelPriorityScheduler.start();
   await messagingConnection.start();
-  await taskQueue.work(TASKS.RECALCULATE_PRIORITIES, async () =>
-    Success(await recalculateAllPrioritiesUseCase.execute()),
+  await taskQueue.work(TASKS.RECALCULATE_PRIORITIES, (signal) =>
+    recalculateAllPrioritiesUseCase.execute(signal),
   );
   await taskQueue.work(TASKS.REPROCESS_CAPTIONS, (signal) =>
     reprocessCaptionsUseCase.execute(signal),
