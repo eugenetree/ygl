@@ -16,7 +16,7 @@ from 02.
 
 **Blocked by:** 03 — The search index stores documents of the new shape
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The transcript lookup returns a video's captions in spoken order, and
       none of other videos', against a real Elasticsearch.
