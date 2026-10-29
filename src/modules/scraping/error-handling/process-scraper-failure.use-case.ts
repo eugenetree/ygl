@@ -6,6 +6,8 @@ import { Logger } from "../../_common/logger/logger.js";
 import { TelegramNotifier } from "../../telegram/telegram-notifier.js";
 import { ScraperName } from "../constants.js";
 
+const MAX_MESSAGE_LENGTH = 200;
+
 @injectable()
 export class ProcessScraperFailureUseCase {
   constructor(
@@ -39,6 +41,7 @@ export class ProcessScraperFailureUseCase {
 
   private formatMessage(scraperName: string, error: BaseError): string {
     const details = JSON.stringify(error, null, 2);
-    return `Scraper failure: ${scraperName}\n\nError type: ${error.type}\nDetails:\n${details}`;
+    const message = `Scraper failure: ${scraperName}\n\nError type: ${error.type}\nDetails:\n${details}`;
+    return message.slice(0, MAX_MESSAGE_LENGTH);
   }
 }

@@ -57,6 +57,22 @@ describe("ProcessScraperFailureUseCase", () => {
     assert.ok(message.includes("DATABASE"));
   });
 
+  it("keeps the message within 200 characters when the error is large", async () => {
+    const error = {
+      type: "PARSING_ERROR" as const,
+      message: "Could not find JSON data in the HTML",
+      context: { html: "<html>".padEnd(2_000_000, "x") },
+    };
+
+    await sut.execute({ scraperName: "CHANNEL", error });
+
+    const message =
+      mocks.telegramNotificationService.sendMessage.mock.calls[0]!.arguments[0];
+    assert.ok(message.length <= 200);
+    assert.ok(message.includes("CHANNEL"));
+    assert.ok(message.includes("PARSING_ERROR"));
+  });
+
   it("returns Success even when Telegram delivery fails", async () => {
     mocks.telegramNotificationService.sendMessage.mock.mockImplementation(() =>
       Promise.resolve(
