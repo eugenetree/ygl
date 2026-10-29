@@ -3,9 +3,9 @@
 Tasks (reprocessing captions, recalculating priorities, rebuilding the search
 index) are requested from the Telegram bot and worked by the process that owns
 the data they change: reprocessing and priorities by the scraper, the rebuild by
-the search sync. They go through pg-boss, wrapped by `_common/tasks/tasks.ts`,
-the only file that imports it. Scraping jobs stay in our own tables. Two queue
-mechanisms side by side is deliberate.
+the search sync. They go through pg-boss, wrapped by the `_common/messaging/`
+module, the only code that uses it. Scraping jobs stay in our own tables. Two
+queue mechanisms side by side is deliberate.
 
 ## Why
 
@@ -43,6 +43,21 @@ mechanisms side by side is deliberate.
 - Every stop of a run, including a deploy, fails it: no automatic retries. A
   failed reprocessing run, requested again, continues where it stopped.
 - pg-boss keeps finished runs for 7 days. A longer history would be a
-  `task_runs` table subscribed to the "run ended" event.
+  `task_runs` table subscribed to the "run completed" and "run failed" events.
 - Progress is read from the data each task changes, never reported by the
   worker, so `/tasks` stays accurate when a worker is stuck.
+- The module offers two interfaces split by concept, `TaskQueue` (request,
+  work, read runs) and `EventBus` (publish, subscribe), on one pg-boss instance
+  per process that `MessagingConnection` starts and stops. Events aren't tied
+  to tasks: the scraper's status is next to move onto them. Everything
+  subscribes through `EventBus`, a task's completed event too. Splitting by
+  role instead (broker, queue, worker, publisher, subscriber) was tried and
+  dropped: every class reached into the same pg-boss instance, and the tests
+  had to assemble them again.
+- A subscriber names itself as a consumer and gets its own copy of every event;
+  consumers sharing a name would take events from each other. A queue is
+  created by whoever reads it, on first use, and kept from then on: a
+  subscriber's by its first `subscribe`, so it doesn't get what was published
+  before that, and a task's by its first `work`, so it can't be requested
+  before its worker has started once. Declaring every queue up front, for every
+  process to create, was tried and dropped: it guarded only that first deploy.

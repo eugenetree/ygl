@@ -41,7 +41,7 @@ A kind of work requested on demand that runs once to completion, such as reproce
 _Avoid_: Job (a scraping queue item), command (the Telegram message that requests a task), migration (deploy-time changes)
 
 **Run**:
-One occurrence of a task: when it was requested, when it started and ended, and how it ended.
+One occurrence of a task: when it was requested, when it started and ended, and how it ended. A run ends completed or failed; a worker that stopped responding, a timeout or a shutdown fails it, and a failed run is never retried.
 _Avoid_: Execution, instance, job
 
 ### Videos

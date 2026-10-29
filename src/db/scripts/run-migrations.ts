@@ -1,4 +1,4 @@
-import { installTaskSchema } from "../../modules/_common/tasks/tasks.js";
+import { installMessagingSchema } from "../../modules/_common/messaging/messaging-schema.js";
 import { connectionConfigFromEnv, dbClient } from "../client.js";
 import { migrateToLatest } from "../migrator.js";
 
@@ -22,7 +22,7 @@ async function runMigrations() {
   await dbClient.destroy();
 
   try {
-    await installTaskSchema(connectionConfigFromEnv());
+    await installMessagingSchema(connectionConfigFromEnv());
     console.log("task schema is up to date");
   } catch (error) {
     console.error("failed to install the task schema");

@@ -167,29 +167,58 @@ Postgres (ADR 0015).
   a task is a queue and a run is a job in that queue; pg-boss's words stay
   inside the wrapper.
 
-### The tasks module
+### The messaging module
 
-- A new module in the shared common area holds two things:
-  - **The wrapper**, the only importer of pg-boss. Its surface, roughly:
+- A new module in the shared common area, `_common/messaging/`, holds two
+  things:
+  - **The wrapper**, the only code that uses pg-boss: two interfaces split by
+    concept, started together on one pg-boss instance per process. Its
+    surface, roughly:
 
     ```ts
-    start(): Promise<void>            // connect, check the schema, create every task's queue
-    stop(): Promise<void>
-    request(task, data): Promise<Result<RunId, AlreadyRunning | DatabaseError>>
-    work(task, handler: (data, signal: AbortSignal) => Promise<output>): Promise<void>
-    onRunEnded(handler: (event: RunEnded) => Promise<void>): Promise<void>
-    latestRuns(): Promise<LatestRun[]>  // one entry per task: state, requested, started, ended
+    MessagingConnection.start(): Promise<void>   // connect, check the schema, relay failed runs
+    MessagingConnection.stop(): Promise<void>
+    TaskQueue.request(task): Promise<Result<RunId, AlreadyRunning | NotSetUp | DatabaseError>>
+    TaskQueue.latestRuns(tasks): Promise<Result<LatestRun[], DatabaseError>>
+    TaskQueue.work(task, handler: (signal: AbortSignal) => Promise<Result<output, error>>): Promise<void>
+    EventBus.publish(event, payload): Promise<void>
+    EventBus.subscribe(event, consumer, handler: (payload) => Promise<Result<void, error>>): Promise<void>
     ```
 
-  - **The task constants**: each task's name, queue settings and payload type,
-    as plain data with no imports from feature modules.
-- `start()` creates every task's queue from the constants, so whichever process
-  starts first creates them, with the same settings everywhere.
+    Every entry point binds `MessagingConnection` as a singleton, so the
+    process's `EventBus` and `TaskQueue` share its pg-boss instance.
+    `TaskQueue` publishes its runs' events through `EventBus`; nothing else
+    publishes yet. The guarantees each interface makes, which a replacement for
+    pg-boss would have to keep, are written on `TaskQueue` and `EventBus`, next
+    to the queue settings that keep them.
+
+  - **The task constants**: each task's name, queue settings and completed
+    event, as plain data with no imports from feature modules. No task takes
+    data yet, so a request carries none; the first that does gets a schema for
+    it, like the events.
+  - **The event constants** (`EVENTS`): one "run completed" event per task
+    and one `TASK_RUN_FAILED` for every task, each a name and a zod schema.
+    The subscriber parses every payload with its event's schema, which also
+    turns its dates back into `Date`s, and drops one that doesn't match with
+    an error logged: the publisher and the subscriber are deployed separately.
+    Each task names its completed event, and the types check that the event's
+    output is the task's.
+- A subscriber names itself as a consumer (`telegram`) and gets its own copy of
+  every event; consumers sharing a name would take events from each other. Its
+  queue is created by its first `subscribe`, so it doesn't get what was
+  published before that, and is kept from then on.
+- A task's queue is created by its first `work`, with the task's settings, so
+  the process that works a task sets its queue up. Until a worker of it has
+  started once, a request for it is refused with `NotSetUp`.
 - Every process that uses tasks (scraper, search sync, bot) calls `start()` once
   at boot and `stop()` on shutdown, explicitly, beside its heartbeat, scheduler
   and listeners. `request` and `work` never start pg-boss themselves.
-- Each process's entry point connects `work(task, …)` to the feature use case.
-  Feature modules never import the tasks module.
+- Each process's entry point connects `work(task, …)` to the feature use case,
+  so the use case that does a task's work never imports the messaging module.
+  Requesting a task is the feature's own use case too
+  (`RequestReprocessCaptionsUseCase`, …), which the bot's controller calls
+  like any other: it imports only `TaskQueue` and `TASKS`, never the worker's
+  use case.
 
 ### Queue settings
 
@@ -206,14 +235,24 @@ Postgres (ADR 0015).
 
 ### Runs ending
 
-- When a handler returns or throws, the wrapper publishes a `task-run-ended`
-  event through pg-boss's publish/subscribe: task, run id, outcome
-  (`completed` or `failed`), requested, started and ended times, and the output
-  or the error.
-- The handler's return value is the run's stored output.
-- The bot subscribes through `onRunEnded`, formats a message per task, and sends
-  it to the operator's chat. Runs from the dead-letter queue are reported the
-  same way, as "worker stopped responding".
+- When a handler succeeds, the wrapper publishes the task's "run completed"
+  event (`reprocess-captions-run-completed`, …) through pg-boss's
+  publish/subscribe: task, run id, requested, started and ended times, and the
+  output. If publishing fails, the run still completes and the failure is
+  logged: failing it would report finished work as failed.
+- When a handler fails, the wrapper throws, and pg-boss fails the run and copies
+  it to the dead-letter queue, as it does for a worker that died, a run past
+  its expiry and a run stopped by a shutdown. A relay in every process that
+  starts messaging publishes each one as `task-run-failed`, with the error.
+  Every failed run reaches the bot this way. Delivery is at least once: a
+  process that dies between publishing and recording the run can report it
+  twice.
+- The handler's success value is the run's stored output.
+- The bot subscribes to each task's completed event with that task's use case,
+  and to `task-run-failed` with one use case for every task, all as the
+  `telegram` consumer. Each formats a
+  message and sends it to the operator's chat. A `Failure` from it delivers
+  the event again later.
 - Subscriptions are durable queues, so an event published while the bot is down
   is delivered when it comes back.
 
@@ -223,8 +262,8 @@ Postgres (ADR 0015).
   `/reprocess_captions`, `/recalculate_priorities`, `/rebuild_search_index` and
   `/tasks`. The old `/resync_captions` and `/recalculate_priority` are removed
   from the handlers and from the synced command list, with no aliases.
-- A request command makes one `request` call and replies with the run id, or
-  "already running".
+- A request command calls its feature's request use case and replies with the
+  run id, or "already running".
 - `/tasks` combines `latestRuns()` with each task's progress query.
 - Reading stays inline in the bot: `/stats`, `/find` and `/last` are unchanged.
 
@@ -294,19 +333,21 @@ Postgres (ADR 0015).
   consumer would see: what a request returns, what a subscriber receives, what
   the search index ends up holding. It never spies on internals or reads
   pg-boss's tables.
-- **The tasks wrapper**, against real Postgres through the existing
+- **The messaging wrapper**, against real Postgres through the existing
   per-suite test database. The pg-boss schema arrives through the migrations,
   like the rest of the schema. Monitoring and heartbeat intervals are
   shortened so tests finish in seconds. It covers:
   - `request` returning a run id, and a second request while one is queued or
     running coming back `AlreadyRunning`;
-  - a handler's return producing a `task-run-ended` event with outcome
-    `completed` and the output, checked by subscribing through `onRunEnded`
-    exactly as the bot does and awaiting the event, with a timeout;
-  - a handler's throw producing outcome `failed` with the error;
+  - a handler's return producing the task's completed event with the output,
+    checked by subscribing exactly as the bot does and awaiting the event, with
+    a timeout;
+  - a handler's failure producing `task-run-failed` with the error;
   - a worker that stops heartbeating leaving its run failed and reported
     through the dead-letter queue;
-  - `latestRuns` returning the latest run of each task.
+  - `latestRuns` returning the latest run of each task;
+  - two consumers of one event each getting their own copy, and a consumer not
+    getting what was published before its first subscribe.
   - Prior art: the queue database tests (video entries, channels) and the push
     channel use case database test.
 - **The rebuild search index use case**, against real Postgres and a fake
@@ -332,7 +373,7 @@ Postgres (ADR 0015).
   rebuild is no longer needed after reprocessing.
 - **Moving scraping jobs onto pg-boss** (ADR 0015).
 - **A run history beyond 7 days.** It would be a `task_runs` table subscribed to
-  `task-run-ended`.
+  the completed and failed events.
 - **Requesting reprocessing automatically** when the captions processing
   algorithm version changes.
 - **Rules between tasks**, such as chaining or blocking. The operator keeps the

@@ -4,11 +4,9 @@ import { Container } from "inversify";
 import { DatabaseClient } from "./db/client.js";
 import { HttpClient, httpClient } from "./modules/_common/http/index.js";
 import { Logger } from "./modules/_common/logger/logger.js";
-import {
-  recalculatePriorities,
-  reprocessCaptions,
-} from "./modules/_common/tasks/task-definitions.js";
-import { Tasks } from "./modules/_common/tasks/tasks.js";
+import { TASKS } from "./modules/_common/messaging/definitions.js";
+import { MessagingConnection } from "./modules/_common/messaging/messaging-connection.js";
+import { TaskQueue } from "./modules/_common/messaging/task-queue.js";
 import { ChannelPriorityScheduler } from "./modules/scraping/channel-priority/channel-priority.scheduler.js";
 import { RecalculateAllPrioritiesUseCase } from "./modules/scraping/channel-priority/recalculate-all-priorities.use-case.js";
 import { ScraperCommandListener } from "./modules/scraping/lifecycle/scraper-command.listener.js";
@@ -22,6 +20,7 @@ import { TelegramNotifier } from "./modules/telegram/telegram-notifier.js";
 import { RawDataStore } from "./modules/youtube-api/raw-data-store.js";
 import { YtDlpClient } from "./modules/youtube-api/yt-dlp-client.js";
 import { YtDlpResponseRecorder } from "./modules/youtube-api/yt-dlp-response-recorder.js";
+import { Success } from "./types/index.js";
 
 async function main() {
   const container = new Container({ autobind: true });
@@ -36,7 +35,7 @@ async function main() {
   container.bind(RawDataStore).toSelf().inSingletonScope();
   container.bind(DatabaseClient).toSelf().inSingletonScope();
   container.bind(ScraperOrchestrator).toSelf().inSingletonScope();
-  container.bind(Tasks).toSelf().inSingletonScope();
+  container.bind(MessagingConnection).toSelf().inSingletonScope();
 
   const logger = container.get(Logger);
   const ytDlpClient = container.get(YtDlpClient);
@@ -48,7 +47,8 @@ async function main() {
   const scraperHeartbeat = container.get(ScraperHeartbeat);
   const channelPriorityScheduler = container.get(ChannelPriorityScheduler);
   const telegramNotifier = container.get(TelegramNotifier);
-  const tasks = container.get(Tasks);
+  const messagingConnection = container.get(MessagingConnection);
+  const taskQueue = container.get(TaskQueue);
   const recalculateAllPrioritiesUseCase = container.get(
     RecalculateAllPrioritiesUseCase,
   );
@@ -59,7 +59,7 @@ async function main() {
     channelPriorityScheduler.stop();
     await scraperOrchestrator.stop();
     await scraperCommandListener.stop();
-    await tasks.stop();
+    await messagingConnection.stop();
 
     const currentStatus = await scraperStatusService.getRequestedStatus();
     if (!currentStatus.ok) {
@@ -85,17 +85,13 @@ async function main() {
   await seeder.seedIfNeeded();
   scraperHeartbeat.start();
   channelPriorityScheduler.start();
-  await tasks.start();
-  await tasks.work(recalculatePriorities, () =>
-    recalculateAllPrioritiesUseCase.execute(),
+  await messagingConnection.start();
+  await taskQueue.work(TASKS.RECALCULATE_PRIORITIES, async () =>
+    Success(await recalculateAllPrioritiesUseCase.execute()),
   );
-  await tasks.work(reprocessCaptions, async (_data, signal) => {
-    const result = await reprocessCaptionsUseCase.execute(signal);
-    if (!result.ok) {
-      throw result.error.error;
-    }
-    return result.value;
-  });
+  await taskQueue.work(TASKS.REPROCESS_CAPTIONS, (signal) =>
+    reprocessCaptionsUseCase.execute(signal),
+  );
 
   // Reconcile status on startup — process may have crashed with stale RUNNING state
   await scraperStatusService.updateStatus({ actual: "STOPPED" });

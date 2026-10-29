@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import type { LatestRun } from "../_common/tasks/tasks.js";
+import type { LatestRun } from "../_common/messaging/task-queue.js";
 import { formatTasksOverview } from "./tasks-overview.js";
 
 // ---- Fixtures ---------------------------------------------------------------

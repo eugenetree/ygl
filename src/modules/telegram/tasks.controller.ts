@@ -2,15 +2,12 @@ import { injectable } from "inversify";
 import { Telegraf } from "telegraf";
 
 import { Logger } from "../_common/logger/logger.js";
-import {
-  type AnyTask,
-  rebuildSearchIndex,
-  recalculatePriorities,
-  reprocessCaptions,
-  TASKS,
-} from "../_common/tasks/task-definitions.js";
-import { Tasks } from "../_common/tasks/tasks.js";
+import { TASKS } from "../_common/messaging/definitions.js";
+import { type AnyTask, TaskQueue } from "../_common/messaging/task-queue.js";
+import { RequestRebuildSearchIndexUseCase } from "../captions-search/request-rebuild-search-index.use-case.js";
 import { SearchIndexes } from "../captions-search/search-indexes.js";
+import { RequestRecalculatePrioritiesUseCase } from "../scraping/channel-priority/request-recalculate-priorities.use-case.js";
+import { RequestReprocessCaptionsUseCase } from "../scraping/scrapers/video/use-cases/reprocess-captions/request-reprocess-captions.use-case.js";
 import { VideoRepository } from "../scraping/scrapers/video/video.repository.js";
 import { formatCount } from "./task-run-messages.js";
 import { formatTasksOverview, type TaskOverview } from "./tasks-overview.js";
@@ -29,33 +26,62 @@ export class TasksController implements TelegramController {
 
   constructor(
     private readonly logger: Logger,
-    private readonly tasks: Tasks,
+    private readonly requestRecalculatePrioritiesUseCase: RequestRecalculatePrioritiesUseCase,
+    private readonly requestReprocessCaptionsUseCase: RequestReprocessCaptionsUseCase,
+    private readonly requestRebuildSearchIndexUseCase: RequestRebuildSearchIndexUseCase,
+    private readonly taskQueue: TaskQueue,
     private readonly videoRepository: VideoRepository,
     private readonly searchIndexes: SearchIndexes,
   ) {
     this.logger.setContext(TasksController.name);
     this.progressLineFetchers = new Map([
-      [reprocessCaptions.name, () => this.videosLeftToReprocess()],
-      [rebuildSearchIndex.name, () => this.rebuildProgressLine()],
+      [TASKS.REPROCESS_CAPTIONS.name, () => this.videosLeftToReprocess()],
+      [TASKS.REBUILD_SEARCH_INDEX.name, () => this.rebuildProgressLine()],
     ]);
   }
 
   public register(bot: Telegraf): void {
-    this.registerRequest(bot, "recalculate_priorities", recalculatePriorities);
-    this.registerRequest(bot, "reprocess_captions", reprocessCaptions);
-    this.registerRequest(bot, "rebuild_search_index", rebuildSearchIndex);
+    this.registerRequest(
+      bot,
+      "recalculate_priorities",
+      TASKS.RECALCULATE_PRIORITIES,
+      () => this.requestRecalculatePrioritiesUseCase.execute(),
+    );
+    this.registerRequest(
+      bot,
+      "reprocess_captions",
+      TASKS.REPROCESS_CAPTIONS,
+      () => this.requestReprocessCaptionsUseCase.execute(),
+    );
+    this.registerRequest(
+      bot,
+      "rebuild_search_index",
+      TASKS.REBUILD_SEARCH_INDEX,
+      () => this.requestRebuildSearchIndexUseCase.execute(),
+    );
     this.registerOverview(bot);
   }
 
-  private registerRequest(bot: Telegraf, command: string, task: AnyTask): void {
+  private registerRequest(
+    bot: Telegraf,
+    command: string,
+    task: AnyTask,
+    request: () => ReturnType<TaskQueue["request"]>,
+  ): void {
     bot.command(command, async (ctx) => {
       this.logger.info(`Received /${command} command`);
 
-      const result = await this.tasks.request(task, {});
+      const result = await request();
       if (!result.ok) {
         switch (result.error.type) {
           case "TASK_ALREADY_RUNNING":
             await ctx.reply(`${task.name} is already running.`);
+            return;
+
+          case "TASK_NOT_SET_UP":
+            await ctx.reply(
+              `${task.name} can't be requested until its worker has started once.`,
+            );
             return;
 
           case "DATABASE":
@@ -76,7 +102,8 @@ export class TasksController implements TelegramController {
     bot.command("tasks", async (ctx) => {
       this.logger.info("Received /tasks command");
 
-      const result = await this.tasks.latestRuns();
+      const tasks = Object.values(TASKS);
+      const result = await this.taskQueue.latestRuns(tasks);
       if (!result.ok) {
         this.logger.error({
           message: "Failed to read the latest runs",
@@ -87,7 +114,7 @@ export class TasksController implements TelegramController {
       }
 
       const overviews = await Promise.all(
-        TASKS.map(async (task): Promise<TaskOverview> => {
+        tasks.map(async (task): Promise<TaskOverview> => {
           const latestRun = result.value.find((run) => run.task === task.name);
           const fetchProgressLine = this.progressLineFetchers.get(task.name);
           const progress =

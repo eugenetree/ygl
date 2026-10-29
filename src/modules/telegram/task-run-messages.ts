@@ -1,58 +1,69 @@
-import {
-  type RebuildSearchIndexOutput,
-  type RecalculatePrioritiesOutput,
-  type ReprocessCaptionsOutput,
-  rebuildSearchIndex,
-  recalculatePriorities,
-  reprocessCaptions,
-} from "../_common/tasks/task-definitions.js";
-import type { RunEnded, RunError } from "../_common/tasks/tasks.js";
+import type {
+  RebuildSearchIndexOutput,
+  RecalculatePrioritiesOutput,
+  ReprocessCaptionsOutput,
+} from "../_common/messaging/definitions.js";
+import type {
+  EndedRun,
+  RunCompleted,
+  RunError,
+  RunFailed,
+} from "../_common/messaging/runs.js";
 import { formatDuration } from "./format-duration.js";
 
-export function formatRunEnded(run: RunEnded): string {
-  const took = formatDuration(run.endedAt.getTime() - run.startedAt.getTime());
-  const prefix = `${run.task} run ${run.runId}`;
+export function formatRecalculatePrioritiesRunCompleted(
+  run: RunCompleted<RecalculatePrioritiesOutput>,
+): string {
+  const { total, failed } = run.output;
+  return `${completed(run)} Recalculated ${total - failed} of ${total} channels, ${failed} failed.`;
+}
 
-  if (run.outcome === "failed") {
-    return `${prefix} failed after ${took}: ${describeError(run.error)}`;
-  }
+export function formatReprocessCaptionsRunCompleted(
+  run: RunCompleted<ReprocessCaptionsOutput>,
+): string {
+  const { output } = run;
+  return [
+    completed(run),
+    `Processed ${output.processedCount}, failed ${output.failedCount}.`,
+    `Both valid before ${output.bothValidBefore}, after ${output.bothValidAfter}.`,
+    `Became valid ${output.becameValid.length}, became invalid ${output.becameInvalid.length}.`,
+  ].join("\n");
+}
 
-  const completed = `${prefix} completed in ${took}.`;
-  switch (run.task) {
-    case recalculatePriorities.name: {
-      const { total, failed } = run.output as RecalculatePrioritiesOutput;
-      return `${completed} Recalculated ${total - failed} of ${total} channels, ${failed} failed.`;
-    }
-    case reprocessCaptions.name: {
-      const output = run.output as ReprocessCaptionsOutput;
-      return [
-        completed,
-        `Processed ${output.processedCount}, failed ${output.failedCount}.`,
-        `Both valid before ${output.bothValidBefore}, after ${output.bothValidAfter}.`,
-        `Became valid ${output.becameValid.length}, became invalid ${output.becameInvalid.length}.`,
-      ].join("\n");
-    }
-    case rebuildSearchIndex.name: {
-      const { indexed, oldIndexSize, newIndexSize } =
-        run.output as RebuildSearchIndexOutput;
-      const old =
-        oldIndexSize === null
-          ? "There was no old index"
-          : `The old index held ${formatCount(oldIndexSize)}`;
-      return `${completed} Indexed ${formatCount(indexed)} captions. ${old}, the new one holds ${formatCount(newIndexSize)}.`;
-    }
-    default:
-      return completed;
-  }
+export function formatRebuildSearchIndexRunCompleted(
+  run: RunCompleted<RebuildSearchIndexOutput>,
+): string {
+  const { indexed, oldIndexSize, newIndexSize } = run.output;
+  const old =
+    oldIndexSize === null
+      ? "There was no old index"
+      : `The old index held ${formatCount(oldIndexSize)}`;
+  return `${completed(run)} Indexed ${formatCount(indexed)} captions. ${old}, the new one holds ${formatCount(newIndexSize)}.`;
+}
+
+export function formatTaskRunFailed(run: RunFailed): string {
+  return `${runOf(run)} failed after ${took(run)}: ${describeError(run.error)}`;
 }
 
 export function formatCount(count: number): string {
   return count.toLocaleString("en-US");
 }
 
+function completed(run: EndedRun): string {
+  return `${runOf(run)} completed in ${took(run)}.`;
+}
+
+function runOf(run: EndedRun): string {
+  return `${run.task} run ${run.runId}`;
+}
+
+function took(run: EndedRun): string {
+  return formatDuration(run.endedAt.getTime() - run.startedAt.getTime());
+}
+
 function describeError(error: RunError): string {
   switch (error.type) {
-    case "HANDLER_THREW":
+    case "HANDLER_FAILED":
       return error.message;
     case "WORKER_STOPPED_RESPONDING":
       return "its worker stopped responding.";

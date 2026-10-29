@@ -1,4 +1,4 @@
-import type { LatestRun } from "../_common/tasks/tasks.js";
+import type { LatestRun } from "../_common/messaging/task-queue.js";
 import { formatDuration } from "./format-duration.js";
 
 export type TaskOverview = {

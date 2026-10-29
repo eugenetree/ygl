@@ -5,9 +5,9 @@ import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { escapeIdentifier } from "pg";
 
 import {
-  installTaskSchema,
-  taskSchemaDefinition,
-} from "../../modules/_common/tasks/tasks.js";
+  installMessagingSchema,
+  messagingSchemaDefinition,
+} from "../../modules/_common/messaging/messaging-schema.js";
 import { DatabaseClient } from "../client.js";
 import { MIGRATIONS_FOLDER, migrateToLatest } from "../migrator.js";
 import {
@@ -27,11 +27,11 @@ const BASE_ALREADY_BUILT = new Set(["42P04", "23505"]);
 // Naming the base database after the migrations lets a reused container serve
 // any branch: a different set of migrations selects a different base instead of
 // tripping Kysely's "corrupted migrations" check, and an edit in place is seen.
-// The task schema is hashed too, so a pg-boss upgrade builds a new base rather
-// than reusing one that `Tasks` would refuse to start on.
-async function hashMigrationsAndTaskSchema(): Promise<string> {
+// The pg-boss schema is hashed too, so a pg-boss upgrade builds a new base rather
+// than reusing one that `MessagingConnection` would refuse to start on.
+async function hashMigrationsAndMessagingSchema(): Promise<string> {
   const hash = createHash("sha256");
-  hash.update(taskSchemaDefinition());
+  hash.update(messagingSchemaDefinition());
   for (const file of (await readdir(MIGRATIONS_FOLDER)).sort()) {
     hash.update(file);
     hash.update(await readFile(path.join(MIGRATIONS_FOLDER, file)));
@@ -66,7 +66,7 @@ async function ensureBaseDatabase(
     } finally {
       await db.destroy();
     }
-    await installTaskSchema({ ...server, database: building });
+    await installMessagingSchema({ ...server, database: building });
     await withAdminClient(server, (admin) =>
       admin.query(
         `ALTER DATABASE ${escapeIdentifier(building)} RENAME TO ${escapeIdentifier(name)}`,
@@ -94,7 +94,7 @@ export async function startTestServer(): Promise<void> {
     user: container.getUsername(),
     password: container.getPassword(),
   };
-  const baseDatabase = `base_${await hashMigrationsAndTaskSchema()}`;
+  const baseDatabase = `base_${await hashMigrationsAndMessagingSchema()}`;
   await ensureBaseDatabase(server, baseDatabase);
 
   publishTestServer({ ...server, baseDatabase });
