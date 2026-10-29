@@ -1,4 +1,8 @@
 npx lint-staged
-npm run typecheck
-npm --prefix frontend run typecheck
-npm test
+
+# The typechecks and tests only cover code, and the tests need Docker running.
+if git diff --cached --name-only | grep -qE '^(src/|frontend/|scripts/|package(-lock)?\.json$|tsconfig\.json$)'; then
+  npm run typecheck
+  npm --prefix frontend run typecheck
+  npm test
+fi
