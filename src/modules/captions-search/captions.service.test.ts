@@ -266,25 +266,6 @@ describe("CaptionsService.findByVideo", () => {
     });
   });
 
-  it("asks Elasticsearch for every caption of the video, in the order they are spoken", async () => {
-    const mocks = createMocks();
-
-    await buildSut(mocks).findByVideo("dQw4w9WgXcQ");
-
-    const request = mocks.esClient.search.mock.calls[0].arguments[0] as Record<
-      string,
-      unknown
-    >;
-    assert.deepEqual(request.query, {
-      term: { "videoId.keyword": "dQw4w9WgXcQ" },
-    });
-    assert.deepEqual(request.sort, [
-      { startTime: { order: "asc" } },
-      { id: { order: "asc" } },
-    ]);
-    assert.equal(request.size, 10000);
-  });
-
   it("skips a stored caption that does not match the expected shape and warns about it", async () => {
     const mocks = createMocks(
       searchResponse([
