@@ -117,7 +117,7 @@ export class CaptionsService {
       index: "captions",
       size: MAX_CAPTIONS_PER_VIDEO,
       sort: [{ startTime: { order: "asc" } }, { id: { order: "asc" } }],
-      query: { term: { "videoId.keyword": videoId } },
+      query: { term: { videoId } },
     });
 
     if (!searchResult.ok) {
