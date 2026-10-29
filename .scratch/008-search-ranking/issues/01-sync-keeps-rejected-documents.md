@@ -18,7 +18,7 @@ about what is written. See spec `.scratch/008-search-ranking/spec.md`,
 
 **Blocked by:** None — can start immediately
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] A pass whose bulk write has a rejected document records `FAIL` with the
       rejection in its fail reason, and the watermark stays at the last

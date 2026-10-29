@@ -14,6 +14,10 @@ export const SEARCH_INDEX = "captions";
 
 const DATED_INDEX_PREFIX = `${SEARCH_INDEX}-`;
 
+// About 1,000 × 350 bytes ≈ 0.35 MB per request, far under the 10% of a
+// 512 MB heap Elasticsearch lets in-flight writes take, so searches keep room.
+export const BULK_BATCH_SIZE = 1000;
+
 // The mappings name fields in snake_case while documents are camelCase, so most
 // fields are mapped dynamically, and searches rely on that (`videoId.keyword`).
 export const SEARCH_INDEX_SETTINGS: IndicesIndexSettings = {
@@ -124,9 +128,9 @@ export class SearchIndexes {
       ]),
     });
     if (response.errors) {
-      const failed = response.items.find((item) => item.index?.error);
+      const failed = response.items.find((item) => item.index?.error)?.index;
       throw new Error(
-        `Elasticsearch rejected documents written to ${index}: ${JSON.stringify(failed?.index?.error)}`,
+        `Elasticsearch rejected document ${failed?._id} written to ${index}: ${JSON.stringify(failed?.error)}`,
       );
     }
   }

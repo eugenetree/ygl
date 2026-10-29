@@ -41,8 +41,6 @@ export class FakeElasticsearch {
         this.dropAliasesOf(index);
         return { acknowledged: true };
       },
-      exists: async ({ index }: { index: string }) =>
-        this.indices.has(index) || this.aliases.has(index),
       refresh: async ({ index }: { index: string }) => {
         this.concrete(this.resolve(index));
         return {};
@@ -114,22 +112,25 @@ export class FakeElasticsearch {
     }) => {
       await this.beforeEachWrite();
       const documents = this.concrete(this.resolve(index));
+      const writes = [];
+      for (let i = 0; i < operations.length; i += 2) {
+        const action = operations[i] as { index: { _id: string } };
+        writes.push({ id: action.index._id, document: operations[i + 1] });
+      }
       if (this.failingWrites) {
         return {
           errors: true,
-          items: [
-            {
-              index: {
-                status: 429,
-                error: { type: "es_rejected_execution_exception" },
-              },
+          items: writes.map(({ id }) => ({
+            index: {
+              _id: id,
+              status: 429,
+              error: { type: "es_rejected_execution_exception" },
             },
-          ],
+          })),
         };
       }
-      for (let i = 0; i < operations.length; i += 2) {
-        const action = operations[i] as { index: { _id: string } };
-        documents.set(action.index._id, operations[i + 1] as Document);
+      for (const { id, document } of writes) {
+        documents.set(id, document as Document);
       }
       return { errors: false, items: [] };
     },
@@ -151,6 +152,10 @@ export class FakeElasticsearch {
 
   failWrites(): void {
     this.failingWrites = true;
+  }
+
+  acceptWrites(): void {
+    this.failingWrites = false;
   }
 
   failDeletes(): void {
