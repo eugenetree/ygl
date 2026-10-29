@@ -1,17 +1,22 @@
 import { injectable } from "inversify";
-import { Selectable } from "kysely";
-import { CaptionsRow } from "../../db/types.js";
 import { Failure, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
-import { CaptionsService } from "./captions.service.js";
-import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
+import {
+  type CaptionToIndex,
+  ElasticCaptionsSyncRepository,
+} from "./elastic-captions-sync.repository.js";
+import {
+  BULK_BATCH_SIZE,
+  SEARCH_INDEX,
+  SearchIndexes,
+} from "./search-indexes.js";
 
 @injectable()
 export class SyncDataToElasticUseCase {
   constructor(
     private readonly elasticCaptionsSyncRepository: ElasticCaptionsSyncRepository,
+    private readonly searchIndexes: SearchIndexes,
     private readonly logger: Logger,
-    private readonly captionsService: CaptionsService,
   ) {
     this.logger.setContext(SyncDataToElasticUseCase.name);
   }
@@ -48,7 +53,7 @@ export class SyncDataToElasticUseCase {
 
       const lastSync = lastSyncResult.value;
 
-      let captions: Selectable<CaptionsRow>[];
+      let captions: CaptionToIndex[];
       if (!lastSync || !lastSync.latestSyncedCaptionId) {
         this.logger.info("No last successful sync found, starting full sync");
         const dataResult =
@@ -95,7 +100,12 @@ export class SyncDataToElasticUseCase {
       }
 
       this.logger.info(`Syncing ${captions.length} captions to Elasticsearch`);
-      await this.captionsService.sync(captions);
+      for (let i = 0; i < captions.length; i += BULK_BATCH_SIZE) {
+        await this.searchIndexes.write(
+          SEARCH_INDEX,
+          captions.slice(i, i + BULK_BATCH_SIZE),
+        );
+      }
 
       const latestCaptionId = captions[captions.length - 1].id;
       await this.elasticCaptionsSyncRepository.update(syncId, {

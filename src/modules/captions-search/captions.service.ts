@@ -8,13 +8,8 @@ import { z } from "zod";
 import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { tryCatch } from "../_common/try-catch.js";
-import { Caption } from "../scraping/scrapers/video/caption.js";
 import type { VideoCaption } from "./clip.js";
-import {
-  clientFromEnv,
-  SEARCH_INDEX_MAPPINGS,
-  SEARCH_INDEX_SETTINGS,
-} from "./search-indexes.js";
+import { clientFromEnv } from "./search-indexes.js";
 
 const INDEX_GONE =
   /index_not_found_exception|no_shard_available_action_exception/;
@@ -59,28 +54,6 @@ export class CaptionsService {
     private readonly esClient: Client = clientFromEnv(),
   ) {
     this.logger.setContext(CaptionsService.name);
-  }
-
-  async sync(captions: Caption[], batchSize = 2000) {
-    const isIndexExists = await this.esClient.indices.exists({
-      index: "captions",
-    });
-
-    if (!isIndexExists) {
-      this.logger.info("Index does not exist, creating it");
-      await this.createIndex();
-    }
-
-    for (let i = 0; i < captions.length; i += batchSize) {
-      const batch = captions.slice(i, i + batchSize);
-      await this.esClient.bulk({
-        index: "captions",
-        operations: batch.flatMap((caption) => [
-          { index: { _id: caption.id } },
-          caption,
-        ]),
-      });
-    }
   }
 
   async search(
@@ -174,13 +147,5 @@ export class CaptionsService {
     const first = await tryCatch(this.esClient.search(request));
     if (first.ok || !isIndexGone(first.error)) return first;
     return tryCatch(this.esClient.search(request));
-  }
-
-  private async createIndex() {
-    await this.esClient.indices.create({
-      index: "captions",
-      settings: SEARCH_INDEX_SETTINGS,
-      mappings: SEARCH_INDEX_MAPPINGS,
-    });
   }
 }

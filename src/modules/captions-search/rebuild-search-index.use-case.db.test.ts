@@ -1,14 +1,20 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { type Kysely, sql } from "kysely";
+import { sql } from "kysely";
 import type { DatabaseClient } from "../../db/client.js";
 import { useTestDatabase } from "../../db/testing/test-database.js";
-import type { Database } from "../../db/types.js";
 import type { Logger } from "../_common/logger/logger.js";
 import { createLoggerMock } from "../_common/logger/testing/logger-mock.js";
 import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 import { RebuildSearchIndexUseCase } from "./rebuild-search-index.use-case.js";
 import { SearchIndexes } from "./search-indexes.js";
+import {
+  ids,
+  seedCaption,
+  seedChannel,
+  seedVideo,
+  uuid,
+} from "./testing/captions-to-index.js";
 import { FakeElasticsearch } from "./testing/fake-elasticsearch.js";
 
 // ---- SUT factory ------------------------------------------------------------
@@ -22,78 +28,6 @@ function buildSut(db: DatabaseClient, elasticsearch: FakeElasticsearch) {
     { oldIndexGraceMs: 0 },
   );
 }
-
-// ---- Fixtures ---------------------------------------------------------------
-
-async function seedChannel(db: Kysely<Database>, id: string) {
-  await db
-    .insertInto("channels")
-    .values({
-      id,
-      name: id,
-      viewCount: 0,
-      videoCount: 0,
-      isFamilySafe: true,
-      channelCreatedAt: new Date(),
-      username: id.toLowerCase(),
-      isArtist: false,
-      keywords: [],
-    })
-    .execute();
-}
-
-async function seedVideo(
-  db: Kysely<Database>,
-  video: {
-    id: string;
-    channelId: string;
-    captionsSimilarityScore?: number;
-    manualCaptionsStatus?: "CAPTIONS_VALID" | "CAPTIONS_ABSENT";
-  },
-) {
-  await db
-    .insertInto("videos")
-    .values({
-      title: video.id,
-      duration: 213,
-      keywords: [],
-      viewCount: 0,
-      thumbnail: `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`,
-      autoCaptionsStatus: "CAPTIONS_VALID",
-      manualCaptionsStatus: "CAPTIONS_VALID",
-      captionsSimilarityScore: 0.95,
-      categories: [],
-      ...video,
-    })
-    .execute();
-}
-
-let captionMinute = 0;
-
-async function seedCaption(
-  db: Kysely<Database>,
-  caption: { id: string; videoId: string; type?: "manual" | "auto" },
-) {
-  captionMinute += 1;
-  await db
-    .insertInto("captions")
-    .values({
-      startTime: 2500,
-      endTime: 4200,
-      duration: 1700,
-      text: `caption ${caption.id}`,
-      type: "manual",
-      createdAt: new Date(Date.UTC(2026, 0, 1, 0, captionMinute)),
-      ...caption,
-    })
-    .execute();
-}
-
-const uuid = (n: number) =>
-  `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
-
-const ids = (documents: Record<string, unknown>[]) =>
-  documents.map((document) => document.id);
 
 // ---- Tests ------------------------------------------------------------------
 
