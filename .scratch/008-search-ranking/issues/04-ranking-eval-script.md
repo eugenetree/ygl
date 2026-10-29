@@ -29,7 +29,7 @@ No tests: it's a local tool, and the logic it shares is tested in 02.
 
 **Blocked by:** 02 — Caption features and the search index document
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Runs locally against the public API with no credentials and makes only
       GET requests.
