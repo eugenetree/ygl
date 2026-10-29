@@ -21,7 +21,7 @@ the new mapping, since `text` is there.
 **Blocked by:** 01 — The incremental sync stops losing rejected documents;
 02 — Caption features and the search index document
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] A dated index created by the rebuild has the new mapping.
 - [ ] The rebuild writes, for each manual caption of a searchable video, the
