@@ -21,6 +21,24 @@ function isIndexGone(error: unknown): boolean {
   );
 }
 
+// A hit is scored by multiplying the weights of the functions it matches, so
+// a whole sentence of 6–14 words scores 1 and a hit with the exact phrase
+// triples its score. Short captions sink harder than long ones.
+const WORD_COUNT_WEIGHTS = [
+  { lte: 2, weight: 0.15 },
+  { gte: 3, lte: 4, weight: 0.4 },
+  { gte: 5, lte: 5, weight: 0.7 },
+  { gte: 15, lte: 18, weight: 0.85 },
+  { gte: 19, lte: 24, weight: 0.6 },
+  { gte: 25, weight: 0.35 },
+];
+// Applies once for a missing start and once for a missing end.
+const FRAGMENT = 0.6;
+// The smallest weight that lifts every phrase hit of 6–14 words above every
+// hit with only the query's words, while "Make sense?" stays below a plain
+// whole sentence.
+const EXACT_PHRASE = 3;
+
 const MAX_TRACKED_TOTAL = 10000;
 // Elasticsearch's default max_result_window; hours of captions fit well under it.
 const MAX_CAPTIONS_PER_VIDEO = 10000;
@@ -67,20 +85,21 @@ export class CaptionsService {
       sort: [{ _score: { order: "desc" } }, { id: { order: "asc" } }],
       track_total_hits: MAX_TRACKED_TOTAL,
       query: {
-        bool: {
-          must: {
-            match: {
-              text: {
-                query,
-                operator: "and",
-              },
-            },
+        function_score: {
+          query: {
+            bool: { filter: { match: { text: { query, operator: "and" } } } },
           },
-          should: {
-            match_phrase: {
-              text: query,
-            },
-          },
+          functions: [
+            ...WORD_COUNT_WEIGHTS.map(({ weight, ...range }) => ({
+              filter: { range: { wordCount: range } },
+              weight,
+            })),
+            { filter: { term: { startsSentence: false } }, weight: FRAGMENT },
+            { filter: { term: { endsSentence: false } }, weight: FRAGMENT },
+            { filter: { match_phrase: { text: query } }, weight: EXACT_PHRASE },
+          ],
+          score_mode: "multiply",
+          boost_mode: "replace",
         },
       },
     });

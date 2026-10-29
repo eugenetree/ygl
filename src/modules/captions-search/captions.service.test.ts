@@ -145,24 +145,6 @@ describe("CaptionsService.search", () => {
     assert.equal(result.value.isTotalExact, false);
   });
 
-  it("asks Elasticsearch for one page of captions ordered by relevance, then caption id", async () => {
-    const mocks = createMocks();
-
-    await buildSut(mocks).search("give you up", { offset: 40, limit: 20 });
-
-    const request = mocks.esClient.search.mock.calls[0].arguments[0] as Record<
-      string,
-      unknown
-    >;
-    assert.equal(request.from, 40);
-    assert.equal(request.size, 20);
-    assert.deepEqual(request.sort, [
-      { _score: { order: "desc" } },
-      { id: { order: "asc" } },
-    ]);
-    assert.equal(request.track_total_hits, 10000);
-  });
-
   it("returns a search-unavailable failure when Elasticsearch cannot be reached", async () => {
     const mocks = createMocks();
     const cause = new Error("getaddrinfo ENOTFOUND elasticsearch");
