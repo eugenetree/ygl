@@ -100,6 +100,14 @@ _Avoid_: Hit, result, match
 The moment a clip should start playing, set slightly before the caption begins so the listener hears the phrase in context.
 _Avoid_: Start time (that is the caption's own start), offset, lead-in
 
+**Whole sentence**:
+A caption that both starts and ends a sentence: past any dialogue dash or opening quote, it opens with a capital letter or a digit, and before any closing quote it ends with a full stop, question mark or exclamation mark. One that trails off in an ellipsis is not.
+_Avoid_: Full sentence, complete sentence (those suggest grammatical completeness, which isn't checked)
+
+**Fragment**:
+A caption that is not a whole sentence.
+_Avoid_: Partial, broken caption
+
 ### Raw data
 
 **Raw caption track**:
