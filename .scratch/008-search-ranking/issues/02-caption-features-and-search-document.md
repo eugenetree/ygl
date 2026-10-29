@@ -19,7 +19,7 @@ Not wired into any writer yet.
 
 **Blocked by:** None — can start immediately
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Table-driven unit tests on real captions: "Strange.", "of life.",
       "- So is it a custom dish?", "every once in a while...",
