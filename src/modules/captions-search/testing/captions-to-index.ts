@@ -49,7 +49,12 @@ let captionMinute = 0;
 /** Each caption seeded is created a minute after the one before. */
 export async function seedCaption(
   db: Kysely<Database>,
-  caption: { id: string; videoId: string; type?: "manual" | "auto" },
+  caption: {
+    id: string;
+    videoId: string;
+    type?: "manual" | "auto";
+    text?: string;
+  },
 ) {
   captionMinute += 1;
   await db

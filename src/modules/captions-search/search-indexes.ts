@@ -8,6 +8,7 @@ import { Failure, type Result, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
 import { tryCatch } from "../_common/try-catch.js";
 import type { SearchUnavailableError } from "./captions.service.js";
+import type { SearchIndexDocument } from "./search-index-document.js";
 
 /** What searches and the incremental sync address the search index by. */
 export const SEARCH_INDEX = "captions";
@@ -18,41 +19,27 @@ const DATED_INDEX_PREFIX = `${SEARCH_INDEX}-`;
 // 512 MB heap Elasticsearch lets in-flight writes take, so searches keep room.
 export const BULK_BATCH_SIZE = 1000;
 
-// The mappings name fields in snake_case while documents are camelCase, so most
-// fields are mapped dynamically, and searches rely on that (`videoId.keyword`).
 export const SEARCH_INDEX_SETTINGS: IndicesIndexSettings = {
-  analysis: {
-    analyzer: {
-      caption_analyzer: {
-        type: "standard",
-      },
-    },
-  },
   number_of_shards: 1,
   number_of_replicas: 0,
 };
 
+// Strict, so a document with a field not mapped here is rejected instead of
+// growing the mapping.
 export const SEARCH_INDEX_MAPPINGS: MappingTypeMapping = {
+  dynamic: "strict",
   properties: {
     id: { type: "keyword" },
-    video_id: { type: "keyword" },
-    type: { type: "keyword" },
-    start_time: { type: "long" },
-    end_time: { type: "long" },
-    duration: { type: "long" },
-    text: {
-      type: "text",
-      analyzer: "caption_analyzer",
-      fields: {
-        keyword: { type: "keyword" },
-      },
-    },
-    channel_id: { type: "keyword" },
-    channel_name: { type: "text" },
+    videoId: { type: "keyword" },
+    channelId: { type: "keyword" },
+    startTime: { type: "long" },
+    endTime: { type: "long" },
+    text: { type: "text", analyzer: "standard", norms: false },
+    wordCount: { type: "short" },
+    startsSentence: { type: "boolean" },
+    endsSentence: { type: "boolean" },
   },
 };
-
-export type SearchIndexDocument = { id: string } & Record<string, unknown>;
 
 export type SearchIndexesState = {
   /** The index searches run against, or null if there is none yet. */
