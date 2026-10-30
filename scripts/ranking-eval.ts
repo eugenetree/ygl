@@ -1,12 +1,16 @@
 #!/usr/bin/env npx tsx
 // Measures page 1 of a fixed set of searches on the live site, as a Markdown
 // table plus the top captions of a few searches. Read-only: GET requests only.
+// Each run is printed and also saved to ranking-eval-runs/ (gitignored): the
+// report as .md and every raw API response beside it as .json.
 //
 // Usage:
 // npx tsx scripts/ranking-eval.ts
 // npx tsx scripts/ranking-eval.ts http://localhost:3001
 // npx tsx scripts/ranking-eval.ts --phase "before phase 1"
 
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { parseArgs } from "node:util";
 import {
   type Clip,
@@ -55,27 +59,42 @@ const QUERIES = [
 const SHOWCASE_QUERIES = ["strange", "you know", "the", "apple", "get rid of"];
 const SHOWCASE_SIZE = 5;
 const PAGE_SIZE = 20;
+const RUNS_DIR = path.join(__dirname, "..", "ranking-eval-runs");
 
-type SearchOutcome =
-  { query: string; clips: Clip[] } | { query: string; failure: string };
+// `response` is the body as the API sent it, kept for the run's .json file.
+type SearchOutcome = { query: string; url: string; response?: unknown } & (
+  | { clips: Clip[] }
+  | { failure: string }
+);
 
 async function search(baseUrl: string, query: string): Promise<SearchOutcome> {
   const url = new URL("/api/search", baseUrl);
   url.searchParams.set("q", query);
   url.searchParams.set("limit", String(PAGE_SIZE));
+  const request = { query, url: url.toString() };
   try {
     const response = await fetch(url, { method: "GET" });
+    const text = await response.text();
+    const raw = parseJson(text);
     if (!response.ok) {
-      return { query, failure: `HTTP ${response.status}` };
+      return { ...request, response: raw, failure: `HTTP ${response.status}` };
     }
-    const body = searchResponseSchema.safeParse(await response.json());
+    const body = searchResponseSchema.safeParse(raw);
     if (!body.success) {
-      return { query, failure: "unexpected response" };
+      return { ...request, response: raw, failure: "unexpected response" };
     }
-    return { query, clips: body.data.clips };
+    return { ...request, response: raw, clips: body.data.clips };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return { query, failure: message };
+    return { ...request, failure: message };
+  }
+}
+
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
   }
 }
 
@@ -129,8 +148,9 @@ async function main() {
     options: { phase: { type: "string" } },
   });
   const baseUrl = positionals[0] ?? "https://saythis.co";
+  const startedAt = new Date();
   const heading = [
-    new Date().toLocaleDateString("sv-SE"),
+    startedAt.toLocaleDateString("sv-SE"),
     ...(values.phase ? [values.phase] : []),
     baseUrl,
   ].join(" — ");
@@ -170,7 +190,39 @@ async function main() {
     }
   }
 
-  console.log(lines.join("\n"));
+  const report = lines.join("\n");
+  console.log(report);
+
+  const runFile = path.join(RUNS_DIR, runFileName(startedAt, values.phase));
+  const responses = {
+    startedAt: startedAt.toISOString(),
+    phase: values.phase ?? null,
+    baseUrl,
+    searches: outcomes.map(({ query, url, response, ...result }) => ({
+      query,
+      url,
+      failure: "failure" in result ? result.failure : null,
+      response: response ?? null,
+    })),
+  };
+  await mkdir(RUNS_DIR, { recursive: true });
+  await writeFile(`${runFile}.md`, `${report}\n`);
+  await writeFile(`${runFile}.json`, `${JSON.stringify(responses, null, 2)}\n`);
+  console.error(`\nSaved to ${runFile}.md and .json`);
+}
+
+// e.g. 2026-10-30_14-05-12_before-phase-1: sorts by time, never overwrites an
+// earlier run.
+function runFileName(startedAt: Date, phase: string | undefined): string {
+  const time = startedAt
+    .toLocaleString("sv-SE")
+    .replace(" ", "_")
+    .replaceAll(":", "-");
+  const slug = phase
+    ?.toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug ? `${time}_${slug}` : time;
 }
 
 void main();
