@@ -158,11 +158,7 @@ export class RebuildSearchIndexUseCase {
             videoId,
           );
         if (!captions.ok) return captions;
-        batch.push(
-          ...captions.value.map((caption) =>
-            toSearchIndexDocument(caption, caption.channelId),
-          ),
-        );
+        batch.push(...captions.value.map(toSearchIndexDocument));
         if (batch.length >= BULK_BATCH_SIZE) {
           const written = await flush();
           if (!written.ok) return written;

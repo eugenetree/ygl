@@ -5,7 +5,9 @@
 // Usage:
 // npx tsx scripts/ranking-eval.ts
 // npx tsx scripts/ranking-eval.ts http://localhost:3001
+// npx tsx scripts/ranking-eval.ts --phase "before phase 1"
 
+import { parseArgs } from "node:util";
 import {
   type Clip,
   searchResponseSchema,
@@ -16,7 +18,7 @@ import {
   startsSentence,
 } from "../src/modules/captions-search/caption-features.js";
 
-const SEARCHES = [
+const QUERIES = [
   "strange",
   "serendipity",
   "worcestershire",
@@ -50,12 +52,12 @@ const SEARCHES = [
   "well-known",
 ];
 
-const SHOWCASE_SEARCHES = ["strange", "you know", "the", "apple", "get rid of"];
+const SHOWCASE_QUERIES = ["strange", "you know", "the", "apple", "get rid of"];
 const SHOWCASE_SIZE = 5;
 const PAGE_SIZE = 20;
 
 type SearchOutcome =
-  { search: string; clips: Clip[] } | { search: string; failure: string };
+  { query: string; clips: Clip[] } | { query: string; failure: string };
 
 async function search(baseUrl: string, query: string): Promise<SearchOutcome> {
   const url = new URL("/api/search", baseUrl);
@@ -64,26 +66,26 @@ async function search(baseUrl: string, query: string): Promise<SearchOutcome> {
   try {
     const response = await fetch(url, { method: "GET" });
     if (!response.ok) {
-      return { search: query, failure: `HTTP ${response.status}` };
+      return { query, failure: `HTTP ${response.status}` };
     }
     const body = searchResponseSchema.safeParse(await response.json());
     if (!body.success) {
-      return { search: query, failure: "unexpected response" };
+      return { query, failure: "unexpected response" };
     }
-    return { search: query, clips: body.data.clips };
+    return { query, clips: body.data.clips };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return { search: query, failure: message };
+    return { query, failure: message };
   }
 }
 
 function metricsRow(outcome: SearchOutcome): string[] {
   if ("failure" in outcome) {
-    return [outcome.search, `failed: ${outcome.failure}`, "", "", "", "", ""];
+    return [outcome.query, `failed: ${outcome.failure}`, "", "", "", "", ""];
   }
   const { clips } = outcome;
   if (clips.length === 0) {
-    return [outcome.search, "no results", "", "", "", "", ""];
+    return [outcome.query, "no results", "", "", "", "", ""];
   }
   const wordCounts = clips.map((clip) => countWords(clip.text));
   const short = wordCounts.filter((count) => count >= 1 && count <= 2).length;
@@ -91,7 +93,7 @@ function metricsRow(outcome: SearchOutcome): string[] {
     (clip) => startsSentence(clip.text) && endsSentence(clip.text),
   ).length;
   return [
-    outcome.search,
+    outcome.query,
     String(clips.length),
     percent(short, clips.length),
     percent(wholeSentences, clips.length),
@@ -122,18 +124,27 @@ function cell(text: string): string {
 }
 
 async function main() {
-  const baseUrl = process.argv[2] ?? "https://saythis.co";
+  const { values, positionals } = parseArgs({
+    allowPositionals: true,
+    options: { phase: { type: "string" } },
+  });
+  const baseUrl = positionals[0] ?? "https://saythis.co";
+  const heading = [
+    new Date().toLocaleDateString("sv-SE"),
+    ...(values.phase ? [values.phase] : []),
+    baseUrl,
+  ].join(" — ");
 
   const outcomes: SearchOutcome[] = [];
-  for (const query of SEARCHES) {
+  for (const query of QUERIES) {
     outcomes.push(await search(baseUrl, query));
   }
 
   const lines = [
-    `## ${new Date().toLocaleDateString("sv-SE")} — ${baseUrl}`,
+    `## ${heading}`,
     "",
     tableRow([
-      "Search",
+      "Query",
       "Clips",
       "1–2 words",
       "Whole sentences",
@@ -146,10 +157,10 @@ async function main() {
   ];
 
   for (const outcome of outcomes) {
-    if (!SHOWCASE_SEARCHES.includes(outcome.search) || !("clips" in outcome)) {
+    if (!SHOWCASE_QUERIES.includes(outcome.query) || !("clips" in outcome)) {
       continue;
     }
-    lines.push("", `### Top captions: \`${outcome.search}\``, "");
+    lines.push("", `### Top captions: \`${outcome.query}\``, "");
     for (const [index, clip] of outcome.clips
       .slice(0, SHOWCASE_SIZE)
       .entries()) {

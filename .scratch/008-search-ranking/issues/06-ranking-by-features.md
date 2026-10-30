@@ -33,7 +33,8 @@ retry when the index vanishes mid-search stays.
       properties rather than exact order:
   - [ ] nothing under 3 words in the top 10 when at least 20 good captions
         match;
-  - [ ] exact-phrase hits come before AND-only hits;
+  - [ ] exact-phrase hits of a comfortable length (6–14 words) come before
+        AND-only hits;
   - [ ] a whole sentence beats a fragment of the same length;
   - [ ] pages 1..n together are a permutation of all hits, and `total` matches.
 - [ ] The mocked unit test asserting the search request shape and sort is

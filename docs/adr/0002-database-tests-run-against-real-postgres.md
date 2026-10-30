@@ -66,7 +66,8 @@ Two structural failures, not ergonomics:
   dependency per file, is enforced only by convention, and has already had to
   stretch `.net` past its name. If another kind of dependency appears, or the
   suites need finer selection than a glob, revisit it rather than adding or
-  overloading suffixes.
+  overloading suffixes. Elasticsearch was the first such dependency; revisited,
+  it got a fourth suffix, `.es` (ADR-0016).
 - Stale `base_<hash>` databases accumulate as branches come and go;
   `npm run test:db:reset` removes them by removing the container.
 - Fixtures must satisfy real foreign keys, `NOT NULL`s and enum types that the

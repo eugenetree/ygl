@@ -18,17 +18,18 @@ export type SearchIndexDocument = {
   endsSentence: boolean;
 };
 
+export type CaptionToIndex = Pick<
+  CaptionRow,
+  "id" | "videoId" | "startTime" | "endTime" | "text"
+> & { channelId: string };
+
 export function toSearchIndexDocument(
-  caption: Pick<
-    CaptionRow,
-    "id" | "videoId" | "startTime" | "endTime" | "text"
-  >,
-  channelId: string,
+  caption: CaptionToIndex,
 ): SearchIndexDocument {
   return {
     id: caption.id,
     videoId: caption.videoId,
-    channelId,
+    channelId: caption.channelId,
     startTime: caption.startTime,
     endTime: caption.endTime,
     text: caption.text,

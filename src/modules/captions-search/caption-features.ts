@@ -35,11 +35,12 @@ const NAMED_ENTITIES: Record<string, string> = {
 
 function normalize(text: string): string {
   return decodeEntities(text)
+    .replace(/<br\s*\/?>/gi, " ")
     .replace(/<\/?[a-z][^>]*>/gi, "")
     .replace(/[\u{200B}-\u{200D}\u{2060}\u{FEFF}]/gu, "")
     .replace(/[\xA0\r\n]/g, " ")
     .trim()
-    .replace(/^(?:-|>>)\s*/, "");
+    .replace(/^(?:[-–—]|>>)\s*/, "");
 }
 
 function decodeEntities(text: string): string {
