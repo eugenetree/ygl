@@ -4,7 +4,7 @@
 machine to measure page 1 of a fixed set of searches on prod. It is committed
 alongside the repo's other scripts and never deployed or run in a container.
 
-For each of 30 searches it calls the public `/api/search` for page 1 (20 clips)
+For each of 31 searches it calls the public `/api/search` for page 1 (20 clips)
 and prints a table: share of 1–2-word captions, share of whole sentences,
 median word count, distinct videos, distinct channels (by channel name, which
 the API returns). It counts words and whole sentences with the feature

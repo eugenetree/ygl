@@ -217,7 +217,7 @@ share of whole sentences, median word count, distinct videos, distinct channels
 "whole sentence" means the same in the metrics as in the ranking. Each run is
 recorded with its date and phase, with the top few captions of some searches.
 
-The set, 30 searches:
+The set, 31 searches:
 
 | Kind | Searches |
 |---|---|
@@ -251,7 +251,8 @@ Elasticsearch. Three seams:
    function. It is the only test of the ranking itself, since the fake client
    can't rank. It asserts properties, not exact order:
    - nothing under 3 words in the top 10 when at least 20 good captions match;
-   - exact-phrase hits come before AND-only hits;
+   - exact-phrase hits of a comfortable length (6–14 words) come before
+     AND-only hits;
    - a whole sentence beats a fragment of the same length;
    - pages 1..n together are a permutation of all hits, and `total` matches;
    - the transcript lookup returns a video's captions in spoken order by
