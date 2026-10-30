@@ -27,7 +27,7 @@ retry when the index vanishes mid-search stays.
 **Blocked by:** 05 — Elasticsearch tests, and transcripts looked up by
 `videoId`
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Against a real Elasticsearch with about 60 fixture captions, asserting
       properties rather than exact order:
