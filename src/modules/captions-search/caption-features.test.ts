@@ -11,6 +11,8 @@ describe("startsSentence()", () => {
     ["Strange.", true],
     ["of life.", false],
     ["- So is it a custom dish?", true],
+    ["– So is it a custom dish?", true],
+    ["— So is it?", true],
     ["every once in a while...", false],
     ['Is it "strange"?', true],
     ['"Strange," he said.', true],
@@ -95,6 +97,10 @@ describe("features of captions with markup", () => {
     [
       '<font color="#ffff00">every once</font>\nin a while',
       { words: 5, startsSentence: false, endsSentence: false },
+    ],
+    [
+      "Strange<br>things<br/>happen<br />here.",
+      { words: 4, startsSentence: true, endsSentence: true },
     ],
     [
       "&quot;Strange,&quot; he said.",
