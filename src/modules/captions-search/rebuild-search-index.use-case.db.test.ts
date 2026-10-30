@@ -8,14 +8,14 @@ import { createLoggerMock } from "../_common/logger/testing/logger-mock.js";
 import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 import { RebuildSearchIndexUseCase } from "./rebuild-search-index.use-case.js";
 import { SearchIndexes } from "./search-indexes.js";
+import { FakeElasticsearch } from "./testing/fake-elasticsearch.js";
 import {
   ids,
   seedCaption,
   seedChannel,
   seedVideo,
   uuid,
-} from "./testing/captions-to-index.js";
-import { FakeElasticsearch } from "./testing/fake-elasticsearch.js";
+} from "./testing/seed-searchable-captions.js";
 
 // ---- SUT factory ------------------------------------------------------------
 

@@ -1,9 +1,11 @@
 import { after, beforeEach } from "node:test";
 import { Client } from "@elastic/elasticsearch";
-import type { CaptionRow } from "../../../db/types.js";
 import type { Logger } from "../../_common/logger/logger.js";
 import { createLoggerMock } from "../../_common/logger/testing/logger-mock.js";
-import { toSearchIndexDocument } from "../search-index-document.js";
+import {
+  type CaptionToIndex,
+  toSearchIndexDocument,
+} from "../search-index-document.js";
 import { SearchIndexes } from "../search-indexes.js";
 
 // Test files run in child processes of the test runner, so global setup hands
@@ -26,15 +28,10 @@ function readTestElasticsearch(): string {
   return node;
 }
 
-export type CaptionFixture = Pick<
-  CaptionRow,
-  "id" | "videoId" | "startTime" | "endTime" | "text"
-> & { channelId: string };
-
 export type TestSearchIndex = {
   client: Client;
   /** Writes captions as the sync does, and makes them searchable. */
-  writeCaptions(captions: CaptionFixture[]): Promise<void>;
+  writeCaptions(captions: CaptionToIndex[]): Promise<void>;
 };
 
 /**
@@ -66,12 +63,7 @@ export function useTestSearchIndex(): TestSearchIndex {
     client,
     async writeCaptions(captions) {
       if (!index) throw new Error("writeCaptions runs inside a test");
-      await searchIndexes.write(
-        index,
-        captions.map((caption) =>
-          toSearchIndexDocument(caption, caption.channelId),
-        ),
-      );
+      await searchIndexes.write(index, captions.map(toSearchIndexDocument));
       await searchIndexes.refresh(index);
     },
   };

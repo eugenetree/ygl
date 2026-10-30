@@ -3,7 +3,6 @@ import { injectable } from "inversify";
 import type { ExpressionBuilder } from "kysely";
 import { DatabaseClient } from "../../db/client.js";
 import {
-  type CaptionRow,
   type Database,
   DatabaseError,
   UpdateableElasticCaptionsSyncRow,
@@ -14,11 +13,7 @@ import {
   ElasticCaptionsSync,
   ElasticCaptionsSyncProps,
 } from "./elastic-captions-sync.js";
-
-export type CaptionToIndex = Pick<
-  CaptionRow,
-  "id" | "videoId" | "startTime" | "endTime" | "text"
-> & { channelId: string };
+import type { CaptionToIndex } from "./search-index-document.js";
 
 const CAPTION_TO_INDEX_COLUMNS = [
   "captions.id",

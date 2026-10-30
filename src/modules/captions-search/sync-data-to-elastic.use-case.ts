@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { Failure, Success } from "../../types/index.js";
 import { Logger } from "../_common/logger/logger.js";
+import { ElasticCaptionsSyncRepository } from "./elastic-captions-sync.repository.js";
 import {
   type CaptionToIndex,
-  ElasticCaptionsSyncRepository,
-} from "./elastic-captions-sync.repository.js";
-import { toSearchIndexDocument } from "./search-index-document.js";
+  toSearchIndexDocument,
+} from "./search-index-document.js";
 import {
   BULK_BATCH_SIZE,
   SEARCH_INDEX,
@@ -104,11 +104,7 @@ export class SyncDataToElasticUseCase {
       for (let i = 0; i < captions.length; i += BULK_BATCH_SIZE) {
         await this.searchIndexes.write(
           SEARCH_INDEX,
-          captions
-            .slice(i, i + BULK_BATCH_SIZE)
-            .map((caption) =>
-              toSearchIndexDocument(caption, caption.channelId),
-            ),
+          captions.slice(i, i + BULK_BATCH_SIZE).map(toSearchIndexDocument),
         );
       }
 

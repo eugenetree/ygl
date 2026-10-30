@@ -21,9 +21,9 @@ function isIndexGone(error: unknown): boolean {
   );
 }
 
-// A hit is scored by multiplying the weights of the functions it matches, so
-// a whole sentence of 6–14 words scores 1 and a hit with the exact phrase
-// triples its score. Short captions sink harder than long ones.
+// A matching caption is scored by multiplying the weights of the functions it
+// matches, so a whole sentence of 6–14 words scores 1 and a caption with the
+// exact phrase triples its score. Short captions sink harder than long ones.
 const WORD_COUNT_WEIGHTS = [
   { lte: 2, weight: 0.15 },
   { gte: 3, lte: 4, weight: 0.4 },
@@ -33,11 +33,11 @@ const WORD_COUNT_WEIGHTS = [
   { gte: 25, weight: 0.35 },
 ];
 // Applies once for a missing start and once for a missing end.
-const FRAGMENT = 0.6;
-// The smallest weight that lifts every phrase hit of 6–14 words above every
-// hit with only the query's words, while "Make sense?" stays below a plain
-// whole sentence.
-const EXACT_PHRASE = 3;
+const FRAGMENT_WEIGHT = 0.6;
+// The smallest weight that lifts every caption of 6–14 words with the exact
+// phrase above every caption with only the query's words, while "Make sense?"
+// stays below a plain whole sentence.
+const EXACT_PHRASE_WEIGHT = 3;
 
 const MAX_TRACKED_TOTAL = 10000;
 // Elasticsearch's default max_result_window; hours of captions fit well under it.
@@ -94,9 +94,18 @@ export class CaptionsService {
               filter: { range: { wordCount: range } },
               weight,
             })),
-            { filter: { term: { startsSentence: false } }, weight: FRAGMENT },
-            { filter: { term: { endsSentence: false } }, weight: FRAGMENT },
-            { filter: { match_phrase: { text: query } }, weight: EXACT_PHRASE },
+            {
+              filter: { term: { startsSentence: false } },
+              weight: FRAGMENT_WEIGHT,
+            },
+            {
+              filter: { term: { endsSentence: false } },
+              weight: FRAGMENT_WEIGHT,
+            },
+            {
+              filter: { match_phrase: { text: query } },
+              weight: EXACT_PHRASE_WEIGHT,
+            },
           ],
           score_mode: "multiply",
           boost_mode: "replace",

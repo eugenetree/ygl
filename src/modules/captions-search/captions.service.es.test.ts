@@ -8,13 +8,11 @@ import {
   startsSentence,
 } from "./caption-features.js";
 import { CaptionsService, type StoredCaption } from "./captions.service.js";
-import {
-  type CaptionFixture,
-  useTestSearchIndex,
-} from "./testing/test-elasticsearch.js";
+import type { CaptionToIndex } from "./search-index-document.js";
+import { useTestSearchIndex } from "./testing/test-elasticsearch.js";
 
 // Captions as they come in real videos, the weakest first: equally scored
-// hits are ordered by id, so a ranking that ignores the features puts them on
+// clips are ordered by id, so a ranking that ignores the features puts them on
 // top.
 const CORPUS = [
   "Make sense?",
@@ -89,7 +87,7 @@ const VIDEOS = [
   { videoId: "iG9CE55wbtY", channelId: "UCAuUUnT6oDeKwE6v1NGQxug" },
 ];
 
-const CAPTIONS: CaptionFixture[] = CORPUS.map((text, i) => ({
+const CAPTIONS: CaptionToIndex[] = CORPUS.map((text, i) => ({
   id: `caption-${String(i + 1).padStart(2, "0")}`,
   ...VIDEOS[i % VIDEOS.length],
   startTime: i * 3000,
@@ -123,7 +121,7 @@ describe("CaptionsService.search against Elasticsearch", () => {
     );
   });
 
-  it("ranks every exact-phrase hit of 6–14 words before every hit with only the query's words", async () => {
+  it("ranks every caption of 6–14 words with the exact phrase before every caption with only the query's words", async () => {
     await searchIndex.writeCaptions(CAPTIONS);
 
     const ranked = await search("make sense");
@@ -138,7 +136,7 @@ describe("CaptionsService.search against Elasticsearch", () => {
     assert.ok(comfortablePhraseRanks.length > 0 && wordsOnlyRanks.length > 0);
     assert.ok(
       Math.max(...comfortablePhraseRanks) < Math.min(...wordsOnlyRanks),
-      "an exact-phrase hit of 6–14 words ranks after a hit with only the words",
+      "a caption of 6–14 words with the exact phrase ranks after a caption with only the words",
     );
   });
 
@@ -165,14 +163,14 @@ describe("CaptionsService.search against Elasticsearch", () => {
     assert.deepEqual(outranked, []);
   });
 
-  it("returns every hit exactly once across the pages, with the same total on each", async () => {
+  it("returns every matching caption exactly once across the pages, with the same total on each", async () => {
     await searchIndex.writeCaptions(CAPTIONS);
-    const hits = CAPTIONS.filter(
+    const matching = CAPTIONS.filter(
       ({ text }) => /\bmake\b/i.test(text) && /\bsense\b/i.test(text),
     );
 
     const pages = [];
-    for (let offset = 0; offset < hits.length + 7; offset += 7) {
+    for (let offset = 0; offset < matching.length + 7; offset += 7) {
       const result = await buildSut().search("make sense", {
         offset,
         limit: 7,
@@ -185,10 +183,10 @@ describe("CaptionsService.search against Elasticsearch", () => {
       pages
         .flatMap((page) => page.captions.map((caption) => caption.id))
         .sort(),
-      hits.map((caption) => caption.id),
+      matching.map((caption) => caption.id),
     );
     for (const page of pages) {
-      assert.equal(page.total, hits.length);
+      assert.equal(page.total, matching.length);
       assert.equal(page.isTotalExact, true);
     }
   });
